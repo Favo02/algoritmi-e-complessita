@@ -31,30 +31,43 @@ jobs:
         path: algoritmi-e-complessita.pdf
         retention-days: 30
 
-    # Attach PDF to PR when pushing to attesa-review
-    - name: Find Pull Request
-      if: github.ref == 'refs/heads/attesa-review'
-      uses: jwalton/gh-find-current-pr@v1
-      id: findPR
-      with:
-        state: open
-
     - name: Comment PDF on PR
-      if: github.ref == 'refs/heads/attesa-review' && steps.findPR.outputs.number
       uses: actions/github-script@v7
       with:
         script: |
-          const comment = `📄 **PDF Generated Successfully for Review!**
+          let prNumber = null;
 
-          The latest PDF has been compiled from this commit and is ready for review.
-          You can download it from the [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+          // If this is a direct PR event
+          if (context.eventName === 'pull_request') {
+            prNumber = context.payload.pull_request.number;
+          }
+          // If this is a push event, find associated PR
+          else if (context.eventName === 'push') {
+            const branchName = context.ref.replace('refs/heads/', '');
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${branchName}`,
+              state: 'open'
+            });
+            if (pulls.length > 0) {
+              prNumber = pulls[0].number;
+            }
+          }
 
-          Commit: ${context.sha.substring(0, 7)}
-          Branch: attesa-review`;
+          // Comment on PR if found
+          if (prNumber) {
+            const comment = `📄 **PDF Generated Successfully for Review!**
 
-          github.rest.issues.createComment({
-            issue_number: ${{ steps.findPR.outputs.number }},
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
+            The latest PDF has been compiled and is ready for review.
+            You can download it from the [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+
+            Commit: ${context.sha.substring(0, 7)}`;
+
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
