@@ -3,6 +3,8 @@ name: Create Release with PDF
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**.typ'
 
 jobs:
   create-release:

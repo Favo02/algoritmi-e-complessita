@@ -3,8 +3,12 @@ name: Generate PDF for Review
 on:
   push:
     branches: [ attesa-review ]
+    paths:
+      - '**.typ'
   pull_request:
     branches: [ main ]
+    paths:
+      - '**.typ'
 
 jobs:
   generate-pdf-for-review:
