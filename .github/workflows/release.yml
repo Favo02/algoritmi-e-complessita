@@ -1,0 +1,53 @@
+name: Create Release with PDF
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Typst
+      uses: typst-community/setup-typst@v3
+
+    - name: Compile Typst document
+      run: |
+        typst compile main.typ algoritmi-e-complessita.pdf
+
+    - name: Upload PDF as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: algoritmi-e-complessita-pdf-release
+        path: algoritmi-e-complessita.pdf
+        retention-days: 90
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%d/%m/%Y')" >> $GITHUB_OUTPUT
+
+    - name: Create Release with PDF
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: release-${{ github.sha }}
+        name: Compiled PDF ${{ steps.date.outputs.date }} (${{ github.sha }})
+        body: |
+          🎓 **Algoritmi e Complessità - PDF ${{ steps.date.outputs.date }} (${{ github.sha }})**
+
+          Automated release created from main branch with the latest version of the course notes.
+
+          **Release Details:**
+          - Generated from commit: ${{ github.sha }}
+          - Build date: ${{ steps.date.outputs.date }}
+          - PDF compiled with latest Typst version
+
+          **Download:** The PDF is attached to this release as `algoritmi-e-complessita.pdf`
+        files: algoritmi-e-complessita.pdf
+        draft: false
+        prerelease: false
