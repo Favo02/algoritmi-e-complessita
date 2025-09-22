@@ -251,7 +251,7 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
   - Insieme degli output possibili: $quad O_Pi subset.eq 2^*$
   - Funzione soluzione, ad ogni input associa un insieme non vuoto dei possibili output: $ "sol"_Pi: I_Pi -> 2^(O_Pi \\ {emptyset}) $
   #nota[
-    La funzione soluzione ha come codominio l'insieme delle parti dei possibili output $2^(O_pi \\ {emptyset})$, ovvero associa ad ogni input $in I_Pi$ un sottoinsieme dei possibili output, ovvero un elemento dell'insieme delle parti di $O_Pi$.
+    La funzione soluzione ha come codominio l'insieme delle parti dei possibili output $2^(O_Pi \\ {emptyset})$, ovvero associa ad ogni input $in I_Pi$ un sottoinsieme dei possibili output, ovvero un elemento dell'insieme delle parti di $O_Pi$.
   ]
   #attenzione[
      Questo sottoinsieme non deve essere vuoto, ovvero assumiamo che per ogni input *esista* almeno una soluzione.
