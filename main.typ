@@ -417,11 +417,6 @@ Possiamo creare il seguente insieme:
 
   let complexity_classes = cetz.canvas({
     import cetz.draw: *
-    /*grid(
-      (0, 0),
-      (rel: (10, 6)),
-      help-lines: true,
-    )*/
 
     // External box
     rect((0, 0), (rel: (10, 6)), name: "superset")
