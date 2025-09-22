@@ -371,8 +371,8 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
     node(x, $x in 2^*$)
     node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-    node(x1, $"si", x in X$)
-    node(x2, $"no", x in.not X$)
+    node(x1, $"si", space x in X$)
+    node(x2, $"no", space x in.not X$)
     edge(x, a, "->")
     edge(a, x1, "->")
     edge(a, x2, "->")
