@@ -10,7 +10,7 @@
 #import "@preview/codly:1.3.0": *
 
 // disegni
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 #import "@preview/cetz:0.4.0"
 #import "@preview/cetz-venn:0.1.4"
 
@@ -82,11 +82,15 @@
   #text(3em)[*#title*]\
   #text(1.5em)[#subtitle]
 
-  #authors.map(author => [
-    #link("https://github.com/" + author.at(1))[
-      #text(1.5em, author.at(0))
-    ]
-  ]).join([ -- ])\
+  #(
+    authors
+      .map(author => [
+        #link("https://github.com/" + author.at(1))[
+          #text(1.5em, author.at(0))
+        ]
+      ])
+      .join([ -- ])
+  )\
 
   #text("Ultima modifica:")
   #datetime.today().display("[day]/[month]/[year]")
@@ -95,21 +99,21 @@
 // indice
 #outline(
   title: "Indice",
-  indent: auto
+  indent: auto,
 )
 
 // numerazione titoli
 #set heading(numbering: "1.1.")
 
 // impostazioni pagine
-#let numberingH(c)={
+#let numberingH(c) = {
   if c.numbering != none {
-    return numbering(c.numbering,..counter(heading).at(c.location()))
+    return numbering(c.numbering, ..counter(heading).at(c.location()))
   }
   return ""
 }
 
-#let currentH(level: 1)={
+#let currentH(level: 1) = {
   let elems = query(selector(heading).after(here()))
 
   if elems.len() != 0 and elems.first().location().page() == here().page() {
@@ -130,12 +134,12 @@
     #set text(8pt, style: "italic")
     #title
     #h(1fr)
-    #context[_ #currentH() _]
+    #context [_ #currentH() _]
   ],
   footer: [
     #set text(8pt)
 
-    #context[
+    #context [
       _#authors.map(author => author.at(0)).join(", ") - #datetime.today().display("[day]/[month]/[year]")_
       #h(1fr)
       #text(12pt)[#counter(page).display("1")]
@@ -224,8 +228,8 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 
 #esempio[
   Alcuni esempi di linguaggio:
-  - $A = emptyset$: linguaggio vuoto, dice sempre di no
-  - $B = 2^*$: linguaggio tutto vero
+  - $A = emptyset$: linguaggio vuoto
+  - $B = 2^*$: linguaggio che include tutte le possibili stringhe binarie
   - $C = {0,10,1010,dots,"x"0}$: insieme delle stringhe binarie che terminano per $0$
   - $D = {x | x "è la rappresentazione binaria di un numero primo"}$
 
@@ -254,11 +258,11 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
     La funzione soluzione ha come codominio l'insieme delle parti dei possibili output $2^(O_Pi \\ {emptyset})$, ovvero associa ad ogni input $in I_Pi$ un sottoinsieme dei possibili output, ovvero un elemento dell'insieme delle parti di $O_Pi$.
   ]
   #attenzione[
-     Questo sottoinsieme non deve essere vuoto, ovvero assumiamo che per ogni input *esista* almeno una soluzione.
+    Questo sottoinsieme non deve essere vuoto, ovvero assumiamo che per ogni input *esista* almeno una soluzione.
 
-     Ma *non* è detto che questa soluzione sia *univoca*, un input potrebbe avere più soluzioni ugualmente corrette. Un algoritmo è corretto per un certo problema se restituisce *uno qualsiasi* tra i possibili output corretti. È quindi possibile che due algoritmi diversi producano output diversi a fronte dello stesso input.
+    Ma *non* è detto che questa soluzione sia *univoca*, un input potrebbe avere più soluzioni ugualmente corrette. Un algoritmo è corretto per un certo problema se restituisce *uno qualsiasi* tra i possibili output corretti. È quindi possibile che due algoritmi diversi producano output diversi a fronte dello stesso input.
 
-     #esempio[
+    #esempio[
       Problema: dato l'elenco dei nomi degli studenti presenti in aula, restituire il primo studente in ordine alfabetico.
 
       In caso ci siano due studenti con lo stesso nome, chi viene restituito? È *sbagliato* stamparli entrambi, ne viene chiesto solo uno.
@@ -300,11 +304,13 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
   / Soluzione 2: prima del numero, viene dichiarato quando è lungo il numero che segue, utilizzando una codifica unaria. Ovvero tanti zeri quanti è lungo il numero seguiti da un bit a uno per indicare l'inizio del numero vero e proprio. Questa rappresentazione prende il nome di *Elias $gamma$*:
 
     In binario:
-    $ x = 12 ->  mono(1100) $
-    $ y = 7 ->  mono(111) $
+    $ x = 12 -> mono(1100) $
+    $ y = 7 -> mono(111) $
 
     Elias $gamma$:
-    $ mono(mb(underbrace(0000, "4 zeri")1) space underbrace(1100, "4") space mb(underbrace(000, "3 zeri")1) space underbrace(111, "3")) $
+    $
+      mono(mb(underbrace(0000, "4 zeri")1) space underbrace(1100, "4") space mb(underbrace(000, "3 zeri")1) space underbrace(111, "3"))
+    $
 
   / Soluzione 3: scrivere i numeri in unario, tanti zeri quanti è lungo il numero seguiti da un bit a uno per indicare la fine.
 
@@ -318,7 +324,7 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
 
   / Soluzione 3: $x + 1 + y + 1$
 
-  Per numeri molto piccoli dovrebbe funzionare meglio la soluzione1, per numeri grandi la soluzione2.
+  Per numeri molto piccoli dovrebbe funzionare meglio la soluzione 1, per numeri grandi la soluzione 2.
   Le prime due soluzioni differiscono solamente di un fattore moltiplicativo, quindi sono *asintoticamente equiparabili*. La terza invece è *esponenzialmente* più grande delle prime due dato che è lineare, quindi è da evitare.
 ]
 
@@ -327,16 +333,18 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
 Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un output $y in O_Pi$ che appartiene alle soluzioni ammissibili $"sol"_Pi$ per l'input $x$:
 
 #let algo_diagram = diagram(
-  spacing: (10pt, 4em),{
-  let (x, a, y) = ((0,0), (3,0), (6,0))
+  spacing: (10pt, 4em),
+  {
+    let (x, a, y) = ((0, 0), (3, 0), (6, 0))
 
-  node(x, $x$)
-  node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-  node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
+    node(x, $x$)
+    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+    node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
 
-  edge(x, a, "->")
-  edge(a, y, "->")
-})
+    edge(x, a, "->")
+    edge(a, y, "->")
+  },
+)
 
 #align(center, algo_diagram)
 
@@ -357,17 +365,19 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 / Decidibili: un problema si dice *decidibile* se esiste un algoritmo in grado di risolverlo. Sia $X$ un insieme, un problema di decisione è decidibile se esiste un algoritmo $A$:
 
 #let algo_decisionale = diagram(
-  spacing: (10pt, 4em),{
-  let (x, a, x1, x2) = ((0,0), (3,0), (6,-0.2), (6,0.2))
+  spacing: (10pt, 4em),
+  {
+    let (x, a, x1, x2) = ((0, 0), (3, 0), (6, -0.2), (6, 0.2))
 
-  node(x, $x in 2^*$)
-  node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-  node(x1, $"si" x in X$)
-  node(x2, $"no" x in.not X$)
-  edge(x, a, "->")
-  edge(a, x1, "->")
-  edge(a, x2, "->")
-})
+    node(x, $x in 2^*$)
+    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+    node(x1, $"si", x in X$)
+    node(x2, $"no", x in.not X$)
+    edge(x, a, "->")
+    edge(a, x1, "->")
+    edge(a, x2, "->")
+  },
+)
 
 #align(center, algo_decisionale)
 
@@ -381,10 +391,10 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
 #teorema("Teorema")[
   Se il linguaggio del problema di decisione $X$ è *finito*, allora il problema è *decidibile*.
-]
 
-#dimostrazione[
-  Banalmente, basterebbe fare una catena di if elencando tutte le stringhe che appartengono al linguaggio.
+  #dimostrazione[
+    Banalmente, basterebbe fare una catena di if elencando tutte le stringhe che appartengono al linguaggio.
+  ]
 ]
 
 / Non decidibili: esistono degli insiemi che non sono decidibili? Si, l'insieme dei problemi di decisione è troppo numeroso.
@@ -443,6 +453,7 @@ $ t_A : bb(N) -> bb(N), quad t_(A)(n) = max_(x in I_Pi, |x| = n) T_(A)(x) $
 Tuttavia, essendo un assunzione abbiamo una *perdita di informazione*. All'interno della classe di input con dimensione $n$ potrebbero esserci alcuni input più "sfortunati" su cui $A$ impiega più tempo.
 
 #esempio[
+  // TODO: sostituire con grafico (y = tempo, x = taglia input) con un picco solo nel mezzo
   Dimensione input $n = 1500$.\
   Singoli input $x = 1.000.000, y = 100, z = 103, w = 89$ passi.
   $ t_(A)(n) = 1.000.000 $
@@ -494,14 +505,14 @@ Possiamo dividere la definizione di complessità in due categorie:
   Stabilisce quanto costa, al minimo, risolvere un certo problema $Pi$. Al posto di classificare l'algoritmo, viene classificato direttamente il problema, dividendoli in classi di complessità.
 
 #informalmente[
-  / Algoritmica: viene studiato un concreto algoritmo che è stato scoperto e si determina quanto tempo ci mette. Si cerca di trovare algoritmi più veloci, *abbassando* la complessità algoritmica.
-  / Strutturale: non si immagina nemmeno un algoritmo che risolve il problema, ci si basa puramente sulla struttura del problema, determinando "a prescindere" dalle tecniche algoritmiche usate per risolverlo, quanto tempo serve. Si prova a dimostrare che serve almeno $x$ tempo, cercando di *alzare* questo bound, per avvicinarsi all'algoritmo migliore noto.
+  / Algoritmica: viene studiata la complessità di un algoritmo esistente. Si cerca di trovare algoritmi più veloci, *abbassando* la complessità algoritmica.
+  / Strutturale: non si immagina nemmeno un algoritmo che risolve il problema, ci si basa solamente sulla struttura del problema. Viene determinato, "a prescindere" dalle tecniche algoritmiche usate, quanto tempo si impiega a risolverlo. Si prova a dimostrare che serve almeno $x$ tempo, cercando di *alzare* questo bound, per avvicinarsi all'algoritmo migliore noto.
 ]
 
 Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia la reale complessità di un certo problema. Lo scopo è *ridurre il gap* tra l'upper bound (abbassandolo) e il lower bound (alzandolo), in modo tale che la complessità per risolvere un problema $Pi$ sia data dalla complessità dell'algoritmo ottimo per $Pi$.
 
 #esempio[
-  Problema ordinamento di un array:
+  Problema ordinamento di un array basato su confronti:
 
   - inizialmente il miglior algoritmo noto è il bubble sort, quindi upper bound $mb(O(n^2))$
     $ mb(O(n^2)) >= "ottimo" >= mr("lower") $
@@ -514,10 +525,10 @@ Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia l
   - viene dimostrato che è impossibile ordinare (basandosi su confronti) facendo meno di $n log n$ confronti (nel caso peggiore), portando il lower bound a $mr(Omega(n log n))$ _(dimostrazione del limite inferiore del decision tree)_
     $ mb(O(n log n)) = "ottimo" = mr(Omega(n log n)) $
   - problema dell'ordinamento "risolto", è impossibile fare meglio dato che la forbice si è chiusa.
+]
 
-  #nota[
-    Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
-  ]
+#nota[
+  Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
 ]
 
 #appunti // TODO approvate la review
