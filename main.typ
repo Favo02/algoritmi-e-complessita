@@ -407,23 +407,48 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
   Dato che esistono molti più problemi che programmi, allora molti problemi devono per forza non essere decidibili.
 ]
 
-Possiamo creare il seguente insieme: // TODO: sistemare disegno facendo la parte dei problemi decidibili più piccola, aggiungendo caption e mettendo dei punti nel diagramma come dei problemi
+Possiamo creare il seguente insieme:
 
-#let algo_square = (
-  box(width: 150pt, height: 75pt, fill: black, radius: 4pt)[
-    #place(left)[
-      #box(width: 75pt, height: 75pt, fill: blue, inset: (top: 15pt), align(center)[
-        #text(10pt, weight: "bold", white, "Problemi Decidibili")
-      ])
-    ]
-    #place(right)[
-      #box(width: 75pt, height: 75pt, fill: red, inset: (top: 15pt), align(center)[
-        #text(10pt, weight: "bold", white, "Problemi Non Decidibili")
-      ])
-    ]
-  ]
-)
-#align(center, algo_square)
+#{
+  set text(weight: "bold")
+  let stroke_alpha = 150
+  let fill_alpha = 50
+  let big_dot = text(20pt)[$dot$]
+
+  let complexity_classes = cetz.canvas({
+    import cetz.draw: *
+    grid(
+      (0, 0),
+      (rel: (10, 6)),
+      help-lines: true,
+    )
+
+    // External box
+    rect((0, 0), (rel: (10, 6)), name: "superset")
+    content("superset.north-east", [$2^2^*$], anchor: "south-west")
+
+    // Non decidibili
+    rect(
+      "superset.south-west",
+      (rel: (4, 4)),
+      stroke: rgb(70, 70, 70, stroke_alpha),
+      fill: rgb(70, 70, 70, fill_alpha),
+      name: "non_decidibili",
+    )
+    content("non_decidibili", [Non decidibili])
+
+    // Invisible layout anchor element
+    circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+
+    content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
+    content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
+    content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
+  })
+
+  align(center, block(breakable: false, complexity_classes))
+}
+
+// TODO: aggiungere caption
 
 / Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un'algoritmo che è in grado di decidere un dato elemento.
   #informalmente[
