@@ -19,18 +19,20 @@
 #show: gentle-clues.with(breakable: true) // colored boxes
 #show: codly-init.with() // codly setup
 #show: equate.with(breakable: true) // equations settings
-#show heading.where(level: 1): it => { // page break every chapter
+#show heading.where(level: 1): it => {
+  // page break every chapter
   pagebreak()
   it
 }
-#set page( // header and footer
+#set page(
+  // header and footer
   numbering: "1",
   number-align: bottom + right,
   header: [
     #set text(8pt, style: "italic")
     #title
     #h(1fr)
-    #context[
+    #context [
       #let headings = query(heading)
       #let current-page = here().page()
       #let filtered-headings = headings.filter(h => h.location().page() <= current-page)
@@ -48,7 +50,7 @@
     #set text(8pt)
     _#authors.map(author => author.at(0)).join(", ") - #datetime.today().display("[day]/[month]/[year]")_
     #h(1fr)
-    #context[#text(12pt)[#counter(page).display("1")]]
+    #context [#text(12pt)[#counter(page).display("1")]]
   ],
 )
 
