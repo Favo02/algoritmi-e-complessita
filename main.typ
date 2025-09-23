@@ -52,4 +52,5 @@
 )
 
 // content
-#include "content.typ"
+#include "chapters/1-notazione.typ"
+#include "chapters/2-problemi-e-algoritmi.typ"
