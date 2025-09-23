@@ -4,6 +4,7 @@
 #let title = "Algoritmi e Complessità"
 #let subtitle = "Università degli Studi di Milano - Informatica"
 #let authors = (("Luca Favini", "Favo02"), ("Luca Corradini", "LucaCorra02"), ("Matteo Zagheno", "Tsagae"))
+
 #set document(
   title: title,
   author: authors.map(author => author.at(0)),
