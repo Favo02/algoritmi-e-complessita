@@ -61,7 +61,9 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
     $ y = 7 -> mono(111) $
 
     Elias $gamma$:
-    $ mono(mb(underbrace(0000, "4 zeri")1) space underbrace(1100, "4") space mb(underbrace(000, "3 zeri")1) space underbrace(111, "3")) $
+    $
+      mono(mb(underbrace(0000, "4 zeri")1) space underbrace(1100, "4") space mb(underbrace(000, "3 zeri")1) space underbrace(111, "3"))
+    $
 
   / Soluzione 3: scrivere i numeri in unario, tanti zeri quanti è lungo il numero seguiti da un bit a uno per indicare la fine.
 
@@ -86,7 +88,7 @@ Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un out
 #let algo_diagram = diagram(
   spacing: (10pt, 4em),
   {
-    let (x, a, y) = ((0,0), (3,0), (6,0))
+    let (x, a, y) = ((0, 0), (3, 0), (6, 0))
 
     node(x, $x$)
     node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
@@ -94,7 +96,7 @@ Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un out
 
     edge(x, a, "->")
     edge(a, y, "->")
-  }
+  },
 )
 
 #align(center, algo_diagram)
@@ -118,17 +120,17 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 #let algo_decisionale = diagram(
   spacing: (10pt, 4em),
   {
-    let (x, a, x1, x2) = ((0,0), (3,0), (6,-0.2), (6,0.2))
+    let (x, a, x1, x2) = ((0, 0), (3, 0), (6, -0.2), (6, 0.2))
 
     node(x, $x in 2^*$)
     node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-    node(x1, $"si" x in X$)
-    node(x2, $"no" x in.not X$)
+    node(x1, $"si", space x in X$)
+    node(x2, $"no", space x in.not X$)
 
     edge(x, a, "->")
     edge(a, x1, "->")
     edge(a, x2, "->")
-  }
+  },
 )
 
 #align(center, algo_decisionale)
