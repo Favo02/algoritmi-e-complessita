@@ -3,7 +3,7 @@
 #import "@preview/codly:1.3.0": *
 
 // drawings
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 #import "@preview/cetz:0.4.0"
 #import "@preview/cetz-venn:0.1.4"
 

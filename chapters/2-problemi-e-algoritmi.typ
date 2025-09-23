@@ -11,11 +11,11 @@
     La funzione soluzione ha come codominio l'insieme delle parti dei possibili output $2^(O_Pi \\ {emptyset})$, ovvero associa ad ogni input $in I_Pi$ un sottoinsieme dei possibili output, ovvero un elemento dell'insieme delle parti di $O_Pi$.
   ]
   #attenzione[
-     Questo sottoinsieme non deve essere vuoto, ovvero assumiamo che per ogni input *esista* almeno una soluzione.
+    Questo sottoinsieme non deve essere vuoto, ovvero assumiamo che per ogni input *esista* almeno una soluzione.
 
-     Ma *non* è detto che questa soluzione sia *univoca*, un input potrebbe avere più soluzioni ugualmente corrette. Un algoritmo è corretto per un certo problema se restituisce *uno qualsiasi* tra i possibili output corretti. È quindi possibile che due algoritmi diversi producano output diversi a fronte dello stesso input.
+    Ma *non* è detto che questa soluzione sia *univoca*, un input potrebbe avere più soluzioni ugualmente corrette. Un algoritmo è corretto per un certo problema se restituisce *uno qualsiasi* tra i possibili output corretti. È quindi possibile che due algoritmi diversi producano output diversi a fronte dello stesso input.
 
-     #esempio[
+    #esempio[
       Problema: dato l'elenco dei nomi degli studenti presenti in aula, restituire il primo studente in ordine alfabetico.
 
       In caso ci siano due studenti con lo stesso nome, chi viene restituito? È *sbagliato* stamparli entrambi, ne viene chiesto solo uno.
@@ -57,8 +57,8 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
   / Soluzione 2: prima del numero, viene dichiarato quando è lungo il numero che segue, utilizzando una codifica unaria. Ovvero tanti zeri quanti è lungo il numero seguiti da un bit a uno per indicare l'inizio del numero vero e proprio. Questa rappresentazione prende il nome di *Elias $gamma$*:
 
     In binario:
-    $ x = 12 ->  mono(1100) $
-    $ y = 7 ->  mono(111) $
+    $ x = 12 -> mono(1100) $
+    $ y = 7 -> mono(111) $
 
     Elias $gamma$:
     $ mono(mb(underbrace(0000, "4 zeri")1) space underbrace(1100, "4") space mb(underbrace(000, "3 zeri")1) space underbrace(111, "3")) $
@@ -75,7 +75,7 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
 
   / Soluzione 3: $x + 1 + y + 1$
 
-  Per numeri molto piccoli dovrebbe funzionare meglio la soluzione1, per numeri grandi la soluzione2.
+  Per numeri molto piccoli dovrebbe funzionare meglio la soluzione 1, per numeri grandi la soluzione 2.
   Le prime due soluzioni differiscono solamente di un fattore moltiplicativo, quindi sono *asintoticamente equiparabili*. La terza invece è *esponenzialmente* più grande delle prime due dato che è lineare, quindi è da evitare.
 ]
 
@@ -84,16 +84,18 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
 Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un output $y in O_Pi$ che appartiene alle soluzioni ammissibili $"sol"_Pi$ per l'input $x$:
 
 #let algo_diagram = diagram(
-  spacing: (10pt, 4em),{
-  let (x, a, y) = ((0,0), (3,0), (6,0))
+  spacing: (10pt, 4em),
+  {
+    let (x, a, y) = ((0,0), (3,0), (6,0))
 
-  node(x, $x$)
-  node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-  node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
+    node(x, $x$)
+    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+    node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
 
-  edge(x, a, "->")
-  edge(a, y, "->")
-})
+    edge(x, a, "->")
+    edge(a, y, "->")
+  }
+)
 
 #align(center, algo_diagram)
 
@@ -114,17 +116,20 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 / Decidibili: un problema si dice *decidibile* se esiste un algoritmo in grado di risolverlo. Sia $X$ un insieme, un problema di decisione è decidibile se esiste un algoritmo $A$:
 
 #let algo_decisionale = diagram(
-  spacing: (10pt, 4em),{
-  let (x, a, x1, x2) = ((0,0), (3,0), (6,-0.2), (6,0.2))
+  spacing: (10pt, 4em),
+  {
+    let (x, a, x1, x2) = ((0,0), (3,0), (6,-0.2), (6,0.2))
 
-  node(x, $x in 2^*$)
-  node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-  node(x1, $"si" x in X$)
-  node(x2, $"no" x in.not X$)
-  edge(x, a, "->")
-  edge(a, x1, "->")
-  edge(a, x2, "->")
-})
+    node(x, $x in 2^*$)
+    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+    node(x1, $"si" x in X$)
+    node(x2, $"no" x in.not X$)
+
+    edge(x, a, "->")
+    edge(a, x1, "->")
+    edge(a, x2, "->")
+  }
+)
 
 #align(center, algo_decisionale)
 
@@ -138,10 +143,10 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
 #teorema("Teorema")[
   Se il linguaggio del problema di decisione $X$ è *finito*, allora il problema è *decidibile*.
-]
 
-#dimostrazione[
-  Banalmente, basterebbe fare una catena di if elencando tutte le stringhe che appartengono al linguaggio.
+  #dimostrazione[
+    Banalmente, basterebbe fare una catena di if elencando tutte le stringhe che appartengono al linguaggio.
+  ]
 ]
 
 / Non decidibili: esistono degli insiemi che non sono decidibili? Si, l'insieme dei problemi di decisione è troppo numeroso.
@@ -154,23 +159,43 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
   Dato che esistono molti più problemi che programmi, allora molti problemi devono per forza non essere decidibili.
 ]
 
-Possiamo creare il seguente insieme: // TODO: sistemare disegno facendo la parte dei problemi decidibili più piccola, aggiungendo caption e mettendo dei punti nel diagramma come dei problemi
+Possiamo creare il seguente insieme:
 
-#let algo_square = (
-  box(width: 150pt, height: 75pt, fill: black, radius: 4pt)[
-    #place(left)[
-      #box(width: 75pt, height: 75pt, fill: blue, inset: (top: 15pt), align(center)[
-        #text(10pt, weight: "bold", white, "Problemi Decidibili")
-      ])
-    ]
-    #place(right)[
-      #box(width: 75pt, height: 75pt, fill: red, inset: (top: 15pt), align(center)[
-        #text(10pt, weight: "bold", white, "Problemi Non Decidibili")
-      ])
-    ]
-  ]
-)
-#align(center, algo_square)
+#{
+  set text(weight: "bold")
+  let stroke_alpha = 150
+  let fill_alpha = 50
+  let big_dot = text(20pt)[$dot$]
+
+  let complexity_classes = cetz.canvas({
+    import cetz.draw: *
+
+    // External box
+    rect((0, 0), (rel: (10, 6)), name: "superset")
+    content("superset.north-east", [$2^2^*$], anchor: "south-west")
+
+    // Non decidibili
+    rect(
+      "superset.south-west",
+      (rel: (4, 4)),
+      stroke: rgb(70, 70, 70, stroke_alpha),
+      fill: rgb(70, 70, 70, fill_alpha),
+      name: "non_decidibili",
+    )
+    content("non_decidibili", [Non decidibili])
+
+    // Invisible layout anchor element
+    circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+
+    content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
+    content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
+    content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
+  })
+
+  align(center, block(breakable: false, complexity_classes))
+}
+
+// TODO: aggiungere caption
 
 / Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un'algoritmo che è in grado di decidere un dato elemento.
   #informalmente[
@@ -200,6 +225,7 @@ $ t_A : bb(N) -> bb(N), quad t_(A)(n) = max_(x in I_Pi, |x| = n) T_(A)(x) $
 Tuttavia, essendo un assunzione abbiamo una *perdita di informazione*. All'interno della classe di input con dimensione $n$ potrebbero esserci alcuni input più "sfortunati" su cui $A$ impiega più tempo.
 
 #esempio[
+  // TODO: sostituire con grafico (y = tempo, x = taglia input) con un picco solo nel mezzo
   Dimensione input $n = 1500$.\
   Singoli input $x = 1.000.000, y = 100, z = 103, w = 89$ passi.
   $ t_(A)(n) = 1.000.000 $
@@ -251,14 +277,14 @@ Possiamo dividere la definizione di complessità in due categorie:
   Stabilisce quanto costa, al minimo, risolvere un certo problema $Pi$. Al posto di classificare l'algoritmo, viene classificato direttamente il problema, dividendoli in classi di complessità.
 
 #informalmente[
-  / Algoritmica: viene studiato un concreto algoritmo che è stato scoperto e si determina quanto tempo ci mette. Si cerca di trovare algoritmi più veloci, *abbassando* la complessità algoritmica.
-  / Strutturale: non si immagina nemmeno un algoritmo che risolve il problema, ci si basa puramente sulla struttura del problema, determinando "a prescindere" dalle tecniche algoritmiche usate per risolverlo, quanto tempo serve. Si prova a dimostrare che serve almeno $x$ tempo, cercando di *alzare* questo bound, per avvicinarsi all'algoritmo migliore noto.
+  / Algoritmica: viene studiata la complessità di un algoritmo esistente. Si cerca di trovare algoritmi più veloci, *abbassando* la complessità algoritmica.
+  / Strutturale: non si immagina nemmeno un algoritmo che risolve il problema, ci si basa solamente sulla struttura del problema. Viene determinato, "a prescindere" dalle tecniche algoritmiche usate, quanto tempo si impiega a risolverlo. Si prova a dimostrare che serve almeno $x$ tempo, cercando di *alzare* questo bound, per avvicinarsi all'algoritmo migliore noto.
 ]
 
 Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia la reale complessità di un certo problema. Lo scopo è *ridurre il gap* tra l'upper bound (abbassandolo) e il lower bound (alzandolo), in modo tale che la complessità per risolvere un problema $Pi$ sia data dalla complessità dell'algoritmo ottimo per $Pi$.
 
 #esempio[
-  Problema ordinamento di un array:
+  Problema ordinamento di un array basato su confronti:
 
   - inizialmente il miglior algoritmo noto è il bubble sort, quindi upper bound $mb(O(n^2))$
     $ mb(O(n^2)) >= "ottimo" >= mr("lower") $
@@ -271,8 +297,77 @@ Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia l
   - viene dimostrato che è impossibile ordinare (basandosi su confronti) facendo meno di $n log n$ confronti (nel caso peggiore), portando il lower bound a $mr(Omega(n log n))$ _(dimostrazione del limite inferiore del decision tree)_
     $ mb(O(n log n)) = "ottimo" = mr(Omega(n log n)) $
   - problema dell'ordinamento "risolto", è impossibile fare meglio dato che la forbice si è chiusa.
-
-  #nota[
-    Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
-  ]
 ]
+
+#nota[
+  Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
+]
+
+// TODO: spostare questo diagramma nella sezione giusta
+#{
+  set text(weight: "bold")
+  let stroke_alpha = 150
+  let fill_alpha = 50
+
+  let complexity_classes = cetz.canvas({
+    import cetz.draw: *
+
+    grid(
+      (0, 0),
+      (rel: (13, 8)),
+      help-lines: true,
+    )
+
+    // External box
+    rect((0, 0), (rel: (13, 8)), name: "superset")
+    content("superset.north-east", [$2^2^*$], anchor: "south-west")
+
+    // Non decidibili
+    rect(
+      "superset.south-west",
+      (rel: (4, 4)),
+      stroke: rgb(70, 70, 70, stroke_alpha),
+      fill: rgb(70, 70, 70, fill_alpha),
+      name: "non_decidibili",
+    )
+    content("non_decidibili", [Non decidibili])
+
+    // Invisible layout anchor element
+    circle("superset", radius: 2, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+
+    // NP circle
+    circle(
+      "center_anchor.east",
+      radius: 3.5,
+      stroke: rgb(255, 0, 0, stroke_alpha),
+      fill: rgb(255, 0, 0, fill_alpha),
+      name: "NP",
+    )
+    content("NP.north-west", [NP], anchor: "south-east")
+
+    // P circle
+    circle(
+      "NP.south",
+      anchor: "south",
+      radius: 2,
+      stroke: rgb(0, 255, 0, stroke_alpha),
+      fill: rgb(0, 255, 0, fill_alpha),
+      name: "P",
+    )
+    content("P.north-east", [P], anchor: "south-west")
+
+    // NP complete
+    circle(
+      "NP.north-west",
+      anchor: "north-west",
+      radius: 0.8,
+      stroke: rgb(0, 0, 255, stroke_alpha),
+      fill: rgb(0, 0, 255, fill_alpha),
+      name: "NP_complete",
+    )
+    content("NP_complete.east", [NPC], anchor: "north-west")
+    content("NP_complete", text(style: "italic")[#text(20pt)[$dot$] SAT])
+  })
+
+  align(center, block(breakable: false, complexity_classes))
+}

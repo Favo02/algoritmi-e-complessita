@@ -78,8 +78,8 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 
 #esempio[
   Alcuni esempi di linguaggio:
-  - $A = emptyset$: linguaggio vuoto, dice sempre di no
-  - $B = 2^*$: linguaggio tutto vero
+  - $A = emptyset$: linguaggio vuoto
+  - $B = 2^*$: linguaggio che include tutte le possibili stringhe binarie
   - $C = {0,10,1010,dots,"x"0}$: insieme delle stringhe binarie che terminano per $0$
   - $D = {x | x "è la rappresentazione binaria di un numero primo"}$
 
