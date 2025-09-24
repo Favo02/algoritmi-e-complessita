@@ -405,36 +405,38 @@ $"PTAS"$ e $"FPTAS"$ sono delle sottoclassi di $"APX"$.
   Questi problemi sono quasi problemi apprtenenti a PO.
 ]
 
-// TODO: Aggiungere disegno riassuntivo diagramma dei problemai 
-
-#let rect-label(width, height, fill, label, label-fill: white) = {
+#let rect-fill(width, height, fill) = {
   box(
     width: width,
     height: height,
     radius: 5pt,
     fill: fill,
     stroke: 1.5pt + black,
-    align(center + horizon)[
-      #text(fill: label-fill, size: 16pt, weight: "bold")[#label]
-    ]
   )
 }
 
-#box(width: 450pt, height: 350pt)[
-  // Colori meno saturi per una migliore accessibilità e leggibilità
-  #place(dx: 0pt, dy: 0pt)[
-    #rect-label(380pt, 250pt, rgb(100, 150, 200), "NPO")
-  ]
-  #place(dx: 30pt, dy: 30pt)[
-    #rect-label(320pt, 200pt, rgb(150, 180, 220), "APX")
-  ]
-  #place(dx: 60pt, dy: 60pt)[
-    #rect-label(260pt, 150pt, rgb(180, 200, 230), "PTAS")
-  ]
-  #place(dx: 90pt, dy: 90pt)[
-    #rect-label(200pt, 100pt, rgb(200, 220, 240), "FPTAS")
-  ]
-  #place(dx: 120pt, dy: 120pt)[
-    #rect-label(140pt, 50pt, rgb(220, 230, 245), "PO", label-fill: black)
-  ]
+#let label(text, x, y, fill) = locate(
+  (loc) => {
+    let rel-x = measure(100%, loc).width * x
+    let rel-y = measure(100%, loc).height * y
+    place(dx: rel-x, dy: rel-y)[
+      #text(fill: fill, size: 16pt, weight: "bold")[#text]
+    ]
+  }
+)
+
+#box(width: 300pt, height: 250pt)[
+  // Rettangoli di sfondo
+  #place(dx: 0pt, dy: 0pt)[#rect-fill(380pt, 250pt, rgb(100, 150, 200))]
+  #place(dx: 30pt, dy: 30pt)[#rect-fill(320pt, 200pt, rgb(150, 180, 220))]
+  #place(dx: 60pt, dy: 60pt)[#rect-fill(260pt, 150pt, rgb(180, 200, 230))]
+  #place(dx: 90pt, dy: 90pt)[#rect-fill(200pt, 100pt, rgb(200, 220, 240))]
+  #place(dx: 120pt, dy: 120pt)[#rect-fill(140pt, 50pt, rgb(220, 230, 245))]
+
+  // Etichette posizionate separatamente
+  #place(dx: 15pt, dy: 15pt)[#text(fill: black, size: 16pt, weight: "bold")[NPO]]
+  #place(dx: 45pt, dy: 45pt)[#text(fill: black, size: 16pt, weight: "bold")[APX]]
+  #place(dx: 75pt, dy: 75pt)[#text(fill: black, size: 16pt, weight: "bold")[PTAS]]
+  #place(dx: 105pt, dy: 105pt)[#text(fill: black, size: 16pt, weight: "bold")[FPTAS]]
+  #place(dx: 135pt, dy: 135pt)[#text(fill: black, size: 16pt, weight: "bold")[PO]]
 ]
