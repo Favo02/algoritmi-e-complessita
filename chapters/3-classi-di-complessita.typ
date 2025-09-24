@@ -112,17 +112,21 @@ Si tratta di una famiglia speciale di problemi (come quelli di ottimizzazione).
 
 / Un problema $Pi$ si dice di ottimizzazione se:
   - Insieme di *input* $I_Pi subset.eq 2^*$
-  - *Funzione ammissibilità* *$"Amm"_Pi: I_Pi -> 2^2^* \\ {emptyset}$*. Associa ad ogni input un insieme non vuoto di possibili soluzioni: $"Amm"_(Pi)(x)$ (supponiamo ce ne sia almeno una). Capire se esiste una soluzione è un passo precedente (dato perscontato)
+  - *Funzione ammissibilità* *$"Amm"_Pi: I_Pi -> 2^2^* \\ {emptyset}$*. Associa ad ogni input $x$ un insieme non-vuoto di soluzioni ammissibili: $"Amm"_(Pi)(x)$ (supponiamo ce ne sia almeno una). Capire se esiste una soluzione è un passo precedente (dato per scontato) // TODO: @Favo02 @LucaCorra02 Rimuoverei l'ultima frase ("Capire se ... scontato)")
   - *Funzione obiettivo*: *$C_Pi : 2^* times 2^* -> bb(R)$*, essa assegna un valore $C_(Pi)(x, y), forall x in I_Pi, forall y in "Amm"_(Pi)(x)$. Assegna un valore ad ogni coppia di input e output ammissibile.
   - *Tipo del problema* *$t_Pi in { min, max }$*
 
   L'obiettivo è ottenere un algoritmo $A$ che dato un input $x in I_Pi$, fornisce una soluzione $y^* in "Amm"_(Pi)(x)$, tale che:
-  *$ C_(Pi)(x, y^*) >=_max (<=_min) C_(Pi)(x, y'), quad forall y' in "Amm"_(Pi)(x) $*
+  *$ C_(Pi)(x, y^*) >=_max C_(Pi)(x, y'), quad forall y' in "Amm"_(Pi)(x) $*
+
+  #align(center, [or])
+
+  *$ C_(Pi)(x, y^*) <=_min C_(Pi)(x, y'), quad forall y' in "Amm"_(Pi)(x) $*
 
   Vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutte le altre soluzioni per un certo input $x$.
 
 #nota[
-  Si utilizza *$y^*$* per indicare una soluzione ammissibile, in quanto, dato un certo input $x$ ci possono essere più soluzione ammissibili. La funzione $C_(Pi)(x,y^*)$ restituisce lo stesso risultato.
+  Si utilizza *$y^*$* per indicare una soluzione ottima e *$C^*(x)$* per indicare la funzione obiettivo sulla soluzione ottima.
 ]
 
 #esempio[
@@ -146,13 +150,12 @@ Si tratta di una famiglia speciale di problemi (come quelli di ottimizzazione).
     - condizione logica: clausole legate in and tra di loro.
   ]
 ]
-=== Classi di complessità
 
 La classificazione effettuata sui problemi di decisione può essere applicata anche ai problemi di ottimizzazione, suddividendo i problemi in base alla loro complessità strutturale.
 
 === Classe PO
 
-Un problema di ottimizzazione *$Pi in "PO"$* sse esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
+Un problema di ottimizzazione *$Pi in "PO"$* _sse_ esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
 
 #attenzione[
   Dato un input ammissibile, l'algorimto $A$ deve trovare la soluzione *ottima* (o una delle soluzioni ottime in caso ne esistano più di una).
@@ -177,8 +180,8 @@ Un problema di ottimizzazione *$Pi in "PO"$* sse esiste un algoritmo $A$ che lo 
 Un problema *$Pi in "NPo"$* se:
 + *$I_Pi in P$*: *decidere se un input $x$ è un valido impiega un tempo polinomiale*
 + Esiste un *polinomio Q* t.c:
-  1. *$forall x in I_Pi, quad forall y in "Amm"_(Pi)(x), quad |y| <= Q(|x|)$*
-  2. *$forall x in I_Pi, forall y in 2^*$, se $|y| <= Q(|x|)$, decidibile in tempo polinomiale se $y in "amm"_(Pi)(x)$*
+  - *$forall x in I_Pi, forall y in "Amm"_(Pi)(x), quad |y| <= Q(|x|)$*
+  - *$forall x in I_Pi, forall y in 2^*$, se $|y| <= Q(|x|)$, decidibile in tempo polinomiale se $y in "Amm"_(Pi)(x)$*
 + la funzione *$C_Pi$* è *calcolabile in tempo polinomiale*
 
 
