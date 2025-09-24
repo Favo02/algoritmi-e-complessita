@@ -55,3 +55,5 @@
 // content
 #include "chapters/1-notazione.typ"
 #include "chapters/2-problemi-e-algoritmi.typ"
+#include "chapters/3-classi-di-complessita.typ"
+#include "chapters/4-max-matching-load-balacing.typ"
