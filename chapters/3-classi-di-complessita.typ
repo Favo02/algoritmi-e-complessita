@@ -374,33 +374,67 @@ Si tratta di problemi di ottimizzazione approssimabili con un tasso entro una co
   fissando $a=1$, otteniamo la classe $1-"APX" = P$
 ]
 
-
 #informalmente[
-  Ci saranno problemi "difficili" dove non potremo più approssimare ad una costate, ma anche l'approssimazione cresce col crescere dell'input
+  Ci saranno problemi "difficili" in cui approssimare ad una costate non sarà più possibile. Ovviamente richiedendo un approssimazione sempre più piccola i tempi possono crescere in maniera esponenziale
 ]
 
 === PTAS e FPTAS
 
-/ PTAS: Polynomial-Time Approximation Scheme. La crescita del tempo è esponenziale sul decrescere di epsilon.
+$"PTAS"$ e $"FPTAS"$ sono delle sottoclassi di $"APX"$.
 
-$ Pi (x in I_(Pi), epsilon > 1) $
+*PTAS*: *Polynomial-Time Approximation Scheme*. Un problema $Pi$ appartenente a questa classe è descritto come segue:   
+*$ Pi (x in I_(Pi), epsilon > 1) "con" epsilon "tasso di approsimazione desiderato" $*
 
 #informalmente[
-  Algoritmi che prendono in input anche il tasso di approssimazione che vogliamo. Questi sono meglio degli algoritmi APX, dato che possiamo decidere noi quanto vogliamo (quindi anche meno della costante $alpha$).
+  Algoritmi che prendono in input anche il tasso di approssimazione che desideriamo, la soluzione prodotta si discosta di $epsilon$ da quella ottima. *$A in "PTAS"$ sono meglio degli algoritmi APX*, in quanto è possibile scegliere il tasso di approssimazione. Per $epsilon$ fissato otteniamo un $a-"APX"$ 
 ]
 
 #nota[
-  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon allora esplode il tempo necessario.
+  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon allora esplode il tempo necessario. *Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo esponenziale*.
 ]
 
 #attenzione[
-  Non è possibile chiedere l'ottimo, ma espsilon strettamente maggiore di 1
+  *Non è possibile chiedere l'ottimo*, *$epsilon > 1$*.
 ]
 
-/ FPTAS: Fully Polynomial-Time Approximation Scheme
-
-La crescita non è esponenziale su epsilon, ma è anche polinomiale sulla decrescita di espilon.
-
+/ FPTAS: *Fully Polynomial-Time Approximation Scheme*. 
+#attenzione[
+  A differenza degli algorimti in $"PTAS"$, un algorimto *$A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$*.
+]
 #nota[
-  Questi problemi sono quasi problemi PO.
+  Questi problemi sono quasi problemi apprtenenti a PO.
+]
+
+// TODO: Aggiungere disegno riassuntivo diagramma dei problemai 
+
+#let rect-label(width, height, fill, label, label-fill: white) = {
+  box(
+    width: width,
+    height: height,
+    radius: 5pt,
+    fill: fill,
+    stroke: 1.5pt + black,
+    align(center + horizon)[
+      #text(fill: label-fill, size: 16pt, weight: "bold")[#label]
+    ]
+  )
+}
+
+#box(width: 450pt, height: 350pt)[
+  // Colori meno saturi per una migliore accessibilità e leggibilità
+  #place(dx: 0pt, dy: 0pt)[
+    #rect-label(380pt, 250pt, rgb(100, 150, 200), "NPO")
+  ]
+  #place(dx: 30pt, dy: 30pt)[
+    #rect-label(320pt, 200pt, rgb(150, 180, 220), "APX")
+  ]
+  #place(dx: 60pt, dy: 60pt)[
+    #rect-label(260pt, 150pt, rgb(180, 200, 230), "PTAS")
+  ]
+  #place(dx: 90pt, dy: 90pt)[
+    #rect-label(200pt, 100pt, rgb(200, 220, 240), "FPTAS")
+  ]
+  #place(dx: 120pt, dy: 120pt)[
+    #rect-label(140pt, 50pt, rgb(220, 230, 245), "PO", label-fill: black)
+  ]
 ]
