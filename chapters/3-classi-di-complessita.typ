@@ -109,8 +109,6 @@ Un problema $Pi$ di decisione appartiene a NPc se:
 - Se si trova una soluzione polinomiale per SAT, allora dimostriamo che *$P="NP"$*
 - Se si trova un lower buond super-polinomiale per SAT, allora dimostriamo che *$P!="NP"$*
 ]
-//TODO fare disegno
-#image("../imgs/Complexity_classes.svg", width: 8cm)
 
 == Problemi di Ottimizzazione
 
@@ -365,12 +363,44 @@ Dati:
 Si dice che *$A$ è una $alpha$-approssimazione* sse $forall x in I_Pi$,
 *$ R_(A)(x) >= alpha, quad alpha >= 1 $*
 
-Questa cosa è il rapporto generalizzato per un algoritmo su tutti gli input.
+*Più alfa è grande* più *all'algoritmo è permesso* sbagliare, producendo una *soluzione che si discosta maggiormente dall'ottimo*. 
 
+=== Classe APX
 
-$ 1-"APX" = "PO" $
-$ "APX" = union_(alpha >= 1) alpha-"APX" $
+Si tratta di problemi di ottimizzazione approssimabili con un tasso entro una costante. Può essere definita come segue: 
+*$ "APX" = union_(alpha >= 1) alpha-"APX" $*
+
+#nota[
+  fissando $a=1$, otteniamo la classe $1-"APX" = P$
+]
+
 
 #informalmente[
   Ci saranno problemi "difficili" dove non potremo più approssimare ad una costate, ma anche l'approssimazione cresce col crescere dell'input
+]
+
+=== PTAS e FPTAS
+
+/ PTAS: Polynomial-Time Approximation Scheme. La crescita del tempo è esponenziale sul decrescere di epsilon.
+
+$ Pi (x in I_(Pi), epsilon > 1) $
+
+#informalmente[
+  Algoritmi che prendono in input anche il tasso di approssimazione che vogliamo. Questi sono meglio degli algoritmi APX, dato che possiamo decidere noi quanto vogliamo (quindi anche meno della costante $alpha$).
+]
+
+#nota[
+  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon allora esplode il tempo necessario.
+]
+
+#attenzione[
+  Non è possibile chiedere l'ottimo, ma espsilon strettamente maggiore di 1
+]
+
+/ FPTAS: Fully Polynomial-Time Approximation Scheme
+
+La crescita non è esponenziale su epsilon, ma è anche polinomiale sulla decrescita di espilon.
+
+#nota[
+  Questi problemi sono quasi problemi PO.
 ]
