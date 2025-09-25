@@ -211,26 +211,21 @@ Ovvero vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutt
   Si utilizza $y^*$ per indicare una soluzione ottima e $C^*(x)$ per indicare la funzione obiettivo calcolata sulla soluzione ottima.
 ]
 
-// TODO: spostare questo esempio nella sezione NPOc?
 #esempio[
-  *MaxSAT* (Versione di ottimizazzione di SAT)
+  *Problema dello Zaino (Knapsack)*
 
-  - $I_Pi$: formule booleane in CNF
-  - $"Amm"_(Pi)(x)$: assegnamenti di valori di verità per le variabili che compaiono in x
-  - $C_(Pi)(x, y)$: numero di clausole della formula $x in I_Pi$ rese vere da $y$
-  - $t_Pi = max$, il massimo numero di formule rese vere da $y$.
+  - $I_Pi$: insieme di $n$ oggetti con peso $w_i$ e valore $v_i$, capacità dello zaino $W$
+  - $"Amm"_(Pi)(I)$: sottoinsiemi di oggetti che rispettano il vincolo di peso
+    $ "Amm"_(Pi)(I) = {S subset.eq {1, 2, ..., n} : sum_(i in S) w_i <= W} $
+  - $C_(Pi)(I, S)$: valore totale degli oggetti selezionati
+    $ C_(Pi)(I, S) = sum_(i in S) v_i $
+  - $t_Pi = max$: massimizzare il valore
 
-  Se esistesse un algoritmo $A$ polinomiale per MaxSAT, allora si potrebbe usare per decidere SAT. Ma dato che $"SAT" in "NPc" -> "MaxSat" in "NPOc"$
-
-  #informalmente[
-    Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, potrebbe essere utile ricondursi a proprietà applicabili/non applicabili studiate sui problemi di decisione.
-  ]
+  L'obiettivo è trovare un sottoinsieme $S^*$ che massimizza il valore rispettando il vincolo di peso:
+  $ C_(Pi)(I, S^*) = max_(S in "Amm"_(Pi)(I)) sum_(i in S) v_i $
 
   #nota[
-    Ogni formula booleana in forma normale conguinta (CNF) è composta da:
-    - letterali: variabili o variabili negate,
-    - clausole: letterali in or,
-    - condizione logica: clausole legate in and tra di loro.
+    Come vedremo, è un problema di ottimizzazione "difficile".
   ]
 ]
 
@@ -319,6 +314,27 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   - Viene presa la funzione di costo min/max in base al tipo di problema
 
   Possibile in tempo polinomiale grazie ai vincoli imposti.
+]
+
+#esempio[
+  *MaxSAT* (Versione di ottimizazzione di SAT)
+
+  - $I_Pi$: formula booleane in CNF $phi$
+    #nota[
+      Una formula booleana in forma normale conguinta (CNF) è composta da:
+      - tante clausole, messe in _AND_ tra di loro
+      - ogni causa è composta da letterali (che possono essere negati), messi in _OR_ tra loro
+    ]
+  - $"Amm"_(Pi)(x)$: assegnamenti di valori di verità per le variabili che compaiono in x
+  - $C_(Pi)(x, y)$: numero di clausole della formula $x in I_Pi$ rese vere da $y$
+  - $t_Pi = max$, il massimo numero di formule rese vere da $y$.
+
+  Se esistesse un algoritmo $A$ polinomiale per MaxSAT, allora si potrebbe usare per decidere SAT.
+  Basterebbe controllare se il massimo numero di clausole risolvibili corrisponde al numero totale di formule.
+
+  #informalmente[
+    Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, spesso è utile ricondursi a proprietà applicabili/non applicabili rispetto ai problemi di decisione.
+  ]
 ]
 
 === Problema di Decisione Associato ad un Problema di Ottimizzazione
