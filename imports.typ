@@ -20,8 +20,21 @@
 #let attenzione(body) = { warning(title: "Attenzione")[#body] }
 #let informalmente(body) = { idea(title: "Informalmente", accent-color: green)[#body] }
 #let esempio(body) = { experiment(title: "Esempio", accent-color: purple)[#body] }
-#let teorema(title, body) = { task(title: title, accent-color: eastern)[#body] }
 #let dimostrazione(body) = { memo(title: "Dimostrazione")[#body] }
+
+#let teoremi-counter = counter("teorema")
+#let teorema(title, body) = {
+  teoremi-counter.step()
+  task(
+    title: title + "  " + emph("(THM " + context (teoremi-counter.display()) + ")"),
+    accent-color: eastern,
+  )[#body]
+}
+
+// link to theorem function
+#let link-teorema(label) = {
+  underline(link(label, "THM " + context (teoremi-counter.at(locate(label)).first())))
+}
 
 // first page and outline
 #let frontmatter(title, subtitle, authors) = {
@@ -71,4 +84,10 @@
     MAGARI GUARDATE ANCHE I \/\/TODO
   ]
   pagebreak()
+}
+
+#let todo = {
+  emoji.warning
+  [*TODO: questa sezione è in attesa di conferma, potrebbe non essere corretta/completa*]
+  emoji.warning
 }

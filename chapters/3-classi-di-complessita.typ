@@ -168,7 +168,7 @@ La classificazione effettuata sui problemi di decisione può essere applicata an
 === Classe PO
 
 #informalmente[
-  È l'equivalente della classe P per i problemi di ottimizzazione.
+  È l'equivalente della classe P.
 ]
 
 Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
@@ -184,7 +184,7 @@ Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo ri
 === Classe NPO
 
 #informalmente[
-  Equivalente alla classe NP.
+  È l'equivalente della classe NP.
 
   Tuttavia, il non determinismo è modellato in maniera diversa: in caso usassimo l'istruzione magica, ogni ramo di esecuzione terminerebbe con una soluzione NON binaria, ma "comporle" per trovare la migliore in termini di funzione obiettivo potrebbe non essere banale.
 
@@ -257,193 +257,191 @@ Da un problema $Pi$ di ottimizzazione vogliamo passare al problema $hat(Pi)$ di 
 - $(x, k) in I_hat(Pi) -> "yes" quad <==> quad C_(Pi)^*(x) >=_(<=) k$: l'output del problema di decisione è _Si_ solo se il risultato della funzione costo del problema di ottimizzazione è maggiore o minore rispetto alla soglia $k$ (in base al tipo $t_Pi$)
 
 #esempio[
-  Fissato $Pi ="MaxSat"$, definiamo il problema $hat(Pi)$ di decisione associato:
-  $ I_hat(Pi) = (I_Pi, k), quad I_Pi = "Formula CNF", quad k in bb(N) $
-  Il problema di decisione $hat(Pi)$ risponde alla seguente domanda: esiste un assegnamento che rende vere $>= k$ clausole della formula?
+  Fissato $Pi ="MaxSat"(phi)$, definiamo il problema $hat(Pi)$ di decisione associato:
+  $ I_hat(Pi) = (I_Pi, k), quad I_Pi = "Formula CNF" phi, quad k in bb(N) $
+  Il problema di decisione $hat("MaxSat")(phi, k)$ risponde alla seguente domanda: esiste un assegnamento che rende vere $>= k$ clausole della formula $phi$?
 ]
 
 #teorema("Teorema")[
-  Dato un problema di ottimizzazione $Pi$ e il corrispettivo problema di ottimizzazione $hat(Pi)$ associato:
+  Dato un problema di ottimizzazione $Pi$ e il corrispettivo problema di decisione $hat(Pi)$ associato:
   - Se $Pi in "PO", quad hat(Pi) in "P"$
   - Se $Pi in "NPO", quad hat(Pi) in "NP"$
-]
+] <teorema-problema-ottimizzazione-decisione>
 
 === Classe NPO-completi (NPOc)
 
-Dato un problema di ottimizzazione $Pi$ esso appartiene alla classe *$"NPOc"$* se:
-- *$Pi in "NPO"$*
-- *$hat(Pi) in "NPc"$*, il problema di decisione associato è NP-completo
+#informalmente[
+  È l'equivalente della classe NPc.
+]
+
+Un problema di ottimizzazione $Pi in "NPOc"$ se:
+- $Pi in "NPO"$: il problema è NPO
+- $hat(Pi) in "NPc"$: il problema di decisione associato è NP-completo
 
 #esempio[
+  #todo
+
+  // TODO: io non sono per nulla convinto da questo esempio
+
   $"MaxSat" in "NPOc"$, in quanto $hat("MaxSat") in "NPc"$. Se riuscissi a risolvere $"MaxSat"$ in tempo polinomiale, allora riuscirei anche a risolvere $hat("MaxSat")$. Basterebbe risolvere $"MaxSat"$ e ottenere il numero massimo di clausole soddisfacibili, diciamo $k_("opt")$, e poi confrontare tale numero con il $k$ dato in input al problema decisionale $hat("MaxSat")$.
 
+  // TODO: soprattutto da questa frase, se Pi è in NPO, come fa a essere risolvibile i tempo polnomiale?
   Questo dimostrerebbe che se un problema $Pi$ in $"NPO"$ è risolvibile in tempo polinomiale, allora il suo problema decisionale $hat(Pi)$ associato è in $P$.
 ]
 
 #teorema("Teorema")[
-  Sia $Pi$ un problema di ottimizzazione.
-  \ *Se $Pi in "NPOc"$, allora $Pi in.not "PO"$ a meno che $P = "NP"$*
-]
+  Sia $Pi$ un problema di ottimizzazione:
+  $ Pi in "NPOc" quad and quad Pi in "PO" quad -> quad "P" = "NP" $
+  O alternativamente:
+  $ Pi in "NPOc" quad -> quad Pi in.not "PO" quad "a meno che" quad "P" = "NP" $
 
-#dimostrazione[
-  *Assunzioni*:
-  - $Pi$ sia un problema di ottimizzazione di massimo $t_(Pi)=max$.
-  - $Pi in "NPOc"$
-  - $hat(Pi) in "NPc"$
+  #dimostrazione[
+    #nota[
+      Questa dimostrazione si basa su $t_Pi = max$, questa è un'assunzione _senza perdità di generalità_, ovvero una semplificazione che mostra solo uno dei casi possibili, ma la dimostrazione rimane esattamente uguale anche con gli altri casi possibili (ovvero $t_Pi = min$).
+    ]
 
-  *Per assurdo* suppongo che esista un algorimto *$A$ che risolva $Pi$ in tempo polinomiale*:
+    / Assunzioni:
+      - $Pi$: problema di ottimizzazione di massimizzazione
+      - $Pi in "NPOc"$: il problema è NPO completo
+      - $hat(Pi) in "NPc"$: il problema di decisione associato è NP completo (per #link-teorema(<teorema-problema-ottimizzazione-decisione>))
 
-  #let algo_diagram = diagram(
-    spacing: (10pt, 4em),
-    {
-      let (x, a, y) = ((0, 0), (3, 0), (6, 0))
+    Per assurdo supponiamo che esista un algorimto $A$ che risolva $Pi$, ovvero che calcola la soluzione ottima per tutti gli input $x in I_Pi$ in tempo *polinomiale*.
 
-      node(x, $x in I_Pi$)
-      node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-      node(y, $y^* "t.c" max{C_(Pi)(x,y^*)}$)
+    Consideriamo ora il *problema di decisione* associato $hat(Pi)$, definito come: $ I_hat(Pi) = (x,k) in I_Pi times bb(N) $
 
-      edge(x, a, "->")
-      edge(a, y, "->")
-    },
-  )
-  #align(center, algo_diagram)
-  Ovvero, $A$ calcola la soluzione ottima per un certo input $x$ in tempo polinomiale. \
-  Consideriamo ora il *problema di decisione associato $hat(Pi)$*, definito come:
-  - $I_hat(Pi)=(x,k) in I_Pi times bb(N)$
-  - Uso $A$ per calcolare la soluzione ottima $y^*$ e calcolo $C_(Pi)(x,y^*)$
-  - Se $C_(Pi)(x,y^*) cases(
-      >= k & "out yes" \
-      < k & "out no"
-    )$
-  Ma allora posso *risolvere il problema di decisione associato $hat(Pi)$ in tempo polinomiale*, *$hat(Pi) in P$*. Tuttavia abbiamo assunto che $hat(Pi) in "NPc"$, di conseguenza *è un assurdo*.\
-  *Non si può risolvere $hat(Pi)$ in tempo polinomiale a meno che $P="NP"$*
+    Possiamo usare l'algoritmo $A$ per decidere $hat(Pi)$ in tempo polinomiale:
+    - usiamo $A$ per calcolare la soluzione ottima $y^*$
+    - calcoliamo la funzione obiettivo $C_(Pi)(x,y^*)$
+    - $
+        C_(Pi)(x,y^*) space cases(
+          >= k "output Yes",
+          < k "output No",
+          delim: #none,
+        )
+      $
+
+    Ma allora è possibile risolvere il problema di decisione associato in tempo polinomiale: $hat(Pi) in P$.
+    Tuttavia abbiamo assunto che $Pi in "NPOc"$, quindi $hat(Pi) in "NPc"$ per #link-teorema(<teorema-problema-ottimizzazione-decisione>).
+
+    Questo è un assurdo, a meno che $"P" = "NP" qed$.
+  ]
 ]
 
 == Algoritmi di Approssimazione
 
-Come osservato in precedenza per i problemi di decisione, non si può "scendere a patti", essendo la risposta binaria o si sa quella giusta oppure no.
+Per i problemi di decisione, essendo la risposta binaria, non si può "scendere a patti". O si è in grado di calcolare la soluzione corretta oppure no.
 
-Per quanto riguarda i *problemi di ottimizzazione*, si può *scendere a compromessi per quanto riguarda l'ottimalità della soluzuione* trovata da un algorimto. Lo scopo di questa approssimazione è trovare degli algorimti in grado di produrre soluzioni più velocemente (polinomiali).
-Dunque, *gli algoritmi di approssimazione dato un certo input forniscono un output ammissibile ma sub-ottimo*.
+Per quanto riguarda i problemi di *ottimizzazione*, si possono fare dei compromessi riguardo l'*ottimalità* della soluzione trovata da un algorimto.
+Lo scopo di questa approssimazione è trovare degli algorimti in grado di produrre soluzioni più velocemente (polinomiali), ma fornendo un output ammissibile *sub-ottimo*.
 
 #attenzione[
-  *Non useremo mai euristiche*, ovvero approssimazioni che ogni tanto funzionano e ogni tanto no. *Siamo sempre in grado di determinare con precisione di quanto la soluziome sub-ottima si discosta dall'ottimo*.
+  Non useremo *mai euristiche*, ovvero approssimazioni che ogni tanto funzionano e ogni tanto no.
+  Siamo sempre in grado di determinare con precisione di quanto la soluziome sub-ottima si discosta dall'ottimo.
 ]
 
 === Rapporto di appossimazione
 
 Dati:
 - $Pi$ problema di ottimizzazione
-- $A$ algoritmo t.c:
-  #let algo_diagram = diagram(
-    spacing: (10pt, 4em),
-    {
-      let (x, a, y) = ((0, 0), (3, 0), (6, 0))
+- $A$ algoritmo che da un input $x in I_Pi$ restituisce un output $overline(y) in "Amm"_(Pi)(x)$
 
-      node(x, $x in I_Pi$)
-      node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-      node(y, $hat(y) in "Amm"_(Pi)(x)$)
+Definiamo $R_(A)(x)$ come il *rapporto di approssimazione*, che rappresenta quanto la soluzione $overline(y)$ si discosta dall'ottimo $y^*$:
 
-      edge(x, a, "->")
-      edge(a, y, "->")
-    },
+$ R_(A)(x) = max((c_(Pi)(x, overline(y))) / (c_(Pi)(x, y^*)), (c_(Pi)(x, y^*)) / (c_(Pi)(x, overline(y)))) >= 1 $
+$
+  R_(A)(x) = cases(
+    = 1 space "la soluzione" hat(y) "è ottima",
+    > 1 space "la soluzione" hat(y) "è sub-ottima"
   )
-  #align(center, algo_diagram)
+$
 
-- $R_(A)(x)$ ovvero il *rapporto di approssimazione*:
-
-  $ R_(A)(x) = max((c_(Pi)(x, overline(y))) / (c_(Pi)(x, y^*)), (c_(Pi)(x, y^*)) / (c_(Pi)(x, overline(y)))) >= 1 $
-
+#nota[
   Questo rapporto vale sia se il problema era un problema di massimizzazione che di minimizzazione.
-  $
-    R_A(x) = cases(
-       = 0 & "La soluzione" hat(y) "è ottima" \
-      >= 1 & "La soluzione" hat(y) "è sub-ottima"
-    )
-  $
+]
 
-  #esempio[
-    - se $R = 2$ e $t_(Pi) = max$, allora la soluzione sarà la metà dell'ottimo
-    - se $R = 2$ e $t_(Pi) = min$, allora la soluzione sarà il doppio dell'ottimo
-  ]
+#esempio[
+  - se $R = 2$ e $t_(Pi) = max$, allora la soluzione sarà la metà dell'ottimo
+  - se $R = 2$ e $t_(Pi) = min$, allora la soluzione sarà il doppio dell'ottimo
+]
 
-Si dice che *$A$ è una $alpha$-approssimazione* sse $forall x in I_Pi$,
-*$ R_(A)(x) >= alpha, quad alpha >= 1 $*
+Si dice che $A$ è una *$alpha$-approssimazione* se, per ogni input, il rapporto di approssimazione è al massimo $alpha$:
+$ forall x in I_Pi, quad R_(A)(x) <= alpha, quad alpha >= 1 $
 
-*Più alfa è grande* più *all'algoritmo è permesso* sbagliare, producendo una *soluzione che si discosta maggiormente dall'ottimo*.
+Più alfa è grande più all'algoritmo è *permesso sbagliare*, producendo una soluzione che si discosta maggiormente dall'ottimo.
 
 === Classe APX
 
-Si tratta di problemi di ottimizzazione approssimabili con un tasso entro una costante. Può essere definita come segue:
-*$ "APX" = union_(alpha >= 1) alpha-"APX" $*
+Problemi di ottimizzazione approssimabili con un tasso costante:
+$ "APX" = union.big_(alpha >= 1) alpha"-APX" $
 
 #nota[
-  fissando $a=1$, otteniamo la classe $1-"APX" = P$
+  fissando $alpha = 1$, otteniamo la classe $1"-APX" = "P"$
 ]
 
-#informalmente[
-  Ci saranno problemi "difficili" in cui approssimare ad una costate non sarà più possibile. Ovviamente richiedendo un approssimazione sempre più piccola i tempi possono crescere in maniera esponenziale
+#attenzione[
+  Ci saranno problemi "difficili" in cui approssimare ad una costate non sarà più possibile, ma sarà, ad esempio, necessario approssimare linearmente o logaritmicamente sulla grandezza dell'input.
 ]
 
 === PTAS e FPTAS
 
 $"PTAS"$ e $"FPTAS"$ sono delle sottoclassi di $"APX"$.
 
-*PTAS*: *Polynomial-Time Approximation Scheme*. Un problema $Pi$ appartenente a questa classe è descritto come segue:
-*$ Pi (x in I_(Pi), epsilon > 1) "con" epsilon "tasso di approsimazione desiderato" $*
+/ PTAS, Polynomial-Time Approximation Scheme: i problemi $Pi in "PTAS"$ prendono in input anche il tasso di approssimazione desiderato $epsilon$. La soluzione prodotta si discosta di $epsilon$ da quella ottima:
+$ Pi (x in I_(Pi), epsilon > 1) $
 
-#informalmente[
-  Algoritmi che prendono in input anche il tasso di approssimazione che desideriamo, la soluzione prodotta si discosta di $epsilon$ da quella ottima. *$A in "PTAS"$ sono meglio degli algoritmi APX*, in quanto è possibile scegliere il tasso di approssimazione. Per $epsilon$ fissato otteniamo un $a-"APX"$
+#attenzione[
+  Non è possibile chiedere l'ottimo, $epsilon > 1$.
 ]
 
 #nota[
-  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon allora esplode il tempo necessario. *Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo esponenziale*.
+  Gli algoritmi $in "PTAS"$ sono *meglio* degli algoritmi $in "APX"$, in quanto è possibile scegliere il tasso di approssimazione. Per $epsilon$ fissato otteniamo un $epsilon"-APX"$.
 ]
 
-#attenzione[
-  *Non è possibile chiedere l'ottimo*, *$epsilon > 1$*.
-]
-
-/ FPTAS: *Fully Polynomial-Time Approximation Scheme*.
-#attenzione[
-  A differenza degli algorimti in $"PTAS"$, un algorimto *$A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$*.
-]
 #nota[
-  Questi problemi sono quasi problemi apprtenenti a PO.
+  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon esplode il tempo di esecuzione. Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo *esponenziale*.
 ]
 
-#let rect-fill(width, height, fill) = {
-  box(
-    width: width,
-    height: height,
-    radius: 5pt,
-    fill: fill,
-    stroke: 1.5pt + black,
+/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algorimti in $"PTAS"$, un algorimto $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$.
+
+#nota[
+  Questi problemi sono *quasi* problemi di cui conosciamo l'ottimo, la classe $"FPTAS"$ è poco più grande di $"P"$.
+]
+
+// TODO: aggiungere caption
+#{
+  let rect-fill(width, height, fill) = {
+    box(
+      width: width,
+      height: height,
+      radius: 5pt,
+      fill: fill,
+      stroke: 1.5pt + black,
+    )
+  }
+
+  let label(text, x, y, fill) = locate(
+    loc => {
+      let rel-x = measure(100%, loc).width * x
+      let rel-y = measure(100%, loc).height * y
+      place(dx: rel-x, dy: rel-y)[
+        #text(fill: fill, size: 16pt, weight: "bold")[#text]
+      ]
+    },
   )
+
+  box(width: 300pt, height: 250pt)[
+    // Rettangoli di sfondo
+    #place(dx: 0pt, dy: 0pt)[#rect-fill(380pt, 250pt, rgb(100, 150, 200))]
+    #place(dx: 30pt, dy: 30pt)[#rect-fill(320pt, 200pt, rgb(150, 180, 220))]
+    #place(dx: 60pt, dy: 60pt)[#rect-fill(260pt, 150pt, rgb(180, 200, 230))]
+    #place(dx: 90pt, dy: 90pt)[#rect-fill(200pt, 100pt, rgb(200, 220, 240))]
+    #place(dx: 120pt, dy: 120pt)[#rect-fill(140pt, 50pt, rgb(220, 230, 245))]
+
+    // Etichette posizionate separatamente
+    #place(dx: 15pt, dy: 15pt)[#text(fill: black, size: 16pt, weight: "bold")[NPO]]
+    #place(dx: 45pt, dy: 45pt)[#text(fill: black, size: 16pt, weight: "bold")[APX]]
+    #place(dx: 75pt, dy: 75pt)[#text(fill: black, size: 16pt, weight: "bold")[PTAS]]
+    #place(dx: 105pt, dy: 105pt)[#text(fill: black, size: 16pt, weight: "bold")[FPTAS]]
+    #place(dx: 135pt, dy: 135pt)[#text(fill: black, size: 16pt, weight: "bold")[PO]]
+  ]
 }
-
-#let label(text, x, y, fill) = locate(
-  loc => {
-    let rel-x = measure(100%, loc).width * x
-    let rel-y = measure(100%, loc).height * y
-    place(dx: rel-x, dy: rel-y)[
-      #text(fill: fill, size: 16pt, weight: "bold")[#text]
-    ]
-  },
-)
-
-#box(width: 300pt, height: 250pt)[
-  // Rettangoli di sfondo
-  #place(dx: 0pt, dy: 0pt)[#rect-fill(380pt, 250pt, rgb(100, 150, 200))]
-  #place(dx: 30pt, dy: 30pt)[#rect-fill(320pt, 200pt, rgb(150, 180, 220))]
-  #place(dx: 60pt, dy: 60pt)[#rect-fill(260pt, 150pt, rgb(180, 200, 230))]
-  #place(dx: 90pt, dy: 90pt)[#rect-fill(200pt, 100pt, rgb(200, 220, 240))]
-  #place(dx: 120pt, dy: 120pt)[#rect-fill(140pt, 50pt, rgb(220, 230, 245))]
-
-  // Etichette posizionate separatamente
-  #place(dx: 15pt, dy: 15pt)[#text(fill: black, size: 16pt, weight: "bold")[NPO]]
-  #place(dx: 45pt, dy: 45pt)[#text(fill: black, size: 16pt, weight: "bold")[APX]]
-  #place(dx: 75pt, dy: 75pt)[#text(fill: black, size: 16pt, weight: "bold")[PTAS]]
-  #place(dx: 105pt, dy: 105pt)[#text(fill: black, size: 16pt, weight: "bold")[FPTAS]]
-  #place(dx: 135pt, dy: 135pt)[#text(fill: black, size: 16pt, weight: "bold")[PO]]
-]
