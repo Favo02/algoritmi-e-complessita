@@ -317,7 +317,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
 ]
 
 #esempio[
-  *MaxSAT* (Versione di ottimizazzione di SAT)
+  *MaxSAT* (Versione di ottimizzazione di SAT)
 
   - $I_Pi$: formula booleane in CNF $phi$
     #nota[
@@ -372,7 +372,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
 
   $"MaxSat" in "NPOc"$, in quanto $hat("MaxSat") in "NPc"$. Se riuscissi a risolvere $"MaxSat"$ in tempo polinomiale, allora riuscirei anche a risolvere $hat("MaxSat")$. Basterebbe risolvere $"MaxSat"$ e ottenere il numero massimo di clausole soddisfacibili, diciamo $k_("opt")$, e poi confrontare tale numero con il $k$ dato in input al problema decisionale $hat("MaxSat")$.
 
-  // TODO: soprattutto da questa frase, se Pi è in NPO, come fa a essere risolvibile i tempo polnomiale?
+  // TODO: soprattutto da questa frase, se Pi è in NPO, come fa a essere risolvibile in tempo polinomiale?
   Questo dimostrerebbe che se un problema $Pi$ in $"NPO"$ è risolvibile in tempo polinomiale, allora il suo problema decisionale $hat(Pi)$ associato è in $P$.
 ]
 
@@ -488,7 +488,7 @@ $ Pi (x in I_(Pi), epsilon > 1) $
   Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon esplode il tempo di esecuzione. Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo *esponenziale*.
 ]
 
-/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algoritmi in $"PTAS"$, un algoritmo $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$.
+/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algoritmi in $"PTAS"$, un algoritmo $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescita dell'approsimazione $epsilon$.
 
 #nota[
   Questi problemi sono *quasi* problemi di cui conosciamo l'ottimo, la classe $"FPTAS"$ è poco più grande di $"P"$.
