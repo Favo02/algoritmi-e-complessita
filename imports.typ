@@ -18,6 +18,7 @@
 //pseudocode
 #import "@preview/algorithmic:1.0.5"
 #import algorithmic: style-algorithm, algorithm-figure
+#show: style-algorithm
 
 // colored boxes
 #let nota(body) = { info(title: "Nota")[#body] }
