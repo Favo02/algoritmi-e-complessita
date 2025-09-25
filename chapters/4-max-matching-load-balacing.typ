@@ -197,3 +197,16 @@ La funzione FindAugmenting dato un certo matching $M$ cerca di trovare un cammin
 ==== Complessità Max-BiMatching
 
 *Complessità dell'algoritmio*: Il matching $M$ più grande è al massimo il numero lati, *il ciclo for viene eseguito $O(n)$ volte*. Di conseguenza la *complessità totale è $O(n*m)$*, $O(n^3)$ nel caso di clique. 
+
+== Problema del Perfect Matching
+
+Si tratta di un *problema di decisone*.
+
+#informalmente[
+  Dato un grafo vogliamo determinare se esiste un matching che coinvolge tutti i vertici (non ci possono essere single).
+]
+
+#teorema("Crollario")[
+  *Perfect Matching $in P$*\
+  *Basta utilizzare il problema di Max-Matching* $in "PO"$ e verificare se $|M| = "numero di vertici"$.
+]
