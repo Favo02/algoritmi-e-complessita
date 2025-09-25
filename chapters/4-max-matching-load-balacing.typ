@@ -210,3 +210,71 @@ Si tratta di un *problema di decisone*.
   *Perfect Matching $in P$*\
   *Basta utilizzare il problema di Max-Matching* $in "PO"$ e verificare se $|M| = "numero di vertici"$.
 ]
+
+== Problema di load balancing online
+
+#informalmente[
+  Dato un numero di macchine fissato e un numero di task (di durata nota), vogliamo andare ad assegnare i task alle macchine, in modo tale che *il tempo impiegato dalla macchina più carica sia il minore possibile*. \
+  Vogliamo dunque evitare di avere macchine in uno stato di idle persistente. \
+  Inoltre la *versione dell'algoritmo presentata è online*, ovvero il numero di task non è noto a priori. 
+]
+- Input:
+  - *$m in bb(N)^+$*, numero di macchine
+  - *$n in bb(N)^+$*, numero di task
+  - *$t_0, t_1, ..., t_(n-1) in bb(N)^+$*, $t_i$ è la *durata dell'i-esimo task*
+- $"Sol"_("amm")(x)$: *$underbrace((A_0, A_1, ..., A_(m-1)), "partizione") subset.eq underbrace(n,{0, dots, n-1}) $*, ovvero una partizione degli indici dei task nelle varie macchine
+- *$C_(Pi)(x)$*: $ underbrace(L_i = sum_(j in A_i) t_j,"Carico della macchina i"), quad L = max_(i in m)(L_i) = "span della soluzione" $
+$L$ è il carico della macchina con più lavoro. 
+- *$t_Pi$*: $min$
+
+#nota[
+  *La soluzione ottima assegnerebbe ad ogni macchina lo stesso carico*:
+  $ L = 1/m * sum_(i in t_n) t_i$
+]
+
+//TODO: Fare il disegno forse
+#esempio[
+  $m = 3, n = 8, t = [3, 1, 3, 1, 1, 4, 5, 1]$
+
+  - $"macchina" 0$: $[5, 1]$ = $6$ tempo
+  - $"macchina" 1$: $[3, 3, 1]$ = $7$ tempo
+  - $"macchina" 2$: $[1, 4, 1]$ = $6$ tempo
+  $ L = 7 $
+  Soluzione ottima (se le task fossero perfettamente divisibili): $ceil(19 / 3) = 7$, quindi questa soluzione (fatta intuitivamente) è quella ottima.
+]
+
+#teorema("Teorema")[
+  *$"LoadBalancing" in "NPOc"$*
+]
+
+#pagebreak()
+
+=== Greedy LoadBalancing [2-APX]
+
+#pseudocode(
+  [$A_i <- emptyset quad forall i in m$],
+  [$L_i <- 0 forall i in m$],
+  [*For* $j=0,1,2 dots, n-1$],
+  indent(
+    [$hat(i)<- underbrace("argmin",i in m) L_i$],
+    [#emph("Prendo l'indice della macchina più scarica")],
+    [$A_hat(i)<-A_hat(i) union {i}$],
+    [$L_hat(i)<-L_hat(i)+t_j$]
+  ),
+  [*End*],
+)
+
+#esempio[
+  $m = 3, n = 8, t = [3, 1, 3, 1, 1, 4, 5, 1]$
+
+  - $"macchina" 0$: $[3, 4]$ = $"tempo" 7$
+  - $"macchina" 1$: $[1, 1, 1, 5]$ =  $"tempo" 8$
+  - $"macchina" 2$: $[3, 1]$ = $"tempo" 4$
+  $ L = 8 $
+
+  La soluzione seguendo l'algorimto non è ottima
+]
+
+=== Complessità di Greedy LoadBalancing
+
+L'algorimto proposto è polinomiale: *$O(m log n)$*, utilizzando un heap.
