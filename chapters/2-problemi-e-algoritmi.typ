@@ -163,41 +163,42 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
 Possiamo creare il seguente insieme:
 
-#{
-  set text(weight: "bold")
-  let stroke_alpha = 150
-  let fill_alpha = 50
-  let big_dot = text(20pt)[$dot$]
+#figure(
+  {
+    set text(weight: "bold")
+    let stroke_alpha = 150
+    let fill_alpha = 50
+    let big_dot = text(20pt)[$dot$]
 
-  let complexity_classes = cetz.canvas({
-    import cetz.draw: *
+    let complexity_classes = cetz.canvas({
+      import cetz.draw: *
 
-    // External box
-    rect((0, 0), (rel: (10, 6)), name: "superset")
-    content("superset.north-east", [$2^2^*$], anchor: "south-west")
+      // External box
+      rect((0, 0), (rel: (10, 6)), name: "superset")
+      content("superset.north-east", [$2^2^*$], anchor: "south-west")
 
-    // Non decidibili
-    rect(
-      "superset.south-west",
-      (rel: (4, 4)),
-      stroke: rgb(70, 70, 70, stroke_alpha),
-      fill: rgb(70, 70, 70, fill_alpha),
-      name: "non_decidibili",
-    )
-    content("non_decidibili", [Non decidibili])
+      // Non decidibili
+      rect(
+        "superset.south-west",
+        (rel: (4, 4)),
+        stroke: rgb(70, 70, 70, stroke_alpha),
+        fill: rgb(70, 70, 70, fill_alpha),
+        name: "non_decidibili",
+      )
+      content("non_decidibili", [Non decidibili])
 
-    // Invisible layout anchor element
-    circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+      // Invisible layout anchor element
+      circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
 
-    content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
-    content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
-    content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
-  })
+      content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
+      content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
+      content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
+    })
 
-  align(center, block(breakable: false, complexity_classes))
-}
-
-// TODO: aggiungere caption
+    align(center, block(breakable: false, complexity_classes))
+  },
+  caption: [Rappresentazione dei problemi decidibili e non decidibili],
+)
 
 / Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un'algoritmo che è in grado di decidere un dato elemento.
   #informalmente[
@@ -304,72 +305,3 @@ Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia l
 #nota[
   Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
 ]
-
-// TODO: spostare questo diagramma nella sezione giusta
-#{
-  set text(weight: "bold")
-  let stroke_alpha = 150
-  let fill_alpha = 50
-
-  let complexity_classes = cetz.canvas({
-    import cetz.draw: *
-
-    grid(
-      (0, 0),
-      (rel: (13, 8)),
-      help-lines: true,
-    )
-
-    // External box
-    rect((0, 0), (rel: (13, 8)), name: "superset")
-    content("superset.north-east", [$2^2^*$], anchor: "south-west")
-
-    // Non decidibili
-    rect(
-      "superset.south-west",
-      (rel: (4, 4)),
-      stroke: rgb(70, 70, 70, stroke_alpha),
-      fill: rgb(70, 70, 70, fill_alpha),
-      name: "non_decidibili",
-    )
-    content("non_decidibili", [Non decidibili])
-
-    // Invisible layout anchor element
-    circle("superset", radius: 2, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
-
-    // NP circle
-    circle(
-      "center_anchor.east",
-      radius: 3.5,
-      stroke: rgb(255, 0, 0, stroke_alpha),
-      fill: rgb(255, 0, 0, fill_alpha),
-      name: "NP",
-    )
-    content("NP.north-west", [NP], anchor: "south-east")
-
-    // P circle
-    circle(
-      "NP.south",
-      anchor: "south",
-      radius: 2,
-      stroke: rgb(0, 255, 0, stroke_alpha),
-      fill: rgb(0, 255, 0, fill_alpha),
-      name: "P",
-    )
-    content("P.north-east", [P], anchor: "south-west")
-
-    // NP complete
-    circle(
-      "NP.north-west",
-      anchor: "north-west",
-      radius: 0.8,
-      stroke: rgb(0, 0, 255, stroke_alpha),
-      fill: rgb(0, 0, 255, fill_alpha),
-      name: "NP_complete",
-    )
-    content("NP_complete.east", [NPC], anchor: "north-west")
-    content("NP_complete", text(style: "italic")[#text(20pt)[$dot$] SAT])
-  })
-
-  align(center, block(breakable: false, complexity_classes))
-}

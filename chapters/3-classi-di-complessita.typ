@@ -119,6 +119,77 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   ]
 ]
 
+#figure(
+  {
+    set text(weight: "bold")
+    let stroke_alpha = 150
+    let fill_alpha = 50
+
+    let complexity_classes = cetz.canvas({
+      import cetz.draw: *
+
+      grid(
+        (0, 0),
+        (rel: (13, 8)),
+        help-lines: true,
+      )
+
+      // External box
+      rect((0, 0), (rel: (13, 8)), name: "superset")
+      content("superset.north-east", [$2^2^*$], anchor: "south-west")
+
+      // Non decidibili
+      rect(
+        "superset.south-west",
+        (rel: (4, 4)),
+        stroke: rgb(70, 70, 70, stroke_alpha),
+        fill: rgb(70, 70, 70, fill_alpha),
+        name: "non_decidibili",
+      )
+      content("non_decidibili", [Non decidibili])
+
+      // Invisible layout anchor element
+      circle("superset", radius: 2, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+
+      // NP circle
+      circle(
+        "center_anchor.east",
+        radius: 3.5,
+        stroke: rgb(255, 0, 0, stroke_alpha),
+        fill: rgb(255, 0, 0, fill_alpha),
+        name: "NP",
+      )
+      content("NP.north-west", [NP], anchor: "south-east")
+
+      // P circle
+      circle(
+        "NP.south",
+        anchor: "south",
+        radius: 2,
+        stroke: rgb(0, 255, 0, stroke_alpha),
+        fill: rgb(0, 255, 0, fill_alpha),
+        name: "P",
+      )
+      content("P.north-east", [P], anchor: "south-west")
+
+      // NP complete
+      circle(
+        "NP.north-west",
+        anchor: "north-west",
+        radius: 0.8,
+        stroke: rgb(0, 0, 255, stroke_alpha),
+        fill: rgb(0, 0, 255, fill_alpha),
+        name: "NP_complete",
+      )
+      content("NP_complete.east", [NPc], anchor: "north-west")
+      content("NP_complete", text(style: "italic")[#text(20pt)[$dot$] SAT])
+    })
+
+    align(center, block(breakable: false, complexity_classes))
+  },
+  caption: "Classi di complessità per problemi di decisione",
+)
+
 == Problemi di Ottimizzazione
 
 Si tratta di una famiglia speciale di problemi (come quelli di decisione).
@@ -407,41 +478,73 @@ $ Pi (x in I_(Pi), epsilon > 1) $
   Questi problemi sono *quasi* problemi di cui conosciamo l'ottimo, la classe $"FPTAS"$ è poco più grande di $"P"$.
 ]
 
-// TODO: aggiungere caption
-#{
-  let rect-fill(width, height, fill) = {
-    box(
-      width: width,
-      height: height,
-      radius: 5pt,
-      fill: fill,
-      stroke: 1.5pt + black,
-    )
-  }
+#figure(
+  {
+    set text(weight: "bold")
+    let stroke_alpha = 180
+    let fill_alpha = 60
 
-  let label(text, x, y, fill) = locate(
-    loc => {
-      let rel-x = measure(100%, loc).width * x
-      let rel-y = measure(100%, loc).height * y
-      place(dx: rel-x, dy: rel-y)[
-        #text(fill: fill, size: 16pt, weight: "bold")[#text]
-      ]
-    },
-  )
+    let optimization_classes = cetz.canvas({
+      import cetz.draw: *
 
-  box(width: 300pt, height: 250pt)[
-    // Rettangoli di sfondo
-    #place(dx: 0pt, dy: 0pt)[#rect-fill(380pt, 250pt, rgb(100, 150, 200))]
-    #place(dx: 30pt, dy: 30pt)[#rect-fill(320pt, 200pt, rgb(150, 180, 220))]
-    #place(dx: 60pt, dy: 60pt)[#rect-fill(260pt, 150pt, rgb(180, 200, 230))]
-    #place(dx: 90pt, dy: 90pt)[#rect-fill(200pt, 100pt, rgb(200, 220, 240))]
-    #place(dx: 120pt, dy: 120pt)[#rect-fill(140pt, 50pt, rgb(220, 230, 245))]
+      grid(
+        (0, 0),
+        (rel: (12, 8)),
+        help-lines: true,
+      )
 
-    // Etichette posizionate separatamente
-    #place(dx: 15pt, dy: 15pt)[#text(fill: black, size: 16pt, weight: "bold")[NPO]]
-    #place(dx: 45pt, dy: 45pt)[#text(fill: black, size: 16pt, weight: "bold")[APX]]
-    #place(dx: 75pt, dy: 75pt)[#text(fill: black, size: 16pt, weight: "bold")[PTAS]]
-    #place(dx: 105pt, dy: 105pt)[#text(fill: black, size: 16pt, weight: "bold")[FPTAS]]
-    #place(dx: 135pt, dy: 135pt)[#text(fill: black, size: 16pt, weight: "bold")[PO]]
-  ]
-}
+      // NPO - outermost circle (red)
+      circle(
+        (6, 4),
+        radius: 3.8,
+        stroke: rgb(220, 50, 50, stroke_alpha),
+        fill: rgb(220, 50, 50, fill_alpha),
+        name: "NPO",
+      )
+      content("NPO.north", [NPO], anchor: "north")
+
+      // APX circle (orange)
+      circle(
+        (6, 4),
+        radius: 3.2,
+        stroke: rgb(255, 140, 0, stroke_alpha),
+        fill: rgb(255, 140, 0, fill_alpha),
+        name: "APX",
+      )
+      content("APX.north", [APX], anchor: "north")
+
+      // PTAS circle (yellow)
+      circle(
+        (6, 4),
+        radius: 2.4,
+        stroke: rgb(255, 215, 0, stroke_alpha),
+        fill: rgb(255, 215, 0, fill_alpha),
+        name: "PTAS",
+      )
+      content("PTAS.north", [PTAS], anchor: "north")
+
+      // FPTAS circle (light green)
+      circle(
+        (6, 4),
+        radius: 1.6,
+        stroke: rgb(144, 238, 144, stroke_alpha),
+        fill: rgb(144, 238, 144, fill_alpha),
+        name: "FPTAS",
+      )
+      content("FPTAS.north", [FPTAS], anchor: "north")
+
+      // PO - innermost circle (green)
+      circle(
+        (6, 4),
+        radius: 0.8,
+        stroke: rgb(50, 205, 50, stroke_alpha),
+        fill: rgb(50, 205, 50, fill_alpha),
+        name: "PO",
+      )
+      content("PO.north", [PO], anchor: "north")
+    })
+
+    align(center, block(breakable: false, optimization_classes))
+  },
+  caption: "Classi di complessità per problemi di ottimizzazione",
+)
