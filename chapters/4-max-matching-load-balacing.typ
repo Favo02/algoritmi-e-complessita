@@ -15,11 +15,11 @@ Chiamato anche problema dei matrimoni.
 Formalmente, possiamo definire il problema Max-Matching come segue: 
 - *$I_Pi$* = Grafo non orientato *$G(V,E)$*
 - *$"Sol"_("amm")$* = *$ M subset.eq E "t.c" forall x in V "al massimo un lato di" M "è incidente su" x$*. Ovvero un sottoinsieme di lati tale che ogni vertice partecia al massimo ad una coppia. 
-- *$C_Pi$* = $|M|$
+- *$C_Pi$* = $|M|$, numero di coppie.
 - *$t_Pi = max$* 
 
 #attenzione[
-  La soluzione presentata è *valida solo per grafi bipartiti*. Ovvero grafi in cui esistono solamente due tipi di vertici che si possono solamente relazionare con il tipo opposto (uomini $<->$ donne). La versione che vedremo è più semplice e prende il nome di *Max Bi-Matching*,
+  La soluzione presentata è *valida solo per grafi bipartiti*. Ovvero grafi in cui esistono solamente due tipi di vertici che si possono solamente relazionare con il tipo opposto (uomini $<->$ donne). Questa variante prende il nome di *Max Bi-Matching*.
 ]
 
 #teorema("Teorema")[
@@ -50,7 +50,7 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
 #dimostrazione()[
   Sia $M^'$ un matching più grande di $M$ t.c $|M^'| > |M|$
 
-  Effettuo la differenza simmetrica $Delta$:
+  Consideriamo la differenza simmetrica $Delta$:
   $ X = M Delta M^'
   = (M / M^') union (M' / M) $
   Ovvero $X$ contiene tutto ciò che non c'è in $M^' sect M$.
@@ -101,26 +101,102 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
   ]
 
   #teorema("Osservazione 3")[
-    Come conseguenza dell'osservazione2, *se guardo solo i lati di $X$, i vertici hanno solo grado $0,1,2$*.
+    Una conseguenza dell'osservazione 2 e che *guardando solo i lati di $X$, i vertici possono avere solo grado $0,1,2$*.
 
     La situazione peggiore è quando ho un ciclo: 
     //TODO: fare disegno del ciclo di punti
 
-    Tuttavia, *se ci sono cicli sono fatti da un numero pari di punti*: metà $in M^'/M$ e metà $in M/M^'$. 
+    Tuttavia, *se sono presenti dei cicli sono costituiti da un numero pari di punti*: metà $in M^'/M$ e metà $in M/M^'$. 
   ]
 
   #teorema("Osservazione 4")[
-    Per l'osservazione1 è possibile affermare che *non ci sono solo cicli*. Dato che un ciclo brucia lo stesso numero di lati per $M$ e $M^'$ *ci deve essere almeno un cammino*, in quanto $|M^'| > |M|$. 
+    Per l'osservazione 1 è possibile affermare che all'interno del grafo *non vi sono solo cicli*. Dato che un ciclo brucia lo stesso numero di lati per $M$ e $M^'$ *ci deve essere almeno un cammino*, in quanto $|M^'| > |M|$. 
   ]
     
   #teorema("Osservazione 5")[
-    *Ci deve essere almeno un cammino con più lati di $M^'/M$ rispetto ai lati di $M/M^'$*. Tale cammino deve iniziare e terminate con lati $in M^'/M$, dove i lati iniziale e finale sono vuoti.
+    Una conseguenza dell'osservazione 4 è che *ci deve essere almeno un cammino con più lati di $M^'/M$ rispetto ai lati di $M/M^'$*. Tale cammino deve iniziare e terminate con lati $in M^'/M$ (in quanto $|M^'|>|M|$), dove i vertici iniziale e finale devono essere esposti in $M$: 
+
+    #box(width: 500pt, height: 40pt)[
+      #place(dx: 0pt, dy: 10pt)[
+        #line(start: (100pt, 0pt), end: (150pt, 0pt), stroke: 1.0pt + red)
+        #line(start: (150pt, -12pt), end: (200pt, -12pt), stroke: 1.0pt + black)
+        #line(start: (200pt, -24pt), end: (250pt, -25pt), stroke: 1.0pt + red)
+        #line(start: (250pt, -38pt), end: (300pt, -38pt), stroke: 1.0pt + black)
+        #line(start: (300pt, -50pt), end: (350pt, -50pt), stroke: 1.0pt + red)
+      ]
+
+      #draw-point-with-label(100pt, 10pt, "ini")
+      #draw-point-with-label(150pt, 10pt, "")
+      #draw-point-with-label(200pt, 10pt, "")
+      #draw-point-with-label(250pt, 10pt, "")
+      #draw-point-with-label(300pt, 10pt, "")
+      #draw-point-with-label(350pt, 10pt, "fin")
+ 
+      #place(dx: 105pt, dy: 20pt)[
+        #text($L_1 in M^'/M$)
+      ]
+      #place(dx: 155pt, dy: 20pt)[
+        #text($L_2 in M/M^'$)
+      ]
+      #place(dx: 210pt, dy: 20pt)[
+        #text($L_3 in M^'/M$)
+      ]
+      #place(dx: 255pt, dy: 20pt)[
+        #text($L_4 in M/M^'$)
+      ]
+      #place(dx: 300pt, dy: 20pt)[
+        #text($L_5 in M^'/M$)
+      ]
+    ]
+
+    Il cammino così descritto rispecchia esattamente *la definizone di cammino aumentante*.
   ]
 
-
-
-
 ]
+
+=== Algoritmo Max Bi-Matching
+
+```pseudocode
+pub fn main() {
+    println!("Hello, world!");
+}
+```
+
+#algorithm-figure(
+  "Binary Search",
+  vstroke: .5pt + luma(200),
+  {
+    import algorithmic: *
+    Procedure(
+      "Binary-Search",
+      ("A", "n", "v"),
+      {
+        Comment[Initialize the search range]
+        Assign[$l$][$1$]
+        Assign[$r$][$n$]
+        LineBreak
+        While(
+          $l <= r$,
+          {
+            Assign([mid], FnInline[floor][$(l + r) / 2$])
+            IfElseChain(
+              $A ["mid"] < v$,
+              {
+                Assign[$l$][$"mid" + 1$]
+              },
+              [$A ["mid"] > v$],
+              {
+                Assign[$r$][$"mid" - 1$]
+              },
+              Return[mid],
+            )
+          },
+        )
+        Return[*null*]
+      },
+    )
+  }
+)
 
 
 
