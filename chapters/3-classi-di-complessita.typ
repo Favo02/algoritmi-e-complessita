@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Classi di Complessità
+= Classi di Complessità <classi-complessita>
 
 Studiando la complessità strutturale dei problemi, possiamo andare a suddividerli in diverse famiglie, che prendono il nome di classi di complessità.
 
@@ -10,11 +10,11 @@ Studiando la complessità strutturale dei problemi, possiamo andare a suddivider
   - *Super-polinomiale*
 ]
 
-== Problemi di Decisione
+== Problemi di Decisione <problemi-decisione>
 
 Andremo a classificare i problemi di decisione in tre classi: *P*, *NP* e *NP completi*.
 
-=== Classe P
+=== Classe P <classe-p>
 
 Insieme dei problemi di decisione che ammettono un algoritmo *polinomiale* che li risolve.
 
@@ -26,11 +26,11 @@ Per determinare l'appartenenza (o meno) di un problema a questa classe dobbiamo 
   Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema di $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"Ordinamento" in "P"$*.
 ]
 
-=== Classe NP
+=== Classe NP <classe-np>
 
 Insieme dei problemi $Pi$ di decisione che ammettono un algoritmo *polinomiale non deterministico* che li risolve.
 
-==== Algoritmo non deterministico
+==== Algoritmo non deterministico <algoritmo-non-deterministico>
 
 Algoritmo che può utilizzare l'istruzione "$X = space ?$", che permette la biforcazione dell'esecuzione:
 - primo ramo: assegna $X = 0$
@@ -59,7 +59,7 @@ Un algoritmo non deterministico è *simulabile* attraverso diverse tecniche (ad 
   ]
 ]
 
-=== Problema $"P" eq.quest "NP"$
+=== Problema $"P" eq.quest "NP"$ <problema-p-vs-np>
 
 Possiamo osservare che *$P subset.eq "NP"$*: basta non utilizzare l'istruzione magica negli algoritmi.
 
@@ -69,7 +69,7 @@ Tuttavia non è nota con certezza la natura dell'inclusione, ovvero se $P subset
   Ad oggi l'_ipotesi_ universalmente accettata è che *$P != "NP"$* (assunzione che verrà fatta durante tutto il corso).
 ]
 
-=== Riduzione in tempo polinomiale
+=== Riduzione in tempo polinomiale <riduzione-tempo-polinomiale>
 
 Siano $Pi_1, Pi_2 subset.eq 2^*$ due problemi di decisione, allora una riduzione polinomiale di $Pi_1$ a $Pi_2$ è una funzione $f$ che *trasforma* in tempo *polinomiale* un'istanza di $Pi_1$ ad un'istanza di $Pi_2$, ottenendo lo stesso risultato:
 - $f: 2^* -> 2^*$, calcolabile in tempo polinomiale
@@ -81,13 +81,13 @@ L'idea è dare un *ordine di difficoltà*. Se posso trasformare un problema $Pi_
 #teorema("Proprietà")[
   Se $Pi_1$ non è più difficile di $Pi_2$ e $Pi_2 in "P"$, allora anche $Pi_1 in "P"$:
   $ Pi_1 <=_p Pi_2, quad Pi_2 in P quad ==> quad Pi_1 in P $
-]
+] <teorema-proprieta-riduzione>
 
 #informalmente[
   Se trovo un algoritmo polinomiale per $Pi_2$, lo trovo anche per $Pi_1$, dato che posso trasformare gli input di $Pi_1$ in quelli di $Pi_2$. L'overhead di trasformazione è comunque polinomiale, quindi trascurabile.
 ]
 
-=== Classe NP-completi (NPc)
+=== Classe NP-completi (NPc) <classe-np-completi>
 
 Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *ogni* altro problema NP è *riducibile* in tempo polinomiale a $Pi$:
 + $Pi in "NP"$
@@ -107,7 +107,7 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
     La cosa interessante non è che il problema NPc sia SAT, ma che questi problemi "più difficili in assoluto" esistano.
     Tutti i problemi NP-completi sono equivalenti in termini di difficoltà computazionale.
   ]
-]
+] <teorema-cook>
 
 #teorema("Corollario Teorema di Cook")[
   $ "SAT" in P quad <==> quad P = "NP" $
@@ -117,7 +117,7 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
     - Se si trova una soluzione polinomiale per SAT, allora dimostriamo che *$P = "NP"$*, dato che possiamo ricondurvi ogni altro problema NP
     - Se si trova un lower bound super-polinomiale per SAT, allora dimostriamo che *$P != "NP"$*, dato che non possono esistere problemi più difficili
   ]
-]
+] <teorema-corollario-cook>
 
 #figure(
   {
@@ -190,7 +190,7 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   caption: "Classi di complessità per problemi di decisione",
 )
 
-== Problemi di Ottimizzazione
+== Problemi di Ottimizzazione <problemi-ottimizzazione>
 
 Si tratta di una famiglia speciale di problemi (come quelli di decisione).
 
@@ -231,7 +231,7 @@ Ovvero vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutt
 
 La classificazione effettuata sui problemi di decisione può essere applicata anche ai problemi di ottimizzazione, suddividendo i problemi in base alla loro complessità strutturale.
 
-=== Classe PO
+=== Classe PO <classe-po>
 
 #informalmente[
   È l'equivalente della classe P.
@@ -247,7 +247,7 @@ Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo ri
   La classe $"PO"$ è molto rara, sopratutto in presenza di numerosi vincoli.
 ]
 
-=== Classe NPO
+=== Classe NPO <classe-npo>
 
 #informalmente[
   È l'equivalente della classe NP.
@@ -337,7 +337,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   ]
 ]
 
-=== Problema di Decisione Associato ad un Problema di Ottimizzazione
+=== Problema di Decisione Associato ad un Problema di Ottimizzazione <problema-decisione-associato>
 
 Da un problema $Pi$ di ottimizzazione vogliamo passare al problema $hat(Pi)$ di decisione associato:
 - $I_hat(Pi) = I_Pi times bb(N)$: l'input del problema di decisione sono delle coppie formate dall'input del problema di ottimizzazione associato e un parametro intero $k$
@@ -355,7 +355,7 @@ Da un problema $Pi$ di ottimizzazione vogliamo passare al problema $hat(Pi)$ di 
   - Se $Pi in "NPO", quad hat(Pi) in "NP"$
 ] <teorema-problema-ottimizzazione-decisione>
 
-=== Classe NPO-completi (NPOc)
+=== Classe NPO-completi (NPOc) <classe-npo-completi>
 
 #informalmente[
   È l'equivalente della classe NPc.
@@ -412,9 +412,9 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
 
     Questo è un assurdo, a meno che $"P" = "NP" qed$.
   ]
-]
+] <teorema-npoc-po-implica-p-np>
 
-== Algoritmi di Approssimazione
+== Algoritmi di Approssimazione <algoritmi-approssimazione>
 
 Per i problemi di decisione, essendo la risposta binaria, non si può "scendere a patti". O si è in grado di calcolare la soluzione corretta oppure no.
 
@@ -426,7 +426,7 @@ Lo scopo di questa approssimazione è trovare degli algoritmi in grado di produr
   Siamo sempre in grado di determinare con precisione di quanto la soluzione sub-ottima si discosta dall'ottimo.
 ]
 
-=== Rapporto di approssimazione
+=== Rapporto di approssimazione <rapporto-approssimazione>
 
 Dati:
 - $Pi$ problema di ottimizzazione
@@ -456,7 +456,7 @@ $ forall x in I_Pi, quad R_(A)(x) <= alpha, quad alpha >= 1 $
 
 Più alfa è grande più all'algoritmo è *permesso sbagliare*, producendo una soluzione che si discosta maggiormente dall'ottimo.
 
-=== Classe APX
+=== Classe APX <classe-apx>
 
 Problemi di ottimizzazione approssimabili con un tasso costante:
 $ "APX" = union.big_(alpha >= 1) alpha"-APX" $
@@ -469,7 +469,7 @@ $ "APX" = union.big_(alpha >= 1) alpha"-APX" $
   Ci saranno problemi "difficili" in cui approssimare ad una costate non sarà più possibile, ma sarà, ad esempio, necessario approssimare linearmente o logaritmicamente sulla grandezza dell'input.
 ]
 
-=== PTAS e FPTAS
+=== Classi PTAS e FPTAS <classi-ptas-fptas>
 
 $"PTAS"$ e $"FPTAS"$ sono delle sottoclassi di $"APX"$.
 
