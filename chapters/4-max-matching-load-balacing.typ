@@ -114,7 +114,7 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
   ]
     
   #teorema("Osservazione 5")[
-    Ci deve essere kkkkkkk
+    *Ci deve essere almeno un cammino con più lati di $M^'/M$ rispetto ai lati di $M/M^'$*. Tale cammino deve iniziare e terminate con lati $in M^'/M$, dove i lati iniziale e finale sono vuoti.
   ]
 
 
