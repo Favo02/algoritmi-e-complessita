@@ -30,11 +30,15 @@
     #text(3em)[*#title*]\
     #text(1.5em)[#subtitle]
 
-    #authors.map(author => [
-      #link("https://github.com/" + author.at(1))[
-        #text(1.5em, author.at(0))
-      ]
-    ]).join([ -- ])\
+    #(
+      authors
+        .map(author => [
+          #link("https://github.com/" + author.at(1))[
+            #text(1.5em, author.at(0))
+          ]
+        ])
+        .join([ -- ])
+    )\
 
     #text("Ultima modifica:")
     #datetime.today().display("[day]/[month]/[year]")
@@ -44,7 +48,7 @@
 
   outline(
     title: "Indice",
-    indent: auto
+    indent: auto,
   )
 }
 

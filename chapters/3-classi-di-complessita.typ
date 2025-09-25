@@ -2,10 +2,10 @@
 
 = Classi di Complessità
 
-Studiando la complessità strutturale dei problemi, possiamo andare a suddividerli in diverse famiglie, esse prendono il nome di classi di complessità.
+Studiando la complessità strutturale dei problemi, possiamo andare a suddividerli in diverse famiglie, che prendono il nome di classi di complessità.
 
 #informalmente[
-  Dati due algoritmi che impiegano $O(n^(1.81))$ e $O(n^(1.61))$ per risolvere un problema $Pi$, ai fini del corso essi sono equiparabili. Ci basterà sapere se il tempo di un algoritmo è:
+  Dati due algoritmi che impiegano $O(n^(1.81))$ e $O(3 n^(1.61))$ per risolvere un problema $Pi$, ai fini del corso sono equiparabili. Ci basterà sapere se il tempo di un algoritmo è:
   - *Polinomiale*
   - *Super-polinomiale*
 ]
@@ -16,126 +16,138 @@ Andremo a classificare i problemi di decisione in tre classi: *P*, *NP* e *NP co
 
 === Classe P
 
-Insieme dei problemi di decisione che *ammettono un algoritmo polinomiale* che li risolve.
-Per determinare l'appartenenza (o meno) di un problema a questa classe dobbdiamo dimostrare almeno una tra le seguenti condizioni:
-- *L'upper bound di $Pi$ deve essere riconducibile ad un polinomio* (esiste un algoritmo $A$ che risolve $Pi$ in tempo polinomiale) *$=> Pi in P$*.
-- Dimostrare che il *lower bound* di $Pi$ *sia superpolinomiale* *$=> Pi in.not P$*
+Insieme dei problemi di decisione che ammettono un algoritmo *polinomiale* che li risolve.
 
+Per determinare l'appartenenza (o meno) di un problema a questa classe dobbiamo dimostrare almeno una tra le seguenti condizioni:
+- *$Pi in P$*: l'_upper bound_ di $Pi$ deve essere riconducibile ad un polinomio (esiste un algoritmo $A$ che risolve $Pi$ in tempo polinomiale)
+- *$Pi in.not P$*: dimostrare che il _lower bound_ di $Pi$ sia superpolinomiale
 
 #esempio[
-  Problema *SAT*: data una formula booleana, decidere se esiste almeno un assegnamento di variabili per il quale la formula risulta vera.
-
-  $ (x_1 or not x_2) and (x_4 or x_5 or x_6) $
-
-  Al momento è *ignoto lo status di SAT*, non si sa se $"SAT" in P$ o $"SAT" in.not P$. Non si conoscono né algoritmi lower buond super-polinomiali, né algoritmi di soluzione polinomiali.
+  Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema di $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"BubbleSort" in "P"$*.
 ]
 
 === Classe NP
 
-Insieme dei problemi $Pi$ di decisione che *ammettono un algoritmo polinomiale non deterministico*.
+Insieme dei problemi $Pi$ di decisione che ammettono un algoritmo *polinomiale non deterministico* che li risolve.
+
+==== Algoritmo non deterministico
+
+Algoritmo che può utilizzare l'istruzione "$X = space ?$", che permette la biforcazione dell'esecuzione:
+- primo ramo: assegna $X = 0$
+- secondo ramo: assegna $X = 1$
+
+Dato che è un problema di decisione, ogni ramo quando termina, stampa $mb("Si")$ o $mr("No")$. A questo punto tutti i rami vengono messi in `OR`. Se c'è almeno un $mb("Si")$, allora la soluzione del problema di decisione è $mb("Si")$, altrimenti $mr("No")$.
 
 #informalmente[
-  Il non determinismo può essere visto come l'aggiuntà di un istruzione magica di assegnamento "*$X space = space ?$*" ad un programma. Durante l'esecuzione del programma esso si biforca al raggiungimento dell'istruzione:
-  - primo ramo: assegna $X = 0$
-  - secondo ramo: assegna $X = 1$
-
-  Dato che è un problema di decisione, ogni ramo quando termina, stampa $mb("Si")$ o $mr("No")$. A questo punto tutti i rami vengono messi in *OR*. Se c'è almeno un $mb("Si")$, allora la soluzione del problema di decisione è $mb("SI")$.
-
-  #idea[
-    //TODO aggiungere disegno, esempio disegno:
-    - Python standard: $X in 2^* -> A ->$ Si / No
-    - Python "magico" (non deterministico): $x in 2^* -> A ->$ Albero di risultati messi in OR
-  ]
-
-  Il progrmma *non deterministico è simulabile* attraverso diverse tecniche (eseguendo i singoli rami sequenzialmente o in parallelo), il problema è che ci si impiega *tempo arbitrariamente alto* non avendo infinito parallelismo. I rami d'esecuzione crescono in maniera esponenziale, anche fissando l'altezza dell'albero a polinomiale.
-
-  Per risolvere *SAT* può essere utilizzato un algoritmo non deterministico: basta adoperare l'istruzione magica per ogni variabile. In totale ci sono $2^"numero variabili"$ rami, dove ogni ramo ha un altezza polinomiale.
-
-  Possiamo quindi affermare che *$"SAT" in "NP"$*
+  - Algoritmo standard: $quad x in 2^* -> A ->$ Si / No
+  - Algoritmo non deterministico: $quad x in 2^* -> A ->$ albero di risultati messi in OR
 ]
 
-=== Problema P = NP
+Un algoritmo non deterministico è *simulabile* attraverso diverse tecniche (ad esempio eseguendo i singoli rami sequenzialmente), ma potrebbe impiegarci *tempo arbitrariamente alto*. Questo perchè il numero di rami d'esecuzione (la _larghezza_ dell'albero) crescono in maniera esponenziale, nonostante la polinomialità di ogni singolo ramo (l'_altezza_ dell'albero).
 
-Possiamo osservare che *$P subset "NP"$*: basta non utilizzare l'istruzione magica negli algoritmi.
+#esempio[
+  Problema *SAT*: data una formula booleana, decidere se esiste almeno un assegnamento di variabili per il quale la formula risulta vera:
+
+  $ (x_1 or not x_2) and (x_4 or x_5 or x_6) $
+
+  È possibile risolvere SAT utilizzando un algoritmo non deterministico: basta adoperare l'istruzione magica per ogni variabile e valutare la formula. Questo comporterebbe $2^"numero variabili"$ rami, dove ogni ramo ha un altezza polinomiale.
+
+  Possiamo quindi affermare che *$"SAT" in "NP"$*.
+
+  #attenzione[
+    Non è stato dimostrato un lower bound super-polinomiale per SAT, di conseguenza sicuramente *$"SAT" in "NP"$*, ma non è noto se *$"SAT" in quest space "P"$*.
+  ]
+]
+
+=== Problema $"P" eq.quest "NP"$
+
+Possiamo osservare che *$P subset.eq "NP"$*: basta non utilizzare l'istruzione magica negli algoritmi.
+
+Tuttavia non è nota con certezza la natura dell'inclusione, ovvero se $P subset.eq "NP"$ o $P subset "NP"$.
 
 #attenzione[
-  Tuttavia non è nota con certezza la natura dell'inclusione, ovvero se $P subset.eq "NP"$ o $P subset "NP"$.
-
-  Ad oggi *l'ipotesi universalmente accettata* è che *$P != "NP"$* (assunzione che verrà fatta durante tutto il corso).
+  Ad oggi l'_ipotesi_ universalmente accettata è che *$P != "NP"$* (assunzione che verrà fatta durante tutto il corso).
 ]
 
 === Riduzione in tempo polinomiale
 
-Siano $Pi_1, Pi_2 subset.eq 2^*$ due problemi di decisione, allora una *riduzione polinomiale* di $Pi_1$ a $Pi_2$ è una funzione $f$ tale che:
-- $f: 2^* -> 2^*, quad x in Pi_1 <=> f(x) in Pi_2$
-- $f$ calcolabile in tempo polinomiale
-e si indica con *$Pi_1 <=_p Pi_2$* (Se trovo un algoritmo per $Pi_2$, lo trovo anche per $Pi_1$).
+Siano $Pi_1, Pi_2 subset.eq 2^*$ due problemi di decisione, allora una riduzione polinomiale di $Pi_1$ a $Pi_2$ è una funzione $f$ che *trasforma* in tempo *polinomiale* un'istanza di $Pi_1$ ad un'istanza di $Pi_2$, ottenendo lo stesso risultato:
+- $f: 2^* -> 2^*$, calcolabile in tempo polinomiale
+- $forall x in 2^*, quad x in Pi_1 <==> f(x) in Pi_2$
+e si indica con *$Pi_1 <=_p Pi_2$*.
 
-#informalmente[
-  L'idea è dare un *ordine di difficoltà*, ovvero che *$Pi_1$ non è più difficile di $Pi_2$*.
-
-  Se sono in grado di trovare un algoritmo $A in P$ per $Pi_2$, allora posso usarlo anche per risolvere $Pi_1$, dato che anche la riduzione (la trasformazione di $P_2$ in $P_1$) è polinomiale.
-]
+L'idea è dare un *ordine di difficoltà*. Se posso trasformare un problema $Pi_1$ in un problema $Pi_2$ ed ottenere gli stessi risultati, allora non può essere più difficile di $Pi_2$.
 
 #teorema("Proprietà")[
-  Se $Pi_1 <=_p Pi_2$ e $Pi_2 in P => Pi_1 in P$
+  Se $Pi_1$ non è più difficile di $Pi_2$ e $Pi_2 in "P"$, allora anche $Pi_1 in "P"$:
+  $ Pi_1 <=_p Pi_2, quad Pi_2 in P quad ==> quad Pi_1 in P $
 ]
-=== Classe NP-completi (NPc)
-
-Un problema $Pi$ di decisione appartiene a NPc se:
-+ *$Pi in "NP"$*
-+ *$forall Pi' in "NP", quad Pi' <=_p Pi$*
 
 #informalmente[
-  Un problema $Pi in "NPc"$ se:
-  + $Pi$ $in$ NP
-  + Qualsiasi altro problema $Pi^' in$ NP è riducibile in tempo polinomiale a $Pi$
+  Se trovo un algoritmo polinomiale per $Pi_2$, lo trovo anche per $Pi_1$, dato che posso trasformare gli input di $Pi_1$ in quelli di $Pi_2$. L'overhead di trasformazione è comunque polinomiale, quindi trascurabile.
+]
+
+=== Classe NP-completi (NPc)
+
+Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *ogni* altro problema NP è *riducibile* in tempo polinomiale a $Pi$:
++ $Pi in "NP"$
++ $forall Pi' in "NP", quad Pi' <=_p Pi$
+
+#informalmente[
+  I problemi NPc sono i "più difficili" della classe NP, dato che ogni problema può essere ricondotto a loro.
+  Sempre per lo stesso motivo, non possono esistere problemi più difficili in NP.
+
+  Risolvendo in tempo polinomiale un problema NPc, verrebbero risolti *tutti* i problemi NP, effettivamente rendendo $P = "NP"$.
 ]
 
 #teorema("Teorema di Cook")[
-  *SAT è NP-completo* (la cosa interessante non è che sia SAT, ma che esista!) //TODO: espandere?
+  *$ "SAT" in "NPc" $*
+
+  #informalmente[
+    La cosa interessante non è che il problema NPc sia SAT, ma che questi problemi "più difficili in assoluto" esistano.
+    Tutti i problemi NP-completi sono equivalenti in termini di difficoltà computazionale.
+  ]
 ]
 
-#teorema("Crollario Teorema di Cook")[
-  $"SAT" in P <==> P = "NP"$ (vale per ogni problema NPc).
-]
+#teorema("Corollario Teorema di Cook")[
+  $ "SAT" in P quad <==> quad P = "NP" $
+  $ "SAT" in.not P quad <==> quad P != "NP" $
 
-#nota[
-  Se avessimo un algoritmo polinomiale per SAT ($"SAT" in P$), allora dato che ogni altro problema $Pi^' in "NP"$ è riconducibile a SAT avremo anche un algorimto polinomiale per $Pi^'$. Di conseguenza $P="NP"$. Quindi:
-  - Se si trova una soluzione polinomiale per SAT, allora dimostriamo che *$P="NP"$*
-  - Se si trova un lower buond super-polinomiale per SAT, allora dimostriamo che *$P!="NP"$*
+  #attenzione[
+    - Se si trova una soluzione polinomiale per SAT, allora dimostriamo che *$P = "NP"$*, dato che possiamo ricondurvi ogni altro problema NP
+    - Se si trova un lower bound super-polinomiale per SAT, allora dimostriamo che *$P != "NP"$*, dato che non possono esistere problemi più difficili
+  ]
 ]
 
 == Problemi di Ottimizzazione
 
-Si tratta di una famiglia speciale di problemi (come quelli di ottimizzazione).
+Si tratta di una famiglia speciale di problemi (come quelli di decisione).
 
-/ Un problema $Pi$ si dice di ottimizzazione se:
-  - Insieme di *input* $I_Pi subset.eq 2^*$
-  - *Funzione ammissibilità* *$"Amm"_Pi: I_Pi -> 2^2^* \\ {emptyset}$*. Associa ad ogni input $x$ un insieme non-vuoto di soluzioni ammissibili: $"Amm"_(Pi)(x)$ (supponiamo ce ne sia almeno una). Capire se esiste una soluzione è un passo precedente (dato per scontato) // TODO: @Favo02 @LucaCorra02 Rimuoverei l'ultima frase ("Capire se ... scontato)")
-  - *Funzione obiettivo*: *$C_Pi : 2^* times 2^* -> bb(R)$*, essa assegna un valore $C_(Pi)(x, y), forall x in I_Pi, forall y in "Amm"_(Pi)(x)$. Assegna un valore ad ogni coppia di input e output ammissibile.
-  - *Tipo del problema* *$t_Pi in { min, max }$*
+Un problema $Pi$ si dice di ottimizzazione se:
+- *Input* $I_Pi subset.eq 2^*$
+- *Funzione di ammissibilità* $"Amm"_Pi: I_Pi -> 2^2^* \\ {emptyset}$: associa ad ogni input $x$ un insieme non-vuoto di soluzioni ammissibili (supponiamo ce ne sia sempre almeno una, il problema è sempre risolvibile)
+- *Funzione obiettivo* $C_Pi : 2^* times 2^* -> bb(R)$: assegna un valore ad ogni coppia di input e output $ C_(Pi)(x, y), quad forall x in I_Pi, quad forall y in "Amm"_(Pi)(x) $
+- *Tipo del problema* $t_Pi in { min, max }$: problema di massimizzazione o minimizzazione
 
-  L'obiettivo è ottenere un algoritmo $A$ che dato un input $x in I_Pi$, fornisce una soluzione $y^* in "Amm"_(Pi)(x)$, tale che:
-  *$ C_(Pi)(x, y^*) >=_max C_(Pi)(x, y'), quad forall y' in "Amm"_(Pi)(x) $*
+L'obiettivo è ottenere un algoritmo $A$ che dato un input $x in I_Pi$, fornisce una soluzione $y^* in "Amm"_(Pi)(x)$, tale che: $ cases(
+  C_(Pi)(x, y^*) >= C_(Pi)(x, y')\, quad forall y' in "Amm"_(Pi)(x) quad "se" t_Pi = max,
+  C_(Pi)(x, y^*) <= C_(Pi)(x, y')\, quad forall y' in "Amm"_(Pi)(x) quad "se" t_Pi = min
+) $
 
-  #align(center, [or])
-
-  *$ C_(Pi)(x, y^*) <=_min C_(Pi)(x, y'), quad forall y' in "Amm"_(Pi)(x) $*
-
-  Vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutte le altre soluzioni per un certo input $x$.
+Ovvero vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutte le altre soluzioni per un certo input $x$.
 
 #nota[
-  Si utilizza *$y^*$* per indicare una soluzione ottima e *$C^*(x)$* per indicare la funzione obiettivo sulla soluzione ottima.
+  Si utilizza $y^*$ per indicare una soluzione ottima e $C^*(x)$ per indicare la funzione obiettivo calcolata sulla soluzione ottima.
 ]
 
+// TODO: spostare questo esempio nella sezione NPOc?
 #esempio[
   *MaxSAT* (Versione di ottimizazzione di SAT)
 
   - $I_Pi$: formule booleane in CNF
   - $"Amm"_(Pi)(x)$: assegnamenti di valori di verità per le variabili che compaiono in x
   - $C_(Pi)(x, y)$: numero di clausole della formula $x in I_Pi$ rese vere da $y$
-  - $t_Pi = max$. Il massimo numero di formule rese vere da $y$.
+  - $t_Pi = max$, il massimo numero di formule rese vere da $y$.
 
   Se esistesse un algoritmo $A$ polinomiale per MaxSAT, allora si potrebbe usare per decidere SAT. Ma dato che $"SAT" in "NPc" -> "MaxSat" in "NPOc"$
 
@@ -155,7 +167,11 @@ La classificazione effettuata sui problemi di decisione può essere applicata an
 
 === Classe PO
 
-Un problema di ottimizzazione *$Pi in "PO"$* _sse_ esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
+#informalmente[
+  È l'equivalente della classe P per i problemi di ottimizzazione.
+]
+
+Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
 
 #attenzione[
   Dato un input ammissibile, l'algorimto $A$ deve trovare la soluzione *ottima* (o una delle soluzioni ottime in caso ne esistano più di una).
@@ -165,71 +181,67 @@ Un problema di ottimizzazione *$Pi in "PO"$* _sse_ esiste un algoritmo $A$ che l
   La classe $"PO"$ è molto rara, sopratutto in presenza di numerosi vincoli.
 ]
 
-#informalmente[
-  È l'equivalente della classe P per i problemi di ottimizzazione
-]
-
 === Classe NPO
 
 #informalmente[
-  Equivalente alla classe NP. Tuttavia, in questo caso non può essere semplicemente introdotta l'istruzione magica per modellare il non determinismo. Ogni ramo di esecuzione non da una soluzione binaria, ma una soluzione ammissibile e "comporle" per trovare la migliore in termini di funzione obiettivo risulta non banale.
+  Equivalente alla classe NP.
 
-  Il *non determinismo* non può essere descritto semplicemente da una macchina di Turing, ma viene introdotto un *oracolo*.
+  Tuttavia, il non determinismo è modellato in maniera diversa: in caso usassimo l'istruzione magica, ogni ramo di esecuzione terminerebbe con una soluzione NON binaria, ma "comporle" per trovare la migliore in termini di funzione obiettivo potrebbe non essere banale.
+
+  Di conseguenza usiamo un *oracolo*, ovvero un istruzione che ci fornisce "magicamente" il risultato che "stiamo cercando".
 ]
 
-Un problema *$Pi in "NPo"$* se:
-+ *$I_Pi in P$*: *decidere se un input $x$ è un valido impiega un tempo polinomiale*
-+ Esiste un *polinomio Q* t.c:
-  - *$forall x in I_Pi, forall y in "Amm"_(Pi)(x), quad |y| <= Q(|x|)$*
-  - *$forall x in I_Pi, forall y in 2^*$, se $|y| <= Q(|x|)$, decidibile in tempo polinomiale se $y in "Amm"_(Pi)(x)$*
-+ la funzione *$C_Pi$* è *calcolabile in tempo polinomiale*
+Un problema di ottimizzazione $Pi in "NPO"$ se:
++ $I_Pi in "P"$: decidere se un input $x$ è un valido impiega un tempo polinomiale
++ esiste un polinomio $Q$ tale che:
+  - la dimensione di qualsiasi soluzione ammissibile deve essere limitata rispetto ad un polinomio basato sulla lunghezza dell'input
+    $ forall x in I_Pi, quad forall y in "Amm"_(Pi)(x), quad |y| <= Q(|x|) $
+  - è decidibile in tempo polinomiale se una certa soluzione $y$ è una soluzione ammissibile:
+    $ forall x in I_Pi, quad forall y in 2^*, quad "se" |y| <= Q(|x|), quad y in "Amm"_(Pi)(x) "in tempo polinomiale" $
++ la funzione di costo $C_Pi$ è calcolabile in tempo polinomiale
 
 
 #informalmente[
-  La definizione chiede che:
-  1. decidere se un input $x$ è valido costa un tempo polinomiale
-  2. gli output $y$ (le soluzioni) hanno una dimensione limitata, polinomiale rispetto alla dimensione dell'input
-  3. data una soluzione $y$ per un certo input $x$ è verificabile in tempo polinomiale se essa è ammessa $y in "Amm"_(Pi)(x)$
-  4. la funzione di costo è calcolabile in tempo polinomiale
+  // TODO: questo disegno serve davvero? più che altro sembra che dallo stesso x in ingresso esce tanta roba
+  #let algo_tree = diagram(
+    spacing: (10pt, 4em),
+    {
+      // --- NODI ---
+      let (x, box, error) = ((0, 0), (0, 1), (1, 1))
+      let (b1, b2, b3, b4) = ((-2, 2), (2, 2), (1, 2), (-1, 2))
+      let (maxmin) = (0, 3)
 
-    #let algo_tree = diagram(
-      spacing: (10pt, 4em),
-      {
-        // --- NODI ---
-        let (x, box, error) = ((0, 0), (0, 1), (1, 1))
-        let (b1, b2, b3, b4) = ((-2, 2), (2, 2), (1, 2), (-1, 2))
-        let (maxmin) = (0, 3)
+      // Input in alto
+      node(x, $x in I_Pi$)
 
-        // Input in alto
-        node(x, $x in I_Pi$)
+      // Algoritmo (rettangolo)
+      node(box, $"Algo"$, stroke: 1pt, shape: rect, width: 5em, height: 2.5em)
 
-        // Algoritmo (rettangolo)
-        node(box, $"Algo"$, stroke: 1pt, shape: rect, width: 5em, height: 2.5em)
+      // STOP & ERROR a destra
+      node(error, $x in.not I_Pi$ + linebreak() + "STOP & ERROR")
 
-        // STOP & ERROR a destra
-        node(error, $x in.not I_Pi$ + linebreak() + "STOP & ERROR")
+      // Due rami verso il basso
+      node(b1, $y' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
+      node(b3, $y''' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
+      node(b4, $y'' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
+      node(b2, $y'''' in "Amm"_(Pi)(x)$ + linebreak() + $"SI," C_(Pi)(x,y)$)
 
-        // Due rami verso il basso
-        node(b1, $y in.not "Amm"_(Pi)(x)$ + linebreak() + "NO ,STOP")
-        node(b3, $y in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
-        node(b4, $y in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
-        node(b2, $y in "Amm"_(Pi)(x)$ + linebreak() + $"SI," C_(Pi)(x,y)$)
+      node(maxmin, "MAX / MIN")
 
-        node(maxmin, "MAX / MIN")
-
-        // --- ARCHI ---
-        edge(x, box, "->")
-        edge(box, error, "->")
-        edge(box, b1, "->")
-        edge(box, b2, "->")
-        edge(box, b4, "->")
-        edge(box, b3, "->")
-        edge(b4, maxmin, "->")
-        edge(b2, maxmin, "->")
-      },
-    )
-
+      // --- ARCHI ---
+      edge(x, box, "->")
+      edge(box, error, "->")
+      edge(box, b1, "->")
+      edge(box, b2, "->")
+      edge(box, b4, "->")
+      edge(box, b3, "->")
+      edge(b4, maxmin, "->")
+      edge(b2, maxmin, "->")
+    },
+  )
   #algo_tree
+
+  // TODO: non ho capito questa cosa
   Funzionamento:
   - 1 bit per volta viene generata qualunque sequenza di input $y in 2^*,|y|<= Q(|x|)$
   - Se $y$ è ammissibile, viene valutata la funzione obiettivo $C_(Pi)(x)$
@@ -238,32 +250,25 @@ Un problema *$Pi in "NPo"$* se:
   Possibile in tempo polinomiale grazie ai vincoli imposti.
 ]
 
-=== Problema di decisione associato ad un problema di ottimizzazione
+=== Problema di Decisione Associato ad un Problema di Ottimizzazione
 
-Da un problema *$Pi$ di ottimizzazione vogliamo passare al problema $hat(Pi)$ di decisione associato*:
-- $Pi$ problema di ottimizzazione
-- $hat(Pi)$ corrispettivo problema di decisione, così costruito:
-  - *$I_hat(Pi) = I_Pi times bb(N)$*, coppie
-  - *$(x, k) in I_hat(Pi) -> "yes" "sse" C_(Pi)^*(x) >= (<=) k$*
-
-#informalmente[
-  Dato un input del problema $Pi$ e un numero $k$, il problema di decisione $hat(Pi)$ risponde "yes" sse la soluzione ottima $C_(Pi)(x)$ del problema di ottimizzazione è $>=$ o $<=$ di una certa *soglia $k$* (in base alla tipologia del problema $Pi$).
-]
+Da un problema $Pi$ di ottimizzazione vogliamo passare al problema $hat(Pi)$ di decisione associato:
+- $I_hat(Pi) = I_Pi times bb(N)$: l'input del problema di decisione sono delle coppie formate dall'input del problema di ottimizzazione associato e un parametro intero $k$
+- $(x, k) in I_hat(Pi) -> "yes" quad <==> quad C_(Pi)^*(x) >=_(<=) k$: l'output del problema di decisione è _Si_ solo se il risultato della funzione costo del problema di ottimizzazione è maggiore o minore rispetto alla soglia $k$ (in base al tipo $t_Pi$)
 
 #esempio[
-  Fissato $Pi ="MaxSat"$, definiamo il problema $hat(Pi)$ di ottimizzazione associato:
-  - $I_hat(Pi) = ("Formula CNF",k)$, con $k in bb(N)$
+  Fissato $Pi ="MaxSat"$, definiamo il problema $hat(Pi)$ di decisione associato:
+  $ I_hat(Pi) = (I_Pi, k), quad I_Pi = "Formula CNF", quad k in bb(N) $
   Il problema di decisione $hat(Pi)$ risponde alla seguente domanda: esiste un assegnamento che rende vere $>= k$ clausole della formula?
 ]
 
 #teorema("Teorema")[
-  Dato un problema di ottimizzazione $Pi$ e il corispettivo problema di ottimizzazione $hat(Pi)$ associato:
-  - Se *$Pi in "PO", hat(Pi) in P$*
-  - Se *$Pi in "NPO", hat(Pi) in "NP"$*
+  Dato un problema di ottimizzazione $Pi$ e il corrispettivo problema di ottimizzazione $hat(Pi)$ associato:
+  - Se $Pi in "PO", quad hat(Pi) in "P"$
+  - Se $Pi in "NPO", quad hat(Pi) in "NP"$
 ]
 
-
-=== Classe NPOc
+=== Classe NPO-completi (NPOc)
 
 Dato un problema di ottimizzazione $Pi$ esso appartiene alla classe *$"NPOc"$* se:
 - *$Pi in "NPO"$*
