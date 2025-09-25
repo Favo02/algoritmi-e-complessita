@@ -15,6 +15,10 @@
 #let mp(body) = text(fill: purple, $#body$)
 #let mb(body) = text(fill: blue, $#body$)
 
+//pseudocode
+#import "@preview/algorithmic:1.0.5"
+#import algorithmic: style-algorithm, algorithm-figure
+
 // colored boxes
 #let nota(body) = { info(title: "Nota")[#body] }
 #let attenzione(body) = { warning(title: "Attenzione")[#body] }
