@@ -155,48 +155,45 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
 ]
 
 === Algoritmo Max Bi-Matching
-
-```pseudocode
-pub fn main() {
-    println!("Hello, world!");
-}
-```
-
-#algorithm-figure(
-  "Binary Search",
-  vstroke: .5pt + luma(200),
-  {
-    import algorithmic: *
-    Procedure(
-      "Binary-Search",
-      ("A", "n", "v"),
-      {
-        Comment[Initialize the search range]
-        Assign[$l$][$1$]
-        Assign[$r$][$n$]
-        LineBreak
-        While(
-          $l <= r$,
-          {
-            Assign([mid], FnInline[floor][$(l + r) / 2$])
-            IfElseChain(
-              $A ["mid"] < v$,
-              {
-                Assign[$l$][$"mid" + 1$]
-              },
-              [$A ["mid"] > v$],
-              {
-                Assign[$r$][$"mid" - 1$]
-              },
-              Return[mid],
-            )
-          },
-        )
-        Return[*null*]
-      },
-    )
-  }
+#pseudocode(
+  [input $<-$ $G=(V_1 union V_2, E)$],
+  [$M <- emptyset$ #emph("Matching vuoto")],
+  [*While* true],
+  indent(
+    [$Pi <- "FindAugmenting"(M)$],
+    [#emph("Funzione che cerca un cammino aumentante")],
+    [*If* $Pi = perp$ *then*],
+    indent(
+      [*Output*$(M)$],
+      [#emph("Non ci sono più cammini aumentanti M è massimo")],
+      [*Stop*]
+    ),
+    [*Else*],
+    indent(
+      [$M <- "Switch"(M, Pi)$],
+      [#emph("Guadagno un matching in più")]
+    ),
+  ),
+  [*End*]
 )
 
+==== Analisi della funzione FindAugmenting
+La funzione FindAugmenting dato un certo matching $M$ cerca di trovare un cammino aumentante,
+ utilizzando una *BFS Modificata*:
+- La *visita parte* da un *vertice $v in V_1$ esposto* (o $v in V_2$)
+- Dato un vertice $v$ vengono *visitati alternamente i lati adiacenti $in M$ e che $in.not M$*
+- La *visita termina* quando viene *visitato un vertice $v in V_2$ esposto*. Significa che è stato trovato un cammino aumentante
 
+#informalmente[
+  La BFS modifica prova tutti i cammini alternati a partire da un vertice esposto.
+]
 
+#nota[
+  *BFS* = Visita in ampiezza. Dato un vertice iniziale vengono aggiunti i vicini ad una coda. Man mano si visitano i nodi presenti nella coda elliminandoli da essa.  
+]
+
+*Complessità della funzione*: La *BFS* ha una complessità di *$O(m)$* (con $m$ numero di lati). Nel caso di una clique la complessità è $O((n/2)^2)$ (tutti i vertici connessi tra di loro)
+
+==== Complessità Max-BiMatching
+
+*Complessità dell'algoritmio*: Il matching $M$ più grande è al massimo il numero lati, *il ciclo for viene eseguito $O(n)$ volte*. Di conseguenza la *complessità totale è $O(n*m)$*, $O(n^3)$ nel caso di clique. 

@@ -16,9 +16,7 @@
 #let mb(body) = text(fill: blue, $#body$)
 
 //pseudocode
-#import "@preview/algorithmic:1.0.5"
-#import algorithmic: style-algorithm, algorithm-figure
-#show: style-algorithm
+#import "@preview/lovelace:0.3.0": *
 
 // colored boxes
 #let nota(body) = { info(title: "Nota")[#body] }
