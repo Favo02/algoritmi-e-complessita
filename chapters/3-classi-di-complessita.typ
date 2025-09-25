@@ -23,7 +23,7 @@ Per determinare l'appartenenza (o meno) di un problema a questa classe dobbiamo 
 - *$Pi in.not P$*: dimostrare che il _lower bound_ di $Pi$ sia superpolinomiale
 
 #esempio[
-  Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema di $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"BubbleSort" in "P"$*.
+  Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema di $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"Ordinamento" in "P"$*.
 ]
 
 === Classe NP
@@ -240,7 +240,7 @@ La classificazione effettuata sui problemi di decisione può essere applicata an
 Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo risolve in tempo polinomiale.
 
 #attenzione[
-  Dato un input ammissibile, l'algorimto $A$ deve trovare la soluzione *ottima* (o una delle soluzioni ottime in caso ne esistano più di una).
+  Dato un input ammissibile, l'algoritmo $A$ deve trovare la soluzione *ottima* (o una delle soluzioni ottime in caso ne esistano più di una).
 ]
 
 #nota[
@@ -321,9 +321,9 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
 
   - $I_Pi$: formula booleane in CNF $phi$
     #nota[
-      Una formula booleana in forma normale conguinta (CNF) è composta da:
+      Una formula booleana in forma normale congiunta (CNF) è composta da:
       - tante clausole, messe in _AND_ tra di loro
-      - ogni causa è composta da letterali (che possono essere negati), messi in _OR_ tra loro
+      - ogni clausola è composta da letterali (che possono essere negati), messi in _OR_ tra loro
     ]
   - $"Amm"_(Pi)(x)$: assegnamenti di valori di verità per le variabili che compaiono in x
   - $C_(Pi)(x, y)$: numero di clausole della formula $x in I_Pi$ rese vere da $y$
@@ -392,7 +392,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
       - $Pi in "NPOc"$: il problema è NPO completo
       - $hat(Pi) in "NPc"$: il problema di decisione associato è NP completo (per #link-teorema(<teorema-problema-ottimizzazione-decisione>))
 
-    Per assurdo supponiamo che esista un algorimto $A$ che risolva $Pi$, ovvero che calcola la soluzione ottima per tutti gli input $x in I_Pi$ in tempo *polinomiale*.
+    Per assurdo supponiamo che esista un algoritmo $A$ che risolva $Pi$, ovvero che calcola la soluzione ottima per tutti gli input $x in I_Pi$ in tempo *polinomiale*.
 
     Consideriamo ora il *problema di decisione* associato $hat(Pi)$, definito come: $ I_hat(Pi) = (x,k) in I_Pi times bb(N) $
 
@@ -418,15 +418,15 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
 
 Per i problemi di decisione, essendo la risposta binaria, non si può "scendere a patti". O si è in grado di calcolare la soluzione corretta oppure no.
 
-Per quanto riguarda i problemi di *ottimizzazione*, si possono fare dei compromessi riguardo l'*ottimalità* della soluzione trovata da un algorimto.
-Lo scopo di questa approssimazione è trovare degli algorimti in grado di produrre soluzioni più velocemente (polinomiali), ma fornendo un output ammissibile *sub-ottimo*.
+Per quanto riguarda i problemi di *ottimizzazione*, si possono fare dei compromessi riguardo l'*ottimalità* della soluzione trovata da un algoritmo.
+Lo scopo di questa approssimazione è trovare degli algoritmi in grado di produrre soluzioni più velocemente (polinomiali), ma fornendo un output ammissibile *sub-ottimo*.
 
 #attenzione[
   Non useremo *mai euristiche*, ovvero approssimazioni che ogni tanto funzionano e ogni tanto no.
-  Siamo sempre in grado di determinare con precisione di quanto la soluziome sub-ottima si discosta dall'ottimo.
+  Siamo sempre in grado di determinare con precisione di quanto la soluzione sub-ottima si discosta dall'ottimo.
 ]
 
-=== Rapporto di appossimazione
+=== Rapporto di approssimazione
 
 Dati:
 - $Pi$ problema di ottimizzazione
@@ -462,7 +462,7 @@ Problemi di ottimizzazione approssimabili con un tasso costante:
 $ "APX" = union.big_(alpha >= 1) alpha"-APX" $
 
 #nota[
-  fissando $alpha = 1$, otteniamo la classe $1"-APX" = "P"$
+  Fissando $alpha = 1$, otteniamo la classe $1"-APX" = "P"$
 ]
 
 #attenzione[
@@ -488,7 +488,7 @@ $ Pi (x in I_(Pi), epsilon > 1) $
   Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon esplode il tempo di esecuzione. Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo *esponenziale*.
 ]
 
-/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algorimti in $"PTAS"$, un algorimto $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$.
+/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algoritmi in $"PTAS"$, un algoritmo $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescità dell'approsimazione $epsilon$.
 
 #nota[
   Questi problemi sono *quasi* problemi di cui conosciamo l'ottimo, la classe $"FPTAS"$ è poco più grande di $"P"$.
