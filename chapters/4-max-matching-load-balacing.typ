@@ -335,3 +335,103 @@ L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
         - cosa succede quando si assegna l'ultimo task?
   ]
 ]
+
+A questo punto potremo chiederci se la dimostrazione proposta è la "migliore possibile".
+
+#informalmente[
+  Ci stiamo chiedendo se la dimostrazione proposta in precedenza è precisa oppure è lasca. Ci sono due alternative: 
+  - Si trova un caso in cui la soluzione prodotta dall'algorimto è $2$ volte l'ottimo 
+  - Si migliora la dimostazione ($1.8$-APX ad esempio).
+]
+
+#teorema("Teorema")[
+  $forall epsilon > 0, exists x in I_Pi$ su cui Greedy LoadBalancing produce una soluzione: 
+  *$ L-epsilon <= L / L^* <= 2 $*
+
+  #informalmente[
+    Gli input occupano tutto lo spazio delle soluzioni: 
+    - alcuni vanno bene e producono una soluzione $L-epsilon$
+    - altri vanno male e producono una $2$-approsimazione
+  ]
+]
+
+#dimostrazione()[
+  Dati: 
+  - *$m$* un intero *$m > 1/epsilon$* *numero macchine*
+  - *$n = m(m - 1) + 1$* numero task
+  - *$t_0, ... t_(n-2) = 1$* tutti i task tranne l'ultimo, *$m(m-1)$* task
+  - *$t_(n-1) = m$* l'ultimo task
+  
+  Come si comporta l'algoritmo:
+  - assegnaimo i task da 1 alla prima macchina libera
+  - assegnaimo il carico da $1$ ad ogni macchina
+  - ripetiamo questa cosa  $m-1$ volte, quindi ogni macchina ha $m-1$ tempo
+  - arriva l'ultimo task, la assegnaimo alla prima macchina, che ha $m-1 + m$ tempo
+
+  #informalmente[
+    L'algoritmo non sa che arriva la task grande, quindi distribuisce equalmente quelli da 1. Se lo sapesse lascerebbe una macchina vuota e gli assegnerebbe alla fine $m$. In questo csao tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m -1 + 1$ task da 1, l'ultima con solo il carico da $m$). Questa è la soluzione ottima dato che è la media.
+  ]
+
+  $ L/L^* = (2 m -1) / m = 2 - 1/m >= 2-epsilon space qed $
+
+  #informalmente[
+    Questa dimostrazione ci ha anche mostrato i punti deboli dell'algorimto.
+  ]
+]
+
+== SortedGreedyLoadBalancing [3/2-APX]
+
+- Input
+- Ordina i task in modo decrescente
+- Esegui GreedyLoadBalancing
+
+Questo algoritmo è $O(n log n + n log m)$.
+
+#attenzione[
+  Questo algoritmo non è più online, ovvero serve sapere tutte le task prima di iniziare ad assegnare i task.
+]
+
+#teorema("Teorema")[
+  $ "SortedGreedyLoadBalancing è" 3/2 "-approssimante" $
+
+  #dimostrazione[
+    / Caso 1: se ci sono meno task che macchine $n <= m$, funziona esattamente uguale a greedyloadbalancing (senza sorting): assegna ad ogni macchina un task. Troviamo la soluzione ottima, il rapporto è $1$. Il carico finale è la lunghezza del carico più lungo, per osservazione fatta prima questo è l'ottimo. $qed$
+
+    / Caso 2: $n > m$, ci sono più task che macchine.
+
+    / Osservazione 1: $ L^* >= 2 t_m $ La soluzione ottima è almeno due volte il task di indice $m$.
+    / Dimostrazione 1: $
+    underbrace(t_0 >= t_1 >= ... >= t_m-1 >= t_m, "m+1 task") >= ... \
+    $
+      Per principio della piccionaia, almeno due task devono essere assegnati alla stessa macchina $i$.
+      $ L^* >= L_i^* >= 2 t_m $
+
+    
+  Sia $hat(i)$ la macchina con carico massimo:
+  - se ha avuto un solo assegnamento, allora questa è una soluzione ottima. Questo vuol dire che quello che fa questa soluzione è un solo task, quindi non possiamo fare di meglio. $qed$
+  - se ha avuto più carichi $>= 2$. Sia $hat(j)$ l'ultimo compilto assegnato a $hat(i)$, già il secondo che le viene assegnato deve essere dopo il carico $m$, quindi deve essere maggiore del carico $m$:
+    $ hat(j) >= m \
+      t_hat(j) <= t_m <= 1/2 L^* "per oss1" \
+     L = L_hat(i) = ... <= 3/2 L^* \
+      L / L^* <= 3/2 space qed
+    $
+  ]
+]
+
+#attenzione[
+  Questa dimostrazione non è la migliore possibile. L'algorimto non arriverà mai a generare una soluzione $3/2$ volte più grande dell'ottimo.
+
+  Esiste una dimostrazione di _Graham 1969_ che mostra che è una $4/3$-approssimazione
+]
+
+== LoadBancing in [PTAS]
+
+Load Balancing sta in PTAS (dimostrata da _Hochbaum-Shmoys 1988_).
+
+Se $P != N P$, LoadBalancing non può stare in FPTAS.
+
+Quindi loadbalancing cresce in maniera esponenziale all'abbassarsi di $epsilon$.
+
+#dimostrazione[
+  Si sa in quanto il problema di decisione è fortemente NP-completo
+]
