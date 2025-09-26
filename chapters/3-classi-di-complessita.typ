@@ -404,7 +404,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
   ]
 
   #esempio[
-    Considerando $"MaxSAT"(phi)$ e il suo problema associato $hat("MaxSAT")(phi, k)$ possiamo porre $k$ uguale al numero di clausule di $phi$ rendendo $hat("MaxSAT")$ equivalente a SAT.
+    Considerando $"MaxSAT"(phi)$ e il suo problema associato $hat("MaxSAT")(phi, k)$ possiamo porre $k$ uguale al numero di clausole di $phi$ rendendo $hat("MaxSAT")$ equivalente a SAT.
 
     Se, per assurdo, potessimo risolvere $hat("MaxSAT")$ in tempo polinomiale allora avremmo trovato un algoritmo che risolve SAT in tempo polinomiale (il che è assurdo).
   ]
