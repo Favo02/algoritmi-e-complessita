@@ -59,7 +59,7 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
   ]
 
   #teorema("Osservazione 1")[
-    *$X$ contiene più elementi di $M^'$ che di $M$*, in quanto abbiamo supposto che $|M^'| > M$.
+    *$X$ contiene più elementi di $M^'$ che di $M$*, in quanto abbiamo supposto che $|M^'| > |M|$.
 
   ]
 
@@ -149,7 +149,7 @@ In un cammino aumentante è sempre presente $1$ lato libero in più rispetto a q
       ]
     ]
 
-    Il cammino così descritto rispecchia esattamente *la definizone di cammino aumentante*.
+    Il cammino così descritto rispecchia esattamente *la definizione di cammino aumentante*.
   ]
 
 ]
@@ -229,7 +229,7 @@ $L$ è il carico della macchina con più lavoro.
 
 #nota[
   *La soluzione ottima assegnerebbe ad ogni macchina lo stesso carico*:
-  $ L = 1/m * sum_(i in t_n) t_i$
+  $ L = 1/m * sum_(i=0)^(n-1) t_i$  
 ]
 
 //TODO: Fare il disegno forse
@@ -277,4 +277,4 @@ $L$ è il carico della macchina con più lavoro.
 
 === Complessità di Greedy LoadBalancing
 
-L'algorimto proposto è polinomiale: *$O(m log n)$*, utilizzando un heap.
+L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap.
