@@ -268,7 +268,6 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
 
 
 #informalmente[
-  // TODO: questo disegno serve davvero? più che altro sembra che dallo stesso x in ingresso esce tanta roba
   #let algo_tree = diagram(
     spacing: (10pt, 4em),
     {
@@ -307,10 +306,12 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   )
   #algo_tree
 
-  // TODO: non ho capito questa cosa
+  #todo
+  // TODO: dove sta l'oracolo? è l'algoritmo stesso l'oracolo? è possibile evitare di dire: "1 bit per volta viene generata qualunque sequenza ..." ma dire "solo per ogni input ..."?
+
   Funzionamento:
-  - 1 bit per volta viene generata qualunque sequenza di input $y in 2^*,|y|<= Q(|x|)$
-  - Se $y$ è ammissibile, viene valutata la funzione obiettivo $C_(Pi)(x)$
+  - 1 bit per volta viene generata qualunque sequenza di input $x in 2^*,|y|<= Q(|x|)$
+  - Se $y$ è ammissibile, viene valutata la funzione obiettivo $C_(Pi)(x, y)$
   - Viene presa la funzione di costo min/max in base al tipo di problema
 
   Possibile in tempo polinomiale grazie ai vincoli imposti.
@@ -365,17 +366,6 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
 - $Pi in "NPO"$: il problema è NPO
 - $hat(Pi) in "NPc"$: il problema di decisione associato è NP-completo
 
-#esempio[
-  #todo
-
-  // TODO: io non sono per nulla convinto da questo esempio
-
-  $"MaxSat" in "NPOc"$, in quanto $hat("MaxSat") in "NPc"$. Se riuscissi a risolvere $"MaxSat"$ in tempo polinomiale, allora riuscirei anche a risolvere $hat("MaxSat")$. Basterebbe risolvere $"MaxSat"$ e ottenere il numero massimo di clausole soddisfacibili, diciamo $k_("opt")$, e poi confrontare tale numero con il $k$ dato in input al problema decisionale $hat("MaxSat")$.
-
-  // TODO: soprattutto da questa frase, se Pi è in NPO, come fa a essere risolvibile in tempo polinomiale?
-  Questo dimostrerebbe che se un problema $Pi$ in $"NPO"$ è risolvibile in tempo polinomiale, allora il suo problema decisionale $hat(Pi)$ associato è in $P$.
-]
-
 #teorema("Teorema")[
   Sia $Pi$ un problema di ottimizzazione:
   $ Pi in "NPOc" quad and quad Pi in "PO" quad -> quad "P" = "NP" $
@@ -411,6 +401,12 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
     Tuttavia abbiamo assunto che $Pi in "NPOc"$, quindi $hat(Pi) in "NPc"$ per #link-teorema(<teorema-problema-ottimizzazione-decisione>).
 
     Questo è un assurdo, a meno che $"P" = "NP" qed$.
+  ]
+
+  #esempio[
+    Considerando $"MaxSAT"(phi)$ e il suo problema associato $hat("MaxSAT")(phi, k)$ possiamo porre $k$ uguale al numero di clausule di $phi$ rendendo $hat("MaxSAT")$ equivalente a SAT.
+
+    Se, per assurdo, potessimo risolvere $hat("MaxSAT")$ in tempo polinomiale allora avremmo trovato un algoritmo che risolve SAT in tempo polinomiale (il che è assurdo).
   ]
 ] <teorema-npoc-po-implica-p-np>
 
