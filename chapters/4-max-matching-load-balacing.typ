@@ -215,8 +215,8 @@ Si tratta di un *problema di decisone*.
 
 #informalmente[
   Dato un numero di macchine fissato e un numero di task (di durata nota), vogliamo andare ad assegnare i task alle macchine, in modo tale che *il tempo impiegato dalla macchina più carica sia il minore possibile*. \
-  Vogliamo dunque evitare di avere macchine in uno stato di idle persistente. \
-  Inoltre la *versione dell'algoritmo presentata è online*, ovvero il numero di task non è noto a priori. 
+  Vogliamo dunque evitare di avere macchine in uno stato di idle prolungato. \
+  Inoltre la *versione dell'algoritmo presentata è online*, ovvero il numero di task non è noto a priori, possono essere inserite man mano. 
 ]
 - Input:
   - *$m in bb(N)^+$*, numero di macchine
@@ -253,12 +253,12 @@ $L$ è il carico della macchina con più lavoro.
 
 #pseudocode(
   [$A_i <- emptyset quad forall i in m$],
-  [$L_i <- 0 forall i in m$],
+  [$L_i <- 0 quad forall i in m$],
   [*For* $j=0,1,2 dots, n-1$],
   indent(
     [$hat(i)<- underbrace("argmin",i in m) L_i$],
-    [#emph("Prendo l'indice della macchina più scarica")],
-    [$A_hat(i)<-A_hat(i) union {i}$],
+    [#emph($hat(i)$ + " " + "è l'indice della macchina più scarica")],
+    [$A_hat(i)<-A_hat(i) union {j}$],
     [$L_hat(i)<-L_hat(i)+t_j$]
   ),
   [*End*],
@@ -277,4 +277,4 @@ $L$ è il carico della macchina con più lavoro.
 
 === Complessità di Greedy LoadBalancing
 
-L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap.
+L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
