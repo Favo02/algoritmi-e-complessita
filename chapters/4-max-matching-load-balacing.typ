@@ -278,3 +278,60 @@ $L$ è il carico della macchina con più lavoro.
 === Complessità di Greedy LoadBalancing
 
 L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
+
+=== Greedy LoadBalancing *$in 2-"APX"$*
+
+#teorema("Teorema")[
+  *Greedy LoadBalancing è un algorimto $2$-Approssimanto*
+]
+
+#dimostrazione()[
+  #teorema("Osservazione 1")[
+    $ L^*>=1/m sum_(j in n)t_j $
+    Lo span (soluzione ottima) è almeno la media tra i task / il numero di macchine. In questo modo nessuna macchina sarà mai scarica -> basso periodo di inattività.
+  ]
+  #dimostrazione()[
+    Se sommo i carici di ogni macchina, ottengo la somma di tutti i task: 
+    *$ sum_(i in m) L_i^* = sum_(j in n) t_j $*
+    Applicando il principio di *pidgeon holding*, almeno una macchina $i$ avrà un carico $L_i^* >= 1/m sum_(i in n) t_j$, di conseguenza la soluzione ottima: 
+    *$ L^* = underbracket(max, i in n) L_i^* >= 1/m sum_(j in n) t_j  $*
+
+    #informalmente[
+      Il *principio di pidgeon holding* (o anche detto problema delle camicie e cassetti) afferma che se ci sono $7$ camicie e $5$ cassetti, almeno un cassetto contiene $2$ camicie.
+    ]
+  ]
+
+  #teorema("Osservazione 2")[
+    *$ L^*>= underparen(max, j in n) t_j $*
+    La dimostrazione è ovvia: il task più lungo deve per forza essere assegnato ad una macchina.
+  ]
+
+  Supponiamo di eseguire ora l'algorimto Greedy LoadBalancing. L'output è una *soluzione $L$* (non ottima): 
+   *$ L = max L_hat(i), hat(i) "macchina più carica" $*
+  Consideriamo ora *l'ultimo task assegnato $t_hat(j)$* alla macchina $hat(i)$.\
+  Cosa Rappresentata *$L_hat(i) - t_hat(j)$* ? é il carico che aveva la macchina più scarica $hat(i)$ prima dell'assegnazione del carico $t_hat(j)$: 
+  *$ L_hat(i) - t_hat(j) <= L_i^' <= L_i forall i in m  $*
+  
+  Dove $L^'$ è il carico delle altra macchine all'assegnamento del task $t_hat(j)$ (più cariche di $L_hat(i)-t_hat(j)$).\ 
+  Moltiplichiamo per $m$:
+  
+  *$ m(L_hat(i)-t_hat(j)) <= sum_(i in m) L_i = sum_(j in n) t_j $*
+  
+  Dividendo per $m$:
+
+  *$ L_hat(i)-t_hat(j) <= 1/m sum_(j in n)t_j <= underbrace(L^*,"oss 1") $*
+
+  Possiamo riscrivere la soluzone trovata $L$ (non ottima) come:
+  *$ L = underbrace(L_hat(i), max L_i) = underbrace(L_hat(i) - t_hat(j),<= L^*) + underbrace(t_hat(j),<= L^*) <= 2L^* $* 
+  Di conseguenza considerando il rapporto di approsimazione:
+  *$ L/L^* <= 2 $* 
+
+  #informalmente()[
+    La dimostrazione utilizza i seguenti concetti:
+    - La dimostrazione utilizza proprietà dell'ottimo, ma senza sapere come questo ottimo viene costruito. Le osservazioni fatte valgono per una qualunque soluzione, al posto di $L^*$ si poteva usare $forall L$.
+    - Ragionando sull'algoritmo:
+      - Cosa rende l'algoritmo pessimo?
+        - l'assegnazione dell'ultimo task
+        - cosa succede quando si assegna l'ultimo task?
+  ]
+]
