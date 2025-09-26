@@ -14,7 +14,7 @@ Chiamato anche problema dei matrimoni.
 
 Formalmente, possiamo definire il problema Max-Matching come segue: 
 - *$I_Pi$* = Grafo non orientato *$G(V,E)$*
-- *$"Sol"_("amm")$* = *$ M subset.eq E "t.c" forall x in V "al massimo un lato di" M "è incidente su" x$*. Ovvero un sottoinsieme di lati tale che ogni vertice partecia al massimo ad una coppia. 
+- *$"Sol"_("amm")$* = *$ M subset.eq E "t.c" forall x in V "al massimo un lato di" M "è incidente su" x$*. Ovvero un sottoinsieme di lati tale che ogni vertice partecipa al massimo ad una coppia. 
 - *$C_Pi$* = $|M|$, numero di coppie.
 - *$t_Pi = max$* 
 
