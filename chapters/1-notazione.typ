@@ -1,8 +1,8 @@
 #import "../imports.typ": *
 
-= Notazione
+= Notazione <notazione>
 
-== Insiemi numerici
+== Insiemi numerici <insiemi-numerici>
 
 / $bb(N)$: Numeri naturali con zero
 / $bb(Z)$: Numeri relativi (numeri interi sia positivi che negativi)
@@ -13,7 +13,7 @@
   Tutti gli insiemi prevedono anche il loro sottoinsieme _strettamente_ positivo: $bb(N^+), bb(Z^+), bb(Q^+), bb(R^+)$
 ]
 
-== Monoide libero
+== Monoide libero <monoide-libero>
 
 / $Sigma$: alfabeto, insieme finito non vuoto di simboli
 / $Sigma^*$: monoide libero su $Sigma$, ovvero l'insieme delle stringhe valide sull'alfabeto $Sigma$
@@ -29,7 +29,7 @@
   $w in Sigma^*, quad w_i = "carattere" in Sigma, quad w = w_0, w_1, ..., w_(|w|-1)$
 ]
 
-== Potenze di insiemi
+== Potenze di insiemi <potenze-insiemi>
 
 / $A, B$: insiemi
 / $A^B$: insieme delle funzioni da $B$ (dominio) ad $A$ (codominio):
@@ -44,7 +44,7 @@ $ A^B = { f | f : B -> A } $
   ]
 ]
 
-== Insiemi
+== Insiemi <insiemi>
 
 Se $k in bb(N)$, allora usiamo lo stesso simbolo $k$ per definire tutto l'insieme $k = {0, 1, ..., k-1}$.
 
@@ -70,7 +70,7 @@ Possiamo quindi scrivere:
   ]
 ]
 
-== Linguaggi
+== Linguaggi <linguaggi>
 
 Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 - $2^* =$ alfabeto delle stringhe binarie, ovvero il "linguaggio completo"
@@ -86,13 +86,13 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
   Si può dire che i linguaggi $A,B,C,D subset.eq 2^*$ o $A,B,C,D in 2^2^*$.
 ]
 
-== Grafi
+== Grafi <grafi>
 
 / Grafo NON orientato: vertici e lati $G(V, E)$
 / Grafo orientato: nodi e archi $G(V, E)$
 / Grafo bipartito: i nodi sono divisi in due insiemi disgiunti $G(V_1 union V_2, E)$
 / Cammino: sequenza di nodi distinti connessi da archi (non ripetuti)
 
-== Varie
+== Varie <varie>
 
 / Ottimo: indichiamo l'ottimo con $*$, $y^*$ è la soluzione ottima, $c^*$ è il valore assunto dalla funzione obiettivo sull'output ottimo

@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problemi e Algoritmi
+= Problemi e Algoritmi <problemi-algoritmi>
 
 / Algoritmo: metodo risolutivo formale di un problema _(ne riparleremo meglio dopo aver definito problema)_
 / Problema ($Pi$):
@@ -41,7 +41,7 @@
   ]
 ]
 
-== Input e Output binari
+== Input e Output binari <input-output-binari>
 
 Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo sono *mappabili su sequenze binarie* (numeri in base due, stringhe in ASCII, ...).
 
@@ -81,7 +81,7 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
   Le prime due soluzioni differiscono solamente di un fattore moltiplicativo, quindi sono *asintoticamente equiparabili*. La terza invece è *esponenzialmente* più grande delle prime due dato che è lineare, quindi è da evitare.
 ]
 
-== Correttezza
+== Correttezza <correttezza>
 
 Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un output $y in O_Pi$ che appartiene alle soluzioni ammissibili $"sol"_Pi$ per l'input $x$:
 
@@ -109,9 +109,9 @@ La definizione di algoritmo corrisponde alla *Macchina di Turing* (MdT).
   #informalmente[
     Ovvero, per qualsiasi sistema di calcolo inventato dall'uomo, come la macchina di Turing o Python (supponendo infinita memoria), otteniamo lo stesso insieme di problemi decidibili.
   ]
-]
+] <teorema-tesi-church>
 
-== Problemi di decisione: Decidibilità
+== Problemi di decisione: Decidibilità <problemi-decisione-decidibilita>
 
 I problemi di decisione (detti anche _membership problems_) sono una particolare famiglia di problemi, i quali ammettono, per ogni istanza di input, solamente due possibili risposte: vero o falso.
 
@@ -149,7 +149,7 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
   #dimostrazione[
     Banalmente, basterebbe fare una catena di if elencando tutte le stringhe che appartengono al linguaggio.
   ]
-]
+] <teorema-linguaggio-finito-decidibile>
 
 / Non decidibili: esistono degli insiemi che non sono decidibili? Si, l'insieme dei problemi di decisione è troppo numeroso.
 
@@ -163,41 +163,42 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
 Possiamo creare il seguente insieme:
 
-#{
-  set text(weight: "bold")
-  let stroke_alpha = 150
-  let fill_alpha = 50
-  let big_dot = text(20pt)[$dot$]
+#figure(
+  {
+    set text(weight: "bold")
+    let stroke_alpha = 150
+    let fill_alpha = 50
+    let big_dot = text(20pt)[$dot$]
 
-  let complexity_classes = cetz.canvas({
-    import cetz.draw: *
+    let complexity_classes = cetz.canvas({
+      import cetz.draw: *
 
-    // External box
-    rect((0, 0), (rel: (10, 6)), name: "superset")
-    content("superset.north-east", [$2^2^*$], anchor: "south-west")
+      // External box
+      rect((0, 0), (rel: (10, 6)), name: "superset")
+      content("superset.north-east", [$2^2^*$], anchor: "south-west")
 
-    // Non decidibili
-    rect(
-      "superset.south-west",
-      (rel: (4, 4)),
-      stroke: rgb(70, 70, 70, stroke_alpha),
-      fill: rgb(70, 70, 70, fill_alpha),
-      name: "non_decidibili",
-    )
-    content("non_decidibili", [Non decidibili])
+      // Non decidibili
+      rect(
+        "superset.south-west",
+        (rel: (4, 4)),
+        stroke: rgb(70, 70, 70, stroke_alpha),
+        fill: rgb(70, 70, 70, fill_alpha),
+        name: "non_decidibili",
+      )
+      content("non_decidibili", [Non decidibili])
 
-    // Invisible layout anchor element
-    circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
+      // Invisible layout anchor element
+      circle("superset", radius: 2.7, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
 
-    content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
-    content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
-    content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
-  })
+      content("center_anchor.north-west", [#big_dot X], anchor: "south-east")
+      content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
+      content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
+    })
 
-  align(center, block(breakable: false, complexity_classes))
-}
-
-// TODO: aggiungere caption
+    align(center, block(breakable: false, complexity_classes))
+  },
+  caption: [Rappresentazione dei problemi decidibili e non decidibili],
+)
 
 / Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un'algoritmo che è in grado di decidere un dato elemento.
   #informalmente[
@@ -205,11 +206,11 @@ Possiamo creare il seguente insieme:
   ]
   #teorema("Teorema di Rice")[
     Non si può decidere programmaticamente se un programma termina.
-  ]
+  ] <teorema-rice>
 
 Tutti i problemi del corso, saranno decidibili.
 
-== Complessità
+== Complessità <complessita>
 
 Sia $Pi$ un problema decidibile, possiamo chiederci quante risorse servono per risolverlo, ovvero la sua *complessità*.
 
@@ -219,7 +220,7 @@ Il concetto di risorsa tuttavia può essere vario (tempo, numero di istruzioni, 
 - La risorsa che ci interessa è il tempo $T$ richiesto dall'algoritmo $A$ per l'input $x$:
 $ forall x in I_Pi, quad T_(A)(x) $
 
-=== Assunzione Worst-Case
+=== Assunzione Worst-Case <assunzione-worst-case>
 
 Considerare $T_(A)(x)$ è scomodo in quanto questa funzione dipende fortemente dalla dimensione dell'input specifico $x$. Conviene aggregare gli input in base alla loro *dimensione*, definendo $t_A$ come il tempo massimo impiegato da $A$ per input $x$ di dimensione $n$:
 $ t_A : bb(N) -> bb(N), quad t_(A)(n) = max_(x in I_Pi, |x| = n) T_(A)(x) $
@@ -236,7 +237,7 @@ Tuttavia, essendo un assunzione abbiamo una *perdita di informazione*. All'inter
   ]
 ]
 
-=== Assunzione Avg-Case
+=== Assunzione Avg-Case <assunzione-avg-case>
 
 Un'altra possibilità è calcolare la media delle risorse impiegate per una certa taglia di input. Molto raramente è possibile fare il calcolo empirico, quindi è necessario fare uno studio, detto *Average Case Analysis*. Problemi di questa assunzione:
 - lo studio del caso medio è molto difficile, spesso impossibile
@@ -254,7 +255,7 @@ Un'altra possibilità è calcolare la media delle risorse impiegate per una cert
 
 Da qui in avanti useremo l'assunzione Worst-Case.
 
-=== Assunzione asintotica
+=== Assunzione asintotica <assunzione-asintotica>
 
 La funzione $t$ si può comportare in maniera molto diversa per algoritmi diversi, come possiamo valutare quale algoritmo è "migliore"? Si utilizza *l'assunzione asintotica*, ovvero si valuta il tempo impiegato dall'algoritmo considerando *input di taglia infinita*. L'algoritmo migliore sarà quello che tende ad infinito meno rapidamente.
 
@@ -269,7 +270,7 @@ La funzione $t$ si può comportare in maniera molto diversa per algoritmi divers
   // TODO: disegnino funzioni che si intrecciano
 ]
 
-== Complessità Strutturale e Algoritmica
+== Complessità Strutturale e Algoritmica <complessita-strutturale-algoritmica>
 
 Possiamo dividere la definizione di complessità in due categorie:
 
@@ -304,72 +305,3 @@ Questi due bound non coincidono _quasi_ mai, lasciando incertezza su quale sia l
 #nota[
   Sono rarissimi i problemi in cui abbiamo chiuso la forbice, spesso perchè dimostrare un limite inferiore è molto complesso. Di questi problemi non conosciamo la "vera" complessità.
 ]
-
-// TODO: spostare questo diagramma nella sezione giusta
-#{
-  set text(weight: "bold")
-  let stroke_alpha = 150
-  let fill_alpha = 50
-
-  let complexity_classes = cetz.canvas({
-    import cetz.draw: *
-
-    grid(
-      (0, 0),
-      (rel: (13, 8)),
-      help-lines: true,
-    )
-
-    // External box
-    rect((0, 0), (rel: (13, 8)), name: "superset")
-    content("superset.north-east", [$2^2^*$], anchor: "south-west")
-
-    // Non decidibili
-    rect(
-      "superset.south-west",
-      (rel: (4, 4)),
-      stroke: rgb(70, 70, 70, stroke_alpha),
-      fill: rgb(70, 70, 70, fill_alpha),
-      name: "non_decidibili",
-    )
-    content("non_decidibili", [Non decidibili])
-
-    // Invisible layout anchor element
-    circle("superset", radius: 2, stroke: rgb(255, 0, 255, 0), name: "center_anchor")
-
-    // NP circle
-    circle(
-      "center_anchor.east",
-      radius: 3.5,
-      stroke: rgb(255, 0, 0, stroke_alpha),
-      fill: rgb(255, 0, 0, fill_alpha),
-      name: "NP",
-    )
-    content("NP.north-west", [NP], anchor: "south-east")
-
-    // P circle
-    circle(
-      "NP.south",
-      anchor: "south",
-      radius: 2,
-      stroke: rgb(0, 255, 0, stroke_alpha),
-      fill: rgb(0, 255, 0, fill_alpha),
-      name: "P",
-    )
-    content("P.north-east", [P], anchor: "south-west")
-
-    // NP complete
-    circle(
-      "NP.north-west",
-      anchor: "north-west",
-      radius: 0.8,
-      stroke: rgb(0, 0, 255, stroke_alpha),
-      fill: rgb(0, 0, 255, fill_alpha),
-      name: "NP_complete",
-    )
-    content("NP_complete.east", [NPC], anchor: "north-west")
-    content("NP_complete", text(style: "italic")[#text(20pt)[$dot$] SAT])
-  })
-
-  align(center, block(breakable: false, complexity_classes))
-}
