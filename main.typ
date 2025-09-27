@@ -58,3 +58,4 @@
 #include "chapters/1-notazione.typ"
 #include "chapters/2-problemi-e-algoritmi.typ"
 #include "chapters/3-classi-di-complessita.typ"
+#include "chapters/5-problema-load-balancing.typ"
