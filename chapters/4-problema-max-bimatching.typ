@@ -237,7 +237,7 @@ Inoltre saranno utili le seguenti definizioni:
     La funzione visita prima tutti i vertici a distanza $1$ da quello iniziale, poi a distanza $2$ e così via.
   ]
   - la visita parte da un vertice $u in V_1$ *esposto*
-  - primo passo: vengono visitati i vertici adiacenti a $v$ non esposti, seguendo i lati *liberi* ($in.not M$)
+  - primo passo: vengono visitati i vertici adiacenti a $u$ non esposti, seguendo i lati *liberi* ($in.not M$)
   - passo successivo: partendo da tutti i vertici non esposti, si seguono i lati *occupati* ($in M$)
   - si continua *alternando* lati liberi ($in.not M$) e occupati ($in M$)
   - la visita *termina* quando viene visitato un vertice $d in V_2$ *esposto*: trovato un *cammino aumentante*
@@ -309,7 +309,7 @@ Inoltre saranno utili le seguenti definizioni:
 
 == Problema Perfect Bi-Matching [P]
 
-Si tratta di un problema di *decisone*, dato un grafo determinare se esiste un matching che coinvolge *tutti* i vertici.
+Si tratta di un problema di *decisione*, dato un grafo determinare se esiste un matching che coinvolge *tutti* i vertici.
 
 #teorema("Corollario")[
   *$ "Perfect Matching" in P $*
