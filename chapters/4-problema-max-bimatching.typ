@@ -16,7 +16,7 @@
 
 Formalmente, possiamo definire il problema Max Matching come segue:
 - $I_Pi = G(V, E)$: grafo non orientato
-- $"Sol"_("amm") = M subset.eq E$: un *matching*, ovvero un sottoinsieme di lati tale che ogni vertice è collegato ad al massimo un lato del matching _(ovvero un insieme di coppie sposate)_: $ forall x in V, "al massimo un lato di" M "è incidente su" x $
+- $"Amm"_Pi = M subset.eq E$: un *matching*, ovvero un sottoinsieme di lati tale che ogni vertice è collegato ad al massimo un lato del matching _(ovvero un insieme di coppie sposate)_: $ forall x in V, "al massimo un lato di" M "è incidente su" x $
 - $C_Pi = |M|$: numero di coppie
 - $t_Pi = max$
 
@@ -57,7 +57,7 @@ Inoltre saranno utili le seguenti definizioni:
     Sia $M'$ un matching più grande di $M$: $|M'| > |M|$
 
     #attenzione[
-      Non è detto che $M^' subset M$, $M^'$ e $M$ possono essere differenti
+      Non è detto che $M' subset M$, $M'$ e $M$ possono essere differenti
     ]
 
     Consideriamo la differenza simmetrica $Delta$, ovvero i lati che non sono in nessuno dei due matching:
@@ -125,7 +125,6 @@ Inoltre saranno utili le seguenti definizioni:
       - è isolato (grado 0)
       - è l'estremo di un cammino (grado 1)
       - è all'interno di un cammino o ciclo (grado 2)
-      // TODO: disegno
     ]
 
     #teorema("Osservazione 4")[
@@ -312,7 +311,7 @@ Inoltre saranno utili le seguenti definizioni:
 
 Si tratta di un problema di *decisone*, dato un grafo determinare se esiste un matching che coinvolge *tutti* i vertici.
 
-#teorema("Crollario")[
+#teorema("Corollario")[
   *$ "Perfect Matching" in P $*
 
   #dimostrazione[
