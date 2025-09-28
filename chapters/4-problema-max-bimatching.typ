@@ -60,8 +60,8 @@ Inoltre saranno utili le seguenti definizioni:
       Non è detto che $M' subset M$, $M'$ e $M$ possono essere differenti
     ]
 
-    Consideriamo la differenza simmetrica $Delta$, ovvero i lati che non sono in nessuno dei due matching:
-    $ X = M space Delta space M^' = (M \\ M^') union (M' \\ M) = (M union M') \\ (M inter M') $
+    Consideriamo la differenza simmetrica $Delta$, ovvero i lati in esattamente uno dei due matching (non in entrambi):
+    $ X = M space Delta space M' = (M \\ M') union (M' \\ M) = (M union M') \\ (M inter M') $
 
     #figure(
       cetz.canvas({
@@ -76,7 +76,7 @@ Inoltre saranno utili le seguenti definizioni:
     )
 
     #teorema("Osservazione 1")[
-      $X$ contiene più elementi $in M'$ che $in M$, in quanto abbiamo supposto che $|M^'| > |M|$.
+      $X$ contiene più elementi $in M'$ che $in M$, in quanto abbiamo supposto che $|M'| > |M|$.
     ]
 
     #let draw-point-with-label(x, y, label) = {
@@ -91,7 +91,7 @@ Inoltre saranno utili le seguenti definizioni:
     #teorema("Osservazione 2")[
       Ogni vertice ha al *massimo* $2$ lati di $X$ *incidenti*, altrimenti non sarebbero matching.
 
-      Dato un vertice $v$ e due lati $l_1 in M\\M^'$ e $l_2 in M^'\\M$, possiamo trovarci nella seguente situazione:
+      Dato un vertice $v$ e due lati $l_1 in M\\M'$ e $l_2 in M'\\M$, possiamo trovarci nella seguente situazione:
 
       #align(center)[
         #cetz.canvas({
@@ -169,7 +169,7 @@ Inoltre saranno utili le seguenti definizioni:
         })
       ]
 
-      Di conseguenza devono esistere dei *cammini di dimensione dispari*, altrimenti sarebbe impossibile soddisfare $|M^'| > |M|$.
+      Di conseguenza devono esistere dei *cammini di dimensione dispari*, altrimenti sarebbe impossibile soddisfare $|M'| > |M|$.
     ]
 
     #teorema("Osservazione 5")[
