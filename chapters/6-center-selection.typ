@@ -21,6 +21,29 @@ Lo spazio dei punti *$Omega$ si dice spaziometrico sse $forall x,y,z in Omega$*,
   $ d(x,y) = sqrt(sum_(i=1)^n (x_i-y_i)^2) $
   Si possono usare anche differenti distanze, come quella di Churchill: 
   $ d_"hill"(x,y)=max_(i=1)^n (x_i-y_i) $
-
-
 ]
+
+//TODO Esempio di spazio di Vornoi
+
+Dato uno *spazio di Vornoi*, ogni volta che andiamo a posizionare un centro esso viene partizionato. Ogni partizione prende il *nome di cella di Vornoi*: parte di piano dove tutti i punti facentene parte fanno riferimento allo stesso centro. 
+
+#nota[
+  Il numero di partizioni dello spazio che vengono a crearsi corrisponde al numero di centri inseriti.
+]
+
+Possiamo ora definire il *problema di CenterSelection*:
+- Input: 
+  - *$(Omega, d)$*, spaziometrico
+  - *$S subset.eq Omega$*, punti dello spaziometrico
+  - *$k in bb(N)^+$*, budget da rispettare
+
+- *$"Amm"_(Pi)(x): C subset.eq S quad t.c |C| <= k $*, ovvero un sottoinsieme di punti (i centri) che rispettano il budget. 
+- Definita: 
+  *$ forall s in S rho(x,C) = min_(c in C) d(x,c) $*
+  ovvero la distanza che un cittadino della cella $x$ impiega per ranggiungere un centro $C$ fissato.\
+  La *funzione obbiettivo* è: 
+  *$ rho(C) = max_(x in S) rho(x,c)  $*
+  dove *$rho(C)$ è il raggio di copertura di $C$*
+- *$t_Pi = max$*
+
+
