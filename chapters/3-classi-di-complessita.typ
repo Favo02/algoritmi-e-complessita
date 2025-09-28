@@ -190,6 +190,39 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   caption: "Classi di complessità per problemi di decisione",
 )
 
+=== Pseudopolinomialità e NP-completezza forte/debole
+
+#attenzione[
+  Ha senso fare questo discorso solo per algoritmi che prendono in input un numero intero.
+]
+
+Un algoritmo si dice *pseudopolinomiale* se è polinomiale nel *valore* dell'input ma esponenziale nella *dimensione* dell'input.
+
+#esempio[
+  Trovare se un numero è primo, algoritmo naive:
+  #pseudocode(
+    [*Input:* $n in bb(N)$],
+    [*For* $i = 2, 3, dots, n-1$ #emph("// controlla tutti i possibili divisori")],
+    indent(
+      [*If* $n mod i = 0$ *then* *output* $"False"$],
+    ),
+    [*End*],
+    [*output* $"True"$],
+  )
+
+  Questo algoritmo *NON è polinomiale*, ma *pseudopolinomiale* dato che dipende dal valore di $n$ e non dalla lunghezza di $n$.
+  $ O(n) = O(2^(|n|)) $
+]
+
+Un problema di decisione $Pi$ è:
+- *debolmente NP-completo* se esiste un algorimto pseudopolinomiale che lo riso
+- *fortemente NP-completo* se, seppur limitando polinomialmente tutti i numeri $in I_Pi$, il problema rimane NP-completo
+
+#informalmente[
+  / Debolmente NP-completo: gira in tempo polinomiale sul valore dell'input
+  / Fortemente NP-completo: anche su valori piccoli, è comunque esponenziale
+]
+
 == Problemi di Ottimizzazione <problemi-ottimizzazione>
 
 Si tratta di una famiglia speciale di problemi (come quelli di decisione).
