@@ -43,7 +43,55 @@ Possiamo ora definire il *problema di CenterSelection*:
   ovvero la distanza che un cittadino della cella $x$ impiega per ranggiungere un centro $C$ fissato.\
   La *funzione obbiettivo* è: 
   *$ rho(C) = max_(x in S) rho(x,c)  $*
-  dove *$rho(C)$ è il raggio di copertura di $C$*
-- *$t_Pi = max$*
+  dove *$rho(C)$ è il raggio di copertura di $C$*, l'obbiettivo è dunque *mininimizzare $rho(C)$*
+- *$t_Pi = min$*
 
+#teorema("Teorema")[
+  *$"CenterSelection" in "NPO-c"$*
+]
 
+=== Algoritmo CenterSelectionPlus
+
+#informalmente[
+  Per descrivere il problema di CenterSelection, andremo ad utilizzare una sua variante semplificata, ovvero CenterSelectionPlus. \
+  Questa versione presenta un input in più: $r in bb(R)^+$. Utilizzato come raggio.
+]
+
+*Algoritmo $"CenterSelectionPlus"$*:
+
+#import "@preview/lovelace:0.3.0": *
+#pseudocode(
+  [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
+  [$C <- emptyset$],
+  [*while* $S eq.not emptyset$],
+  indent(
+    [$hat(s) <- $ take any $hat(s) in S$],
+    [$C <- C union {hat(s)}$],
+    [remove from $S$ all $x "t.c" d(x,hat(s))<=2r$],
+    [#emph("rimuove tutti i punti che stanno in un raggio " + $2r$ +" da "+$hat(s)$)],
+    [*if* $|C| > k$],
+    indent(
+      [*output* "impossibile"]
+    ),
+    [*else*],
+    indent(
+      [*output* $C$]
+    ),
+    [*end*]
+  )
+)
+
+//Todo Mettere un esempio
+
+#nota[
+  il comportamento dell'algoritmo è influenzato in base alla scelta del *parametro $r$*:
+  - se *$r$ è molto grande*, *l'algoritmo produce quasi sicuramente una soluzione* che rispetta il budget (ad ogni passo cancello tanti punti)
+  - se *$r$ è molto piccolo*, *l'algorimto trova delle soluzioni migliori ma che potrebbero sforare il budget* a disposizione, rendendole non ammissibili.  
+]
+
+#nota[
+  L'algorimto di *$"CenterSelectionPuls"$ gode della proprietà di arbitrarietà*, in alcuni punti può effettuare delle scelte "casuali" (ad esempio non viene specificato come viene scelto il primo punto $hat(s)$).\
+  Quando si implementa un algoritmo arbitrario, bisonga deciderne il comportamento. \
+  
+  Le analisi dell'algorimto vengono fatte indipendentemente dalle scelte arbitrarie effettuate. 
+]
