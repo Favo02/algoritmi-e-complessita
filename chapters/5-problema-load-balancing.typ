@@ -123,7 +123,7 @@
       ]
     ] <greedy-load-balancing-apx-2-oss-2>
 
-    Supponiamo di eseguire ora l'algorimto Greedy Load Balancing, ci restituisce una soluzione $L$, che non è altro che il carico della macchina più carica:
+    Supponiamo di eseguire ora l'algoritmo Greedy Load Balancing, ci restituisce una soluzione $L$, che non è altro che il carico della macchina più carica:
     $ L = max L_hat(i), quad hat(i) "macchina più carica" $
 
     Consideriamo ora *l'ultimo task* $t_hat(j)$ assegnato alla macchina $hat(i)$.
@@ -170,7 +170,7 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
   Con lasca si intende che l'algoritmo è effettivamente 2-approssimante, ma potrebbe essere meglio, ovvero non si ottine mai un output abbastanza brutto da essere un 2-ottimo.
 
   Ci sono due alternative:
-  - Si trova un caso in cui la soluzione prodotta dall'algorimto è $2$ volte l'ottimo (caso peggiore)
+  - Si trova un caso in cui la soluzione prodotta dall'algoritmo è $2$ volte l'ottimo (caso peggiore)
   - Si va a migliorare la dimostrazione, ottenendo un $alpha$ più piccolo ($1.8$-APX ad esempio)
 ]
 
@@ -202,13 +202,13 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
 
     #informalmente[
       L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equalmente tra le varie macchine i task da $1$.
-      In un ipotetica soluzione ottima, si potrebbe lasciare una macchina vuota e assegnarle il task da $m$ alla fine.
-      In questo csao, tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m - 1 + 1$ task da 1, l'ultima con solo il carico da $m$).
+      In una ipotetica soluzione ottima, si potrebbe lasciare una macchina vuota e assegnarle il task da $m$ alla fine.
+      In questo caso tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m - 1 + 1$ task da 1, l'ultima con solo il carico da $m$).
       Questa è la soluzione ottima dato che è la media.
     ]
 
     #nota[
-      Questa dimostrazione ha anche evidenziato i punti deboli dell'algorimto.
+      Questa dimostrazione ha anche evidenziato i punti deboli dell'algoritmo.
     ]
   ]
 ]
@@ -273,7 +273,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
 #attenzione[
   Questa dimostrazione non è la migliore possibile.
-  L'algorimto non arriverà mai a generare una soluzione $3/2$ volte più grande dell'ottimo.
+  L'algoritmo non arriverà mai a generare una soluzione $3/2$ volte più grande dell'ottimo.
 
   Esiste una dimostrazione _(che non vedremo)_ di _Graham 1969_ che mostra che è una $4/3$-approssimazione, di conseguenza:
   *$ "SortedGreedyLoadBalancing" in 4/3"-APX" $*
@@ -301,14 +301,4 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   #dimostrazione[
     Il probelma di decisione associato a LoadBalancing è fortemente NP completo.
   ]
-]
-
-Load Balancing sta in PTAS (dimostrata da _Hochbaum-Shmoys 1988_).
-
-Se $P != N P$, LoadBalancing non può stare in FPTAS.
-
-Quindi loadbalancing cresce in maniera esponenziale all'abbassarsi di $epsilon$.
-
-#dimostrazione[
-  Si sa in quanto il problema di decisione è fortemente NP-completo
 ]
