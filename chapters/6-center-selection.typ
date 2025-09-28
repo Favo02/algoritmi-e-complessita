@@ -95,3 +95,36 @@ Possiamo ora definire il *problema di CenterSelection*:
   
   Le analisi dell'algorimto vengono fatte indipendentemente dalle scelte arbitrarie effettuate. 
 ]
+
+//TODO da sistemare
+#figure(
+  caption: [Esempio di esecuzione di CenterSelectionPlus con $k=2$ e $r$ fissato.],
+  box(width: 200pt, height: 160pt, stroke: 0.5pt)[
+    // Centri (in rosso)
+    #place(top + left, dx: 70pt, dy: 80pt, circle(radius: 3pt, fill: red))
+    #place(top + left, dx: 130pt, dy: 90pt, circle(radius: 3pt, fill: red))
+    
+    // Cerchi di raggio 2r centrati sui punti rossi
+    #place(top + left, dx: 20pt, dy: 30pt, circle(radius: 50pt, stroke: red))
+    #place(top + left, dx: 80pt, dy: 40pt, circle(radius: 50pt, stroke: red))
+
+    // Punti normali
+    #place(top + left, dx: 40pt, dy: 70pt, circle(radius: 2pt))
+    #place(top + left, dx: 90pt, dy: 40pt, circle(radius: 2pt))
+    #place(top + left, dx: 150pt, dy: 60pt, circle(radius: 2pt))
+    #place(top + left, dx: 160pt, dy: 120pt, circle(radius: 2pt))
+    #place(top + left, dx: 30pt, dy: 130pt, circle(radius: 2pt))
+    #place(top + left, dx: 120pt, dy: 130pt, circle(radius: 2pt))
+
+    // Collegamenti corretti ai centri più vicini
+    #place(top + left, dx: 40pt, dy: 70pt, line(stroke: (dash: "dashed"), length: 35pt, angle: 20deg))
+    #place(top + left, dx: 90pt, dy: 40pt, line(stroke: (dash: "dashed"), length: 45pt, angle: 110deg))
+    #place(top + left, dx: 150pt, dy: 60pt, line(stroke: (dash: "dashed"), length: 35pt, angle: 120deg))
+    #place(top + left, dx: 160pt, dy: 120pt, line(stroke: (dash: "dashed"), length: 35pt, angle: 225deg))
+    #place(top + left, dx: 120pt, dy: 130pt, line(stroke: (dash: "dashed"), length: 35pt, angle: 290deg))
+
+    // Etichette dei centri
+    #place(top + left, dx: 65pt, dy: 90pt, text(fill: red, [c#sub[1]]))
+    #place(top + left, dx: 125pt, dy: 100pt, text(fill: red, [c#sub[2]]))
+  ]
+)
