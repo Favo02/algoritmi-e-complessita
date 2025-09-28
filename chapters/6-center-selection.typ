@@ -128,3 +128,20 @@ Possiamo ora definire il *problema di CenterSelection*:
     #place(top + left, dx: 125pt, dy: 100pt, text(fill: red, [c#sub[2]]))
   ]
 )
+
+#teorema("Teorema")[
+  *Se l'algoritmo $"CenterSelectionPlus"$ emette un output, esso è una $(2r)/rho^*-"approssimazione"$ per $"CenterSelection"$*
+]
+
+#dimostrazione()[
+  Seguendo l'algoritmo ogni punto $s in S$, viene cancellato dall'insieme dei punti se: 
+  $ 
+    "fissato" s in S,quad exists hat(s)in C "t.c" d(s,hat(s))<=2r \
+    #emph("dato che "+ $s$ +" si trova dentro al raggio " +$rho(hat(s))$)\
+    arrow underbrace(rho(C),d(s,hat(s))) <= 2r \
+     rho(C)/rho^* <= (2r) / p^* quad qed
+  $
+  #nota()[
+    Si può osservare come *il tasso di approssimazione decresce al valore di $r$*, tuttavia $r$ non può essere ridotto all'infinito.
+  ]
+]
