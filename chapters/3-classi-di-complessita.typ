@@ -560,3 +560,39 @@ $ Pi (x in I_(Pi), epsilon > 1) $
   },
   caption: "Classi di complessità per problemi di ottimizzazione",
 )
+
+== Pseudopolinomialità
+
+Un algorimto *$A$ si dice pseudopolinomiale se impiega un tempo $t_A$ polinomiale rispetto ai valori assunti dall'input* (e non rispetto alla lunghezza dell'input).
+
+#attenzione[
+  Quando vogliamo sapere se un algorimto $A$ impiega un tempo *$t_A$ polinomiale, ci riferiamo sempre al tempo impiegato rispetto alla lunghezza dell'input*. 
+]
+
+#esempio[
+  Supponiamo di avere un certo algorimto $A$ per un problema $Pi$: 
+  - $I_Pi= n = x<= y, quad x,y in bb(N)^+$
+
+  Supponiamo che $A$ impieghi un tempo $t_A = O(x+y)$. L'algorimto $A$ è polinomiale? \
+  La funzione *$t_A$ si riferisce sempre al tempo impiegato rispetto alla lunghezza dell'input*, in questo caso l'input $n$ avra una lunghezza pari a: 
+  $ n =& 2log(x)+2log(y)=2log(x y) \
+      & log(x y) = n/2 \
+      & x y = e^(n/2) \
+      & x^2 >= e^(n/2) \
+      & x >= e^n 
+  $
+  Di conseguenza *$t_A=O(x+y) = O(e^n)$*. L'algoritmo $A$ non è polinomiale rispetto alla lunghezza in bit dell'input (lunghezza != valore dell'input). L'algorimto $A$ è dunque pseudopolinomiale
+]
+
+== Np-Hard
+
+La classe dei problemi NP-completi si suddivide a sua volta in due categorie: 
+- *problemi debolmente NP-completi*
+- *problemi fortemente NP-completi*
+
+Sia $Pi$ un problema di decione, $Pi in "NPc"$, ovvero: 
+- dato un input $x in bb(N)$
+- decidere se $x in I_Pi$ è un problema NP-completo
+In Particolare: 
+- se *esiste un algoritmo $A$ pseudopolinomiale che decide $Pi$, $Pi$ è debolmente $"NP-completo"$*
+- *se non esiste un algoritmo $A$ pseudopolinomiale* che decide $Pi$, *$Pi$ è fortemente $"NP-completo"$*
