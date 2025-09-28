@@ -77,31 +77,31 @@ L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
 #dimostrazione()[
   #teorema("Osservazione 1")[
     $ L^*>=1/m sum_(j in n)t_j $
-    Lo span (soluzione ottima) è almeno la media tra i task / il numero di macchine. In questo modo nessuna macchina sarà mai scarica -> basso periodo di inattività.
+    Lo span (soluzione ottima) è almeno la $"somma tra i task" / "il numero di macchine"$. In questo modo nessuna macchina sarà mai scarica, avremo un basso periodo di inattività.
   ]
   #dimostrazione()[
     Se sommo i carici di ogni macchina, ottengo la somma di tutti i task: 
     *$ sum_(i in m) L_i^* = sum_(j in n) t_j $*
     Applicando il principio di *pidgeon holding*, almeno una macchina $i$ avrà un carico $L_i^* >= 1/m sum_(i in n) t_j$, di conseguenza la soluzione ottima: 
-    *$ L^* = underbracket(max, i in n) L_i^* >= 1/m sum_(j in n) t_j  $*
+    *$ L^* = max_(i in m) L_i^* >= 1/m sum_(j in n) t_j  $*
 
     #informalmente[
-      Il *principio di pidgeon holding* (o anche detto problema delle camicie e cassetti) afferma che se ci sono $7$ camicie e $5$ cassetti, almeno un cassetto contiene $2$ camicie.
+      Per il *principio di pidgeon holding* (o anche detto problema delle camicie e cassetti) possiamo affermare che se ci sono $7$ camicie e $5$ cassetti, almeno un cassetto contiene $2$ camicie.
     ]
   ]
 
   #teorema("Osservazione 2")[
-    *$ L^*>= underparen(max, j in n) t_j $*
+    *$ L^*>= max_(j in n) t_j $*
     La dimostrazione è ovvia: il task più lungo deve per forza essere assegnato ad una macchina.
   ]
 
-  Supponiamo di eseguire ora l'algorimto Greedy LoadBalancing. L'output è una *soluzione $L$* (non ottima): 
+  Supponiamo di eseguire ora l'algorimto Greedy LoadBalancing. Esso produrrà una *soluzione $L$* (supponiamo sia non ottima): 
    *$ L = max L_hat(i), hat(i) "macchina più carica" $*
   Consideriamo ora *l'ultimo task assegnato $t_hat(j)$* alla macchina $hat(i)$.\
   Cosa Rappresentata *$L_hat(i) - t_hat(j)$* ? é il carico che aveva la macchina più scarica $hat(i)$ prima dell'assegnazione del carico $t_hat(j)$: 
   *$ L_hat(i) - t_hat(j) <= L_i^' <= L_i forall i in m  $*
   
-  Dove $L^'$ è il carico delle altra macchine all'assegnamento del task $t_hat(j)$ (più cariche di $L_hat(i)-t_hat(j)$).\ 
+  Dove *$L^'$* è il carico delle altra macchine all'assegnamento del task $t_hat(j)$ (più cariche di $L_hat(i)-t_hat(j)$).\ 
   Moltiplichiamo per $m$:
   
   *$ m(L_hat(i)-t_hat(j)) <= sum_(i in m) L_i = sum_(j in n) t_j $*
@@ -111,7 +111,7 @@ L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
   *$ L_hat(i)-t_hat(j) <= 1/m sum_(j in n)t_j <= underbrace(L^*,"oss 1") $*
 
   Possiamo riscrivere la soluzone trovata $L$ (non ottima) come:
-  *$ L = underbrace(L_hat(i), max L_i) = underbrace(L_hat(i) - t_hat(j),<= L^*) + underbrace(t_hat(j),<= L^*) <= 2L^* $* 
+  *$ L = underbrace(L_hat(i), max L_i) = underbrace(L_hat(i) - t_hat(j),<= L^*) + underbrace(t_hat(j),<= L^* \ "oss 2") <= 2L^* $* 
   Di conseguenza considerando il rapporto di approsimazione:
   *$ L/L^* <= 2 $* 
 
@@ -125,12 +125,12 @@ L'algoritmo proposto è polinomiale: *$O(m log n)$*, utilizzando un heap
   ]
 ]
 
-A questo punto potremo chiederci se la dimostrazione proposta è la "migliore possibile".
+A questo punto potremo chiederci *se la dimostrazione proposta è la "migliore possibile"*.
 
 #informalmente[
   Ci stiamo chiedendo se la dimostrazione proposta in precedenza è precisa oppure è lasca. Ci sono due alternative: 
   - Si trova un caso in cui la soluzione prodotta dall'algorimto è $2$ volte l'ottimo 
-  - Si migliora la dimostazione ($1.8$-APX ad esempio).
+  - Si va a migliorare la dimostrazione, ottenendo un $a$ più piccolo ($1.8$-APX ad esempio).
 ]
 
 #teorema("Teorema")[
@@ -153,22 +153,23 @@ A questo punto potremo chiederci se la dimostrazione proposta è la "migliore po
   
   Come si comporta l'algoritmo:
   - assegnaimo i task da 1 alla prima macchina libera
-  - assegnaimo il carico da $1$ ad ogni macchina
-  - ripetiamo questa cosa  $m-1$ volte, quindi ogni macchina ha $m-1$ tempo
-  - arriva l'ultimo task, la assegnaimo alla prima macchina, che ha $m-1 + m$ tempo
+  - l'assegnazione viene reiterata $m-1$ volte (numero di task da 1). Ogni macchina ha un carico pari a $m-1$.
+  - quando arriva l'ultimo task, viene assegnato alla prima macchina. Avendo così un carico *$L = m-1+m = 2m-1$*.
+
+  //TODO: Non so se volete mettere un diesgno. io penso si capisca cosi.
 
   #informalmente[
-    L'algoritmo non sa che arriva la task grande, quindi distribuisce equalmente quelli da 1. Se lo sapesse lascerebbe una macchina vuota e gli assegnerebbe alla fine $m$. In questo csao tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m -1 + 1$ task da 1, l'ultima con solo il carico da $m$). Questa è la soluzione ottima dato che è la media.
+    L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equalmente tra le varie macchine i task da $1$. In un ipotetica soluzione ottima, si potrebbe lascere una macchina vuota e assegnare il task da $m$ alla fine. In questo csao, tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m -1 + 1$ task da 1, l'ultima con solo il carico da $m$). Questa è la soluzione ottima dato che è la media.
   ]
 
-  $ L/L^* = (2 m -1) / m = 2 - 1/m >= 2-epsilon space qed $
+  *$ L/L^* = (2 m -1) / m = 2 - 1/m underbrace(>=,"per" m > 1/ epsilon) 2-epsilon space $*
 
   #informalmente[
-    Questa dimostrazione ci ha anche mostrato i punti deboli dell'algorimto.
+    Questa dimostrazione ha anche evidenziato i punti deboli dell'algorimto
   ]
 ]
 
-== SortedGreedyLoadBalancing [3/2-APX]
+== Sorted Greedy LoadBalancing [3/2-APX]
 
 - Input
 - Ordina i task in modo decrescente
