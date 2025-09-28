@@ -49,8 +49,8 @@
 == Greedy LoadBalancing _(online)_ [2-APX]
 
 #nota[
-  Questo algoritmo è *online*, ovvero i task da assegnare alle varie macchine posso arrivare man mano.
-  Non è necessario conoscerli tutti a priori.
+  Questo algoritmo è *online*, ovvero i task da assegnare alle varie macchine possono arrivare man mano.
+  Non è necessario conoscerli tutti a priori.ù
 ]
 
 #pseudocode(
@@ -96,7 +96,7 @@
         $ exists i in m, space L_i^* >= 1/m sum_(j in n) t_j $
 
         #nota[
-          Il principio di *pidgenhole*, (oppure _pidgeon holding_, _della piccionaia_ o _delle camicie e cassetti_ afferma che se $m$ oggetti devono essere messi in $n$ contenitori, con $m > n$, allora almeno un contenitore deve contenitore $> 1$ oggetti.
+          Il principio di *pigeonhole*, (oppure _pigeonholing_, _della piccionaia_ o _delle camicie e cassetti_ afferma che se $m$ oggetti devono essere messi in $n$ contenitori, con $m > n$, allora almeno un contenitore deve contenere $> 1$ oggetti.
 
           Una generalizzazione afferma che ci sarà almeno un contenitore che conterrà almeno $ceil(m / n)$ oggetti, ovvero $>=$ alla media (come utilizzato sopra).
 
@@ -181,7 +181,7 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
   #informalmente[
     Gli input occupano tutto lo spazio delle soluzioni:
     - alcuni vanno _bene_ e producono una soluzione $L-epsilon$
-    - altri vanno _male_ e producono una $2$-approsimazione
+    - altri vanno _male_ e producono una $2$-approssimazione
   ]
 
   #dimostrazione[
@@ -198,7 +198,7 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
 
     $ L/L^* = (2 m -1) / m = 2 - 1/m underbrace(>=, "per" m > 1 / epsilon) 2-epsilon space qed $
 
-    //TODO: Non so se volete mettere un diesgno. io penso si capisca cosi.
+    //TODO: Non so se volete mettere un disegno. io penso si capisca cosi.
 
     #informalmente[
       L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equalmente tra le varie macchine i task da $1$.
@@ -246,8 +246,8 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
         #dimostrazione[
           $ underbrace(t_0 >= t_1 >= ... >= t_m-1 >= t_m, "m+1 task") >= ... t_(n-1)\ $
-          Per il principio del _pidgeon holding_, almeno due task sono assegnati alla stessa macchina. Dato che il task $t_m$ è il più piccolo, allora le due assegnate alla stessa macchina devono essere per forza $>= 2 t_m$:
-          $ L^* >= underbrace(L_i^*, i "ha almeno" \ "due tast") >= 2t_m space qed $
+          Per il principio del _pigeonholing_, almeno due task sono assegnati alla stessa macchina. Dato che il task $t_m$ è il più piccolo, allora le due assegnate alla stessa macchina devono essere per forza $>= 2 t_m$:
+          $ L^* >= underbrace(L_i^*, i "ha almeno" \ "due task") >= 2t_m space qed $
         ]
       ] <sorted-greedy-loadbalancing-32-apx-oss1>
 
@@ -299,6 +299,6 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   *$ "Se P" != "NP, LoadBalancing" in.not "FPTAS" $*
 
   #dimostrazione[
-    Il probelma di decisione associato a LoadBalancing è fortemente NP completo.
+    Il problema di decisione associato a LoadBalancing è fortemente NP completo.
   ]
 ]
