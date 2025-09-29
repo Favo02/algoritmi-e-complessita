@@ -119,6 +119,58 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   ]
 ] <teorema-corollario-cook>
 
+=== Pseudopolinomialità
+
+#attenzione[
+  Ha senso fare questo discorso solo per algoritmi che prendono in input numeri interi.
+]
+
+Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale rispetto ai *valori* assunti dall'input, ma esponenziale nella *dimensione* dell'input.
+
+#esempio[
+  Supponiamo di avere un certo algoritmo $A$ per un problema $Pi$:
+  - $I_Pi = x in bb(N)^+$
+  - complessità $O(x)$: tempo impiegato dall'algorimto lineare sul *valore* di $x$
+
+  La funzione $t_(A)(n)$ (definita in #link-section(<assunzione-worst-case>)) è, però, definita sulla *lunghezza* dell'input. Utilizzando Elias-$gamma$ per codificare l'input otteniamo come dimensione dell'input $n$:
+  $
+          n & = 2log_2(x) \
+      n / 2 & = log_2(x) \
+    2^(n/2) & = x \
+        2^n & <= x
+  $
+  Di conseguenza $t_A = O(x) = O(2^n)$.
+  L'algoritmo $A$ *non è polinomiale* rispetto alla lunghezza dell'input, ma solo rispetto al valore.
+  L'algoritmo $A$ è dunque *pseudopolinomiale*.
+]
+
+#esempio[
+  Trovare se un numero è primo, algoritmo naive:
+  #pseudocode(
+    [*Input:* $n > 2 in bb(N)$],
+    [*For* $i = 2, dots, n-1$ #emph("// controlla tutti i possibili divisori")],
+    indent(
+      [*If* $n mod i = 0$ *then* *output* $"False"$],
+    ),
+    [*End*],
+    [*output* $"True"$],
+  )
+
+  Questo algoritmo *NON è polinomiale*, ma *pseudopolinomiale* dato che dipende dal valore di $n$ e non dalla lunghezza di $n$:
+  $ O(n) = O(2^(|n|)) $
+]
+
+=== NP-completezza Forte e Debole
+
+Un problema di decisione $Pi in "NPc"$ è:
+- *debolmente NP-completo* se esiste un algoritmo pseudopolinomiale che lo risolve
+- *fortemente NP-completo* se non esiste un algorimto pseudopolinomiale che lo risolve, ovvero, seppur limitando polinomialmente tutti i numeri $in I_Pi$, il problema rimane esponenziale
+
+#informalmente[
+  / Debolmente NP-completo: gira in tempo polinomiale sul valore dell'input
+  / Fortemente NP-completo: anche su valori piccoli, è comunque esponenziale
+]
+
 #figure(
   {
     set text(weight: "bold")
@@ -154,35 +206,46 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
       // NP circle
       circle(
         "center_anchor.east",
-        radius: 3.5,
+        radius: 3.7,
         stroke: rgb(255, 0, 0, stroke_alpha),
         fill: rgb(255, 0, 0, fill_alpha),
         name: "NP",
       )
-      content("NP.north-west", [NP], anchor: "south-east")
+      content("NP.west", [NP], anchor: "center")
 
       // P circle
       circle(
         "NP.south",
         anchor: "south",
-        radius: 2,
+        radius: 1.4,
         stroke: rgb(0, 255, 0, stroke_alpha),
         fill: rgb(0, 255, 0, fill_alpha),
         name: "P",
       )
-      content("P.north-east", [P], anchor: "south-west")
+      content("P.west", [P], anchor: "center")
 
       // NP complete
       circle(
-        "NP.north-west",
-        anchor: "north-west",
-        radius: 0.8,
+        "NP.north",
+        anchor: "north",
+        radius: 2,
         stroke: rgb(0, 0, 255, stroke_alpha),
         fill: rgb(0, 0, 255, fill_alpha),
         name: "NP_complete",
       )
-      content("NP_complete.east", [NPc], anchor: "north-west")
-      content("NP_complete", text(style: "italic")[#text(20pt)[$dot$] SAT])
+      content("NP_complete.west", [NPc], anchor: "center")
+
+      // Partition line dividing NP-complete circle into two halves
+      line(
+        "NP_complete.south-west",
+        "NP_complete.east",
+        stroke: rgb(0, 0, 255, 200) + 1pt,
+      )
+
+      // Labels for the two halves
+      content("NP_complete.north-east", text(size: 8pt)[NPc Forti], anchor: "north-east")
+      content("NP_complete.south-east", text(size: 8pt)[NPc Deboli], anchor: "east")
+      content("NP_complete", text(style: "italic", weight: "light")[#text(20pt)[$dot$] SAT])
     })
 
     align(center, block(breakable: false, complexity_classes))
@@ -560,39 +623,3 @@ $ Pi (x in I_(Pi), epsilon > 1) $
   },
   caption: "Classi di complessità per problemi di ottimizzazione",
 )
-
-== Pseudopolinomialità
-
-Un algorimto *$A$ si dice pseudopolinomiale se impiega un tempo $t_A$ polinomiale rispetto ai valori assunti dall'input* (e non rispetto alla lunghezza dell'input).
-
-#attenzione[
-  Quando vogliamo sapere se un algorimto $A$ impiega un tempo *$t_A$ polinomiale, ci riferiamo sempre al tempo impiegato rispetto alla lunghezza dell'input*. 
-]
-
-#esempio[
-  Supponiamo di avere un certo algorimto $A$ per un problema $Pi$: 
-  - $I_Pi= n = x<= y, quad x,y in bb(N)^+$
-
-  Supponiamo che $A$ impieghi un tempo $t_A = O(x+y)$. L'algorimto $A$ è polinomiale? \
-  La funzione *$t_A$ si riferisce sempre al tempo impiegato rispetto alla lunghezza dell'input*, in questo caso l'input $n$ avra una lunghezza pari a: 
-  $ n =& 2log(x)+2log(y)=2log(x y) \
-      & log(x y) = n/2 \
-      & x y = e^(n/2) \
-      & x^2 >= e^(n/2) \
-      & x >= e^n 
-  $
-  Di conseguenza *$t_A=O(x+y) = O(e^n)$*. L'algoritmo $A$ non è polinomiale rispetto alla lunghezza in bit dell'input (lunghezza != valore dell'input). L'algorimto $A$ è dunque pseudopolinomiale
-]
-
-== Np-Hard
-
-La classe dei problemi NP-completi si suddivide a sua volta in due categorie: 
-- *problemi debolmente NP-completi*
-- *problemi fortemente NP-completi*
-
-Sia $Pi$ un problema di decione, $Pi in "NPc"$, ovvero: 
-- dato un input $x in bb(N)$
-- decidere se $x in I_Pi$ è un problema NP-completo
-In Particolare: 
-- se *esiste un algoritmo $A$ pseudopolinomiale che decide $Pi$, $Pi$ è debolmente $"NP-completo"$*
-- *se non esiste un algoritmo $A$ pseudopolinomiale* che decide $Pi$, *$Pi$ è fortemente $"NP-completo"$*

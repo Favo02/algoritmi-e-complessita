@@ -15,6 +15,9 @@
 #let mp(body) = text(fill: purple, $#body$)
 #let mb(body) = text(fill: blue, $#body$)
 
+//pseudocode
+#import "@preview/lovelace:0.3.0": *
+
 // colored boxes
 #let nota(body) = { info(title: "Nota")[#body] }
 #let attenzione(body) = { warning(title: "Attenzione")[#body] }
@@ -34,6 +37,12 @@
 // link to theorem function
 #let link-teorema(label) = {
   underline(link(label, "THM " + context (teoremi-counter.at(locate(label)).first())))
+}
+// link to section function
+#let link-section(label) = {
+  underline(link(label, context (
+    numbering(heading.numbering, ..counter(heading).at(locate(label))) + " " + query(label).first().body
+  )))
 }
 
 // first page and outline
