@@ -36,7 +36,7 @@
 
 // link to theorem function
 #let link-teorema(label) = {
-  underline(link(label, "THM " + context (teoremi-counter.at(locate(label)).first())))
+  underline(link(label, "THM " + context (1 + teoremi-counter.at(locate(label)).first())))
 }
 
 // first page and outline
