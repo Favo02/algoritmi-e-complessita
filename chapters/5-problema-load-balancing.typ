@@ -92,11 +92,11 @@
         Se sommo i carichi di ogni macchina (supponendo, in questo caso, che siano distribuiti in maniera ottima $L_i^*$), ottengo la somma di tutti i task. Il lavoro totale completato è uguale al lavoro totale disponibile:
         $ sum_(i in m) L_i^* = sum_(j in n) t_j $
 
-        Applicando il principio di *pigeonhole*, almeno una macchina $i$ avrà un carico maggiore o uguale alla media $1/m limits(sum)_(j in n) t_j$:
+        Applicando il principio di *pigeonholing*, almeno una macchina $i$ avrà un carico maggiore o uguale alla media $1/m limits(sum)_(j in n) t_j$:
         $ exists i in m, space L_i^* >= 1/m sum_(j in n) t_j $
 
         #nota[
-          Il principio di *pigeonhole*, (oppure _pigeonholing_, _della piccionaia_ o _delle camicie e cassetti_ afferma che se $m$ oggetti devono essere messi in $n$ contenitori, con $m > n$, allora almeno un contenitore deve contenere $> 1$ oggetti.
+          Il principio di *pigeonholing*, (oppure _della piccionaia_ o _delle camicie e cassetti_) afferma che se $m$ oggetti devono essere messi in $n$ contenitori, con $m > n$, allora almeno un contenitore deve contenere $> 1$ oggetti.
 
           Una generalizzazione afferma che ci sarà almeno un contenitore che conterrà almeno $ceil(m / n)$ oggetti, ovvero $>=$ alla media (come utilizzato sopra).
 
