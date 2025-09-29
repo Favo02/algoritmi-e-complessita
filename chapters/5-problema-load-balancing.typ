@@ -253,7 +253,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
       Sia $hat(i)$ la macchina con *carico massimo*:
       - se ha avuto *un solo* assegnamento, allora questa è una *soluzione ottima* $L = L^*$ (dato che la singola task deve essere svolta da qualcuno) $L/L^* = 1 <= 3/2 space qed$
-      - se le sono stati assegnati *più carichi* $>= 2$: sia $hat(j)$ l'ultimo task assegnato a $hat(i)$.\
+      - se le sono stati assegnati *più carichi* ($>= 2$): sia $hat(j)$ l'ultimo task assegnato a $hat(i)$.\
         Questo carico deve avere indice $hat(j) >= m$ dato che per ricevere un secondo assegnamento tutte le macchine devono aver ricevuto almeno un carico, quindi i primi $m$ task finiscono a macchine diverse:
         $
             hat(j) & >= m \
