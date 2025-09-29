@@ -12,7 +12,7 @@
   - $m in bb(N)^+$: numero di macchine
   - $n in bb(N)^+$: numero di task
   - $t_0, t_1, ..., t_(n-1) in bb(N)^+$: durata dei task, $t_i$ è la durata dell'$i$-esimo task
-- $"Amm"_Pi$: partizione degli indici dei task nelle macchine, ovvero le task che ogni macchina svolge
+- $"Amm"_Pi$: partizione degli indici dei task nelle macchine, ovvero i task che ogni macchina svolge
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
@@ -39,7 +39,7 @@
   - $"macchina" 1$: $[3, 3, 1]$ = $7$ tempo
   - $"macchina" 2$: $[1, 4, 1]$ = $6$ tempo
   $ L = 7 $
-  Soluzione ideale (se le task fossero perfettamente divisibili): $ceil(19 / 3) = 7$, quindi questa soluzione (fatta intuitivamente) è quella ottima.
+  Soluzione ideale (se i task fossero perfettamente divisibili): $ceil(19 / 3) = 7$, quindi questa soluzione (fatta intuitivamente) è quella ottima.
 ]
 
 #teorema("Teorema")[
@@ -69,7 +69,7 @@
   $m = 3, n = 8, t = [3, 1, 3, 1, 1, 4, 5, 1]$
 
   - $"macchina" 0$: $[3, 4]$ = $"tempo" 7$
-  - $"macchina" 1$: $[1, 1, 1, 5]$ =  $"tempo" 8$
+  - $"macchina" 1$: $[1, 1, 1, 5]$ = $"tempo" 8$
   - $"macchina" 2$: $[3, 1]$ = $"tempo" 4$
   $ L = 8 $
 
@@ -85,8 +85,8 @@
 
     #teorema("Osservazione 1")[
       La soluzione ottima $L^*$ ha uno _span_ (tempo usato dalla macchina più carica) che è almeno la *media* tra i task e il numero di macchine.
-      Ovvero, se nessuna macchina sarà mai scarica, non ci sarà inattività quindi la soluzione sarà ottima.
-      $ L^*>=1/m sum_(j in n)t_j $
+      Ovvero, se nessuna macchina sarà mai scarica, non ci sarà inattività, quindi la soluzione sarà ottima.
+      $ L^* >= 1/m sum_(j in n)t_j $
 
       #dimostrazione[
         Se sommo i carichi di ogni macchina (supponendo, in questo caso, che siano distribuiti in maniera ottima $L_i^*$), ottengo la somma di tutti i task. Il lavoro totale completato è uguale al lavoro totale disponibile:
@@ -145,7 +145,7 @@
       L_hat(i)-t_hat(j) <= 1/m sum_(j in n)t_j underbrace(<=, "per" #link-teorema(<greedy-load-balancing-apx-2-oss-1>)) L^*
     $
 
-    Possiamo riscrivere la soluzone trovata $L$ (output dell'algoritmo) come:
+    Possiamo riscrivere la soluzione trovata $L$ (output dell'algoritmo) come:
     $
       L = underbrace(L_hat(i), max L_i forall i) &= underbrace(L_hat(i) - t_hat(j), <= mr(L^*) "appena dimostrato") + underbrace(t_hat(j), <= mr(L^*) "per" #link-teorema(<greedy-load-balancing-apx-2-oss-2>)) \
       L &<= mr(L^* + L^*) \
@@ -167,7 +167,7 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
 
 #informalmente[
   Ci stiamo chiedendo se la dimostrazione proposta in precedenza è *precisa* oppure è *lasca*.
-  Con lasca si intende che l'algoritmo è effettivamente 2-approssimante, ma potrebbe essere meglio, ovvero non si ottine mai un output abbastanza brutto da essere un 2-ottimo.
+  Con lasca si intende che l'algoritmo è effettivamente 2-approssimante, ma potrebbe essere meglio, ovvero non si ottiene mai un output abbastanza brutto da essere un 2-ottimo.
 
   Ci sono due alternative:
   - Si trova un caso in cui la soluzione prodotta dall'algoritmo è $2$ volte l'ottimo (caso peggiore)
@@ -176,11 +176,11 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
 
 #teorema("Teorema")[
   $forall epsilon > 0, space exists x in I_Pi$ su cui Greedy LoadBalancing produce una soluzione:
-  $ L-epsilon <= L / L^* <= 2 $
+  $ 2 - epsilon <= L / L^* <= 2 $
 
   #informalmente[
     Gli input occupano tutto lo spazio delle soluzioni:
-    - alcuni vanno _bene_ e producono una soluzione $L-epsilon$
+    - alcuni vanno _bene_ e producono una soluzione con rapporto di approssimazione $2 - epsilon$
     - altri vanno _male_ e producono una $2$-approssimazione
   ]
 
@@ -193,7 +193,7 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
 
     Come si comporta l'algoritmo:
     - tutti i task da $1$ vengono assegnati alla prima macchina libera
-    - l'assegnazione viene reiterata $m-1$ volte (numero di task da 1), quindi ogni macchina ha un carico pari a $m-1$
+    - l'assegnazione viene reiterata $m-1$ volte (numero di task da $1$), quindi ogni macchina ha un carico pari a $m-1$
     - all'arrivo dell'ultimo task, viene assegnato alla prima macchina, avendo così un carico $L = m-1+m = 2m-1$
 
     $ L/L^* = (2 m -1) / m = 2 - 1/m underbrace(>=, "per" m > 1 / epsilon) 2-epsilon space qed $
@@ -201,9 +201,9 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
     //TODO: Non so se volete mettere un disegno. io penso si capisca cosi.
 
     #informalmente[
-      L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equalmente tra le varie macchine i task da $1$.
+      L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equamente tra le varie macchine i task da $1$.
       In una ipotetica soluzione ottima, si potrebbe lasciare una macchina vuota e assegnarle il task da $m$ alla fine.
-      In questo caso tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m - 1 + 1$ task da 1, l'ultima con solo il carico da $m$).
+      In questo caso tutte le macchine arriverebbero alla fine con carico $m$ (le prime $m-1$ con $m - 1 + 1$ task da $1$, l'ultima con solo il carico da $m$).
       Questa è la soluzione ottima dato che è la media.
     ]
 
@@ -219,7 +219,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
 #pseudocode(
   [$I_Pi <- I_("GreedyLoadBalancing")$],
-  [Sort($t$) #emph("// ordinare le task (decrescente)")],
+  [Sort($t$) #emph("// ordinare i task (decrescente)")],
   [GreedyLoadBalancing($n$, $m$, $t$) #emph("// viene eseguito l'algoritmo greedy")],
   [*End*],
 )
@@ -228,7 +228,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   Questa versione dell'algoritmo *non* è più *online*, ovvero è necessario avere a disposizione tutti i task prima di iniziare ad assegnarli alle macchine.
 ]
 
-/ Complessità di Sorted Greedy LoadBalancing: oltre alla complessità di Greedy LoadBalancing $O(n log m)$, le task devono essere ordinate, in $O(n log n)$. Di conseguenza complessità totale: $O(n log n + n log m)$, *polinomiale*.
+/ Complessità di Sorted Greedy LoadBalancing: oltre alla complessità di Greedy LoadBalancing $O(n log m)$, i task devono essere ordinati, in $O(n log n)$. Di conseguenza complessità totale: $O(n log n + n log m)$, *polinomiale*.
 
 #teorema("Teorema")[
   *$ "SortedGreedyLoadBalancing" in 3/2"-APX" $*
@@ -245,14 +245,14 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
         $ L^* >= 2 t_m $
 
         #dimostrazione[
-          $ underbrace(t_0 >= t_1 >= ... >= t_m-1 >= t_m, "m+1 task") >= ... t_(n-1)\ $
-          Per il principio del _pigeonholing_, almeno due task sono assegnati alla stessa macchina. Dato che il task $t_m$ è il più piccolo, allora le due assegnate alla stessa macchina devono essere per forza $>= 2 t_m$:
+          $ underbrace(t_0 >= t_1 >= ... >= t_(m-1) >= t_m, "m+1 task") >= ... >= t_(n-1) $
+          Per il principio del _pigeonholing_, almeno due task sono assegnati alla stessa macchina. Dato che il task $t_m$ è il più piccolo tra i primi $m+1$, allora i due assegnati alla stessa macchina devono essere per forza $>= 2 t_m$:
           $ L^* >= underbrace(L_i^*, i "ha almeno" \ "due task") >= 2t_m space qed $
         ]
       ] <sorted-greedy-loadbalancing-32-apx-oss1>
 
       Sia $hat(i)$ la macchina con *carico massimo*:
-      - se ha avuto *un solo* assegnamento, allora questa è una *soluzione ottima* $L^*$ (dato che la singola task deve essere svolta da qualcuno) $L^* <= 3/2 L^* space qed$
+      - se ha avuto *un solo* assegnamento, allora questa è una *soluzione ottima* $L = L^*$ (dato che la singola task deve essere svolta da qualcuno) $L/L^* = 1 <= 3/2 space qed$
       - se le sono stati assegnati *più carichi* $>= 2$: sia $hat(j)$ l'ultimo task assegnato a $hat(i)$.\
         Questo carico deve avere indice $hat(j) >= m$ dato che per ricevere un secondo assegnamento tutte le macchine devono aver ricevuto almeno un carico, quindi i primi $m$ task finiscono a macchine diverse:
         $
