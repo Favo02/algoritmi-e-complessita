@@ -217,7 +217,7 @@ ovvero quasi una *$1-"approssimazione"$*
 
 #pagebreak()
 
-== Algoritmo GreddyCenterSelection
+== Algoritmo GreedyCenterSelection
 
 #pseudocode(
   [*input*: $s subset.eq Omega, k in bb(N)^+$],
