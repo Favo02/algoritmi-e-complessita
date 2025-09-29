@@ -55,7 +55,7 @@
 
 #pseudocode(
   [$A_i <- emptyset quad forall i in m$],
-  [$L_i <- 0 quad forall i in m$],
+  [$L_i <- 0 quad forall i in m$ #emph("// carico totale di ogni macchina")],
   [*For* $j = 0, 1, dots, n-1$ #emph("// per ogni task")],
   indent(
     [$hat(i) <- limits(arg min)_(i in m) space L_i$ #emph("// macchina più scarica in questo momento: " + $hat(i)$)],
