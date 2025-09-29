@@ -23,7 +23,7 @@ Per determinare l'appartenenza (o meno) di un problema a questa classe dobbiamo 
 - *$Pi in.not P$*: dimostrare che il _lower bound_ di $Pi$ sia superpolinomiale
 
 #esempio[
-  Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema di $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"Ordinamento" in "P"$*.
+  Problema dell'ordinamento: l'algoritmo "BubbleSort" risolve il problema in $O(n^2)$, quindi l'upper bound è polinomiale. Di conseguenza *$"Ordinamento" in "P"$*.
 ]
 
 === Classe NP <classe-np>
@@ -43,7 +43,7 @@ Dato che è un problema di decisione, ogni ramo quando termina, stampa $mb("Si")
   - Algoritmo non deterministico: $quad x in 2^* -> A ->$ albero di risultati messi in OR
 ]
 
-Un algoritmo non deterministico è *simulabile* attraverso diverse tecniche (ad esempio eseguendo i singoli rami sequenzialmente), ma potrebbe impiegarci *tempo arbitrariamente alto*. Questo perchè il numero di rami d'esecuzione (la _larghezza_ dell'albero) crescono in maniera esponenziale, nonostante la polinomialità di ogni singolo ramo (l'_altezza_ dell'albero).
+Un algoritmo non deterministico è *simulabile* attraverso diverse tecniche (ad esempio eseguendo i singoli rami sequenzialmente), ma potrebbe impiegarci *tempo arbitrariamente alto*. Questo perché il numero di rami d'esecuzione (la _larghezza_ dell'albero) cresce in maniera esponenziale, nonostante la polinomialità di ogni singolo ramo (l'_altezza_ dell'albero).
 
 #esempio[
   Problema *SAT*: data una formula booleana, decidere se esiste almeno un assegnamento di variabili per il quale la formula risulta vera:
@@ -130,7 +130,7 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
 #esempio[
   Supponiamo di avere un certo algoritmo $A$ per un problema $Pi$:
   - $I_Pi = x in bb(N)^+$
-  - complessità $O(x)$: tempo impiegato dall'algorimto lineare sul *valore* di $x$
+  - complessità $O(x)$: tempo impiegato dall'algoritmo lineare sul *valore* di $x$
 
   La funzione $t_(A)(n)$ (definita in #link-section(<assunzione-worst-case>)) è, però, definita sulla *lunghezza* dell'input. Utilizzando Elias-$gamma$ per codificare l'input otteniamo come dimensione dell'input $n$:
   $
@@ -164,7 +164,7 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
 
 Un problema di decisione $Pi in "NPc"$ è:
 - *debolmente NP-completo* se esiste un algoritmo pseudopolinomiale che lo risolve
-- *fortemente NP-completo* se non esiste un algorimto pseudopolinomiale che lo risolve, ovvero, seppur limitando polinomialmente tutti i numeri $in I_Pi$, il problema rimane esponenziale
+- *fortemente NP-completo* se non esiste un algoritmo pseudopolinomiale che lo risolve, ovvero, seppur limitando polinomialmente tutti i numeri $in I_Pi$, il problema rimane esponenziale
 
 #informalmente[
   / Debolmente NP-completo: gira in tempo polinomiale sul valore dell'input
@@ -307,7 +307,7 @@ Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo ri
 ]
 
 #nota[
-  La classe $"PO"$ è molto rara, sopratutto in presenza di numerosi vincoli.
+  La classe $"PO"$ è molto rara, soprattutto in presenza di numerosi vincoli.
 ]
 
 === Classe NPO <classe-npo>
@@ -317,7 +317,7 @@ Un problema di ottimizzazione $Pi in "PO"$ sse esiste un algoritmo $A$ che lo ri
 
   Tuttavia, il non determinismo è modellato in maniera diversa: in caso usassimo l'istruzione magica, ogni ramo di esecuzione terminerebbe con una soluzione NON binaria, ma "comporle" per trovare la migliore in termini di funzione obiettivo potrebbe non essere banale.
 
-  Di conseguenza usiamo un *oracolo*, ovvero un istruzione che ci fornisce "magicamente" il risultato che "stiamo cercando".
+  Di conseguenza usiamo un *oracolo*, ovvero un'istruzione che ci fornisce "magicamente" il risultato che "stiamo cercando".
 ]
 
 Un problema di ottimizzazione $Pi in "NPO"$ se:
@@ -352,7 +352,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
       node(b1, $y' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
       node(b3, $y''' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
       node(b4, $y'' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
-      node(b2, $y'''' in "Amm"_(Pi)(x)$ + linebreak() + $"SI," C_(Pi)(x,y)$)
+      node(b2, $y'''' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
 
       node(maxmin, "MAX / MIN")
 
@@ -394,7 +394,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   - $t_Pi = max$, il massimo numero di formule rese vere da $y$.
 
   Se esistesse un algoritmo $A$ polinomiale per MaxSAT, allora si potrebbe usare per decidere SAT.
-  Basterebbe controllare se il massimo numero di clausole risolvibili corrisponde al numero totale di formule.
+  Basterebbe controllare se il massimo numero di clausole risolvibili corrisponde al numero totale di clausole.
 
   #informalmente[
     Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, spesso è utile ricondursi a proprietà applicabili/non applicabili rispetto ai problemi di decisione.
@@ -437,7 +437,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
 
   #dimostrazione[
     #nota[
-      Questa dimostrazione si basa su $t_Pi = max$, questa è un'assunzione _senza perdità di generalità_, ovvero una semplificazione che mostra solo uno dei casi possibili, ma la dimostrazione rimane esattamente uguale anche con gli altri casi possibili (ovvero $t_Pi = min$).
+      Questa dimostrazione si basa su $t_Pi = max$, questa è un'assunzione _senza perdita di generalità_, ovvero una semplificazione che mostra solo uno dei casi possibili, ma la dimostrazione rimane esattamente uguale anche con gli altri casi possibili (ovvero $t_Pi = min$).
     ]
 
     / Assunzioni:
@@ -493,7 +493,7 @@ Dati:
 
 Definiamo $R_(A)(x)$ come il *rapporto di approssimazione*, che rappresenta quanto la soluzione $overline(y)$ si discosta dall'ottimo $y^*$:
 
-$ R_(A)(x) = max((c_(Pi)(x, overline(y))) / (c_(Pi)(x, y^*)), (c_(Pi)(x, y^*)) / (c_(Pi)(x, overline(y)))) >= 1 $
+$ R_(A)(x) = max((C_(Pi)(x, overline(y))) / (C_(Pi)(x, y^*)), (C_(Pi)(x, y^*)) / (C_(Pi)(x, overline(y)))) >= 1 $
 $
   R_(A)(x) = cases(
     = 1 space "la soluzione" hat(y) "è ottima",
@@ -513,7 +513,7 @@ $
 Si dice che $A$ è una *$alpha$-approssimazione* se, per ogni input, il rapporto di approssimazione è al massimo $alpha$:
 $ forall x in I_Pi, quad R_(A)(x) <= alpha, quad alpha >= 1 $
 
-Più alfa è grande più all'algoritmo è *permesso sbagliare*, producendo una soluzione che si discosta maggiormente dall'ottimo.
+Più $alpha$ è grande più all'algoritmo è *permesso sbagliare*, producendo una soluzione che si discosta maggiormente dall'ottimo.
 
 === Classe APX <classe-apx>
 
@@ -521,7 +521,7 @@ Problemi di ottimizzazione approssimabili con un tasso costante:
 $ "APX" = union.big_(alpha >= 1) alpha"-APX" $
 
 #nota[
-  Fissando $alpha = 1$, otteniamo la classe $1"-APX" = "P"$
+  Fissando $alpha = 1$, otteniamo la classe $1"-APX" = "PO"$
 ]
 
 #attenzione[
@@ -544,10 +544,10 @@ $ Pi (x in I_(Pi), epsilon > 1) $
 ]
 
 #nota[
-  Non ci sono condizioni su quanto epsilon intacca il tempo di esecuzione. Quasi sempre, abbassando epsilon esplode il tempo di esecuzione. Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo *esponenziale*.
+  Non ci sono condizioni su quanto $epsilon$ intacca il tempo di esecuzione. Quasi sempre, abbassando $epsilon$ esplode il tempo di esecuzione. Più $epsilon$ tende a $1$ più $A in "PTAS"$ impiega un tempo *esponenziale*.
 ]
 
-/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algoritmi in $"PTAS"$, un algoritmo $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescita dell'approsimazione $epsilon$.
+/ FPTAS, Fully Polynomial-Time Approximation Scheme: a differenza degli algoritmi in $"PTAS"$, un algoritmo $A in "FPTAS"$ garantisce un tempo polinomiale anche alla decrescita dell'approssimazione $epsilon$.
 
 #nota[
   Questi problemi sono *quasi* problemi di cui conosciamo l'ottimo, la classe $"FPTAS"$ è poco più grande di $"P"$.
