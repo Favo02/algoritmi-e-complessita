@@ -31,7 +31,7 @@ Possiamo ora definire il problema *Center Selection*:
   - $S subset.eq Omega$: insieme dei punti sullo spazio metrico
   - $k in bb(N)^+$: budget da rispettare
 - $"Amm"_(Pi): C subset.eq S "t.c." |C| <= k$: sottoinsieme di punti (i centri) che rispettano il budget.
-- Funzione obiettovo: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
+- Funzione obiettivo: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
   - definita la distanza tra un punto e il centro più vicino:
   $ rho(x, C) = min_(c in C) d(x,c), quad forall x in S $
   - fissiamo la funzione obiettivo come il massimo di queste distanze:
@@ -165,7 +165,7 @@ Possiamo ora definire il problema *Center Selection*:
 == Algoritmo CenterSelectionPlus
 
 #attenzione[
-  Per arrivare ad un algoritmo per CenterSelection, andremo a presentare una variante semplificata, ovvero l'algorimto CenterSelectionPlus.
+  Per arrivare ad un algoritmo per CenterSelection, andremo a presentare una variante semplificata, ovvero l'algoritmo CenterSelectionPlus.
 
   Questa versione presenta un input in più: $r in bb(R)^+$, il *raggio di copertura*.
 
@@ -193,11 +193,11 @@ Possiamo ora definire il problema *Center Selection*:
 #nota[
   Il comportamento dell'algoritmo è influenzato dalla scelta del *parametro $r$*:
   - se $r$ è *grande*, l'algoritmo produce quasi sicuramente una *soluzione* che rispetta il budget (ad ogni passo cancello tanti punti dato che il raggio è molto grosso)
-  - se $r$ è *piccolo*, l'algorimto trova delle soluzioni migliori (raggio più piccolo) ma che potrebbero *sforare* il budget a disposizione (dato che meno punti verranno coperti), rendendole non ammissibili
+  - se $r$ è *piccolo*, l'algoritmo trova delle soluzioni migliori (raggio più piccolo) ma che potrebbero *sforare* il budget a disposizione (dato che meno punti verranno coperti), rendendole non ammissibili
 ]
 
 #attenzione[
-  L'algorimto di $"CenterSelectionPlus"$ gode della proprietà di *arbitrarietà*: in alcuni punti può effettuare delle *scelte casuali* (ad esempio non viene specificato come vengono scelti i punti $hat(s)$).
+  L'algoritmo di $"CenterSelectionPlus"$ gode della proprietà di *arbitrarietà*: in alcuni punti può effettuare delle *scelte casuali* (ad esempio non viene specificato come vengono scelti i punti $hat(s)$).
 
   Quando si implementa un algoritmo arbitrario, bisogna prendere delle _decisioni_ in questi punti di arbitrarietà.
 
@@ -307,7 +307,7 @@ Possiamo ora definire il problema *Center Selection*:
   Se l'algoritmo $"CenterSelectionPlus"$ emette un output, esso è una $(2r)/rho^*"-approssimazione"$ per $"CenterSelection"$.
 
   #nota[
-    Se viene emesso un ouput, allora è sicuramente ammissibile (dato che viene emesso solo se $|C| < k$).
+    Se viene emesso un output, allora è sicuramente ammissibile (dato che viene emesso solo se $|C| <= k$).
   ]
 
   #dimostrazione[
@@ -330,7 +330,7 @@ Possiamo ora definire il problema *Center Selection*:
 
   #dimostrazione[
     Sia $C^*$ una soluzione ottima, ovvero $rho(C^*) = rho^*$, il minor *raggio di copertura* possibile.
-    Supponiamo di conoscere il valore di $rho^*$ e di eseguire l'algorimto $"CenterSelectionPlus"$ con $r >= p^*$.
+    Supponiamo di conoscere il valore di $rho^*$ e di eseguire l'algoritmo $"CenterSelectionPlus"$ con $r >= rho^*$.
 
     #teorema("Osservazione 1")[
       Sia $mb(s')$ un punto che nella soluzione ottima si rivolge allo stesso centro $mg(hat(c)^*)$ a cui si rivolge $mr(overline(s))$.
@@ -339,7 +339,7 @@ Possiamo ora definire il problema *Center Selection*:
       In altre parole, quando viene selezionato un *qualsiasi* punto che si rivolge allo stesso centro ottimo $mg(hat(c)^*)$, vengono cancellati almeno tutti i punti che appartenevano alla stessa cella di Voronoi di $mg(hat(c)^*)$.
 
       #dimostrazione()[
-        Usando la disuguaglianza tringolare:
+        Usando la disuguaglianza triangolare:
         $
           d(mb(s'), mr(overline(s))) <= underbrace(d(mb(s'), mg(hat(c)^*)), <= rho^*) + underbrace(d(mr(overline(s)), mg(hat(c)^*)), <=rho^*) <= 2rho^*
         $
@@ -395,8 +395,8 @@ Possiamo ora definire il problema *Center Selection*:
     ]
 
     Riassumendo i passi:
-    - ad ogni iterazione viene cancellata un *intera cella di Voronoi* della soluzione ottima, a prescindere che il centro scelto sia quello ottimo o meno
-    - siccome nella soluzione ottima $C^*$ ci sono *al massimo* $k$ celle di Voronoi, dopo $k$ iterazione non ci sono più punti in $S$
+    - ad ogni iterazione viene cancellata un'*intera cella di Voronoi* della soluzione ottima, a prescindere che il centro scelto sia quello ottimo o meno
+    - siccome nella soluzione ottima $C^*$ ci sono *al massimo* $k$ celle di Voronoi, dopo $k$ iterazioni non ci sono più punti in $S$
     - $|C| <= k$, output ammissibile
   ]
 ]
@@ -404,11 +404,11 @@ Possiamo ora definire il problema *Center Selection*:
 Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 - *$r>=rho^*$*: otteniamo una soluzione $(2r)/rho^*"-approssimata"$, con un $r$ _troppo_ grande l'approssimazione peggiora
 - *$r=rho^*$*: otteniamo una $2"-approssimazione"$
-- *$(rho^*)/2 < r < rho^*$*: l'algoritmo potrebbe emettere un ottima approssimazione, ma potrebbe anche non emettere una soluzione (o meglio, trovarne una non ammissibile)
-- *$r < (rho^*)/2$*: l'algorimto *non* emette soluzione, altrimenti otteremmo una soluzione migliore dell'ottimo (impossibile): $(2r)/rho^* < (2((rho^*)/2))/rho^* <= 1$
+- *$(rho^*)/2 < r < rho^*$*: l'algoritmo potrebbe emettere un'ottima approssimazione, ma potrebbe anche non emettere una soluzione (o meglio, trovarne una non ammissibile)
+- *$r < (rho^*)/2$*: l'algoritmo *non* emette soluzione, altrimenti otteremmo una soluzione migliore dell'ottimo (impossibile): $(2r)/rho^* < (2((rho^*)/2))/rho^* <= 1$
 
 #informalmente[
-  Più $r$ è piccolo, migliore sarà l'approssimazione. Se $r$ scendo sotto $rho^*$ l'algoritmo potrebbe non emettere soluzione (ma in caso la emetta sarebbe molto buona).
+  Più $r$ è piccolo, migliore sarà l'approssimazione. Se $r$ scende sotto $rho^*$ l'algoritmo potrebbe non emettere soluzione (ma in caso la emetta sarebbe molto buona).
   Se $r$ scende ulteriormente sotto $rho^* / 2$, allora è impossibile che emetta soluzione.
 ]
 
@@ -433,14 +433,14 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 )
 
 #nota()[
-  L'algorimto appena presentato è *molto simile* a $"CenterSelectionPlus"$.
+  L'algoritmo appena presentato è *molto simile* a $"CenterSelectionPlus"$.
 
   La differenza principale è che $"Plus"$ cancella i punti nel raggio, $"Greedy"$ no.
   Si può riformulare $"Plus"$ facendo in modo che non cancelli, ma semplicemente scelga il prossimo centro fuori dal raggio dei centri già esistenti.
 
   Ora la differenza si riduce a:
   - $"Plus"$: seleziona il prossimo centro come _abbastanza lontano_ dai centri già selezionati
-  - $"Greedy"$: seleziona il prossimo centro centro ccome _il più lontano_ dai centri già selezionati
+  - $"Greedy"$: seleziona il prossimo centro come _il più lontano_ dai centri già selezionati
 ]
 
 #teorema("Proprietà")[
@@ -495,10 +495,10 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 
     L'idea è quella di *ridurre l'arbitrarietà* dell'algoritmo V1.
 
-    Al posto di scelgiere come punto $overline(s)$ un *qualsiasi punto* fuori dal raggio $2r$ del centro, andiamo a scegliere il *più distante* in assoluto ($limits(max)_(s in S) d(overline(s),C)$).
+    Al posto di scegliere come punto $overline(s)$ un *qualsiasi punto* fuori dal raggio $2r$ del centro, andiamo a scegliere il *più distante* in assoluto ($limits(max)_(s in S) d(overline(s),C)$).
     In caso di parità di distanza viene scelto il più piccolo lessicograficamente.
 
-    Per *assurdo* suppungo che i due algoritmi selezionino due punti diversi $overline(s)^' != overline(s)^''$:
+    Per *assurdo* suppongo che i due algoritmi selezionino due punti diversi $overline(s)^' != overline(s)^''$:
     - *V1* seleziona $overline(s)^'$
     - *V2* seleziona $overline(s)^''$
 
@@ -513,7 +513,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
     Di conseguenza, l'unico modo per cui i due algoritmi scelgano dei punti diversi è a parità di distanza:
     $ d(overline(s)^',C) = d(overline(s)^'',C) $
 
-    Ma dato che a partià di distanza i due algorimti scelgono il primo punto in ordine lessicografico, vuol dire che hanno scelto lo stesso punto. $overline(s)^'$ e $overline(s)^''$ sono uguali.
+    Ma dato che a parità di distanza i due algorimti scelgono il primo punto in ordine lessicografico, vuol dire che hanno scelto lo stesso punto. $overline(s)^'$ e $overline(s)^''$ sono uguali.
 
     Ma la versione 2 (*V2*) dell'algoritmo non è altro che la versione $"Greedy"$, $qed$.
 
