@@ -84,12 +84,12 @@
   #dimostrazione[
 
     #teorema("Osservazione 1")[
-      La soluzione ottima $L^*$ ha uno _span_ (tempo usato dalla macchina più carica) è almeno la *media* tra i task e il numero di macchine.
+      La soluzione ottima $L^*$ ha uno _span_ (tempo usato dalla macchina più carica) che è almeno la *media* tra i task e il numero di macchine.
       Ovvero, se nessuna macchina sarà mai scarica, non ci sarà inattività quindi la soluzione sarà ottima.
       $ L^*>=1/m sum_(j in n)t_j $
 
       #dimostrazione[
-        Se sommo i carichi di ogni macchina (supponendo che siano distribuiti in maniera ottima $L_i^*$), ottengo la somma di tutti i task. Il lavoro totale completato è uguale al lavoro totale disponibile:
+        Se sommo i carichi di ogni macchina (supponendo, in questo caso, che siano distribuiti in maniera ottima $L_i^*$), ottengo la somma di tutti i task. Il lavoro totale completato è uguale al lavoro totale disponibile:
         $ sum_(i in m) L_i^* = sum_(j in n) t_j $
 
         Applicando il principio di *pigeonhole*, almeno una macchina $i$ avrà un carico maggiore o uguale alla media $1/m limits(sum)_(j in n) t_j$:
@@ -124,7 +124,7 @@
     ] <greedy-load-balancing-apx-2-oss-2>
 
     Supponiamo di eseguire ora l'algoritmo Greedy Load Balancing, ci restituisce una soluzione $L$, che non è altro che il carico della macchina più carica:
-    $ L = max L_hat(i), quad hat(i) "macchina più carica" $
+    $ L = L_hat(i) = max L_i space forall i in m, quad hat(i) "macchina più carica" $
 
     Consideriamo ora *l'ultimo task* $t_hat(j)$ assegnato alla macchina $hat(i)$.
 
@@ -254,7 +254,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
       Sia $hat(i)$ la macchina con *carico massimo*:
       - se ha avuto *un solo* assegnamento, allora questa è una *soluzione ottima* $L^*$ (dato che la singola task deve essere svolta da qualcuno) $L^* <= 3/2 L^* space qed$
       - se le sono stati assegnati *più carichi* $>= 2$: sia $hat(j)$ l'ultimo task assegnato a $hat(i)$.\
-        Questo carico deve essere $>= m$ dato che per ricevere un secondo assegnamento tutte le macchine devono aver ricevuto almeno un carico, quindi i primi $m$ task finiscono a macchine diverse:
+        Questo carico deve avere indice $hat(j) >= m$ dato che per ricevere un secondo assegnamento tutte le macchine devono aver ricevuto almeno un carico, quindi i primi $m$ task finiscono a macchine diverse:
         $
             hat(j) & >= m \
           t_hat(j) & underbrace(<=, "task ordinate") t_m \
