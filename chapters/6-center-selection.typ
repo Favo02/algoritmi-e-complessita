@@ -69,7 +69,8 @@ Possiamo ora definire il *problema di CenterSelection*:
     [$C <- C union {hat(s)}$],
     [remove from $S$ all $x "t.c" d(x,hat(s))<=2r$],
     [#emph("rimuove tutti i punti che stanno in un raggio " + $2r$ +" da "+$hat(s)$)],
-    [*if* $|C| > k$],
+  ),
+  [*if* $|C| > k$],
     indent(
       [*output* "impossibile"]
     ),
@@ -78,7 +79,6 @@ Possiamo ora definire il *problema di CenterSelection*:
       [*output* $C$]
     ),
     [*end*]
-  )
 )
 
 //Todo Mettere un esempio
@@ -250,4 +250,71 @@ ovvero quasi una *$1-"approssimazione"$*
 #teorema("Teorema")[
   *L'esecuzione di $"GreedyCenterSelection"$ è una delle possibili esecuzioni di $"CenterSelectionPlus"$, quando $r = rho^*$*
 ]
+#dimostrazione()[
+  Supponiamo di *modificare $"GreedyCenterSelectionPlus"$* nel seguente modo:  
+  #grid(
+  columns: (1fr, 1fr),
+  gutter: 16pt,
+  [
+    #align(center)[*CenterSelectionPlus Algo1*]
+      #pseudocode(
+        [Input: $S subset.eq Omega, k in bb(N)^+, mr(r = rho^*)$],
+        [$C <- emptyset$],
+        [*while* $mr(exists s quad d(s,C) > 2r )$],
+        indent(
+          [$overline(s) <- $ take any $mr(hat(s) in S)$ such that $mr(max_(s in S) d(overline(s),C) > 2r)$],
+          [$C <- C union {overline(s)}$],
+        ),
+        [*if* $|C| > k$],
+          indent(
+            [*output* "impossibile"]
+          ),
+          [*else*],
+          indent(
+            [*output* $C$]
+          )
+      )
+    ],
+    [
+      #align(center)[*GreedyCenterSelection Algo2*] 
+      #pseudocode(
+        [Input: $S subset.eq Omega, k in bb(N)^+$],
+        [*if* $|S| <= k$],
+        indent(
+          [*output* $S$],
+          [*stop*]
+        ),
+        [choose any $overline(s) in S$],
+        [$C <- {overline(s)}$],
+        [*while* $|C| < k$],
+        indent(
+          [select $overline(s)$ maximizing $d(s,C)$],
+          [$C <- C union {overline(s)}$]
+        ),
+        [*output* $C$]
+      )
+    ]
+  )
+  L'idea è quella di *ridurre l'arbitrarietà dell'algorimto $"Algo1"$*.\
+  *Scelgo come centro il punto $overline(s) in S$ che massimizza $d(overline(s),C)$*, a parità di distanze scelgo il primo punto in ordine lessicografico.  
+
+  Per *assurdo* suppungo che i due algoritmi selezionino due punti *$overline(s)^',overline(s)^'' "t.c" overline(s)^' != overline(s)^''$*: 
+  - *Algo1* seleziona *$overline(s)^'$*
+  - *Algo2* seleziona *$overline(s)^''$*
+
+  Siccome *Algo2* seleziona in punto *$overline(s)^''$* come il più distante in assoluto, è *per forza più lontano di $overline(s)^'$* (il punto *$overline(s)^'>2r $*, siccome è stato selezionato da *Algo1*): 
+  *$ d(overline(s)^'',C) >= d(overline(s)^', C) > 2r $*
+
+  Di conseguenza anche *$overline(s)^''$ sarebbe sceglibile da Algo1*, senza violare nessun vincolo.\
+  Affinchè *Algo1* scelga $overline(s)^'$ invece di $overline(s)^''$, devono essere vere entrambe le condizioni:
+  - $d(overline(s)^'', C) "non può essere" > d(overline(s)^',C)$, altrimenti Algo1 avrebbe scelto $overline(s)^''$ (sceglie il punto che massimizza $d(hat(s)^',C)$)
+  - $d(overline(s)^'', C) "non può essere" < d(overline(s)^', C)$, perché Algo2 sceglie sempre il massimo
+
+  Di conseguenza, *l'unico modo per cui i due algorimti scelgano dei punti diversi è a parità di distanza*: 
+  *$ d(overline(s)^',C) = d(overline(s)^'',C) $* 
+  Ma dato che *a partià di distanza i due algorimti scelgono il primo punto in ordine lessicografico i punti $overline(s)^'$ e $overline(s)^''$ sono uguali* 
+
+]
+
+
 
