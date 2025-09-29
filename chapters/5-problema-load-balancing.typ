@@ -50,7 +50,7 @@
 
 #nota[
   Questo algoritmo è *online*, ovvero i task da assegnare alle varie macchine possono arrivare man mano.
-  Non è necessario conoscerli tutti a priori.ù
+  Non è necessario conoscerli tutti a priori.
 ]
 
 #pseudocode(
