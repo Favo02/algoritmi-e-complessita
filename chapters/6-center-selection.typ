@@ -50,7 +50,7 @@ Possiamo ora definire il *problema di CenterSelection*:
   *$"CenterSelection" in "NPO-c"$*
 ]
 
-=== Algoritmo CenterSelectionPlus
+== Algoritmo CenterSelectionPlus
 
 #informalmente[
   Per descrivere il problema di CenterSelection, andremo ad utilizzare una sua variante semplificata, ovvero CenterSelectionPlus. \
@@ -206,7 +206,7 @@ Possiamo ora definire il *problema di CenterSelection*:
   - *$|C| <= k$*, output ammissibile
 ]
 
-=== Esecuzione di $"GreedyCenterSelectionPlus"$ al cambiamento di $r$
+=== Esecuzione di *$"GreedyCenterSelectionPlus"$* al cambiamento di $r$
 Come si comporta l'algoritmo al variare di $r$:
 - se passiamo un *$r>=rho^*$* otteniamo sicuramente una *soluzione $(2rho)/rho^*-"approssimata"$*. Passando un $r$ troppo grande ovviamente la soluzione non è ottimale. 
 - se passiamo *$r=rho^*$* otteniamo una *$2-"approssimazione"$*
@@ -215,5 +215,39 @@ Come si comporta l'algoritmo al variare di $r$:
 ovvero quasi una *$1-"approssimazione"$*
 - se passiamo un valore *tra $(rho^*)/2$ e $rho^*$*, *l'algoritmo potrebbe emettere un ottima approssimazione*, *ma potrebbe anche emettere una soluzione non ammissibile* 
 
+#pagebreak()
 
+== Algoritmo GreddyCenterSelection
+
+#pseudocode(
+  [*input*: $s subset.eq Omega, k in bb(N)^+$],
+  [*if* $|S| <= k$],
+  indent(
+    [*output* $S$],
+    [*stop*]
+  ),
+  [choose any $hat(s) in S$],
+  [#emph("scelta arbitraria")],
+  [$C <- union {hat(s)}$],
+  [*while* $|C| < k$],
+  indent(
+    [select $hat(s)$ maximizing $d(s,C)$],
+    [#emph("scelgo il punto "+$hat(s)$+" più distante da tutti i centri")],
+    [$C <- union {hat(s)}$]
+  ),
+  [*output* $C$],
+  [*end*]
+)
+
+#nota()[
+  *L'algorimto appena presentato è molto simile a $"GreddyCenterSelectionPlus"$*.\
+  Basta non elliminare i punti in $"GreddyCenterSelectionPlus"$, ma semplicemente non considerarli.\
+  Inolte differiscono nella logica di selezione dei nuovi centri: 
+  - $"GreedyCenterSelectionPlus"$= sceglie come nuovi centri i punti che si trovano "abbastanza lontani" dai centri già selezionati 
+  - $"GreddyCenterSelection"$= seleziona come nuovo centro il punto più distante da tutti gli altri centri già selezionati 
+]
+
+#teorema("Teorema")[
+  *L'esecuzione di $"GreedyCenterSelection"$ è una delle possibili esecuzioni di $"CenterSelectionPlus"$, quando $r = rho^*$*
+]
 
