@@ -289,7 +289,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   ]
 
   #informalmente[
-    Per ottenere una $epsilon$-approssimazione, basta _bruteforcare_ (provando tutte le combinazioni) di un certo numero di task (che dipende dal tasso $epsilon$ richiesto) e poi continuare in maniera Greedy. Al diminuire di $epsilon$ il tempo richiesto cresce in maniera esponenziale.
+    Per ottenere una $epsilon$-approssimazione, basta fare _brute force_ (provando tutte le combinazioni) di un certo numero di task (che dipende dal tasso $epsilon$ richiesto) e poi continuare in maniera Greedy. Al diminuire di $epsilon$ il tempo richiesto cresce in maniera esponenziale.
 
     Non vedremo come implementare questa variante.
   ]
