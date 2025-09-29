@@ -206,5 +206,14 @@ Possiamo ora definire il *problema di CenterSelection*:
   - *$|C| <= k$*, output ammissibile
 ]
 
+=== Esecuzione di $"GreedyCenterSelectionPlus"$ al cambiamento di $r$
+Come si comporta l'algoritmo al variare di $r$:
+- se passiamo un *$r>=rho^*$* otteniamo sicuramente una *soluzione $(2rho)/rho^*-"approssimata"$*. Passando un $r$ troppo grande ovviamente la soluzione non è ottimale. 
+- se passiamo *$r=rho^*$* otteniamo una *$2-"approssimazione"$*
+- se *$r < (rho^*)/2$*, allora *l'algorimto non emmete quasi sicuramente soluizone*, altrimenti otteremmo una soluzione: 
+*$ (2r)/rho^* < (2((rho^*)/2))/rho^* <= 1 $*
+ovvero quasi una *$1-"approssimazione"$*
+- se passiamo un valore *tra $(rho^*)/2$ e $rho^*$*, *l'algoritmo potrebbe emettere un ottima approssimazione*, *ma potrebbe anche emettere una soluzione non ammissibile* 
+
 
 
