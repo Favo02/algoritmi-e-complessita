@@ -15,6 +15,9 @@
 #let mp(body) = text(fill: purple, $#body$)
 #let mb(body) = text(fill: blue, $#body$)
 
+//pseudocode
+#import "@preview/lovelace:0.3.0": *
+
 // colored boxes
 #let nota(body) = { info(title: "Nota")[#body] }
 #let attenzione(body) = { warning(title: "Attenzione")[#body] }
