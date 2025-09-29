@@ -186,6 +186,25 @@ Possiamo ora definire il *problema di CenterSelection*:
       #place(top + left, dx: 35pt, dy: 55pt, line(length: 50pt, angle: 29deg))
     ]
   )
+  #teorema("Osservazione 1")[
+    Sia #mb($s^'$) un punto che nella soluzione ottima si rivolge allo stesso centro #mb($hat(c)^*$)  a cui si rivolge #mr($hat(s)$). *#mb($s^'$) viene cancellato quando viene aggiunto #mr($hat(s)$)* (a meno che non fosse già stato cancellato).
 
+    #dimostrazione()[
+      Usando la *disuguaglianza tringolare*:
+      $ d(s^',hat(s)) <= underbrace(d(s^', hat(c)^*),<=rho^*) + underbrace(d(hat(c)^*, hat(s)),<=rho^*) <= 2rho^* $
 
+      Ma per ipotesi *$r>=rho^*$*, di conseguenza: 
+      *$ 2rho^* >= 2r $*
+    ]
+    #informalmente()[
+      Quando viene selezionato il punto $mr(hat(s))$ *stiamo andando ad elliminare un intera cella di Voronoi della soluzione ottima*. Dato che andiamo a prendere raggio doppio *$2r, "con" r>=rho^*$*, allora andiamo a coprire tutti i punti coperti dal centro ottimo con raggio *$rho^*$*.
+    ]
+  ]
+  Riassumendo i passi: 
+  - *ad ogni iterazione viene cancellata un intera cella di Voronoi della soluzione ottima*.
+  - siccome nella *soluzione ottima $C^*$ ci sono al massimo $k$ celle di Voronoi*, *dopo $k$ iterazione non ci sono più punti in $S$*.
+  - *$|C| <= k$*, output ammissibile
 ]
+
+
+
