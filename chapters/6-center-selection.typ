@@ -138,10 +138,54 @@ Possiamo ora definire il *problema di CenterSelection*:
   $ 
     "fissato" s in S,quad exists hat(s)in C "t.c" d(s,hat(s))<=2r \
     #emph("dato che "+ $s$ +" si trova dentro al raggio " +$rho(hat(s))$)\
-    arrow underbrace(rho(C),d(s,hat(s))) <= 2r \
+    arrow underbrace(rho(C), d(s,hat(s))) <= 2r \
      rho(C)/rho^* <= (2r) / p^* quad qed
   $
   #nota()[
     Si può osservare come *il tasso di approssimazione decresce al valore di $r$*, tuttavia $r$ non può essere ridotto all'infinito.
   ]
+]
+
+#teorema("Teorema")[
+  *Se $r>=rho^*$, $"CenterSelectionPlus"$ emmete sicuramente un output*.
+]
+#dimostrazione()[
+  Sia $C^*$ una soluzione ottima, ovvero *$rho(C^*) = rho^*$*. Supponiamo ora di conoscere il valore di $rho^*$ e di eseguire l'algorimto $"CenterSelectionPlus"$ con *$r>=p^*$*. 
+  
+  Quando un punto $hat(s) in S$, viene aggiunto all'insieme dei centri, ci troviamo nella seguente situazione: 
+
+  #figure(
+    caption: [#mb("Blue raggio") = $rho^*$, #mr("Red raggio") = $r>=rho^*$],
+    box(width: 200pt, height: 160pt, stroke: 0.5pt)[
+      
+      //Punto hat(s)
+      #place(top + left, dx: 80pt, dy: 80pt, circle(radius: 3pt, fill: red))
+      #place(top + left, dx: 75pt, dy: 90pt, text(fill: red, [$hat(s)$]))
+
+      //Punto hat(C)
+      #place(top + left, dx: 110pt, dy: 80pt, circle(radius: 3pt, fill: blue))
+      #place(top + left, dx: 105pt, dy: 90pt, text(fill: blue, [$hat(c)$]))
+
+      //Punto S^'
+      #place(top + left, dx: 110pt, dy: 50pt, circle(radius: 3pt, fill: blue))
+      #place(top + left, dx: 102pt, dy: 45pt, text(fill: blue, [$s^'$]))
+
+      //punto S
+      #place(top + left, dx: 30pt, dy: 50pt, circle(radius: 3pt, fill: red))
+      #place(top + left, dx: 30pt, dy: 59pt, text(fill: red, [$s$]))
+
+       #place(top + left, dx: 45pt, dy: 72pt, text(fill: black, [$<=2r$]))
+
+      //Cerchio
+      #place(top + left, dx: 45pt, dy: 30pt, circle(radius: 50pt, stroke: blue))
+      #place(top + left, dx: 10pt, dy: 4pt, circle(radius: 75pt, stroke: red))
+
+      //collegamenti 
+      #place(top + left, dx: 85pt, dy: 83pt, line(stroke: (dash: "dashed"), length: 25pt, angle: 1deg))
+      #place(top + left, dx: 110pt, dy: 83pt, line(stroke: (dash: "dashed"), length: 25pt, angle: 280deg))
+      #place(top + left, dx: 35pt, dy: 55pt, line(length: 50pt, angle: 29deg))
+    ]
+  )
+
+
 ]
