@@ -136,8 +136,7 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
   $
           n & = 2log_2(x) \
       n / 2 & = log_2(x) \
-    2^(n/2) & = x \
-        2^n & <= x
+    2^(n/2) & = x
   $
   Di conseguenza $t_A = O(x) = O(2^n)$.
   L'algoritmo $A$ *non è polinomiale* rispetto alla lunghezza dell'input, ma solo rispetto al valore.
