@@ -524,5 +524,68 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 ]
 
 #teorema("Corollario")[
-  $ "GreedyCenterSelection" in 2"-APX" $
+  *$ "GreedyCenterSelection" in 2"-APX" $*
 ]
+
+=== DominatingSet
+
+Per dimostrare il teorma #link-teorema(<teorema-inapprossimabilita-centerselection>), usiamo un problema di decisone che prende il nome di *DominatingSet*.
+
+#informalmente()[
+  Ogni lato del grafo deve essere dominato da un vertice, ovvero conesso ad un vertice. Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".  
+]
+
+Formalmente:
+- *$I_Pi = G(V,E)$* non orientato
+- *$"sol"_Pi$* = *$exists D subset.eq V "t.c" |D| <= k quad forall x in V   ,forall e in E quad e inter D != emptyset and e in.rev.small x$* 
+
+#informalmente()[
+  Stiamo chiedendo che tutti i veritici che non fanno parte del dominatingset $forall v in.not D$, devono essere collegati direttamente tramite un arco ad un vertice in $D$.
+]
+
+#esempio()[
+  //fare disegno con esempio
+]
+
+=== inapprosimibilità di CenterSelection
+
+#teorema("Teorema")[
+  Considerando $P != "NP"$, *per nessun $a<2$ esiste un'algoritmo polinomiale che $a-"approssima"$ CenterSelection*.
+
+  L'algorimto GreedyCenterSelection mostrato in precedenza fornisce l'approssimazione migliore possible. 
+]<teorema-inapprossimabilita-centerselection>
+
+#dimostrazione()[
+  Per dimostrarlo utilizzermo *DominatingSet*. \
+
+  *Per assurdo* supponiamo che esista un algoritmo $A$ per $"CenterSelection"$ che in tempo polinomiale fornisce una $a$-approssimazione (con $a<2$).\
+  *Usiamo $A$ per decidere DominatingSet* in tempo polinomaile. \
+  Dato un grafo $G(V,E)$, definiamo uno spazio metrico $Omega$ come segue: 
+  - *$Omega = S = V$*
+  - definiamo $d$ come: 
+    $ d(u,v) = cases(
+      0 "se" u = v \
+      1 "se" u v in E \
+      2 "se" u v in.not E
+    ) $
+  $Omega$ è uno spazio metrico se valgono le segunti proprietà per $d$:
+  - $d(u,v) >= 0$ e $d(u,v)=d(v,u)$ in quanto $G(V,E)$ è non orientato
+  - $d(u,v)=0$ se $u=v$
+  - La triangolarità è banale da verificare $forall v,u,w$:
+    $ underbrace(d(u,v),"vale" 1 or 2)<= underbrace(underbrace(d(u,w), "vale" 1 or 2) + underbrace(d(w,v),"vale" 1 or 2), "vale" 2 or 3 or 4)$
+
+  *$Omega$ è dunque uno spazio metrico*.\
+  Eseguiamo $A$ con il segunte input: 
+  $
+    (Omega, d) -> A -> C subset.eq V \
+    rho(v,k) = cases(
+      1 "allora la soluzione è ottima" rho^* \
+      2 "se c'è almeno un punto a distanza 2"
+    ) \
+    p^*(v,k) = 1 "sse" \
+    <-> exists C subset.eq V "t.c" |C| < k and forall x in V, d(x,C) = 1 \
+    <-> C "è un dominating set"
+  $
+]
+
+
