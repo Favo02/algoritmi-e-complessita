@@ -489,8 +489,6 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
         )
       ],
     )
-
-    #todo
     // TODO: questa dimostrazione funziona, ma non mi sembra molto formale
 
     L'idea è quella di *ridurre l'arbitrarietà* dell'algoritmo V1.
@@ -515,7 +513,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 
     Ma dato che a parità di distanza i due algorimti scelgono il primo punto in ordine lessicografico, vuol dire che hanno scelto lo stesso punto. $overline(s)^'$ e $overline(s)^''$ sono uguali.
 
-    Ma la versione 2 (*V2*) dell'algoritmo non è altro che la versione $"Greedy"$, $qed$.
+    Ma dato che aveamo supposto $overline(s)^'!=overline(s)^''$, questo è un assurdo. La versione 2 (*V2*) dell'algoritmo non è altro che la versione $"Greedy"$, $qed$.
 
     #informalmente[
       Abbiamo dimostrato che ogni possibile esecuzione dell'algorimto $"Greedy"$ è anche una possibile esecuzione di $"Plus"$ (a cui è stata tolta l'arbitrarietà):
