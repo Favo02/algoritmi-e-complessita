@@ -157,6 +157,10 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
 
   Questo algoritmo *NON è polinomiale*, ma *pseudopolinomiale* dato che dipende dal valore di $n$ e non dalla lunghezza di $n$:
   $ O(n) = O(2^(|n|)) $
+
+  #informalmente[
+    Con un _solo_ bit in più, avremo il _doppio_ delle operazioni da svolgere.
+  ]
 ]
 
 === NP-completezza Forte e Debole
