@@ -60,3 +60,6 @@
 #include "chapters/3-classi-di-complessita.typ"
 #include "chapters/4-problema-max-bimatching.typ"
 #include "chapters/5-problema-load-balancing.typ"
+
+
+#include "chapters/8-problema-vertex-cover.typ"
