@@ -70,14 +70,16 @@ jobs:
               artifact.name === 'algoritmi-e-complessita-pdf-review'
             );
 
-            const artifactUrl = pdfArtifact ? pdfArtifact.archive_download_url :
-              `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
+            // Direct download URL for the artifact zip (API endpoint)
+            const artifactUrl = pdfArtifact
+              ? `https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/artifacts/${pdfArtifact.id}/zip`
+              : `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
 
             const comment = `📄 **PDF Generated Successfully for Review!**
 
             The latest PDF has been compiled and is ready for review.
 
-            **Download PDF:** [algoritmi-e-complessita.pdf](${artifactUrl})
+            **Direct download (artifact .zip):** [Download artifact](${artifactUrl})
 
             Alternative: View all [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId})
 
