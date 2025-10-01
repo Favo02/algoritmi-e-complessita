@@ -59,10 +59,27 @@ jobs:
 
           // Comment on PR if found
           if (prNumber) {
+            // Get the artifact download URL
+            const { data: artifacts } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+
+            const pdfArtifact = artifacts.artifacts.find(artifact =>
+              artifact.name === 'algoritmi-e-complessita-pdf-review'
+            );
+
+            const artifactUrl = pdfArtifact ? pdfArtifact.archive_download_url :
+              `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
+
             const comment = `📄 **PDF Generated Successfully for Review!**
 
             The latest PDF has been compiled and is ready for review.
-            You can download it from the [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+
+            **Download PDF:** [algoritmi-e-complessita.pdf](${artifactUrl})
+
+            Alternative: View all [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId})
 
             Commit: ${context.sha.substring(0, 7)}`;
 
