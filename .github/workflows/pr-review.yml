@@ -2,12 +2,14 @@ name: Generate PDF for Review
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [ main ]
     paths:
       - '**.typ'
 
 jobs:
   generate-pdf-for-review:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,10 +59,29 @@ jobs:
 
           // Comment on PR if found
           if (prNumber) {
+            // Get the artifact download URL
+            const { data: artifacts } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+
+            const pdfArtifact = artifacts.artifacts.find(artifact =>
+              artifact.name === 'algoritmi-e-complessita-pdf-review'
+            );
+
+            // Direct download URL for the artifact zip (API endpoint)
+            const artifactUrl = pdfArtifact
+              ? `https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/artifacts/${pdfArtifact.id}/zip`
+              : `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
+
             const comment = `📄 **PDF Generated Successfully for Review!**
 
             The latest PDF has been compiled and is ready for review.
-            You can download it from the [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).
+
+            **Direct download (artifact .zip):** [Download artifact](${artifactUrl})
+
+            Alternative: View all [workflow artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId})
 
             Commit: ${context.sha.substring(0, 7)}`;
 
