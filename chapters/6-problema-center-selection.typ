@@ -35,7 +35,7 @@ Possiamo ora definire il problema *Center Selection*:
   - definita la distanza tra un punto e il centro più vicino:
   $ rho(x, C) = min_(c in C) d(x,c), quad forall x in S $
   - fissiamo la funzione obiettivo come il massimo di queste distanze:
-  $ rho(C) = max_(x in S) rho(x, c) = "raggio di copertura di" C $
+  $ rho(C) = max_(x in S) rho(x, C) = "raggio di copertura di" C $
 - $t_Pi = min$
 
 #figure(
@@ -175,7 +175,7 @@ Possiamo ora definire il problema *Center Selection*:
 ]
 
 #pseudocode(
-  [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
+  [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R)^+$],
   [$C <- emptyset$],
   [*While* $S eq.not emptyset$],
   indent(
@@ -412,7 +412,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   Se $r$ scende ulteriormente sotto $rho^* / 2$, allora è impossibile che emetta soluzione.
 ]
 
-== Algoritmo GreedyCenterSelection
+== Algoritmo GreedyCenterSelection [2-APX]
 
 #pseudocode(
   [Input: $S subset.eq Omega, k in bb(N)^+$],
@@ -546,7 +546,7 @@ Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus
   Quasi sempre si dimostra che un algoritmo che compie scelte deterministiche sia una possibile esecuzione (una _sola_ traccia per input) di un algoritmo con scelte arbitrarie (_molteplici_ tracce per input). Ancora, esattamente come il caso precedente.
 ]
 
-== Dominating Set <dominating-set>
+== Dominating Set [NPc] <dominating-set>
 
 #nota[
   Per dimostrare il teorema #link-teorema(<teorema-inapprossimabilita-centerselection>),
