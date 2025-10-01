@@ -315,8 +315,8 @@ Possiamo ora definire il problema *Center Selection*:
     $ forall s in S, quad exists overline(s) in C quad "t.c." quad d(s,overline(s))<=2r $
     Quindi il raggio di copertura di ogni centro è $<= 2r$:
     $
-            rho(C) & <= 2r \
-      rho(C) / p^* & <= (2r) / p^* space qed
+              rho(C) & <= 2r \
+      rho(C) / rho^* & <= (2r) / rho^* space qed
     $
 
     #nota[
@@ -405,7 +405,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 - *$r>=rho^*$*: otteniamo una soluzione $(2r)/rho^*"-approssimata"$, con un $r$ _troppo_ grande l'approssimazione peggiora
 - *$r=rho^*$*: otteniamo una $2"-approssimazione"$
 - *$(rho^*)/2 < r < rho^*$*: l'algoritmo potrebbe emettere un'ottima approssimazione, ma potrebbe anche non emettere una soluzione (o meglio, trovarne una non ammissibile)
-- *$r < (rho^*)/2$*: l'algoritmo *non* emette soluzione, altrimenti otteremmo una soluzione migliore dell'ottimo (impossibile): $(2r)/rho^* < (2((rho^*)/2))/rho^* <= 1$
+- *$r < (rho^*)/2$*: l'algoritmo *non* emette soluzione, altrimenti otterremmo una soluzione migliore dell'ottimo (impossibile): $(2r)/rho^* < (2((rho^*)/2))/rho^* <= 1$
 
 #informalmente[
   Più $r$ è piccolo, migliore sarà l'approssimazione. Se $r$ scende sotto $rho^*$ l'algoritmo potrebbe non emettere soluzione (ma in caso la emetta sarebbe molto buona).
@@ -516,7 +516,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
     Ma dato che aveamo supposto $overline(s)^'!=overline(s)^''$, questo è un assurdo. La versione 2 (*V2*) dell'algoritmo non è altro che la versione $"Greedy"$, $qed$.
 
     #informalmente[
-      Abbiamo dimostrato che ogni possibile esecuzione dell'algorimto $"Greedy"$ è anche una possibile esecuzione di $"Plus"$ (a cui è stata tolta l'arbitrarietà):
+      Abbiamo dimostrato che ogni possibile esecuzione dell'algoritmo $"Greedy"$ è anche una possibile esecuzione di $"Plus"$ (a cui è stata tolta l'arbitrarietà):
       $ "Greedy" subset.eq "Plus" $
       Di conseguenza tutte le proprietà di $"Plus"$ valgono anche per l'algoritmo $"Greedy"$.
     ]
@@ -543,7 +543,7 @@ Nel caso in cui tutte le possibili esecuzioni di un algoritmo $A$ siano anche po
 Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus"$.
 
 #informalmente[
-  Quasi sempre si dimostra che un algorimto che compie scelte deterministiche sia una possibile esecuzione (una _sola_ traccia per input) di un algorimto con scelte arbitrarie (_molteplici_ tracce per input). Ancora, esattamente come il caso precedente.
+  Quasi sempre si dimostra che un algoritmo che compie scelte deterministiche sia una possibile esecuzione (una _sola_ traccia per input) di un algoritmo con scelte arbitrarie (_molteplici_ tracce per input). Ancora, esattamente come il caso precedente.
 ]
 
 == Dominating Set <dominating-set>
@@ -645,9 +645,9 @@ $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d 
 == Inapprosimabilità di Center Selection
 
 #teorema("Teorema")[
-  Se $P != "NP"$, per *nessun* $a<2$ esiste un'algoritmo polinomiale che $alpha"-approssima"$ Center Selection.
+  Se $P != "NP"$, per *nessun* $alpha<2$ esiste un algoritmo polinomiale che $alpha$-approssima Center Selection.
 
-  Di conseguenza, l'algorimto $"GreedyCenterSelection"$ mostrato in precedenza fornisce l'approssimazione migliore possible.
+  Di conseguenza, l'algoritmo $"GreedyCenterSelection"$ mostrato in precedenza fornisce l'approssimazione migliore possibile.
 
   #dimostrazione[
     Per dimostrarlo ci ricondurremo a #link-section(<dominating-set>).
@@ -774,7 +774,7 @@ $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d 
       ],
     )
 
-    Ora possiamo trasformare il grafo in uno spazio metrico ed eseguire l'algoritmo $A$ con input $V$ e $k$, che restituità un insieme di centri $C$.
+    Ora possiamo trasformare il grafo in uno spazio metrico ed eseguire l'algoritmo $A$ con input $V$ e $k$, che restituisce un insieme di centri $C$.
     Questa soluzione ha rapporto di approssimazione: $ 1 <= mr(rho(C)) / rho^* <= alpha $
 
     Per come è definito lo spazio metrico, la distanza *massima* tra due punti qualsiasi è $2$, di conseguenza il raggio di copertura della soluzione ottima $rho^*$ sarà 1 o 2: $ rho^*(V, k) in {1,2} $
