@@ -2,12 +2,14 @@ name: Generate PDF for Review
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [ main ]
     paths:
       - '**.typ'
 
 jobs:
   generate-pdf-for-review:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
