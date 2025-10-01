@@ -361,8 +361,8 @@ Possiamo ora definire il problema *Center Selection*:
           circle(points.at(1), radius: r, stroke: green, fill: green.transparentize(85%))
 
           // Show radius r
-          line(points.at(1), (points.at(1).at(0) + r, points.at(1).at(1)), stroke: green)
-          content((points.at(1).at(0) + r / 2, points.at(1).at(1) + 0.15), anchor: "south", text(
+          line(points.at(1), (points.at(1).at(0) + r - 0.1, points.at(1).at(1) + 0.7), stroke: green)
+          content((points.at(1).at(0) + r / 2, points.at(1).at(1) + 0.5), anchor: "south", text(
             fill: green,
             size: 1em,
             [$r$],
@@ -521,71 +521,301 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
       Di conseguenza tutte le proprietà di $"Plus"$ valgono anche per l'algoritmo $"Greedy"$.
     ]
   ]
-]
+] <greedy-center-selection-esecuzione-center-selection-plus>
 
 #teorema("Corollario")[
   *$ "GreedyCenterSelection" in 2"-APX" $*
 ]
 
-=== DominatingSet
+=== Tecnica della Simulazione
 
-Per dimostrare il teorma #link-teorema(<teorema-inapprossimabilita-centerselection>), usiamo un problema di decisone che prende il nome di *DominatingSet*.
-
-#informalmente()[
-  Ogni lato del grafo deve essere dominato da un vertice, ovvero conesso ad un vertice. Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".  
+#nota[
+  La dimostrazione appena mostrata (#link-teorema(<greedy-center-selection-esecuzione-center-selection-plus>)) utilizza la *tecnica della simulazione* (o tecnica della *restrizione/rilassamento*), che merita un approfondimento.
 ]
 
-Formalmente:
-- *$I_Pi = G(V,E)$* non orientato
-- *$"sol"_Pi$* = *$exists D subset.eq V "t.c" |D| <= k quad forall x in V   ,forall e in E quad e inter D != emptyset and e in.rev.small x$* 
+Se tra due algoritmi esistono delle tracce di esecuzione (ovvero delle _esecuzioni_) in comune, allora, per quelle tracce valgono le _proprietà_ di entrambi gli algoritmi contemporaneamente.
 
-#informalmente()[
-  Stiamo chiedendo che tutti i veritici che non fanno parte del dominatingset $forall v in.not D$, devono essere collegati direttamente tramite un arco ad un vertice in $D$.
+#attenzione[
+  Le proprietà valgono solo per le tracce in comune, non sempre!
 ]
 
-#esempio()[
-  //fare disegno con esempio
+Nel caso in cui tutte le possibili esecuzioni di un algoritmo $A$ siano anche possibili tracce di $A'$, allora tutte le proprietà di $A'$ valgono anche per $A$.
+Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus"$.
+
+#informalmente[
+  Quasi sempre si dimostra che un algorimto che compie scelte deterministiche sia una possibile esecuzione (una _sola_ traccia per input) di un algorimto con scelte arbitrarie (_molteplici_ tracce per input). Ancora, esattamente come il caso precedente.
 ]
 
-=== inapprosimibilità di CenterSelection
+== Dominating Set <dominating-set>
+
+#nota[
+  Per dimostrare il teorema #link-teorema(<teorema-inapprossimabilita-centerselection>),
+  abbiamo bisogno di introdurre il problema di decisone *Dominating Set*.
+]
+
+#informalmente[
+  Ogni vertice del grafo deve essere _dominato_, ovvero _adiacente_ ad un vertice selezionato.
+  Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".
+]
+
+- $I_Pi$:
+  - $G(V,E)$: grafo non orientato
+  - $k in bb(N)^+$: budget
+- $"Sol"_Pi = exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
+$ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d in D) $
+
+#figure(
+  cetz.canvas(length: 1cm, {
+    import cetz.draw: *
+
+    // Define vertices positions
+    let vertices = (
+      (1, 2), // v1
+      (3, 3), // v2
+      (5, 2), // v3
+      (2, 1), // v4
+      (4, 1), // v5
+      (3, 0.5), // v6
+    )
+
+    // Define edges
+    let edges = (
+      (0, 1), // v1-v2
+      (1, 2), // v2-v3
+      (0, 3), // v1-v4
+      (3, 4), // v4-v5
+      (2, 4), // v3-v5
+      (4, 5), // v5-v6
+    )
+
+    // Draw edges
+    for edge in edges {
+      line(vertices.at(edge.at(0)), vertices.at(edge.at(1)), stroke: (paint: black, thickness: 1pt))
+    }
+
+    // Define dominating set (indices of vertices in the dominating set)
+    let dominating_set = (1, 4) // v2 and v5
+
+    // Draw vertices
+    for (i, vertex) in vertices.enumerate() {
+      if i in dominating_set {
+        // Dominating vertices (red)
+        circle(vertex, radius: 0.15, fill: red, stroke: (paint: red.darken(20%), thickness: 1.5pt))
+      } else {
+        // Non-dominating vertices (light blue)
+        circle(vertex, radius: 0.12, fill: blue.lighten(60%), stroke: (paint: blue, thickness: 1pt))
+      }
+
+      // Labels
+      content((vertex.at(0), vertex.at(1) + 0.3), anchor: "center", text(
+        size: 0.8em,
+        fill: black,
+        weight: "bold",
+        [$v_#(i + 1)$],
+      ))
+    }
+
+    // Draw dotted lines from non-dominating vertices to their dominators
+    let domination_connections = (
+      (0, 1), // v1 dominated by v2
+      (2, 1), // v3 dominated by v2
+      (3, 4), // v4 dominated by v5
+      (5, 4), // v6 dominated by v5
+    )
+
+    for connection in domination_connections {
+      line(
+        vertices.at(connection.at(0)),
+        vertices.at(connection.at(1)),
+        stroke: (dash: "dotted", paint: red.darken(20%), thickness: 2pt),
+      )
+    }
+  }),
+  caption: [
+    Esempio di Dominating Set con $k=2$.
+    I vertici #text(fill: red)[rossi] ($v_2, v_5$) formano l'insieme dominante.
+    Ogni vertice #text(fill: blue.lighten(40%))[blu] è adiacente ad almeno un vertice dominante, come mostrato dalle linee tratteggiate.
+  ],
+)
 
 #teorema("Teorema")[
-  Considerando $P != "NP"$, *per nessun $a<2$ esiste un'algoritmo polinomiale che $a-"approssima"$ CenterSelection*.
+  *$ "DominatingSet" in "NPc" $*
+] <dominating-set-npc>
 
-  L'algorimto GreedyCenterSelection mostrato in precedenza fornisce l'approssimazione migliore possible. 
-]<teorema-inapprossimabilita-centerselection>
+== Inapprosimabilità di Center Selection
 
-#dimostrazione()[
-  Per dimostrarlo utilizzermo *DominatingSet*. \
+#teorema("Teorema")[
+  Se $P != "NP"$, per *nessun* $a<2$ esiste un'algoritmo polinomiale che $alpha"-approssima"$ Center Selection.
 
-  *Per assurdo* supponiamo che esista un algoritmo $A$ per $"CenterSelection"$ che in tempo polinomiale fornisce una $a$-approssimazione (con $a<2$).\
-  *Usiamo $A$ per decidere DominatingSet* in tempo polinomaile. \
-  Dato un grafo $G(V,E)$, definiamo uno spazio metrico $Omega$ come segue: 
-  - *$Omega = S = V$*
-  - definiamo $d$ come: 
-    $ d(u,v) = cases(
-      0 "se" u = v \
-      1 "se" u v in E \
-      2 "se" u v in.not E
-    ) $
-  $Omega$ è uno spazio metrico se valgono le segunti proprietà per $d$:
-  - $d(u,v) >= 0$ e $d(u,v)=d(v,u)$ in quanto $G(V,E)$ è non orientato
-  - $d(u,v)=0$ se $u=v$
-  - La triangolarità è banale da verificare $forall v,u,w$:
-    $ underbrace(d(u,v),"vale" 1 or 2)<= underbrace(underbrace(d(u,w), "vale" 1 or 2) + underbrace(d(w,v),"vale" 1 or 2), "vale" 2 or 3 or 4)$
+  Di conseguenza, l'algorimto $"GreedyCenterSelection"$ mostrato in precedenza fornisce l'approssimazione migliore possible.
 
-  *$Omega$ è dunque uno spazio metrico*.\
-  Eseguiamo $A$ con il segunte input: 
-  $
-    (Omega, d) -> A -> C subset.eq V \
-    rho(v,k) = cases(
-      1 "allora la soluzione è ottima" rho^* \
-      2 "se c'è almeno un punto a distanza 2"
-    ) \
-    p^*(v,k) = 1 "sse" \
-    <-> exists C subset.eq V "t.c" |C| < k and forall x in V, d(x,C) = 1 \
-    <-> C "è un dominating set"
-  $
-]
+  #dimostrazione[
+    Per dimostrarlo ci ricondurremo a #link-section(<dominating-set>).
 
+    Per *assurdo* supponiamo che esista un algoritmo $A$ per $"CenterSelection"$ che in tempo polinomiale fornisca una $alpha$-approssimazione, con $alpha < 2$.
 
+    Possiamo usare $A$ per decidere DominatingSet in tempo *polinomiale*.
+    Per fare ciò dobbiamo _trasformare_ gli input di DominatingSet (grafo) in input di CenterSelection (spazio metrico).
+
+    Dato il grafo $G(V,E)$, definiamo uno spazio metrico $(Omega, d)$ come:
+    - Spazio dei punti: $Omega = S = V$
+    - Funzione distanza $d$:
+      $
+        d(u,v) = cases(
+          0 "se" u = v,
+          1 "se" (u, v) in E,
+          2 "se" (u, v) in.not E
+        )
+      $
+    - Valgono le proprietà dello spazio metrico di $d$:
+      - $d(u,v) >= 0$: non assegniamo mai distanze negative
+      - $d(u,v) = d(v,u)$: il grafo $G$ è non orientato
+      - $d(u,v) = 0 <==> u = v$: assegniamo $0$ proprio in caso $u = v$
+      - proprietà triangolare: $mr(1 or 2) <= mb(2 or 3 or 4)$
+        $
+          forall space v, u, w, quad underbrace(d(u,v), "vale" mr(1 or 2))<= underbrace(underbrace(d(u,w), "vale" 1 or 2) + underbrace(d(w,v), "vale" 1 or 2), "vale" mb(2 or 3 or 4))
+        $
+
+    #figure(
+      cetz.canvas(length: 1cm, {
+        import cetz.draw: *
+
+        // Original graph G
+        group({
+          content((2.5, 4.5), anchor: "center", text(weight: "bold", size: 1em, "Grafo G"))
+
+          // Define vertices positions for the graph - more interesting layout
+          let vertices = (
+            (1, 3), // v1
+            (3, 4), // v2
+            (4, 2.5), // v3
+            (2, 1.5), // v4
+            (0.5, 2), // v5
+          )
+
+          // Define edges in the graph - creating a more connected graph
+          let edges = (
+            (0, 1), // v1-v2
+            (1, 2), // v2-v3
+            (0, 4), // v1-v5
+            (3, 4), // v4-v5
+            (2, 3), // v3-v4
+            (1, 3),
+          )
+
+          // Draw edges
+          for edge in edges {
+            line(vertices.at(edge.at(0)), vertices.at(edge.at(1)), stroke: (paint: black, thickness: 1.5pt))
+          }
+
+          // Draw vertices
+          for (i, vertex) in vertices.enumerate() {
+            circle(vertex, radius: 0.15, fill: white, stroke: (paint: black, thickness: 1.5pt))
+          }
+        })
+
+        // Arrow
+        content((6, 2.75), anchor: "center", text(size: 1.5em, [$arrow.r$]))
+
+        // Metric space representation
+        group({
+          content((9.5, 4.5), anchor: "center", text(weight: "bold", size: 1em, "Spazio Metrico"))
+
+          // Same vertices positions but shifted
+          let metric_vertices = (
+            (7.5, 3), // v1
+            (9.5, 4), // v2
+            (10.5, 2.5), // v3
+            (8.5, 1.5), // v4
+            (7, 2), // v5
+          )
+
+          // Define which pairs are adjacent (distance 1) based on edges
+          let adjacent_pairs = (
+            (0, 1),
+            (1, 2),
+            (0, 4),
+            (3, 4),
+            (2, 3),
+            (1, 3),
+          )
+
+          // Draw connections for all vertex pairs
+          for i in range(5) {
+            for j in range(i + 1, 5) {
+              let v1 = metric_vertices.at(i)
+              let v2 = metric_vertices.at(j)
+              let midpoint = ((v1.at(0) + v2.at(0)) / 2, (v1.at(1) + v2.at(1)) / 2)
+
+              // Check if this pair is adjacent
+              let is_adjacent = (i, j) in adjacent_pairs or (j, i) in adjacent_pairs
+
+              if is_adjacent {
+                // Adjacent vertices - solid green line with distance 1
+                line(v1, v2, stroke: (paint: green, thickness: 1.5pt))
+                content(midpoint, anchor: "north-west", text(size: 0.7em, fill: green.darken(30%), weight: "bold", [1]))
+              } else {
+                // Non-adjacent vertices - dashed red line with distance 2
+                line(v1, v2, stroke: (paint: red, dash: "dashed", thickness: 1pt))
+                content(midpoint, anchor: "south-west", text(size: 0.7em, fill: red.darken(30%), weight: "bold", [2]))
+              }
+            }
+          }
+
+          // Draw vertices on top
+          for (i, vertex) in metric_vertices.enumerate() {
+            circle(vertex, radius: 0.15, fill: white, stroke: (paint: black, thickness: 1.5pt))
+          }
+        })
+      }),
+      caption: [
+        Trasformazione di un grafo $G(V,E)$ nel corrispondente spazio metrico $(Omega, d)$.
+        La distanza è $mg(1)$ tra vertici adiacenti e $mr(2)$ tra vertici non adiacenti.
+      ],
+    )
+
+    Ora possiamo trasformare il grafo in uno spazio metrico ed eseguire l'algoritmo $A$ con input $V$ e $k$, che restituità un insieme di centri $C$.
+    Questa soluzione ha rapporto di approssimazione: $ 1 <= mr(rho(C)) / rho^* <= alpha $
+
+    Per come è definito lo spazio metrico, la distanza *massima* tra due punti qualsiasi è $2$, di conseguenza il raggio di copertura della soluzione ottima $rho^*$ sarà 1 o 2: $ rho^*(V, k) in {1,2} $
+
+    In particolare, se $rho^* = 1$, allora per ogni punto $x in V$, esiste un centro selezionato a distanza $1$, rendendolo un *dominating set*:
+    $
+      mb(rho^*)(V, k) = 1 space & <==> space exists space C subset.eq V, space |C| <= k, space forall x in V, space d(x, C) <= 1 \
+      & <==> C "è un Dominating Set"
+    $
+
+    Mettendo insieme i pezzi, sappiamo quanto può valere la soluzione ottima $mb(rho^*)$ e sappiamo quanto può valere l'approssimazione che abbiamo trovato $mr(rho(C))$:
+
+    #grid(
+      columns: (1fr, 1fr),
+      align: center,
+      [
+        $
+          rho^* = 1 \
+          1 <= mr(rho(C)) / mb(1) <= alpha \
+          1 <= rho(C) <= alpha
+        $
+        Quindi $C$ *è* un dominating set.
+      ],
+      [
+        $
+          rho^* = 2 \
+          1 <= mr(rho(C)) / mb(2) <= alpha \
+          2 <= rho(C) <= 2 alpha
+        $
+        Quindi $C$ *NON* è un dominating set.
+      ],
+    )
+
+    Quindi ci basta eseguire l'algoritmo $A$ che ($alpha < 2$)-approssima Center Selection per ottenere un $rho(C)$.
+    *Osservando* questo $rho(C)$ possiamo capire in quale *intervallo è compreso* e quindi capire se $C$ è un dominating set o meno, *decidendo* il problema in tempo polinomiale.
+
+    Ma questa cosa è assurda dato che Dominating Set è NPc (#link-teorema(<dominating-set-npc>)), $qed$.
+
+    #attenzione[
+      Questi due casi sono disgiunti dato che $alpha < 2$ per ipotesi.
+      In caso $alpha >= 2$, i due intervalli si sovrappongono, rendendo impossibile intuire la soluzione ottima $rho^*$.
+    ]
+  ]
+] <teorema-inapprossimabilita-centerselection>
