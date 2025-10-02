@@ -26,17 +26,17 @@ Lo spazio dei punti $Omega$ si dice spazio metrico sse $forall x,y,z in Omega$, 
 ]
 
 Possiamo ora definire il problema *Center Selection*:
-- $I_Pi$:
+- *$I_Pi$*:
   - _$(Omega, d)$: spazio metrico (questo input è spesso sottointeso)_
   - $S subset.eq Omega$: insieme dei punti sullo spazio metrico
   - $k in bb(N)^+$: budget da rispettare
-- $"Amm"_(Pi): C subset.eq S "t.c." |C| <= k$: sottoinsieme di punti (i centri) che rispettano il budget.
-- Funzione obiettivo: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
+- *$"Amm"_(Pi)$*: $C subset.eq S "t.c." |C| <= k$: sottoinsieme di punti (i centri) che rispettano il budget.
+- *Funzione obiettivo*: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
   - definita la distanza tra un punto e il centro più vicino:
   $ rho(x, C) = min_(c in C) d(x,c), quad forall x in S $
   - fissiamo la funzione obiettivo come il massimo di queste distanze:
   $ rho(C) = max_(x in S) rho(x, C) = "raggio di copertura di" C $
-- $t_Pi = min$
+- *$t_Pi = min$*
 
 #figure(
   cetz.canvas(length: 1cm, {
@@ -96,7 +96,7 @@ Possiamo ora definire il problema *Center Selection*:
       line(point, centers.at(assignment), stroke: (dash: "dashed", paint: black, thickness: 0.6pt))
     }
   }),
-  caption: [Esempio di selezione dei centri con $k=3$. Ogni centro $c_i$ ha un raggio di copertura $rho = r_i$ che rappresenta la distanza esatta dal centro al punto più lontano nella sua area di copertura.\ L'output di questa istanza del problema è $1.62$.],
+  caption: [Esempio di selezione dei centri con $k=3$. Ogni centro $c_i$ ha un raggio di copertura $rho = r_i$ che rappresenta la distanza esatta dal centro al punto più lontano nella sua area di copertura.\ L'output di questa istanza del problema è $rho(C) = 1.62$.],
 )
 
 #nota[
@@ -558,10 +558,10 @@ Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus
   Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".
 ]
 
-- $I_Pi$:
+- *$I_Pi$*:
   - $G(V,E)$: grafo non orientato
   - $k in bb(N)^+$: budget
-- $"Sol"_Pi = exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
+- *$"Sol"_Pi$* = $exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
 $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d in D) $
 
 #figure(
@@ -811,7 +811,7 @@ $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d 
     Quindi ci basta eseguire l'algoritmo $A$ che ($alpha < 2$)-approssima Center Selection per ottenere un $rho(C)$.
     *Osservando* questo $rho(C)$ possiamo capire in quale *intervallo è compreso* e quindi capire se $C$ è un dominating set o meno, *decidendo* il problema in tempo polinomiale.
 
-    Ma questa cosa è assurda dato che Dominating Set è NPc (#link-teorema(<dominating-set-npc>)), $qed$.
+    Ma questa cosa *è assurda* dato che *$"Dominating" in "NPc"$* (#link-teorema(<dominating-set-npc>)), $qed$.
 
     #attenzione[
       Questi due casi sono disgiunti dato che $alpha < 2$ per ipotesi.
