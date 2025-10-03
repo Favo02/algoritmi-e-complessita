@@ -81,7 +81,7 @@ $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 ]
 
 Una *prezzatura*  $<P_e>$ si dice *stretta* sul vertice $overline(i) in V$, se: 
-$ sum_(e "t.c." overline(i) in e) P_e = w_i $
+$ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
 #informalmente[
   Il vertice $overline(i)$ riceve esattamente quanto chiede
