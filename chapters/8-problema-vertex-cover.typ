@@ -68,7 +68,7 @@ In ogni istante è presente una *funzione di prezzatura*  (pricing):
 $ [<P_e> forall e in E] $
 
 #informalmente()[
-  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati (in un certo istante), per acquistare un vertice $v$ incidente. 
+  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati (in un certo istante), per acquistare un vertice $v$ adiacente. 
 
   Se il prezzo offerto dai lati è variabile, il prezzo di ogni vertice è fisso.
 ]
@@ -87,12 +87,32 @@ $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
   Il vertice $overline(i)$ riceve esattamente quanto chiede.
 ]
 
+#figure(
+  box(width: 150pt, height: 150pt, stroke: 0.5pt)[
+    // Vertice centrale (costo 10)
+    #place(top + left, dx: 67pt, dy: 67pt, circle(radius: 8pt, fill: red))
+    #place(top + left, dx: 71pt, dy: 80pt, text(size: 18pt, fill: red, [v]))
+    #place(top + left, dx: 90pt, dy: 71pt, text(size: 12pt, [$w_i = 10$], fill: red))
+    
+    // Tre archi con le loro prezzature
+    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: 45deg, stroke: purple))
+    #place(top + left, dx: 100pt, dy: 27pt, text(size: 12pt, [$P_(e_1) = 4$], fill: green))
+    
+    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: 180deg, stroke: blue))
+    #place(top + left, dx: 20pt, dy: 57pt, text(size: 12pt, [$P_(e_2) = 3$], fill: blue))
+    
+    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: -45deg, stroke: green))
+    #place(top + left, dx: 100pt, dy: 110pt, text(size: 12pt, [$P_(e_3) = 3$], fill: purple))
+  ],
+  caption: [Esempio di prezzatura stretta: la somma delle offerte dei tre archi entranti in $v$ è uguale al suo costo.]
+)
+
 == Algoritmo PricingVertexCover
 
 #informalmente[
-  Idea dell'algoritmo:
-  - partire dalla prezzatura euqa banale (tutti 0):
-  - far diventare stretta la prezzatura su qualche vertice ()
+  L'algoritmo proposto *non passa mai per offerte inique*:
+  - si parte dalla prezzatura euqa banale (tutti 0):
+  - ad ogni passo si cerca di creare una prezzatura stretta, in modo da acquistare un certo vertice
 ]
 
 - $"Pe" <- 0 forall e in E$
