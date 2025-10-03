@@ -12,11 +12,13 @@ Formalmente:
   - $G(V, E)$: grafo non orientato
   - $w_i in bb(Q)^+, forall i in V$. Ogni vertice ha un costo
 - *$"Amm"_Pi$*: $X subset.eq V, "t.c" forall e in E, e inter X != emptyset$
-  #informalmente[
-    Almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$.
-  ]
 - *$C_Pi$*: $sum_(i in X)w_i$. Costo totale dei vertici selezionati
 - *$t_Pi = min$*
+
+#informalmente[
+  In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$.
+]
+
 
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decione di $"SetCover"$:
