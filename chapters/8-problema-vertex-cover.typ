@@ -130,7 +130,7 @@ Algoritmo $"PricingVertexCover"$:
 )
 
 #informalmente()[
-  Se una prezzatura non è stretta su nessuna delle due estremità di un lato, allora vuol dire che non stiamo coprendo quel lato.
+  Se una *prezzatura non è stretta su nessuna delle due estremità di un lato*, allora vuol dire che *non stiamo coprendo quel lato*.
 ]
 
 #let vertex-cover-graph(
@@ -183,7 +183,7 @@ Algoritmo $"PricingVertexCover"$:
 }
 
 #esempio()[
-  *Passo $0$*: Inizialmente il peso di ogni arco è 0.
+  *Passo $0$*: Inizialmente il peso di ogni lato è 0.
   #figure(
     vertex-cover-graph(
       colors: (black, black, black, black, black),
@@ -232,7 +232,11 @@ Algoritmo $"PricingVertexCover"$:
   )
 
   L'algoritmo termina in quanto tutti i lati sono stati coperti. Soluzione finale: 
-  $ {A,B} union {A,D} union {C,D} $
+  $ 
+    {A,B} union {A,D} union {C,D} \
+    X = {A,B,D}
+  
+  $
   Il costo totale è $10$ (i vertici acquistati).
 ]
 
@@ -248,14 +252,14 @@ Algoritmo $"PricingVertexCover"$:
     $
     Di conseguenza: 
     $
-      sum_(e in E) P_e <= 
-      underbrace(sum_(i in X^*) sum_(e, i in e) P_e, "sol ottima") underbrace(<=,"prezzatura" \ "equa")
+      mb(sum_(e in E) P_e) <= 
+      underbrace(mr(sum_(i in X^*) sum_(e, i in e) P_e), "sol ottima") underbrace(<=,"prezzatura" \ "equa")
       sum_(i in X^*) w_i = w^* 
       
     $
 
     #informalmente[
-      Per la definizione di vertex cover, tutti i lati devono comparire almeno una volta nella soluzione. Ogni lato può apparire al massimo $2$ volte nella soluzione. Di conseguenza la doppia sommatoria è $>=$ uguale alla sommatoria delle prezzature di tutti i lati.
+      Per la definizione di vertex cover, tutti i lati devono comparire almeno una volta nella soluzione. Ogni lato può apparire al massimo $2$ volte nella soluzione. Di conseguenza la $mr("doppia sommatoria")$ è $>=$ uguale alla $mb("sommatoria delle prezzature di tutti i lati")$.
     ]
   ]
 ]<lemma1-vertex-cover>
@@ -273,8 +277,8 @@ Algoritmo $"PricingVertexCover"$:
 
     $ 
       w = sum_(i in X) w_i underbrace(=,"def" \ P_e "stretta") 
-      sum_(i in X) sum_(e "t.c." i in e) P e underbrace(<=, forall e in E \ "e compare" <=2 "volte") 
-      2 sum_(e in E) P e space 
+      sum_(i in X) sum_(e "t.c." i in e) P_e underbrace(<=, forall e in E \ "e compare" <=2 "volte") 
+      2 sum_(e in E) P_e space 
       qed 
     $
   ]
