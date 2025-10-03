@@ -16,16 +16,19 @@
 // various settings
 #set terms(separator: [: ]) // terms list
 #set heading(numbering: "1.1.") // heading numbering
-#show: gentle-clues.with(breakable: true) // colored boxes
-#show: codly-init.with() // codly setup
-#show: equate.with(breakable: true) // equations settings
+#set math.equation(numbering: "(1.1)", supplement: "EQ") // equations numbering
+#show: equate.equate.with(breakable: true, sub-numbering: true) // equations settings
+#show: gentle-clues.gentle-clues.with(breakable: true) // colored boxes
+#show: codly.codly-init.with() // code setup
+
+// page break every chapter
 #show heading.where(level: 1): it => {
-  // page break every chapter
   pagebreak()
   it
 }
+
+// header and footer
 #set page(
-  // header and footer
   numbering: "1",
   number-align: bottom + right,
   header: [
