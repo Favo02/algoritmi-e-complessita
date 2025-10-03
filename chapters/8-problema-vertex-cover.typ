@@ -115,12 +115,130 @@ $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
   - ad ogni passo si cerca di creare una prezzatura stretta, in modo da acquistare un certo vertice
 ]
 
-- $"Pe" <- 0 forall e in E$
-- *While* $exists space [i, j] in E "t.c." <"Pe">$ non è stretto nè su $i$ nè su $j$: \/\/ se una prezzatura non è stretta su nessuna delle due estremità di un lato, allora vuol dire che non stiamo coprendo quel lato
-  - sia $overline(e) = {overline(i), overline(j)}$ un lato tale che
-  $ Delta = min underbrace(w_overline(i) - sum_e, > 0) "Pe", w_overline(j) - sum_e "Pe" $
-  - $P overline(e) <- P overline(e) + Delta$ \/\/ abbiamo scelto uno dei due vertici di un lato e abbiamo fatto diventato quel vertice stretto
-- ...
+Algoritmo $"PricingVertexCover"$:
+#pseudocode(
+  [$P_e <- 0,forall e in E)$],
+  [*While* $exists {i,j} in E "t.c" <P_e> "non è stretto nè su" i "nè su "j$],
+  indent(
+    [Sia $overline(e) = {overline(i),overline(j)}$ un lato t.c],
+    [$Delta = min{w_overline(i) - sum_(e, overline(i) in e)P_e, w_overline(j)- sum_(e, overline(j) in e) P_e)}$],
+    [#emph("stiamo cercando un qualsiai lato, dove il delta è la differenza di prezzo tra il costo del vertice "+$overline(i)$+" e quanto i lati incidenti stanno offrendo")],
+    [$P_overline(e) = P_overline(e)+Delta$],
+    [#emph("Aumentiamo la prezzatura di un lato, in modo tale che in almeno una delle due estremità diventi stretta")]
+  ),
+  [*end*]
+)
+
+#informalmente()[
+  Se una prezzatura non è stretta su nessuna delle due estremità di un lato, allora vuol dire che non stiamo coprendo quel lato.
+]
+
+#let vertex-cover-graph(
+  colors: ((0,0,0), (0,0,0), (0,0,0), (0,0,0), (0,0,0)), 
+  weights: (0,0,0,0,0),                                    
+  node_colors: (white, white, white, white)                
+) = {
+  box(width: 350pt, height: 200pt, stroke: 0.0pt)[
+    //NODO B
+    #place(top + left, dx: 37pt, dy: 147pt, circle(radius: 12pt, fill: node_colors.at(0), stroke: black))
+    #place(top + left, dx: 42pt, dy: 175pt, text(size: 17pt, [$B$]))
+    #place(top + left, dx: 46pt, dy: 152pt, text(size: 14pt, [$3$]))
+
+    //NODO A
+    #place(top + left, dx: 150pt, dy: 10pt, circle(radius: 12pt, fill: node_colors.at(1), stroke: black))
+    #place(top + left, dx: 135pt, dy: 15pt, text(size: 17pt, [$A$]))
+    #place(top + left, dx: 157pt, dy: 15pt, text(size: 14pt, [$4$]))
+
+    //NODO C
+    #place(bottom + left, dx: 150pt, dy: -28pt, circle(radius: 12pt, fill: node_colors.at(2), stroke: black))
+    #place(bottom + left, dx: 153pt, dy: -12pt, text(size: 17pt, [$C$]))
+    #place(bottom + left, dx: 159pt, dy: -35pt, text(size: 14pt, [$5$]))
+    
+    //NODO D
+    #place(bottom + right, dx: -55pt, dy: -27pt, circle(radius: 12pt, fill: node_colors.at(3), stroke: black))
+    #place(bottom + right, dx: -60pt, dy: -11pt, text(size: 17pt, [$D$]))
+    #place(bottom + right, dx: -63pt, dy: -35pt, text(size: 14pt, [$5$]))
+    
+    // Linee di collegamento con colori parametrici
+    // B-A
+    #place(top + left, dx: 50pt, dy: 147pt, line(length: 157pt, angle: 310deg, stroke: colors.at(0)))
+    #place(top + left, dx: 90pt, dy: 68pt, text(size: 14pt)[#weights.at(0)])
+    
+    // B-C
+    #place(top + left, dx: 60pt, dy: 157pt, line(length: 90pt, angle: 360deg, stroke: colors.at(1)))
+    #place(top + left, dx: 100pt, dy: 142pt, text(size: 14pt)[#weights.at(1)])
+    
+    // A-C
+    #place(top + left, dx: 160pt, dy: 33pt, line(length: 115pt, angle: 90deg, stroke: colors.at(2)))
+    #place(top + left, dx: 165pt, dy: 80pt, text(size: 14pt)[#weights.at(2)])
+    
+    // A-D
+    #place(top + left, dx: 170pt, dy: 30pt, line(length: 167pt, angle: 46deg, stroke: colors.at(3)))
+    #place(top + left, dx: 225pt, dy: 70pt, text(size: 14pt)[#weights.at(3)])
+    
+    // C-D
+    #place(bottom + left, dx: 175pt, dy: -42pt, line(length: 95pt, angle: 0deg, stroke: colors.at(4)))
+    #place(bottom + left, dx: 215pt, dy: -47pt, text(size: 14pt)[#weights.at(4)])
+  ]
+}
+
+#esempio()[
+  *Passo $0$*: Inizialmente il peso di ogni arco è 0.
+  #figure(
+    vertex-cover-graph(
+      colors: (black, black, black, black, black),
+      weights: (0, 0, 0, 0, 0),
+      node_colors: (white, white, white, white)
+    ),
+    caption: [Passo $0$]
+  )
+
+  *Passo $1$*: supponiamo venga selezionato il lato ${A,B}$: 
+  $ Delta = min{3-0,4-0} $
+  Ottenendo $Delta = 3$, aumento $P_({A,B})$. \
+  Possiamo ora comprare il lato $B$.
+  #figure(
+    vertex-cover-graph(
+      colors: (red, black, black, black, black),
+      weights: (3, 0, 0, 0, 0),
+      node_colors: (red, white, white, white)
+    ),
+    caption: [Passo $1$]
+  )
+
+  *Passo $2$*: supponiamo venga scelto il lato ${A,D}$:
+  $ Delta = {4-3,5-0} $
+  Ottenendo $Delta = 4$, incremento $P_{A,D}$.\
+  Posso quindi comprare il verice $A$.
+  #figure(
+    vertex-cover-graph(
+      colors: (black, black, black, red, black),
+      weights: (3, 0, 0, 1, 4),
+      node_colors: (red, red, white, white)
+    ),
+    caption: [Passo $2$]
+  )
+  *Passo $3$*: l'ultima scelta possibile è il lato ${C,D}$: 
+  $ Delta = min{5-0, 5-1} $
+  Ottenendo $Delta = 4$, , incremento $P_{C,D}$.\
+  Possiamo ora acquistare il vertice $D$
+  #figure(
+    vertex-cover-graph(
+      colors: (black, black, black, black, red),
+      weights: (3, 0, 0, 1, 0),
+      node_colors: (red, red, white, red)
+    ),
+    caption: [Passo $3$]
+  )
+
+  L'algoritmo termina in quanto tutti i lati sono stati coperti. Soluzione finale: 
+  $ {A,B} union {A,D} union {C,D} $
+  Il costo totale è $10$ (i vertici acquistati).
+
+
+]
+
+
 
 #teorema("Lemma")[
   Se $<P e>$ è una pezzatura qeual, allora:
