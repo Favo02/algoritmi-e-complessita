@@ -208,12 +208,12 @@ Algoritmo $"PricingVertexCover"$:
 
   *Passo $2$*: supponiamo venga scelto il lato ${A,D}$:
   $ Delta = {4-3,5-0} $
-  Ottenendo $Delta = 4$, incremento $P_{A,D}$.\
+  Ottenendo $Delta = 1$, incremento $P_{A,D}$.\
   Posso quindi comprare il verice $A$.
   #figure(
     vertex-cover-graph(
       colors: (black, black, black, red, black),
-      weights: (3, 0, 0, 1, 4),
+      weights: (3, 0, 0, 1, 0),
       node_colors: (red, red, white, white)
     ),
     caption: [Passo $2$]
@@ -225,7 +225,7 @@ Algoritmo $"PricingVertexCover"$:
   #figure(
     vertex-cover-graph(
       colors: (black, black, black, black, red),
-      weights: (3, 0, 0, 1, 0),
+      weights: (3, 0, 0, 1, 4),
       node_colors: (red, red, white, red)
     ),
     caption: [Passo $3$]
@@ -234,66 +234,70 @@ Algoritmo $"PricingVertexCover"$:
   L'algoritmo termina in quanto tutti i lati sono stati coperti. Soluzione finale: 
   $ {A,B} union {A,D} union {C,D} $
   Il costo totale è $10$ (i vertici acquistati).
-
-
 ]
 
 
-
 #teorema("Lemma")[
-  Se $<P e>$ è una pezzatura qeual, allora:
-  $ sum_(e in E) P e <= w^* $
+  Se $<P_e>$ è una *prezzatura equa*, allora:
+  $ sum_(e in E) P_e <= w^* $
 
   #dimostrazione[
-    Per definizione di equo:
+    Per la definizione di prezzatura equa sappiamo che:
+    $
+      forall i, quad sum_(e "t.c." i in e) P_e <= w_i \
+    $
+    Di conseguenza: 
+    $
+      sum_(e in E) P_e <= 
+      underbrace(sum_(i in X^*) sum_(e, i in e) P_e, "sol ottima") underbrace(<=,"prezzatura" \ "equa")
+      sum_(i in X^*) w_i = w^* 
+      
+    $
 
-    $
-      forall i, quad sum_(e "t.c." i in e) P e <= w_i \
-      ...
-    $
     #informalmente[
-      Ma tutti i lati devono contenere, dato che è un vertex cover.
-      Qualche lato potrebbe apparire due volte dato che entrambi gli estremi siano nel set dei vertici presi, ma tutti almeno una volta.
-      Quindi è maggiore uguale della sommatoria sui singoli lati.
+      Per la definizione di vertex cover, tutti i lati devono comparire almeno una volta nella soluzione. Ogni lato può apparire al massimo $2$ volte nella soluzione. Di conseguenza la doppia sommatoria è $>=$ uguale alla sommatoria delle prezzature di tutti i lati.
     ]
   ]
-]
+]<lemma1-vertex-cover>
 
 #teorema("Lemma")[
-  La soluzione $w$ trovata da PricingVertexCover soddisfa la proprietà che $ w <= 2 sum_(e in E) P e $
+  La soluzione *$w$* trovata da $"PricingVertexCover"$ soddisfa la seguente proprietà:
+  $ w <= 2 sum_(e in E) P_e $
 
   #informalmente[
-    Ogni lato può pagare ad una delle due estremità o ad entrambe, ma non più di così.
+    Ogni lato, al *massimo*, può contribuire all'*acquisto di entrambi i vertici adiacenti*. 
   ]
 
   #dimostrazione[
-    X = insieme dei vertici su cui Pe è stretto
-    $ w = sum_(i in X) w_i = sum_(i in X) sum_(e "t.c." i in e) P e <= 2 sum_(e in E) P e space qed $
+    Possiamo definire l'insieme dei vertici finali $X$ come: l'insieme dei vertici su cui la prezzatura $P_e$ è stretta
 
-    Per definizione se $w_i$ è stretto,allora la somma dei vertici che vi incino è uguale.
-
-    Ogni $e$ compare $<= 2$ volte.
+    $ 
+      w = sum_(i in X) w_i underbrace(=,"def" \ P_e "stretta") 
+      sum_(i in X) sum_(e "t.c." i in e) P e underbrace(<=, forall e in E \ "e compare" <=2 "volte") 
+      2 sum_(e in E) P e space 
+      qed 
+    $
   ]
-]
+]<lemma2-vertex-cover>
 
 #teorema("Teorema")[
   *$ "PricingVertexCover" in 2"-APX" $*
 
   #dimostrazione[
     $
-      w / w^* underbrace(<=, "lemma2") (2 sum_(e in E) P e) / w^* underbrace(<=, "lemma1") (2 sum_(e in E) P e) / (sum_(e in E) P e) <= 2 space qed
+      w / w^* underbrace(<=, #link-teorema( <lemma1-vertex-cover>)) 
+      (2 sum_(e in E) P e) / w^* underbrace(<=, #link-teorema(<lemma2-vertex-cover>)) 
+      (2 sum_(e in E) P e) / (sum_(e in E) P e) <= 2 space qed
     $
   ]
 ]
 
-#informalmente[
-  Nel precedente problema, il pricing era usato come metodo per andare ad ottimizzare due obiettivi (il numero di punti coperti e il costo dell'area).
-
-  In questo problema il pricing ha più il senso della parola, ha quasi delle prorprietà economiche (i lati offrono una cifra, i vertici hanno un costo per coprire).
-]
-
 #teorema("Teorema")[
-  Non è noto alcun algoritmo polinomiale migliore di questa approssimazione.
+  Non è noto alcun algoritmo polinomiale che offre un'approsimazione significativamente migliore di $2$.
+
+  #informalmente()[
+    Neanche selezionando il lato che minimizza il $Delta$. 
+  ]
 ]
 
 #teorema("Teorema")[
