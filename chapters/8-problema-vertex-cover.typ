@@ -1,41 +1,50 @@
 #import "../imports.typ": *
 
-= Problema Vertex Cover
+= Problema Vertex Cover (copertura di vertici)
 
 #informalmente[
-  Ogni lato del grafo deve essere coperto da almeno un vertice
-]
+  Dato un grafo $G(V,E)$, vogliamo trovare un sotto-insieme di vertici $S subset.eq V$ tale che, ogni lato $in E$ ha almeno un estremo in $S$.  
 
-- $I_Pi$:
+  Ogni lato del grafo deve essere coperto da almeno un vertice.
+]
+Formalmente:
+- *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
-  - $w_i in bb(Q)^+ forall i in V$
-- $"Amm"_Pi$
+  - $w_i in bb(Q)^+, forall i in V$. Ogni vertice ha un costo
+- *$"Amm"_Pi$*: $X subset.eq V, "t.c" forall e in E, e inter X != emptyset$
   #informalmente[
-    Prendo ogni lato, quindi una coppia di vertici e controllo se almeno uno dei due è dentro l'insieme dei vertici coperti
+    Almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$.
   ]
-- $C_Pi$: costo totale dei vertici selezionati
-- $t_Pi = min$
+- *$C_Pi$*: $sum_(i in X)w_i$. Costo totale dei vertici selezionati
+- *$t_Pi = min$*
 
 #teorema("Proprietà")[
-  La versione di decisione di vertexcover è polinomialmente riducibile all'istanza di decisione di setcover
+  La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decione di $"SetCover"$:
+  *$ hat("VertexCover") <=_p hat("SetCover") $*
 
-  $ hat("VertexCover") <=_p hat("SetCover") $
+  #dimostrazione()[
+    Data un istanza di $"SetCover"$: 
+    $ x = (G=(V,E), (w_i)_(i in V), hat(w)) $
 
-  #dimostrazione[
-    Mostriamo la funzione che trasforma gli input.
+    Vogliamo trasformala in un istanza di $"SetCover"$:
+    $ m = (f(x) = {S_1,....,S_2}, v_(i in {1,dots,m}),hat(v)) $
 
-    Istanza di vertexcover:
-    $ x = (G=(V, E), (w_i)_(i in V), overline(w)) $
+    Trasformazioni: 
+    - Gli insiemi $S_i$ contengono tutti gli archi incidenti su un certo vertice $V_i$: 
+    $ 
+      forall i in V_i, S_i = {e in E | i in e}\
+      union.big_(i=1)^(m) S_i = E
+    $
+    - I costi degli insiemi sono i costi dei vertici: 
+     $ v_i = w_i $  
+    - Stessa soglia 
+     $ hat(w) = hat(v) $
+    
+    Possiamo definire ora una *soluzione ammissibile*: 
+    Scelta di $S_i$ che coprono tutti i lati del grafo. Ovvero devo scegliere dei vertici tali che tutti i lati del grafo originale hanno almeno un lato dentro un sotto-insieme $S_i$.
 
-    Lo vogliamo trasformare in istanza di setcover:
-    $ ({S_1, ..., S_m}, (v_i)_(i in {1, ..., m}), overline(v)) $
-
-    Trasformiamo:
-    - gli insiemi sono gli insiemi di lati che incidono su un certo vertice $ forall i in V, S_i = { e in E "t.c." i in e} $
-    - i costi degli insiemi sono i costi dei vertici: $ v_i = w_i $
-    - il bound è uguale: $ overline(v) = overline(w) $
-
-    Le soluzini sono le stesse, anche il valore della funzione obiettivo è uguale per entrambi i problemi.
+    Le *soluzoni delle istanze $m$ e $x$ sono le medesime*. \
+    Il *valore della funzione obiettivo viene conservato* durante la trasformazione. 
   ]
 ]
 
