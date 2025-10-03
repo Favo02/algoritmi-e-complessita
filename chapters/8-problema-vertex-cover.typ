@@ -19,7 +19,6 @@ Formalmente:
   In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$.
 ]
 
-
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decione di $"SetCover"$:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
@@ -51,41 +50,41 @@ Formalmente:
 ]
 
 #teorema("Proprietà")[
-  $ "VertexCover" in H(D)"-APX" $
-  dove $D$ è il grafo massimo del grafo.
+  *$ "VertexCover" in H(D)"-APX" $*
+  dove $D$ è il grado massimo del grafo. 
 
-  #informalmente[
-    Dato che sappiamo trasformare un'istanza di Vertex cover in setcover, allora è possibile applicare lo stesso algorimto, che ci fa ottenere la stessa approssimazione.
+  #attenzione()[
+    In precendenza abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$. Dato che il valore delle funzione obiettivo viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una stessa approssimazione. 
   ]
 
-  #informalmente[
-    Dato che tutti questi problemi sono NPOc, allora la versione di decisione è in NPc, di conseguenza sono tutte riducibili tra di loro.
-
-    Quello di "strano" che succede qua è che anche le versioni di ottimizzazione sono riducibili e quindi hanno (come minimo) stessa approssimazione.
+  #nota[
+    Dato che i problemi trattasi sono $"NPOc"$, allora la versione di decisione è in $"NPc"$, di conseguenza sono tutte riducibili tra di loro [ #link-section(<riduzione-tempo-polinomiale>)]
   ]
 ]
 
 == Vertex Cover mediante Pricing
 
-#informalmente[
-  Ogni vertice ha un prezzo, ma questo prezzo può essere pagato da più di un lato, dato che pagando una sola volta il prezzo entrambi i lati sarebbero coperti da quel vertice.
+In ogni istante è presente una *funzione di prezzatura*  (pricing): 
+$ [<P_e> forall e in E] $
+
+#informalmente()[
+  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati (in un certo istante), per acquistare un vertice $v$ incidente. 
+
+  Se il prezzo offerto dai lati è variabile, il prezzo di ogni vertice è fisso.
 ]
 
-/ Funzione di prezzatura (pricing):
-  $<"Pe"> forall e in E$
+Una *prezzatura* $<P_e>$ si dice *equa* se ogni vertice riceve dai lati incidenti un offerta $<=$ al suo prezzo d'acquisto $w_i$ :
+$ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 
-Una prezzatura si dice *equa* se ogni vertice riceve al massimo quello che chiede:
-$ forall i in V, quad sum_(e "t.c. i in e") P_e <= w_i $
-
-#informalmente[
-  Se ad ogni vertice è offermo meno o uguale a quanto richiede.
+#nota[
   La prezzatura equa banale è dove ogni lato offre $0$.
 ]
 
-Prezzatura stretta: una prezzatura $<"Pe">$ è stretta sul vertice $overline(i) in V$, se: $ sum_(e "t.c." overline(i) in e) "Pe" = w_i $
+Una *prezzatura*  $<P_e>$ si dice *stretta* sul vertice $overline(i) in V$, se: 
+$ sum_(e "t.c." overline(i) in e) P_e = w_i $
 
 #informalmente[
-  Tutti i vertici ricevono esattamente quanto chiedono.
+  Il vertice $overline(i)$ riceve esattamente quanto chiede
 ]
 
 == Algoritmo PricingVertexCover
