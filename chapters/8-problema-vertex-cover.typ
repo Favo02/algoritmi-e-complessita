@@ -3,14 +3,14 @@
 = Problema Vertex Cover (copertura di vertici)
 
 #informalmente[
-  Dato un grafo $G(V,E)$, vogliamo trovare un sotto-insieme di vertici $S subset.eq V$ tale che, ogni lato $in E$ ha almeno un estremo in $S$.  
+  Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $S subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $S$.  
 
   Ogni lato del grafo deve essere coperto da almeno un vertice.
 ]
 Formalmente:
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
-  - $w_i in bb(Q)^+, forall i in V$. Ogni vertice ha un costo
+  - $w_i in bb(Q)^+, forall i in V$. Costo di ogni vertice
 - *$"Amm"_Pi$*: $X subset.eq V, "t.c" forall e in E, e inter X != emptyset$
 - *$C_Pi$*: $sum_(i in X)w_i$. Costo totale dei vertici selezionati
 - *$t_Pi = min$*
@@ -20,11 +20,11 @@ Formalmente:
 ]
 
 #teorema("Proprietà")[
-  La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decione di $"SetCover"$:
+  La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
 
   #dimostrazione()[
-    Data un istanza di $"SetCover"$: 
+    Data un'istanza di $"VertexCover"$: 
     $ x = (G=(V,E), (w_i)_(i in V), hat(w)) $
 
     Vogliamo trasformala in un istanza di $"SetCover"$:
@@ -36,13 +36,11 @@ Formalmente:
       forall i in V_i, S_i = {e in E | i in e}\
       union.big_(i=1)^(m) S_i = E
     $
-    - I costi degli insiemi sono i costi dei vertici: 
-     $ v_i = w_i $  
-    - Stessa soglia 
-     $ hat(w) = hat(v) $
+    - I costi degli insiemi sono i costi dei vertici: $v_i = w_i$  
+    - Stessa soglia: $hat(w) = hat(v)$
     
     Possiamo definire ora una *soluzione ammissibile*: 
-    Scelta di $S_i$ che coprono tutti i lati del grafo. Ovvero devo scegliere dei vertici tali che tutti i lati del grafo originale hanno almeno un lato dentro un sotto-insieme $S_i$.
+    Scelta di $S_i$ che coprono tutti i lati del grafo. Ovvero devo scegliere dei vertici tali che tutti i lati del grafo originale hanno almeno un'estremità dentro un sottoinsieme $S_i$.
 
     Le *soluzoni delle istanze $m$ e $x$ sono le medesime*. \
     Il *valore della funzione obiettivo viene conservato* durante la trasformazione. 
@@ -54,21 +52,21 @@ Formalmente:
   dove $D$ è il grado massimo del grafo. 
 
   #attenzione()[
-    In precendenza abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$. Dato che il valore delle funzione obiettivo viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una stessa approssimazione. 
+    In precendenza abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$. Dato che il valore delle funzione obiettivo viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una solzuone con la stessa approssimazione. 
   ]
 
   #nota[
-    Dato che i problemi trattasi sono $"NPOc"$, allora la versione di decisione è in $"NPc"$, di conseguenza sono tutte riducibili tra di loro [ #link-section(<riduzione-tempo-polinomiale>)]
+    Dato che i problemi trattasi sono $"NPOc"$, allora la loro versione di decisione è in $"NPc"$. Di conseguenza sono tutte riducibili tra di loro [ #link-section(<riduzione-tempo-polinomiale>)]
   ]
 ]
 
 == Vertex Cover mediante Pricing
 
 In ogni istante è presente una *funzione di prezzatura*  (pricing): 
-$ [<P_e> forall e in E] $
+*$ [<P_e> forall e in E] $*
 
 #informalmente()[
-  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati (in un certo istante), per acquistare un vertice $v$ adiacente. 
+  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati, in un certo istante, per acquistare un vertice $v$ adiacente. 
 
   Se il prezzo offerto dai lati è variabile, il prezzo di ogni vertice è fisso.
 ]
@@ -111,22 +109,24 @@ $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
 #informalmente[
   L'algoritmo proposto *non passa mai per offerte inique*:
-  - si parte dalla prezzatura euqa banale (tutti 0):
+  - si parte dalla prezzatura equa banale (tutti 0):
   - ad ogni passo si cerca di creare una prezzatura stretta, in modo da acquistare un certo vertice
 ]
 
 Algoritmo $"PricingVertexCover"$:
 #pseudocode(
-  [$P_e <- 0,forall e in E)$],
-  [*While* $exists {i,j} in E "t.c" <P_e> "non è stretto nè su" i "nè su "j$],
+  [$P_e <- 0,forall e in E$],
+  [*While* $exists {i,j} in E "t.c" <P_e> "non è stretta nè su" i "nè su "j$],
   indent(
     [Sia $overline(e) = {overline(i),overline(j)}$ un lato t.c],
     [$Delta = min{w_overline(i) - sum_(e, overline(i) in e)P_e, w_overline(j)- sum_(e, overline(j) in e) P_e)}$],
-    [#emph("stiamo cercando un qualsiai lato, dove il delta è la differenza di prezzo tra il costo del vertice "+$overline(i)$+" e quanto i lati incidenti stanno offrendo")],
+    [#emph("stiamo cercando un qualsiai lato del grafo. Il delta è definito come la differenza di prezzo tra il costo del vertice "+$overline(i)$+" e quanto i lati incidenti stanno offrendo")],
     [$P_overline(e) = P_overline(e)+Delta$],
     [#emph("Aumentiamo la prezzatura di un lato, in modo tale che in almeno una delle due estremità diventi stretta")]
   ),
-  [*end*]
+  [$X <- "insieme dei vertici su cui" <P_e> "è stretta"$],
+  [*Output* $X$],
+  [*End*]
 )
 
 #informalmente()[
