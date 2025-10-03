@@ -77,14 +77,14 @@ Una *prezzatura* $<P_e>$ si dice *equa* se ogni vertice riceve dai lati incident
 $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 
 #nota[
-  La prezzatura equa banale è dove ogni lato offre $0$.
+  La prezzatura equa banale è quando ogni lato offre $0$.
 ]
 
 Una *prezzatura*  $<P_e>$ si dice *stretta* sul vertice $overline(i) in V$, se: 
 $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
 #informalmente[
-  Il vertice $overline(i)$ riceve esattamente quanto chiede
+  Il vertice $overline(i)$ riceve esattamente quanto chiede.
 ]
 
 == Algoritmo PricingVertexCover
