@@ -3,20 +3,24 @@
 = Problema Vertex Cover (copertura di vertici)
 
 #informalmente[
-  Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $S subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $S$.  
+  Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $S subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $S$.
 
   Ogni lato del grafo deve essere coperto da almeno un vertice.
 ]
-Formalmente:
+
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
-  - $w_i in bb(Q)^+, forall i in V$. Costo di ogni vertice
-- *$"Amm"_Pi$*: $X subset.eq V, "t.c" forall e in E, e inter X != emptyset$
-- *$C_Pi$*: $sum_(i in X)w_i$. Costo totale dei vertici selezionati
+  - $w_i in bb(Q)^+, space forall i in V$: costo di ogni vertice
+- *$"Amm"_Pi$*: insieme di vertici $X$ tale che ogni lato sia coperto da un vertice in $X$:
+  $ X subset.eq V, quad forall e in E, quad e inter X != emptyset $
+- *$C_Pi$*: costo totale dei vertici selezionati
+  $ sum_(i in X)w_i $
 - *$t_Pi = min$*
 
-#informalmente[
-  In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$.
+#nota[
+  La notazione $e inter X$ è valida perchè un lato $e$ non è altro che un _insieme_ di due vertici.
+
+  In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
 #teorema("Proprietà")[
@@ -24,274 +28,339 @@ Formalmente:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
 
   #dimostrazione()[
-    Data un'istanza di $"VertexCover"$: 
-    $ x = (G=(V,E), (w_i)_(i in V), hat(w)) $
+    Data un'istanza di $"VertexCover"$:
+    $ x' = (underbrace(G=(V,E), "grafo"), underbrace((w_i)_(i in V), "costi"), underbrace(overline(w), "budget")) $
 
     Vogliamo trasformala in un istanza di $"SetCover"$:
-    $ m = (f(x) = {S_1,....,S_2}, v_(i in {1,dots,m}),hat(v)) $
+    $
+      x'' = (underbrace({S_1, ... ,S_m}, "aree"), underbrace((w_i)_(i in S), "costi"), underbrace(overline(v), "budget"))
+    $
 
-    Trasformazioni: 
-    - Gli insiemi $S_i$ contengono tutti gli archi incidenti su un certo vertice $V_i$: 
-    $ 
-      forall i in V_i, S_i = {e in E | i in e}\
+    Per fare ciò, definiamo la funzione $f(x') -> x''$, che costruisce:
+
+    - Le _aree_ $S_i$ come gli insiemi che contengono gli archi $e$ incidenti su un certo vertice $V_i$:
+    $
+      forall i in V, quad S_i = {e in E "t.c." i in e}, quad
       union.big_(i=1)^(m) S_i = E
     $
-    - I costi degli insiemi sono i costi dei vertici: $v_i = w_i$  
-    - Stessa soglia: $hat(w) = hat(v)$
-    
-    Possiamo definire ora una *soluzione ammissibile*: 
-    Scelta di $S_i$ che coprono tutti i lati del grafo. Ovvero devo scegliere dei vertici tali che tutti i lati del grafo originale hanno almeno un'estremità dentro un sottoinsieme $S_i$.
+    - I _costi_ degli insiemi come i costi del vertice che rappresentano: $v_i = w_i$
+    - Il _budget_ rimane invariato: $overline(w) = overline(v)$
 
-    Le *soluzoni delle istanze $m$ e $x$ sono le medesime*. \
-    Il *valore della funzione obiettivo viene conservato* durante la trasformazione. 
+    #informalmente[
+      I _punti_ dell'universo da coprire diventano i _lati_, mentre le _aree_ sono i _vertici_.
+      Andando a selezionare un'area (quindi un vertice) copriamo tutti i lati che sono connessi a quel vertice.
+
+      Coprendo tutti i punti dell'universo, andiamo a coprire tutti i lati, risolvendo VertexCover.
+    ]
+
+    Con la funzione $f$ un'istanza di SetCover viene trasformata in un'istanza di VertexCover (in tempo polinomiale).
+    Dobbiamo anche dimostrare che una soluzione di VertexCover sia *valida* anche per SetCover, ovvero che le *soluzioni ammissibili* siano uguali:
+    - _SetCover_: ogni punto dell'universo deve essere coperto da almeno un'area
+    - _VertexCover_: ogni lato deve avere un'estremità in $V$
+
+    Ma per come sono create gli le aree $S_i$ da $f$, allora ogni punto non è altro che un lato.
+    Dato che le soluzioni ammissibili di _SetCover_ comprendono solo le soluzioni dove tutti i punti sono coperti, allora tutti i lati di _VertexCover_ sono coperti.
+
+    Quindi le *soluzoni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, il valore della *funzione obiettivo* viene conservato durante la trasformazione.
   ]
-]
+] <vertex-cover-riducibile-set-cover>
 
 #teorema("Proprietà")[
   *$ "VertexCover" in H(D)"-APX" $*
-  dove $D$ è il grado massimo del grafo. 
+  dove $D$ è il grado massimo del grafo.
 
-  #attenzione()[
-    In precendenza abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$. Dato che il valore delle funzione obiettivo viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una solzuone con la stessa approssimazione. 
+  #dimostrazione[
+    Abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$ (#link-teorema(<vertex-cover-riducibile-set-cover>)).
+    Dato che il valore delle *funzione obiettivo* viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una soluzione con la *stessa approssimazione*.
   ]
 
-  #nota[
-    Dato che i problemi trattasi sono $"NPOc"$, allora la loro versione di decisione è in $"NPc"$. Di conseguenza sono tutte riducibili tra di loro [ #link-section(<riduzione-tempo-polinomiale>)]
+  #attenzione[
+    Due problemi $in "NPOc"$ *non* è detto che mantengano la *stessa approssimazione*!
+
+    In questo esempio l'approssimazione è mantenuta perchè i valori della *funzione obiettivo* solo gli stessi.
   ]
 ]
 
 == Vertex Cover mediante Pricing
 
-In ogni istante è presente una *funzione di prezzatura*  (pricing): 
-*$ [<P_e> forall e in E] $*
-
-#informalmente()[
-  Per ogni lato, la funzione di pricing indica il prezzo offerto dai lati, in un certo istante, per acquistare un vertice $v$ adiacente. 
-
-  Se il prezzo offerto dai lati è variabile, il prezzo di ogni vertice è fisso.
-]
-
-Una *prezzatura* $<P_e>$ si dice *equa* se ogni vertice riceve dai lati incidenti un offerta $<=$ al suo prezzo d'acquisto $w_i$ :
-$ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
+In ogni istante è presente una *funzione di prezzatura* (pricing):
+$ angle.l P_e angle.r quad forall e in E $
 
 #nota[
-  La prezzatura equa banale è quando ogni lato offre $0$.
+  Notazione:
+  - $P_e$ indica il prezzo di un singolo lato $e$. È una _variabile duale_ associata al lato $e$
+  - $angle.l P_e angle.r$ indica l'insieme di tutti i prezzi dei lati $e$. Non è propriamente una _funzione_ (nonostante si comporti come tale) ma l'_intero vettore_ di _variabili duali_
 ]
-
-Una *prezzatura*  $<P_e>$ si dice *stretta* sul vertice $overline(i) in V$, se: 
-$ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
 #informalmente[
-  Il vertice $overline(i)$ riceve esattamente quanto chiede.
+  Per ogni lato, la funzione di pricing indica il prezzo offerto da quel lato.
+  Un vertice può essere comprato se la somma dei prezzi offerti dai lati incidenti su di esso è $>=$ al suo costo.
+
+  Mentre il prezzo offerto dai lati è _variabile_, il costo di ogni vertice è _fisso_.
 ]
 
-#figure(
-  box(width: 150pt, height: 150pt, stroke: 0.5pt)[
-    // Vertice centrale (costo 10)
-    #place(top + left, dx: 67pt, dy: 67pt, circle(radius: 8pt, fill: red))
-    #place(top + left, dx: 71pt, dy: 80pt, text(size: 18pt, fill: red, [v]))
-    #place(top + left, dx: 90pt, dy: 71pt, text(size: 12pt, [$w_i = 10$], fill: red))
-    
-    // Tre archi con le loro prezzature
-    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: 45deg, stroke: purple))
-    #place(top + left, dx: 100pt, dy: 27pt, text(size: 12pt, [$P_(e_1) = 4$], fill: green))
-    
-    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: 180deg, stroke: blue))
-    #place(top + left, dx: 20pt, dy: 57pt, text(size: 12pt, [$P_(e_2) = 3$], fill: blue))
-    
-    #place(top + left, dx: 75pt, dy: 75pt, line(length: 45pt, angle: -45deg, stroke: green))
-    #place(top + left, dx: 100pt, dy: 110pt, text(size: 12pt, [$P_(e_3) = 3$], fill: purple))
-  ],
-  caption: [Esempio di prezzatura stretta: la somma delle offerte dei tre archi entranti in $v$ è uguale al suo costo.]
-)
+/ Prezzatura equa:
+  una prezzatura $angle.l P_e angle.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un offerta minore o uaugle al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
+  $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
+
+  #nota[
+    La prezzatura equa banale è quando ogni lato offre $0$.
+  ]
+
+  #esempio[
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
+
+        // Vertici del grafo
+        circle((0, 0), radius: 0.15, fill: white, stroke: black)
+        content((0, -0.5), text(size: 10pt)[$8$])
+        content((-0.5, 0), text(size: 10pt)[$v_1$])
+
+        circle((2, 0), radius: 0.15, fill: white, stroke: black)
+        content((2, -0.5), text(size: 10pt)[$6$])
+        content((2.5, 0), text(size: 10pt)[$v_2$])
+
+        circle((1, 1.5), radius: 0.15, fill: white, stroke: black)
+        content((1, 2), text(size: 10pt)[$5$])
+        content((1.5, 1.5), text(size: 10pt)[$v_3$])
+
+        // Archi con prezzature
+        line((0, 0), (2, 0), stroke: 2pt + blue)
+        content((1, -0.25), text(size: 9pt, fill: blue)[$3$])
+
+        line((0, 0), (1, 1.5), stroke: 2pt + red)
+        content((0.2, 0.8), text(size: 9pt, fill: red)[$4$])
+
+        line((2, 0), (1, 1.5), stroke: 2pt + green)
+        content((1.8, 0.8), text(size: 9pt, fill: green)[$1$])
+      }),
+      caption: [Esempio di prezzatura equa: \
+        $v_1$ riceve $mr(4)+mb(3)=7 <= 8$ \
+        $v_2$ riceve $mb(3)+mg(1)=4 <= 6$ \
+        $v_3$ riceve $mr(4)+mg(1)=5 <= 5$
+      ],
+    )
+  ]
+
+/ Prezzatura stretta:
+  una prezzatura $angle.l P_e angle.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta provenienete dai lati incidenti è esattamente uguale al suo costo $w_i$:
+  $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
+
+  #esempio[
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
+
+        // Vertici del grafo
+        circle((0, 0), radius: 0.15, fill: red, stroke: black)
+        content((0, -0.5), text(size: 10pt)[$10$])
+        content((-0.5, 0), text(size: 10pt)[$v_1$])
+
+        circle((2, 0), radius: 0.15, fill: white, stroke: black)
+        content((2, -0.5), text(size: 10pt)[$6$])
+        content((2.5, 0), text(size: 10pt)[$v_2$])
+
+        circle((1, 1.5), radius: 0.15, fill: white, stroke: black)
+        content((1, 2), text(size: 10pt)[$8$])
+        content((1.5, 1.5), text(size: 10pt)[$v_3$])
+
+        // Archi con prezzature
+        line((0, 0), (2, 0), stroke: 2pt + blue)
+        content((1, -0.25), text(size: 9pt, fill: blue)[$4$])
+
+        line((0, 0), (1, 1.5), stroke: 2pt + red)
+        content((0.2, 0.8), text(size: 9pt, fill: red)[$6$])
+      }),
+      caption: [Esempio di prezzatura stretta su $v_1$: \
+        $v_1$ riceve $mr(6)+mb(4)=10 = w_1$ (prezzatura stretta)
+      ],
+    )
+  ]
 
 == Algoritmo PricingVertexCover
 
 #informalmente[
-  L'algoritmo proposto *non passa mai per offerte inique*:
-  - si parte dalla prezzatura equa banale (tutti 0):
-  - ad ogni passo si cerca di creare una prezzatura stretta, in modo da acquistare un certo vertice
+  L'algoritmo proposto *non* passa mai per *offerte inique*:
+  - si parte dalla prezzatura equa banale (tutti 0)
+  - ad ogni passo si cerca di creare una prezzatura stretta su un certo vertice, in modo da acquistarlo
 ]
 
-Algoritmo $"PricingVertexCover"$:
 #pseudocode(
-  [$P_e <- 0,forall e in E$],
-  [*While* $exists {i,j} in E "t.c" <P_e> "non è stretta nè su" i "nè su "j$],
+  [$P_e <- 0, quad forall e in E$],
+  [*While* $exists {i,j} in E "t.c." angle.l P_e angle.r "non è stretta nè su" i "nè su "j$ *do* #emph("// lato non stretto su nessun estremo")],
   indent(
-    [Sia $overline(e) = {overline(i),overline(j)}$ un lato t.c],
-    [$Delta = min{w_overline(i) - sum_(e, overline(i) in e)P_e, w_overline(j)- sum_(e, overline(j) in e) P_e)}$],
-    [#emph("stiamo cercando un qualsiai lato del grafo. Il delta è definito come la differenza di prezzo tra il costo del vertice "+$overline(i)$+" e quanto i lati incidenti stanno offrendo")],
-    [$P_overline(e) = P_overline(e)+Delta$],
-    [#emph("Aumentiamo la prezzatura di un lato, in modo tale che in almeno una delle due estremità diventi stretta")]
+    [$overline(e) <- {overline(i),overline(j)} in E "t.c." angle.l P_e angle.r "non è stretta nè su" i "nè su "j$ #emph(
+        "// lato selezionato non stretto",
+      )],
+    [$Delta = min(
+        w_overline(i) - limits(sum)_(e, overline(i) in e) P_e, space
+        w_overline(j)- limits(sum)_(e, overline(j) in e) P_e
+      )$ #emph(
+        "// minimo tra il costo per far diventare " + $i$ + " o " + $j$ + " stretto",
+      )],
+    [$P_overline(e) = P_overline(e)+Delta$ #emph(
+        "// aumentiamo la prezzatura del lato, una delle due estremità diventa stretta",
+      )],
   ),
-  [$X <- "insieme dei vertici su cui" <P_e> "è stretta"$],
+  [$X <- "insieme dei vertici su cui" angle.l P_e angle.r "è stretta"$],
   [*Output* $X$],
-  [*End*]
+  [*End*],
 )
 
-#informalmente()[
-  Se una *prezzatura non è stretta su nessuna delle due estremità di un lato*, allora vuol dire che *non stiamo coprendo quel lato*.
-]
+#esempio[
+  #let draw-graph-step(pricings: (:), purchased: ()) = {
+    cetz.canvas({
+      import cetz.draw: *
 
-#let vertex-cover-graph(
-  colors: ((0,0,0), (0,0,0), (0,0,0), (0,0,0), (0,0,0)), 
-  weights: (0,0,0,0,0),                                    
-  node_colors: (white, white, white, white)                
-) = {
-  box(width: 350pt, height: 200pt, stroke: 0.0pt)[
-    //NODO B
-    #place(top + left, dx: 37pt, dy: 147pt, circle(radius: 12pt, fill: node_colors.at(0), stroke: black))
-    #place(top + left, dx: 42pt, dy: 175pt, text(size: 17pt, [$B$]))
-    #place(top + left, dx: 46pt, dy: 152pt, text(size: 14pt, [$3$]))
+      // Vertici del grafo
+      circle((0, 0), radius: 0.15, fill: if "B" in purchased { red } else { white }, stroke: black)
+      content((-1, 0), text(size: 10pt)[$B, w = 3$])
 
-    //NODO A
-    #place(top + left, dx: 150pt, dy: 10pt, circle(radius: 12pt, fill: node_colors.at(1), stroke: black))
-    #place(top + left, dx: 135pt, dy: 15pt, text(size: 17pt, [$A$]))
-    #place(top + left, dx: 157pt, dy: 15pt, text(size: 14pt, [$4$]))
+      circle((2, 1.5), radius: 0.15, fill: if "A" in purchased { red } else { white }, stroke: black)
+      content((2, 2), text(size: 10pt)[$A, w = 4$])
 
-    //NODO C
-    #place(bottom + left, dx: 150pt, dy: -28pt, circle(radius: 12pt, fill: node_colors.at(2), stroke: black))
-    #place(bottom + left, dx: 153pt, dy: -12pt, text(size: 17pt, [$C$]))
-    #place(bottom + left, dx: 159pt, dy: -35pt, text(size: 14pt, [$5$]))
-    
-    //NODO D
-    #place(bottom + right, dx: -55pt, dy: -27pt, circle(radius: 12pt, fill: node_colors.at(3), stroke: black))
-    #place(bottom + right, dx: -60pt, dy: -11pt, text(size: 17pt, [$D$]))
-    #place(bottom + right, dx: -63pt, dy: -35pt, text(size: 14pt, [$5$]))
-    
-    // Linee di collegamento con colori parametrici
-    // B-A
-    #place(top + left, dx: 50pt, dy: 147pt, line(length: 157pt, angle: 310deg, stroke: colors.at(0)))
-    #place(top + left, dx: 90pt, dy: 68pt, text(size: 14pt)[#weights.at(0)])
-    
-    // B-C
-    #place(top + left, dx: 60pt, dy: 157pt, line(length: 90pt, angle: 360deg, stroke: colors.at(1)))
-    #place(top + left, dx: 100pt, dy: 142pt, text(size: 14pt)[#weights.at(1)])
-    
-    // A-C
-    #place(top + left, dx: 160pt, dy: 33pt, line(length: 115pt, angle: 90deg, stroke: colors.at(2)))
-    #place(top + left, dx: 165pt, dy: 80pt, text(size: 14pt)[#weights.at(2)])
-    
-    // A-D
-    #place(top + left, dx: 170pt, dy: 30pt, line(length: 167pt, angle: 46deg, stroke: colors.at(3)))
-    #place(top + left, dx: 225pt, dy: 70pt, text(size: 14pt)[#weights.at(3)])
-    
-    // C-D
-    #place(bottom + left, dx: 175pt, dy: -42pt, line(length: 95pt, angle: 0deg, stroke: colors.at(4)))
-    #place(bottom + left, dx: 215pt, dy: -47pt, text(size: 14pt)[#weights.at(4)])
-  ]
-}
+      circle((2, -1.5), radius: 0.15, fill: if "C" in purchased { red } else { white }, stroke: black)
+      content((2, -2), text(size: 10pt)[$C, w = 5$])
 
-#esempio()[
-  *Passo $0$*: Inizialmente il peso di ogni lato è 0.
-  #figure(
-    vertex-cover-graph(
-      colors: (black, black, black, black, black),
-      weights: (0, 0, 0, 0, 0),
-      node_colors: (white, white, white, white)
-    ),
-    caption: [Passo $0$]
-  )
+      circle((4, 0), radius: 0.15, fill: if "D" in purchased { red } else { white }, stroke: black)
+      content((5, 0), text(size: 10pt)[$D, w = 3$])
 
-  *Passo $1$*: supponiamo venga selezionato il lato ${A,B}$: 
-  $ Delta = min{3-0,4-0} $
-  Ottenendo $Delta = 3$, aumento $P_({A,B})$. \
-  Possiamo ora comprare il lato $B$.
-  #figure(
-    vertex-cover-graph(
-      colors: (red, black, black, black, black),
-      weights: (3, 0, 0, 0, 0),
-      node_colors: (red, white, white, white)
-    ),
-    caption: [Passo $1$]
-  )
+      // Archi con prezzature
+      let ab-price = pricings.at("AB", default: 0)
+      line((0, 0), (2, 1.5), stroke: if ab-price > 0 { 2pt + red } else { 1pt + black })
+      content((0.8, 0.8), text(size: 9pt, fill: if ab-price > 0 { red } else { black })[$#ab-price$])
 
-  *Passo $2$*: supponiamo venga scelto il lato ${A,D}$:
-  $ Delta = {4-3,5-0} $
-  Ottenendo $Delta = 1$, incremento $P_{A,D}$.\
-  Posso quindi comprare il verice $A$.
-  #figure(
-    vertex-cover-graph(
-      colors: (black, black, black, red, black),
-      weights: (3, 0, 0, 1, 0),
-      node_colors: (red, red, white, white)
-    ),
-    caption: [Passo $2$]
-  )
-  *Passo $3$*: l'ultima scelta possibile è il lato ${C,D}$: 
-  $ Delta = min{5-0, 5-1} $
-  Ottenendo $Delta = 4$, , incremento $P_{C,D}$.\
-  Possiamo ora acquistare il vertice $D$
-  #figure(
-    vertex-cover-graph(
-      colors: (black, black, black, black, red),
-      weights: (3, 0, 0, 1, 4),
-      node_colors: (red, red, white, red)
-    ),
-    caption: [Passo $3$]
-  )
+      let bc-price = pricings.at("BC", default: 0)
+      line((0, 0), (2, -1.5), stroke: if bc-price > 0 { 2pt + black } else { 1pt + black })
+      content((0.8, -0.8), text(size: 9pt, fill: black)[$#bc-price$])
 
-  L'algoritmo termina in quanto tutti i lati sono stati coperti. Soluzione finale: 
-  $ 
-    {A,B} union {A,D} union {C,D} \
-    X = {A,B,D}
-  
+      let ac-price = pricings.at("AC", default: 0)
+      line((2, 1.5), (2, -1.5), stroke: if ac-price > 0 { 2pt + black } else { 1pt + black })
+      content((1.7, 0), text(size: 9pt, fill: black)[$#ac-price$])
+
+      let ad-price = pricings.at("AD", default: 0)
+      line((2, 1.5), (4, 0), stroke: if ad-price > 0 { 2pt + blue } else { 1pt + black })
+      content((3.2, 0.8), text(size: 9pt, fill: if ad-price > 0 { blue } else { black })[$#ad-price$])
+
+      let cd-price = pricings.at("CD", default: 0)
+      line((2, -1.5), (4, 0), stroke: if cd-price > 0 { 2pt + green } else { 1pt + black })
+      content((3.2, -0.8), text(size: 9pt, fill: if cd-price > 0 { green } else { black })[$#cd-price$])
+    })
+  }
+
+  / Passo $0$: Inizialmente il peso di ogni lato è 0.
+    #figure(
+      draw-graph-step(),
+    )
+
+  / Passo $1$: supponiamo venga selezionato il lato $mr({A,B})$:
+    - $Delta = min{4-0,3-0} = 3$
+    - Aumento $P_({A,B}) = 3$
+    - Possiamo ora comprare il vertice $B$.
+    #figure(
+      draw-graph-step(pricings: ("AB": 3), purchased: ("B",)),
+    )
+
+  / Passo $2$: supponiamo venga scelto il lato $mb({A,D})$:
+    - $Delta = min{4-3,3-0} = 1$
+    - Incremento $P_({A,D}) = 1$
+    - Posso quindi comprare il vertice $A$.
+    #figure(
+      draw-graph-step(pricings: ("AB": 3, "AD": 1), purchased: ("A", "B")),
+    )
+
+  / Passo $3$: l'ultima scelta possibile è il lato $mg({C,D})$:
+    - $Delta = min{5-0, 3-1} = 2$
+    - Incremento $P_({C,D}) = 2$
+    - Possiamo ora acquistare il vertice $D$.
+    #figure(
+      draw-graph-step(pricings: ("AB": 3, "AD": 1, "CD": 2), purchased: ("A", "B", "D")),
+    )
+
+  L'algoritmo termina in quanto non c'è nessun lato che non è stretto su nessuno dei due estremi.
+  Soluzione finale:
   $
-  Il costo totale è $10$ (i vertici acquistati).
+    X = {A,B,D}, quad 4 + 3 + 3 = 10
+  $
 ]
-
 
 #teorema("Lemma")[
-  Se $<P_e>$ è una *prezzatura equa*, allora:
+  Se $angle.l P_e angle.r$ è una *prezzatura equa*, allora la somma della prezzatura di ogni lato $P_e$ è minore o uguale al costo della soluzione ottima $w^*$:
   $ sum_(e in E) P_e <= w^* $
 
   #dimostrazione[
-    Per la definizione di prezzatura equa sappiamo che:
-    $
-      forall i, quad sum_(e "t.c." i in e) P_e <= w_i \
-    $
-    Di conseguenza: 
-    $
-      mb(sum_(e in E) P_e) <= 
-      underbrace(mr(sum_(i in X^*) sum_(e, i in e) P_e), "sol ottima") underbrace(<=,"prezzatura" \ "equa")
-      sum_(i in X^*) w_i = w^* 
-      
-    $
+    Per definizione di prezzatura equa sappiamo che per ogni vertice, la somma dei _prezzi degli archi_ incidenti è minore o uguale al suo _costo_:
+    $ forall i, quad mr(sum_(e, i in e) P_e) <= mb(w_i) $ <vertex-cover-eq-definizione-prezzatura-equa>
 
-    #informalmente[
-      Per la definizione di vertex cover, tutti i lati devono comparire almeno una volta nella soluzione. Ogni lato può apparire al massimo $2$ volte nella soluzione. Di conseguenza la $mr("doppia sommatoria")$ è $>=$ uguale alla $mb("sommatoria delle prezzature di tutti i lati")$.
-    ]
+    Il costo $w^*$ della soluzione ottima $X^*$ è la somma dei prezzi dei vertici selezionati da $X$:
+    $ sum_(i in X^*) w_i = w^* $ <vertex-cover-eq-soluzione-ottima>
+
+    Infine, per definizione di VertexCover, ogni lato $e$ deve essere coperto, quindi deve apparire per forza collegato ad un vertice $i$ della soluzione ottima $X^*$.
+    È un minore e non un uguale dato che ogni lato potrebbe apparire per entrambi i suoi estremi, quindi due volte:
+    $ sum_(e in E) P_e <= sum_(i in X^*) sum_(e, i in e) P_e $ <vertex-cover-eq-ogni-lato>
+
+    Mettendo i pezzi insieme:
+
+    $
+      sum_(e in E) P_e underbrace(<=, #link-equation(<vertex-cover-eq-ogni-lato>))
+      sum_(i in X^*) mr(sum_(e, i in e) P_e) underbrace(<=, #link-equation(<vertex-cover-eq-definizione-prezzatura-equa>))
+      sum_(i in X^*) mb(w_i) underbrace(=, #link-equation(<vertex-cover-eq-soluzione-ottima>)) w^*
+      space qed
+    $
   ]
-]<lemma1-vertex-cover>
+] <lemma1-vertex-cover>
 
 #teorema("Lemma")[
-  La soluzione *$w$* trovata da $"PricingVertexCover"$ soddisfa la seguente proprietà:
+  La soluzione *$w$* trovata da $"PricingVertexCover"$ è minore o uguale al doppio della prezzatura (somma delle offerte dei lati):
   $ w <= 2 sum_(e in E) P_e $
 
   #informalmente[
-    Ogni lato, al *massimo*, può contribuire all'*acquisto di entrambi i vertici adiacenti*. 
+    Ogni lato, può pagare la propria offerta al *massimo* due volte, dato contribuire all'acquisto di *nessuno*, *uno* o *entrambi* i vertici adiacenti.
   ]
 
   #dimostrazione[
-    Possiamo definire l'insieme dei vertici finali $X$ come: l'insieme dei vertici su cui la prezzatura $P_e$ è stretta
+    Definiamo l'insieme dei vertici $X$ come l'insieme dei vertici su cui la prezzatura $P_e$ è stretta, ovvero una soluzione di PricingVertexCover.
+    Il costo totale pagato è, quindi, la somma dei vertici selezionati $X$:
+    $ w = sum_(i in X) mr(w_i) $
 
-    $ 
-      w = sum_(i in X) w_i underbrace(=,"def" \ P_e "stretta") 
-      sum_(i in X) sum_(e "t.c." i in e) P_e underbrace(<=, forall e in E \ "e compare" <=2 "volte") 
-      2 sum_(e in E) P_e space 
-      qed 
+    Ma per definizione di prezzatura stretta, il costo di un vertice è uguale al prezzo offerto dai lati incidenti:
+    $ w_i = mr(sum_(e, i in e) P_e) $
+
+    Di conseguenza:
+    $ w = sum_(i in X) mr(w_i) = sum_(i in X) mr(sum_(e, i in e) P_e) $
+
+    Ogni lato potrebbe apparire al massimo due volte in questa sommatoria, dato che potrebbe apparire una volta per ogni estremo $mb(i)$:
+    $
+      w space = space sum_(i in X) w_i space = space sum_(i in X) sum_mb(e\, i in e) P_e underbrace(<=, mb(forall e in E\, \ e "compare" <= 2 "volte"))
+      2 sum_(e in E) P_e space
+      qed
     $
   ]
-]<lemma2-vertex-cover>
+] <lemma2-vertex-cover>
 
 #teorema("Teorema")[
   *$ "PricingVertexCover" in 2"-APX" $*
 
   #dimostrazione[
+    Per #link-teorema(<lemma2-vertex-cover>):
     $
-      w / w^* underbrace(<=, #link-teorema( <lemma1-vertex-cover>)) 
-      (2 sum_(e in E) P e) / w^* underbrace(<=, #link-teorema(<lemma2-vertex-cover>)) 
-      (2 sum_(e in E) P e) / (sum_(e in E) P e) <= 2 space qed
+                w & <= 2 sum_(e in E) P_e \
+      w / mr(w^*) & <= (2 limits(sum)_(e in E) P_e) / mr(w^*)
+    $
+
+    Ma dato che, per #link-teorema(<lemma1-vertex-cover>), $mr(w^*) >= mb(limits(sum)_(e in E) P_e)$, allora:
+
+    $
+      w / w^* space <= space
+      (2 limits(sum)_(e in E) P e) / mr(w^*) space <= space
+      (2 limits(sum)_(e in E) P e) / mb(limits(sum)_(e in E) P e)
+      \
+      w / w^* space <= space
+      (2 limits(sum)_(e in E) P e) / w^* space <= space
+      2 space (cancel(limits(sum)_(e in E) P e)) / cancel(limits(sum)_(e in E) P e)
+      \
+      w / w^* <= 2 space qed
     $
   ]
 ]
@@ -299,11 +368,15 @@ Algoritmo $"PricingVertexCover"$:
 #teorema("Teorema")[
   Non è noto alcun algoritmo polinomiale che offre un'approsimazione significativamente migliore di $2$.
 
-  #informalmente()[
-    Neanche selezionando il lato che minimizza il $Delta$. 
+  #informalmente[
+    Neanche selezionando il lato che minimizza il $Delta$ tra tutti i lati selezionabili.
   ]
 ]
 
 #teorema("Teorema")[
   *$ "VertexConver" in.not "PTAS" $*
+
+  #informalmente[
+    Non esistono algoritmi che garantiscono un certo tasso di approssimazione, nemmeno, ad esempio, provando a effettuare un _bruteforce_ su una parte ridotta di lati/vertici.
+  ]
 ]
