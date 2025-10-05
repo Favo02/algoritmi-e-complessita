@@ -19,10 +19,15 @@
 #let attenzione(body) = { gentle-clues.warning(title: "Attenzione")[#body] }
 #let informalmente(body) = { gentle-clues.idea(title: "Informalmente", accent-color: green)[#body] }
 #let esempio(body) = { gentle-clues.experiment(title: "Esempio", accent-color: purple)[#body] }
-#let dimostrazione(body) = { gentle-clues.memo(title: "Dimostrazione")[#body] }
+
+#let dimostrazione(body) = {
+  set math.equation(numbering: "(1.1)", supplement: "EQ") // activate math numbering
+  gentle-clues.memo(title: "Dimostrazione")[#body]
+}
 
 #let teoremi-counter = counter("teorema")
 #let teorema(title, body) = {
+  set math.equation(numbering: "(1.1)", supplement: "EQ") // activate math numbering
   teoremi-counter.step()
   gentle-clues.task(
     title: title + "  " + emph("(THM " + context (teoremi-counter.display()) + ")"),

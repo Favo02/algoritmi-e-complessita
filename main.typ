@@ -16,7 +16,7 @@
 // various settings
 #set terms(separator: [: ]) // terms list
 #set heading(numbering: "1.1.") // heading numbering
-#set math.equation(numbering: "(1.1)", supplement: "EQ") // equations numbering
+#set math.equation(numbering: none, supplement: "EQ") // equations numbering, off by default, active in teorema or dimostrazione blocks
 #show: equate.equate.with(breakable: true, sub-numbering: true) // equations settings
 #show: gentle-clues.gentle-clues.with(breakable: true) // colored boxes
 #show: codly.codly-init.with() // code setup
