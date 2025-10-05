@@ -31,7 +31,7 @@
     Data un'istanza di $"VertexCover"$:
     $ x' = (underbrace(G=(V,E), "grafo"), underbrace((w_i)_(i in V), "costi"), underbrace(overline(w), "budget")) $
 
-    Vogliamo trasformala in un istanza di $"SetCover"$:
+    Vogliamo trasformarla in un'istanza di $"SetCover"$:
     $
       x'' = (underbrace({S_1, ... ,S_m}, "aree"), underbrace((w_i)_(i in S), "costi"), underbrace(overline(v), "budget"))
     $
@@ -58,10 +58,10 @@
     - _SetCover_: ogni punto dell'universo deve essere coperto da almeno un'area
     - _VertexCover_: ogni lato deve avere un'estremità in $V$
 
-    Ma per come sono create gli le aree $S_i$ da $f$, allora ogni punto non è altro che un lato.
+    Ma per come sono create le aree $S_i$ da $f$, ogni punto non è altro che un lato.
     Dato che le soluzioni ammissibili di _SetCover_ comprendono solo le soluzioni dove tutti i punti sono coperti, allora tutti i lati di _VertexCover_ sono coperti.
 
-    Quindi le *soluzoni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, il valore della *funzione obiettivo* viene conservato durante la trasformazione.
+    Quindi le *soluzioni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, il valore della *funzione obiettivo* viene conservato durante la trasformazione.
   ]
 ] <vertex-cover-riducibile-set-cover>
 
@@ -71,13 +71,13 @@
 
   #dimostrazione[
     Abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$ (#link-teorema(<vertex-cover-riducibile-set-cover>)).
-    Dato che il valore delle *funzione obiettivo* viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una soluzione con la *stessa approssimazione*.
+    Dato che il valore delle *funzione obiettivo* viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una soluzione con la *stessa approssimazione* $qed$.
   ]
 
   #attenzione[
     Due problemi $in "NPOc"$ *non* è detto che mantengano la *stessa approssimazione*!
 
-    In questo esempio l'approssimazione è mantenuta perchè i valori della *funzione obiettivo* solo gli stessi.
+    In questo esempio l'approssimazione è mantenuta perché i valori della *funzione obiettivo* sono gli stessi.
   ]
 ]
 
@@ -100,7 +100,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 / Prezzatura equa:
-  una prezzatura $angle.l P_e angle.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un offerta minore o uaugle al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
+  una prezzatura $angle.l P_e angle.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un'offerta minore o uguale al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
   $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 
   #nota[
@@ -144,7 +144,7 @@ $ angle.l P_e angle.r quad forall e in E $
   ]
 
 / Prezzatura stretta:
-  una prezzatura $angle.l P_e angle.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta provenienete dai lati incidenti è esattamente uguale al suo costo $w_i$:
+  una prezzatura $angle.l P_e angle.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta proveniente dai lati incidenti è esattamente uguale al suo costo $w_i$:
   $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
   #esempio[
@@ -188,9 +188,9 @@ $ angle.l P_e angle.r quad forall e in E $
 
 #pseudocode(
   [$P_e <- 0, quad forall e in E$],
-  [*While* $exists {i,j} in E "t.c." angle.l P_e angle.r "non è stretta nè su" i "nè su "j$ *do* #emph("// lato non stretto su nessun estremo")],
+  [*While* $exists space overline(e) = {i,j} in E "t.c." P_overline(e) "non è stretta nè su" i "nè su "j$ *do* #emph("// esiste un lato non stretto su nessuno dei due estremi")],
   indent(
-    [$overline(e) <- {overline(i),overline(j)} in E "t.c." angle.l P_e angle.r "non è stretta nè su" i "nè su "j$ #emph(
+    [$overline(e) <- {overline(i),overline(j)}$ #emph(
         "// lato selezionato non stretto",
       )],
     [$Delta = min(
@@ -278,7 +278,7 @@ $ angle.l P_e angle.r quad forall e in E $
       draw-graph-step(pricings: ("AB": 3, "AD": 1, "CD": 2), purchased: ("A", "B", "D")),
     )
 
-  L'algoritmo termina in quanto non c'è nessun lato che non è stretto su nessuno dei due estremi.
+  L'algoritmo termina poiché non esiste alcun lato che non sia stretto su almeno uno dei due estremi.
   Soluzione finale:
   $
     X = {A,B,D}, quad 4 + 3 + 3 = 10
@@ -316,7 +316,7 @@ $ angle.l P_e angle.r quad forall e in E $
   $ w <= 2 sum_(e in E) P_e $
 
   #informalmente[
-    Ogni lato, può pagare la propria offerta al *massimo* due volte, dato contribuire all'acquisto di *nessuno*, *uno* o *entrambi* i vertici adiacenti.
+    Ogni lato, può pagare la propria offerta al *massimo* due volte, dato che può contribuire all'acquisto di *nessuno*, *uno* o *entrambi* i vertici adiacenti.
   ]
 
   #dimostrazione[
@@ -374,7 +374,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 #teorema("Teorema")[
-  *$ "VertexConver" in.not "PTAS" $*
+  *$ "VertexCover" in.not "PTAS" $*
 
   #informalmente[
     Non esistono algoritmi che garantiscono un certo tasso di approssimazione, nemmeno, ad esempio, provando a effettuare un _bruteforce_ su una parte ridotta di lati/vertici.
