@@ -79,22 +79,14 @@ Inoltre saranno utili le seguenti definizioni:
       $X$ contiene più elementi $in M'$ che $in M$, in quanto abbiamo supposto che $|M'| > |M|$.
     ]
 
-    #let draw-point-with-label(x, y, label) = {
-      place(dx: x, dy: y)[
-        #circle(radius: 3.0pt, fill: black)
-      ]
-      place(dx: x, dy: y - 15pt)[
-        #text(label)
-      ]
-    }
-
     #teorema("Osservazione 2")[
       Ogni vertice ha al *massimo* $2$ lati di $X$ *incidenti*, altrimenti non sarebbero matching.
 
       Dato un vertice $v$ e due lati $l_1 in M\\M'$ e $l_2 in M'\\M$, possiamo trovarci nella seguente situazione:
 
-      #align(center)[
-        #cetz.canvas({
+      #{
+        set align(center)
+        cetz.canvas({
           import cetz.draw: *
 
           // Draw three points
@@ -113,7 +105,7 @@ Inoltre saranno utili le seguenti definizioni:
           content((0.7, 0.4), [$l_1 in M\\M'$], fill: white)
           content((3.3, 0.4), [$l_2 in M'\\M$], fill: white)
         })
-      ]
+      }
 
       Ogni singolo matching $M$ e $M'$ può avere un solo lato connesso al vertice $v$ e quelli in comune sono stati scartati, di conseguenza ogni vertice ha $0, 1$ lati di $M$ e $0, 1$ lati di $M'$, quindi al massimo $2$ lati incidenti.
     ]
@@ -132,8 +124,9 @@ Inoltre saranno utili le seguenti definizioni:
 
       Ogni ciclo deve essere formato da un numero *pari* di lati, altrimenti ci sarebbero due lati *consecutivi* appartenenti allo stesso matching, assurdo. In ogni ciclo ci sono lo stesso numero di lati $in M \\ M'$ e $in M' \\ M$.
 
-      #align(center)[
-        #cetz.canvas({
+      #{
+        set align(center)
+        cetz.canvas({
           import cetz.draw: *
 
           // Draw cycle with 6 vertices
@@ -167,7 +160,7 @@ Inoltre saranno utili le seguenti definizioni:
           content((-2.5, 0), [$l_5 in M'\\M$], fill: white)
           content((-2, 1.6), [$l_6 in M\\M'$], fill: white)
         })
-      ]
+      }
 
       Di conseguenza devono esistere dei *cammini di dimensione dispari*, altrimenti sarebbe impossibile soddisfare $|M'| > |M|$.
     ]
@@ -176,8 +169,9 @@ Inoltre saranno utili le seguenti definizioni:
       Conseguenza dell'osservazione 4: ci deve essere almeno un *cammino con più lati* di $M' \\ M$ rispetto ai lati di $M \\ M'$.
       Tale cammino deve iniziare e terminate con lati $in M'\\M$ (in quanto $|M'|>|M|$), dove i vertici iniziale e finale devono essere *esposti* in $M$:
 
-      #align(center)[
-        #cetz.canvas({
+      #{
+        set align(center)
+        cetz.canvas({
           import cetz.draw: *
 
           // Draw points (vertices)
@@ -200,7 +194,7 @@ Inoltre saranno utili le seguenti definizioni:
           content((7, -0.5), [$l_4 in M\\M'$], fill: white)
           content((9, 0.5), [$l_5 in M'\\M$], fill: white)
         })
-      ]
+      }
 
       Il cammino così descritto rispecchia esattamente la definizione di *cammino aumentante* $qed$.
     ]
@@ -243,59 +237,59 @@ Inoltre saranno utili le seguenti definizioni:
   - la visita *termina* quando viene visitato un vertice $d in V_2$ *esposto*: trovato un *cammino aumentante*
 
   #figure(
-    align(center)[
-      #cetz.canvas({
-        import cetz.draw: *
+    cetz.canvas({
+      import cetz.draw: *
 
-        // Level 0: Starting exposed vertex
-        circle((0, 0), radius: 0.1, fill: green)
-        content((-0.5, 0), [$u_1$])
+      // Level 0: Starting exposed vertex
+      circle((0, 0), radius: 0.1, fill: green)
+      content((-0.5, 0), [$u_1$])
 
-        // Level 1: Free edges to multiple non-exposed vertices
-        let level1_positions = ((-3, -2), (-1, -2), (1, -2), (3, -2))
-        for (i, pos) in level1_positions.enumerate() {
-          circle(pos, radius: 0.1, fill: black)
-          content((pos.at(0) - 0.4, pos.at(1)), [$d_#(i + 1)$])
-          line((0, 0), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+      // Level 1: Free edges to multiple non-exposed vertices
+      let level1_positions = ((-3, -2), (-1, -2), (1, -2), (3, -2))
+      for (i, pos) in level1_positions.enumerate() {
+        circle(pos, radius: 0.1, fill: black)
+        content((pos.at(0) - 0.4, pos.at(1)), [$d_#(i + 1)$])
+        line((0, 0), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+      }
+
+      // Level 2: Matched edges back to vertices in V1
+      let level2_positions = ((-4, -4), (-2, -4), (-1, -4), (0, -4), (1, -4), (2, -4), (4, -4))
+      for (i, pos) in level2_positions.enumerate() {
+        circle(pos, radius: 0.1, fill: if i == 3 or i == 5 { black } else { black })
+        content((pos.at(0) - 0.4, pos.at(1)), [$u_#(i + 2)$])
+
+        // Connect level 1 to level 2 with matched edges
+        if i < 2 { line(level1_positions.at(0), pos, stroke: (paint: red, thickness: 2pt)) } else if (
+          i >= 2 and i < 4
+        ) { line(level1_positions.at(1), pos, stroke: (paint: red, thickness: 2pt)) } else if i >= 4 and i < 6 {
+          line(level1_positions.at(2), pos, stroke: (paint: red, thickness: 2pt))
+        } else { line(level1_positions.at(3), pos, stroke: (paint: red, thickness: 2pt)) }
+      }
+
+      // Level 3: Free edges from exposed vertices to final exposed vertices
+      let level3_positions = ((-1, -6), (1, -6), (3, -6))
+      for (i, pos) in level3_positions.enumerate() {
+        circle(pos, radius: 0.1, fill: green)
+        content((pos.at(0), pos.at(1) - 0.4), [$d_#(i + 5)$])
+        if i == 0 {
+          line(level2_positions.at(3), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+        } else if i == 1 {
+          line(level2_positions.at(5), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+        } else {
+          line(level2_positions.at(5), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
         }
+      }
 
-        // Level 2: Matched edges back to vertices in V1
-        let level2_positions = ((-4, -4), (-2, -4), (-1, -4), (0, -4), (1, -4), (2, -4), (4, -4))
-        for (i, pos) in level2_positions.enumerate() {
-          circle(pos, radius: 0.1, fill: if i == 3 or i == 5 { black } else { black })
-          content((pos.at(0) - 0.4, pos.at(1)), [$u_#(i + 2)$])
-
-          // Connect level 1 to level 2 with matched edges
-          if i < 2 { line(level1_positions.at(0), pos, stroke: (paint: red, thickness: 2pt)) } else if (
-            i >= 2 and i < 4
-          ) { line(level1_positions.at(1), pos, stroke: (paint: red, thickness: 2pt)) } else if i >= 4 and i < 6 {
-            line(level1_positions.at(2), pos, stroke: (paint: red, thickness: 2pt))
-          } else { line(level1_positions.at(3), pos, stroke: (paint: red, thickness: 2pt)) }
-        }
-
-        // Level 3: Free edges from exposed vertices to final exposed vertices
-        let level3_positions = ((-1, -6), (1, -6), (3, -6))
-        for (i, pos) in level3_positions.enumerate() {
-          circle(pos, radius: 0.1, fill: green)
-          content((pos.at(0), pos.at(1) - 0.4), [$d_#(i + 5)$])
-          if i == 0 {
-            line(level2_positions.at(3), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
-          } else if i == 1 {
-            line(level2_positions.at(5), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
-          } else {
-            line(level2_positions.at(5), pos, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
-          }
-        }
-
-        // Highlight one correct augmenting path
-        line((0, 0), (-1, -2), stroke: 4pt + green.transparentize(70%))
-        line((-1, -2), (0, -4), stroke: 4pt + green.transparentize(70%))
-        line((0, -4), (-1, -6), stroke: 4pt + green.transparentize(70%))
-      })
-    ],
-    caption: [Visita effettuata dalla BFS modificata per cammino aumentante.\
+      // Highlight one correct augmenting path
+      line((0, 0), (-1, -2), stroke: 4pt + green.transparentize(70%))
+      line((-1, -2), (0, -4), stroke: 4pt + green.transparentize(70%))
+      line((0, -4), (-1, -6), stroke: 4pt + green.transparentize(70%))
+    }),
+    caption: [
+      Visita effettuata dalla BFS modificata per cammino aumentante.\
       Lati blu: $in.not M$, rossi: $in M$.\
-      Vertici neri: occupati, verdi: esposti.],
+      Vertici neri: occupati, verdi: esposti.
+    ],
   )
 
   #informalmente[
