@@ -53,6 +53,127 @@
       Coprendo tutti i punti dell'universo, andiamo a coprire tutti i lati, risolvendo VertexCover.
     ]
 
+    #esempio[
+      #figure(
+        {
+          set text(size: 10pt)
+          
+          grid(
+            columns: (1fr, 1fr),
+            column-gutter: 2em,
+            
+            // Left side: Vertex Cover
+            [
+              #align(center)[
+                *Vertex Cover*
+                
+                #v(0.5em)
+                
+                #cetz.canvas(length: 1cm, {
+                  import cetz.draw: *
+                  
+                  // Vertices of the graph
+                  let vertices = (
+                    (1, 2),   // v1
+                    (3, 2),   // v2
+                    (2, 0.5), // v3
+                  )
+                  
+                  // Edges
+                  let edges = (
+                    (0, 1), // e1: v1-v2
+                    (1, 2), // e2: v2-v3
+                    (0, 2), // e3: v1-v3
+                  )
+                  
+                  // Draw edges first (so they appear behind vertices)
+                  line(vertices.at(0), vertices.at(1), stroke: 2pt + gray, name: "e1")
+                  content((2, 2.3), text(size: 9pt, fill: blue)[$e_1$])
+                  
+                  line(vertices.at(1), vertices.at(2), stroke: 2pt + gray, name: "e2")
+                  content((3.3, 1.2), text(size: 9pt, fill: blue)[$e_2$])
+                  
+                  line(vertices.at(0), vertices.at(2), stroke: 2pt + gray, name: "e3")
+                  content((0.7, 1.2), text(size: 9pt, fill: blue)[$e_3$])
+                  
+                  // Draw vertices
+                  circle(vertices.at(0), radius: 0.15, fill: red, stroke: black)
+                  content((0.5, 2), text(size: 10pt)[$v_1$])
+                  
+                  circle(vertices.at(1), radius: 0.15, fill: white, stroke: black)
+                  content((3.5, 2), text(size: 10pt)[$v_2$])
+                  
+                  circle(vertices.at(2), radius: 0.15, fill: red, stroke: black)
+                  content((2, 0), text(size: 10pt)[$v_3$])
+                })
+                
+                #v(0.5em)
+                
+                Soluzione: $mr({v_1, v_3})$\
+                #text(size: 9pt)[Tutti i lati sono coperti]
+              ]
+            ],
+            
+            // Right side: Set Cover
+            [
+              #align(center)[
+                *Set Cover*
+                
+                #v(0.5em)
+                
+                #cetz.canvas(length: 1cm, {
+                  import cetz.draw: *
+                  
+                  // Universe points (edges from Vertex Cover)
+                  let points = (
+                    (1, 2.5), // e1
+                    (2, 2.5), // e2
+                    (3, 2.5), // e3
+                  )
+                  
+                  // Draw universe
+                  rect((0.5, 2.2), (3.5, 2.8), stroke: (paint: gray, dash: "dashed"))
+                  content((0.6, 2.7), text(size: 8pt)[Universo $U$])
+                  
+                  // Draw points
+                  circle(points.at(0), radius: 0.08, fill: blue, stroke: blue)
+                  content((1, 3), text(size: 9pt, fill: blue)[$e_1$])
+                  
+                  circle(points.at(1), radius: 0.08, fill: blue, stroke: blue)
+                  content((2, 3), text(size: 9pt, fill: blue)[$e_2$])
+                  
+                  circle(points.at(2), radius: 0.08, fill: blue, stroke: blue)
+                  content((3, 3), text(size: 9pt, fill: blue)[$e_3$])
+                  
+                  // Draw sets (areas)
+                  // S1 covers e1, e3
+                  rect((0.7, 1.3), (2.5, 1.8), stroke: red + 2pt, fill: red.transparentize(85%))
+                  content((0.8, 1.65), text(size: 9pt, fill: red)[$S_1$])
+                  content((1.6, 1.5), text(size: 8pt)[$= {e_1, e_3}$])
+                  
+                  // S2 covers e1, e2
+                  rect((1.5, 0.6), (3.3, 1.1), stroke: gray + 1.5pt, fill: gray.transparentize(85%))
+                  content((1.6, 0.95), text(size: 9pt, fill: gray)[$S_2$])
+                  content((2.4, 0.8), text(size: 8pt)[$= {e_1, e_2}$])
+                  
+                  // S3 covers e2, e3
+                  rect((0.7, 0), (2.5, 0.45), stroke: red + 2pt, fill: red.transparentize(85%))
+                  content((0.8, 0.3), text(size: 9pt, fill: red)[$S_3$])
+                  content((1.6, 0.15), text(size: 8pt)[$= {e_2, e_3}$])
+                })
+                
+                #v(0.5em)
+                
+                Soluzione: $mr({S_1, S_3})$\
+                #text(size: 9pt)[Tutti i punti sono coperti]
+              ]
+            ]
+          )
+        },
+        caption: [Riduzione da Vertex Cover a Set Cover: i vertici del grafo diventano aree (insiemi), i lati diventano punti da coprire. Una soluzione di Vertex Cover $mr({v_1, v_3})$ corrisponde a una soluzione di Set Cover $mr({S_1, S_3})$ dove $S_1$ contiene i lati incidenti su $v_1$ e $S_3$ contiene i lati incidenti su $v_3$.]
+      )
+    ]
+
     Con la funzione $f$ un'istanza di SetCover viene trasformata in un'istanza di VertexCover (in tempo polinomiale).
     Dobbiamo anche dimostrare che una soluzione di VertexCover sia *valida* anche per SetCover, ovvero che le *soluzioni ammissibili* siano uguali:
     - _SetCover_: ogni punto dell'universo deve essere coperto da almeno un'area

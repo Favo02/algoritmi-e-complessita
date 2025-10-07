@@ -1,0 +1,8 @@
+# Typst compiler installation artifacts
+typst-x86_64-unknown-linux-musl/
+
+# Compiled PDF output
+*.pdf
+
+# Temporary files
+*.tmp
