@@ -62,6 +62,9 @@
     Dato che le soluzioni ammissibili di _SetCover_ comprendono solo le soluzioni dove tutti i punti sono coperti, allora tutti i lati di _VertexCover_ sono coperti.
 
     Quindi le *soluzioni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, il valore della *funzione obiettivo* viene conservato durante la trasformazione.
+
+
+    
   ]
 ] <vertex-cover-riducibile-set-cover>
 
