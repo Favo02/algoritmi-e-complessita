@@ -300,7 +300,7 @@ $ angle.l P_e angle.r quad forall e in E $
     È un minore e non un uguale dato che ogni lato potrebbe apparire per entrambi i suoi estremi, quindi due volte:
     $ sum_(e in E) P_e <= sum_(i in X^*) sum_(e, i in e) P_e $ <vertex-cover-eq-ogni-lato>
 
-    Mettendo i pezzi insieme:
+    Mettendo i pezzi insieme: // TODO: perché la sommatoria di tutti i P_e non al costo w_i della soluzione ottima come anche mostrato nella dimostazionae successiva (66)?
 
     $
       sum_(e in E) P_e underbrace(<=, #link-equation(<vertex-cover-eq-ogni-lato>))
