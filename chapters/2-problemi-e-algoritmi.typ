@@ -85,21 +85,23 @@ Assumiamo sempre che $I_Pi, O_Pi subset.eq 2^*$. Tutti i problemi che vedremo so
 
 Un algoritmo $A$ si dice *corretto* se per ogni input $x in I_Pi$ produce un output $y in O_Pi$ che appartiene alle soluzioni ammissibili $"sol"_Pi$ per l'input $x$:
 
-#let algo_diagram = diagram(
-  spacing: (10pt, 4em),
-  {
-    let (x, a, y) = ((0, 0), (3, 0), (6, 0))
+#{
+  set align(center)
+  import fletcher: *
+  diagram(
+    spacing: (10pt, 4em),
+    {
+      let (x, a, y) = ((0, 0), (3, 0), (6, 0))
 
-    node(x, $x$)
-    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-    node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
+      node(x, $x$)
+      node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+      node(y, $y in O_Pi, quad y in "sol"_(Pi)(x)$)
 
-    edge(x, a, "->")
-    edge(a, y, "->")
-  },
-)
-
-#align(center, algo_diagram)
+      edge(x, a, "->")
+      edge(a, y, "->")
+    },
+  )
+}
 
 La definizione di algoritmo corrisponde alla *Macchina di Turing* (MdT).
 
@@ -117,23 +119,25 @@ I problemi di decisione (detti anche _membership problems_) sono una particolare
 
 / Decidibili: un problema si dice *decidibile* se esiste un algoritmo in grado di risolverlo. Sia $X$ un insieme, un problema di decisione è decidibile se esiste un algoritmo $A$:
 
-#let algo_decisionale = diagram(
-  spacing: (10pt, 4em),
-  {
-    let (x, a, x1, x2) = ((0, 0), (3, 0), (6, -0.2), (6, 0.2))
+#{
+  set align(center)
+  import fletcher: *
+  diagram(
+    spacing: (10pt, 4em),
+    {
+      let (x, a, x1, x2) = ((0, 0), (3, 0), (6, -0.2), (6, 0.2))
 
-    node(x, $x in 2^*$)
-    node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
-    node(x1, $"si", space x in X$)
-    node(x2, $"no", space x in.not X$)
+      node(x, $x in 2^*$)
+      node(a, $A$, stroke: 1pt, shape: rect, width: 4em, height: 3em)
+      node(x1, $"si", space x in X$)
+      node(x2, $"no", space x in.not X$)
 
-    edge(x, a, "->")
-    edge(a, x1, "->")
-    edge(a, x2, "->")
-  },
-)
-
-#align(center, algo_decisionale)
+      edge(x, a, "->")
+      edge(a, x1, "->")
+      edge(a, x2, "->")
+    },
+  )
+}
 
 #nota[
   Parlare di problema decidibile o di *linguaggio* decidibile è la stessa cosa. Gli input del problema non sono altro che delle stringhe di bit e di conseguenza si può determinare se appartengono o meno al linguaggio.
@@ -170,7 +174,7 @@ Possiamo creare il seguente insieme:
     let fill_alpha = 50
     let big_dot = text(20pt)[$dot$]
 
-    let complexity_classes = cetz.canvas({
+    cetz.canvas({
       import cetz.draw: *
 
       // External box
@@ -194,8 +198,6 @@ Possiamo creare il seguente insieme:
       content("center_anchor.north-east", [#big_dot Pari], anchor: "north-west")
       content("center_anchor.south-east", [#big_dot Primes], anchor: "south")
     })
-
-    align(center, block(breakable: false, complexity_classes))
   },
   caption: [Rappresentazione dei problemi decidibili e non decidibili],
 )
