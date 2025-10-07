@@ -3,7 +3,7 @@
 = Problema Vertex Cover (copertura di vertici)
 
 #informalmente[
-  Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $S subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $S$.
+  Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $X subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $X$.
 
   Ogni lato del grafo deve essere coperto da almeno un vertice.
 ]
@@ -56,7 +56,7 @@
     Con la funzione $f$ un'istanza di SetCover viene trasformata in un'istanza di VertexCover (in tempo polinomiale).
     Dobbiamo anche dimostrare che una soluzione di VertexCover sia *valida* anche per SetCover, ovvero che le *soluzioni ammissibili* siano uguali:
     - _SetCover_: ogni punto dell'universo deve essere coperto da almeno un'area
-    - _VertexCover_: ogni lato deve avere un'estremità in $V$
+    - _VertexCover_: ogni lato deve avere un'estremità in $X$
 
     Ma per come sono create le aree $S_i$ da $f$, ogni punto non è altro che un lato.
     Dato che le soluzioni ammissibili di _SetCover_ comprendono solo le soluzioni dove tutti i punti sono coperti, allora tutti i lati di _VertexCover_ sono coperti.
