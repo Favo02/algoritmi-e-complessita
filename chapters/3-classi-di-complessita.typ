@@ -180,7 +180,7 @@ Un problema di decisione $Pi in "NPc"$ è:
     let stroke_alpha = 150
     let fill_alpha = 50
 
-    let complexity_classes = cetz.canvas({
+    cetz.canvas({
       import cetz.draw: *
 
       grid(
@@ -250,8 +250,6 @@ Un problema di decisione $Pi in "NPc"$ è:
       content("NP_complete.south-east", text(size: 8pt)[NPc Deboli], anchor: "east")
       content("NP_complete", text(style: "italic", weight: "light")[#text(20pt)[$dot$] SAT])
     })
-
-    align(center, block(breakable: false, complexity_classes))
   },
   caption: "Classi di complessità per problemi di decisione",
 )
@@ -332,45 +330,46 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
     $ forall x in I_Pi, quad forall y in 2^*, quad "se" |y| <= Q(|x|), quad y in "Amm"_(Pi)(x) "in tempo polinomiale" $
 + la funzione di costo $C_Pi$ è calcolabile in tempo polinomiale
 
-
 #informalmente[
-  #let algo_tree = diagram(
-    spacing: (10pt, 4em),
-    {
-      // --- NODI ---
-      let (x, box, error) = ((0, 0), (0, 1), (1, 1))
-      let (b1, b2, b3, b4) = ((-2, 2), (2, 2), (1, 2), (-1, 2))
-      let (maxmin) = (0, 3)
+  #{
+    import fletcher: *
+    diagram(
+      spacing: (10pt, 4em),
+      {
+        // --- NODI ---
+        let (x, box, error) = ((0, 0), (0, 1), (1, 1))
+        let (b1, b2, b3, b4) = ((-2, 2), (2, 2), (1, 2), (-1, 2))
+        let (maxmin) = (0, 3)
 
-      // Input in alto
-      node(x, $x in I_Pi$)
+        // Input in alto
+        node(x, $x in I_Pi$)
 
-      // Algoritmo (rettangolo)
-      node(box, $"Algo"$, stroke: 1pt, shape: rect, width: 5em, height: 2.5em)
+        // Algoritmo (rettangolo)
+        node(box, $"Algo"$, stroke: 1pt, shape: rect, width: 5em, height: 2.5em)
 
-      // STOP & ERROR a destra
-      node(error, $x in.not I_Pi$ + linebreak() + "STOP & ERROR")
+        // STOP & ERROR a destra
+        node(error, $x in.not I_Pi$ + linebreak() + "STOP & ERROR")
 
-      // Due rami verso il basso
-      node(b1, $y' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
-      node(b3, $y''' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
-      node(b4, $y'' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
-      node(b2, $y'''' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
+        // Due rami verso il basso
+        node(b1, $y' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
+        node(b3, $y''' in.not "Amm"_(Pi)(x)$ + linebreak() + "NO, STOP")
+        node(b4, $y'' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
+        node(b2, $y'''' in "Amm"_(Pi)(x)$ + linebreak() + $"SI, "C_(Pi)(x,y)$)
 
-      node(maxmin, "MAX / MIN")
+        node(maxmin, "MAX / MIN")
 
-      // --- ARCHI ---
-      edge(x, box, "->")
-      edge(box, error, "->")
-      edge(box, b1, "->")
-      edge(box, b2, "->")
-      edge(box, b4, "->")
-      edge(box, b3, "->")
-      edge(b4, maxmin, "->")
-      edge(b2, maxmin, "->")
-    },
-  )
-  #algo_tree
+        // --- ARCHI ---
+        edge(x, box, "->")
+        edge(box, error, "->")
+        edge(box, b1, "->")
+        edge(box, b2, "->")
+        edge(box, b4, "->")
+        edge(box, b3, "->")
+        edge(b4, maxmin, "->")
+        edge(b2, maxmin, "->")
+      },
+    )
+  }
 
   #todo
   // TODO: dove sta l'oracolo? è l'algoritmo stesso l'oracolo? è possibile evitare di dire: "1 bit per volta viene generata qualunque sequenza ..." ma dire "solo per ogni input ..."?
@@ -562,7 +561,7 @@ $ Pi (x in I_(Pi), epsilon > 1) $
     let stroke_alpha = 180
     let fill_alpha = 60
 
-    let optimization_classes = cetz.canvas({
+    cetz.canvas({
       import cetz.draw: *
 
       grid(
@@ -621,8 +620,6 @@ $ Pi (x in I_(Pi), epsilon > 1) $
       )
       content("PO.north", [PO], anchor: "north")
     })
-
-    align(center, block(breakable: false, optimization_classes))
   },
   caption: "Classi di complessità per problemi di ottimizzazione",
 )

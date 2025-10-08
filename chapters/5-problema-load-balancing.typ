@@ -142,12 +142,12 @@
 
     Dividendo per $m$:
     $
-      L_hat(i)-t_hat(j) <= 1/m sum_(j in n)t_j underbrace(<=, "per" #link-teorema(<greedy-load-balancing-apx-2-oss-1>)) L^*
+      L_hat(i)-t_hat(j) <= 1/m sum_(j in n)t_j underbrace(<=, "per" #link-teorema(<greedy-load-balancing-apx-2-oss-1>)) L^* #<greedy-load-balancing-m-minore-lstar>
     $
 
-    Possiamo riscrivere la soluzione trovata $L$ (output dell'algoritmo) come:
+    Possiamo riscrivere la soluzione trovata $L$ (output dell'algoritmo) come :
     $
-      L = underbrace(L_hat(i), max L_i forall i) &= underbrace(L_hat(i) - t_hat(j), <= mr(L^*) "appena dimostrato") + underbrace(t_hat(j), <= mr(L^*) "per" #link-teorema(<greedy-load-balancing-apx-2-oss-2>)) \
+      L = underbrace(L_hat(i), max L_i forall i) &= underbrace(L_hat(i) - t_hat(j), <= mr(L^*) "per" #link-equation(<greedy-load-balancing-m-minore-lstar>)) + underbrace(t_hat(j), <= mr(L^*) "per" #link-teorema(<greedy-load-balancing-apx-2-oss-2>)) \
       L &<= mr(L^* + L^*) \
       L &<= 2L^*
     $
