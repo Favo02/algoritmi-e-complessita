@@ -21,7 +21,7 @@ Formalmente:
     forall i in I, exists "un cammino" pi_i: s_i -> t_i \
     "t.c" forall a in A, "non ci sono più di" c "cammini" pi_i "che passano per" a 
   $
-  
+
 - *$C_Pi$* = $|I|$, numero di coppie collegate
 - *$t_Pi$* = max 
 
@@ -73,20 +73,19 @@ L'input di questo problema è analogo a $"CongestedPath"$, con l'aggiunta di una
   Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato. Per questo motivo viene cancellato.
 ]
 
+Un certo cammino $pi$ inoltre può avere alcune proprietà in determinati istanti dell'esecuzione. 
+
 / Cammino Corto:
-  Per una certa $l$ (quindi ad un certo istante), un cammino $pi$ si chiama *corto* se $ell(pi) < beta^c$.
+  Per una certa $ell$ (quindi ad un certo istante), un *cammino $pi$* si dice *corto* se: 
+  *$ ell(pi) < beta^c $*
 
-  #informalmente[
-    Per una certa funzione $l$ npn significa altro che ad un certo istante
-  ]
+/ Cammini utili: Cammini che *collegano una nuova coppia* (ovvero una coppia non ancora collegata)
 
-/ Cammini utili: cammini che collegano una nuova coppia (ovvero una coppia non ancora collegata)
-
-/ $C_i$ insieme dei cammini utili: insieme dei cammini corti utili prima dell'$i$-esima iterazione
+/ $C_i$ insieme dei cammini corti utili: prima dell'$i$-esima iterazione
 
 #attenzione[
-  Queste proprietà cambiano col passare del tempo
-]
+  Queste proprietà variano in base all'esecuzione (istante) in cui siamo
+] 
 
 Durante l'esecuzione, possono succede le seguenti cose (non il contrario):
 - prima utile diventa inutile (abbiamo collegato sorgente destinazione)
@@ -147,17 +146,23 @@ Quindi l'algoritmo termina dopo l'istante $s$, chiamiamo la funzione $overline(e
 
     Calcoliamo:
     $
-      sum_(a in A) ell'(a) - sum_(a in A) ell(a) \ =
-      sum_(a in pi)(beta ell(a) ell(a)) + underbrace(sum_(a in.not pi) (ell(a) - ell(a)), 0) \
+      sum_(a in A) ell'(a) - sum_(a in A) ell(a) \ 
+      = sum_(a in A) ell'(a)-ell(a) \ 
+      =
+      sum_(a in pi)(beta ell(a) - ell(a)) + underbrace(sum_(a in.not pi) (ell(a) - ell(a)), 0) \
       = sum_(a in pi)(beta - 1) ell(a) \
       = (beta-1) sum_(a in pi) ell(a) = (beta-1) ell(pi) \
-      < (beta-1) underbrace(beta^c, "dato che è corto") < beta^(c+1) space qed
+      < (beta-1) underbrace(beta^c, "dato che è corto")<beta^(c+1)-beta^c < beta^(c+1) space qed
     $
+
+    $ell(pi) < beta^c$ in quanto $ell$ prende solo cammini corti, prima parte dell'algoritmo
   ]
 ]
 
 #teorema("Osservazioni")[
   1. $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) underbrace(>=, "lemma") beta^c |I^* \\ I| $
+  $overline(l)(pi_i^*)$ sono i cammini con lughezza $>= beta^c$ per def di $overline(ell)$
+
 
   2. $
       sum_(i in I^* \\ I) overline(ell)(pi_i^*) underbrace(<=, "per definizione del problema" \ "allora nessun cammino usa un arco più di c volte") underbrace(c sum_(a in A) overline(ell)(a), "tutti gli archi usati esattamente c volte") \
@@ -171,7 +176,7 @@ Quindi l'algoritmo termina dopo l'istante $s$, chiamiamo la funzione $overline(e
   #dimostrazione[
     Principio di inclusione eslusione:
     $
-          beta^c |I^*| & <= beta^c |I^* \\ I| + beta^c |I inter I| \
+          beta^c |I^*| & <= beta^c |I^* \\ I| + beta^c |I^* inter I| \
                        & underbrace(<=, "oss1") sum_(i in i^* \\ I) overline(ell)(pi_i^*) + beta^c |I| \
                        & underbrace(<=, "oss2") c(beta^(c+1) |I_s| + m) + beta^c |I| \
                        & <= c(beta^(c+1) |I| + m) + beta^c |I| \
@@ -179,6 +184,8 @@ Quindi l'algoritmo termina dopo l'istante $s$, chiamiamo la funzione $overline(e
                    ... \
                        & <= c(beta + beta^(-c) m) |I| + |I|
     $
+
+    $|I^* sect I| <= |I| $ in quato la $|I|$ non essendo ottima ma un approssimazione trova di più rispetto halal sol ottima $|I^*|$
 
     Vogliamo calcolare il rapporto di approssimazione:
 
