@@ -87,21 +87,22 @@ Un certo cammino $pi$ inoltre può avere alcune proprietà in determinati istant
   Queste proprietà variano in base all'esecuzione (istante) in cui siamo
 ] 
 
-Durante l'esecuzione, possono succede le seguenti cose (non il contrario):
-- prima utile diventa inutile (abbiamo collegato sorgente destinazione)
-- corto diventi lungo (alcuni dei lati su cui passa hanno aumentato il peso)
-- un cammino esistente diventa inesistente
+In un dato istante, le *trasformazioni possibili* per un cammino $pi$ sono: 
+- $pi "utile" -> pi "inutile"$
+- $pi "corto" -> pi "lungo"$
+- $pi "esistente" -> pi "non esistente"$
 
-Quindi: $ underbrace(C_0 supset.eq C_1 supset.eq C_2 supset.eq ... supset.eq, "prima fase") C_s = emptyset $
-
-Quando finiamo i cammini corti utili $emptyset$:
-- abbiamo collefato tutte le coppie
-- rimangono coppie collegabili solo attraverso cammini lunghi
-
-Quindi l'algoritmo termina dopo l'istante $s$, chiamiamo la funzione $overline(ell)$ la funzione nell'istante dove non ci sono più cammini corti utili $C_s$.
+Possiamo dividere l'esecuzione dell'algoritmo in due fasi: 
+$ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots subset.eq underbrace(C_s,mb("fase 2," overline(ell)(pi))) = emptyset $
+- $mb("fase 1")$: l'algoritmo sceglie un cammino corto utile
+- $mr("fase 2")$: i cammini corti utili sono finiti: 
+  - non esistono più coppie collegabili
+  - rimangono coppie collegabili solo con camminimi lunghi.\
+    L'algoritmo termina dopo l'istante $s$.\
+    *$overline(ell)$* = la funzione nell'istante $C_s$ dove *non* ci sono più cammini utili  
 
 #informalmente[
-  Dato che l'algoritmo sceglie sempre il cammino utile più corto, allora fino all'istante $s$ sceglierà sempre cammini corti, quindi un cammino più corto di $beta^c$
+  Dato che l'algoritmo sceglie sempre il cammino utile più corto, fino all'istante $s$ sceglierà sempre cammini corti (cammino più corto di $beta^c$)
 ]
 
 #attenzione[
