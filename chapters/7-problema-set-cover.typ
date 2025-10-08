@@ -229,7 +229,7 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
 
 #nota[
   L'algoritmo utilizza il prezzo su un'_area_, mentre lo abbiamo definito su un _punto_.
-  Ma *tutti* i punti di una certa area (allo stesso istante) hanno lo *stesso prezzo*, di conseguenza minimizzare il rapporto per un'area o per un punto è equivalente.
+  Ma *tutti* i punti di una certa area, allo stesso istante, hanno lo *stesso prezzo*, di conseguenza minimizzare il rapporto per un'area o per un punto è equivalente.
 ]
 
 #teorema("Teorema")[
@@ -254,10 +254,10 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
       $c_s = 10 / 4 = 2.5, quad limits(sum)_(s in S) c_s = 4 dot 2.5 = 10$.
     ]
 
-    Ma scorrere per ogni area $mb(i in I)$ tutti i punti non ancora presi $mb(s in S_i inter R)$, equivale a scorrere tutti i punti dell'universo $mg(s in Omega)$:
+    Ma scorrere per ogni area $mb(i in I)$ tutti i punti non ancora presi $mb(s in S_i inter R)$, equivale a scorrere tutti i punti dell'universo $mg(s in Omega)$ (dato che per essere ammissibile una soluzione $I$ deve coprire tutti i punti):
     $ w = sum_(i in I) w_i = sum_(i in I) sum_(s in S_i inter R) c_s = mg(sum_(s in Omega) c_s) space qed $
   ]
-] <teorema-somma-costii-totale-pagato>
+] <teorema-somma-costi-totale-pagato>
 
 #teorema("Teorema")[
   Per ogni area, la somma dei prezzi dei punti contenuti (nell'istante in cui sono stati coperti) è limitata superiormente dalla funzione armonica:
@@ -293,18 +293,17 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
     $ R supset.eq {s_j, ..., s_d} $
 
     Il numero di punti della zona, ancora da coprire è, quindi, almeno il numero di punti da $s_j$ in poi:
-    $ |S_k inter R| >= d-j+1 $
+    $ |S_k inter R| >= d-j+1 $ <set-cover-punti-da-coprire-sj>
     #nota[
       Non è $=$ ma è $>=$ dato che potrebbero esserci dei punti prima di $j$ appartenenti allo stesso _gruppo_, che vengono coperti allo stesso istante di $s_j$.
     ]
 
-    Dato che l'algoritmo greedy sceglie prima l'area $mr(S_overline(k))$ che l'area $mb(S_k)$ (altrimenti non potrebbe esistere un istante in cui viene coperto il punto $s_j$ da $S_overline(k)$ dato che sarebbe già coperto da $S_k$), allora il rapporto della prima deve essere più piccolo della seconda.
-    Ma il rapporto dell'area $mr(S_overline(k))$ non è altro che il prezzo di $c_s_j$:
+    Dato che l'algoritmo greedy sceglie prima l'area $mr(S_overline(k))$ che l'area $mb(S_k)$ (se così non fosse, non potrebbe esistere un istante in cui viene coperto il punto $s_j$ da $S_overline(k)$ dato che sarebbe già coperto da $S_k$), allora il prezzo (il rapporto) della prima deve essere più piccolo della seconda.
+    Ma il prezzo dell'area $mr(S_overline(k))$ non è altro che il prezzo di $c_s_j$:
     $ c_s_j = mr(w_overline(k) / (|S_overline(k) inter R|)) <= mb(w_k / (|S_k inter R|)) $
 
-    Come abbiamo dimostrato prima, $mg(|S_k inter R|) >= mp(d-j+1)$, quindi:
+    Per #link-equation(<set-cover-punti-da-coprire-sj>), $mg(|S_k inter R|) >= mp(d-j+1)$, quindi:
     $ c_s_j <= w_k / mg(|S_k inter R|) <= w_k / mp(d-j+1) $
-    // TODO: al posto di dire dimostrato prima, mettere link equazione quando sarà mergeato in main
 
     Dato che questo ragionamento vale per ogni $j$ e, ricordando che $mm(|S_k| = d)$:
     $
@@ -318,30 +317,48 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
 ] <teorema-somma-prezzi-funzione-armonica>
 
 #teorema("Teorema")[
-  #todo
-  // TODO
-
   L'algoritmo $"PrincingSetCover"$ è una *$H(M)$-approssimazione*, dove $M$ è la cardinalità massima di un'area, $M = limits(max)_k |S_k|$.
 
   #dimostrazione[
-    Sia $w^*$ il costo pagato dalla soluzione ottima $I^*$:
-    $ w^* = sum_(i in I^*) w_i $
-
-    Per il teorema #link-teorema(<teorema-somma-prezzi-funzione-armonica>), per ogni $k$:
+    Riscrivendo il #link-teorema(<teorema-somma-prezzi-funzione-armonica>):
     $
-                                   w_k dot H(|S_k|) & >= sum_(s in S_k) c_s \
-      (w_k dot cancel(H(|S_k|))) / cancel(H(|S_k|)) & >= (limits(sum)_(s in S_k) c_s) / H(|S_k|)
+      forall k, quad w_k dot H(|S_k|) & underbrace(>=, #link-teorema(<teorema-somma-prezzi-funzione-armonica>)) sum_(s in S_k) c_s \
+      w_k & >= (limits(sum)_(s in S_k) c_s) / H(|S_k|)
+    $
+    Dato che $M$ è definito come il massimo di tutte le cardinalità, allora:
+    $
+      forall k, quad mr(w_k) & >= (limits(sum)_(s in S_k) c_s) / H(|S_k|) >= mr((limits(sum)_(s in S_k) c_s) / H(M))
+    $ <set-cover-hm-approssimazione-oss-a>
+
+    Sia $I^*$ la soluzione ottima, allora il suo costo $w^*$ è la somma dei costi delle aree selezionate:
+    $ w^* = sum_(i in I^*) w_i $ <set-cover-hm-approssimazione-sol-ottima>
+
+    Dato che #link-equation(<set-cover-hm-approssimazione-oss-a>) vale per ogni $k$, allora vale anche:
+    $
+      w^* = sum_(i in I^*) mr(w_i) quad & >= quad (limits(sum)_(i in I^*) mr(limits(sum)_(s in S_i) c_s))/mr(H(M))
+    $ <set-cover-hm-approssimazione-oss-c>
+
+    La doppia sommatoria $limits(sum)_(i in I^*) limits(sum)_(s in S_i)$ scorre tutti i punti, ma potrebbe considerarne alcuni più volte, dato che scorre tutti i punti $in S_i$ a prescindere se siano stati già presi.
+    Quindi è grande almeno quanto lo scorrere tutti i punti dell'universo almeno una volta $s in Omega$:
+
+    $
+      mb(sum_(i in I^*) sum_(s in S_i) c_s) >= sum_(s in Omega) c_s underbrace(=, #link-teorema(<teorema-somma-costi-totale-pagato>)) mb(w)
+    $ <set-cover-hm-approssimazione-oss-b>
+
+    Mettendo tutto insieme:
+    $
+      w^*
+      quad underbrace(=, #link-equation(<set-cover-hm-approssimazione-sol-ottima>)) quad
+      sum_(i in I^*) w_i
+      quad underbrace(>=, #link-equation(<set-cover-hm-approssimazione-oss-c>)) quad
+      mb(limits(sum)_(i in I^*) limits(sum)_(s in S_i) c_s) / H(M)
+      quad underbrace(>=, #link-equation(<set-cover-hm-approssimazione-oss-b>)) quad
+      mb(w) / H(M)
     $
 
-    Per il teorema #link-teorema(<teorema-somma-costii-totale-pagato>):
-    $ sum_(i in I^*) sum_(s in S_i) c_s >= sum_(s in Omega) c_s = w $
-
-    Quindi:
     $
-      w^* = sum_(i in I^*) w_i quad & >= quad (sum_(i in I^*) sum_(s in S_i) c_s)/H(M) quad >= quad w/H(M) \
-                           w^* quad & >= quad w/H(M) \
-                  H(M) dot w^* quad & >= quad w \
-                          H(M) quad & >= quad w/w^* space qed
+       w^* quad & >= quad w/H(M) \
+      H(M) quad & >= quad w/w^* space qed
     $
   ]
 ]
