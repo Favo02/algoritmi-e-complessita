@@ -21,6 +21,7 @@ Formalmente:
     forall i in I, exists "un cammino" pi_i: s_i -> t_i \
     "t.c" forall a in A, "non ci sono più di" c "cammini" pi_i "che passano per" a 
   $
+  
 - *$C_Pi$* = $|I|$, numero di coppie collegate
 - *$t_Pi$* = max 
 
