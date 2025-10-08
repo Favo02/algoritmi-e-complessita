@@ -3,31 +3,35 @@
 = Problema Congested Paths
 
 #informalmente[
-  Dato un grafo orientato, ci sono delle _sorgenti_ e delle _destinazioni_.
-  Vogliamo collegare le sorgenti con le corrispondenti destinazioni attraverso un _cammino_ nel grafo.
-
-  C'è un vincolo, un paramtro di congestione intero.
-  Non ci devono essere più di $c$ cammini passino su un certo arco.
+  Dato un grafo orientato e una lista di _sorgenti_ e _destinazioni_, vogliamo collegare le sorgenti con le corrispondenti destinazioni attraverso un _cammino_ nel grafo.\
+  Inoltre, dato un tasso di congestione intero $c$, vogliamo che non ci siano più di $c$ cammini che passino per uno stesso arco $a$.
 
   Obiettivo: massimizzare le coppie collegate.
 ]
 
-- $I_Pi$:
-  - $G(N, A)$: grafo orientato (nodi e archi)
-  - $s_0, ..., s_k-1 in bb(N)$: sorgenti
-  - $t_0, ..., t_k-1 in bb(N)$: destinazioni
-  - $c in bb(N)^+$: parametro di congestione
-- $"Amm"_Pi$: insieme di coppie che risciamo a collegare
-  $I subset.eq k, forall i in I$ un cammino $pi_i$ da $s_i$ a $t_i$, tale che $forall a in A$ non ci sono più di $c$ cammini che passano per $a$
-- $C_Pi = |I|$
-- $t_Pi = max$
+Formalmente: 
+- *$I_Pi$*:
+  - $G = (N,A)$, grafo orientato
+  - $S_0,dots,S_(k-1) in bb(N)$, lista di sorgenti
+  - $T_0,dots,T_(k-1) in bb(N)$, lista di destinazioni
+  - $c in bb(N^+)$, tasso di consegtione
+- *$"Amm"_(Pi)$*:
+  $ 
+    I subset.eq k \
+    forall i in I, exists "un cammino" pi_i: S_i -> T_i \
+    "t.c" forall a in A, "non ci sono più di" c "cammini" pi_i "che passano per" a 
+  $
+- *$C_Pi$* = $|I|$, numero di coppie collegate
+- *$t_Pi$* = max 
 
-Abbiamo anche bisogno di una funzione $l$, che associa ad ogni arco un costo.
-Questa funzione cambia nel tempo.
-$ l: A -> bb(R)^+ $
-Questa funzione si può estendere a dei cammini:
-$ pi = <x_1, ..., x_i> $
-$ ell(pi) = ell(x_1, x_2) + ell(x_2, x_3) + ... + l_(x_(i-1), x_i) $
+Definiamo anche una *funzione di costo $l$*, la quale associa ad ogni arco un costo. Essa *varia nel tempo*:
+$ ell : A -> bb(R)^+ $
+Il costo di un cammino $pi$ è definito come: 
+$
+  pi = <x_1,x_2,dots,x_i>\
+  ell(pi) = ell(x_1,x_2)+ell(x_2,x_3)+dots+ell(x_(i-1),x_i)
+$
+
 
 == Algoritmo PricingCongestedPaths
 
