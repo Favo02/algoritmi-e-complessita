@@ -218,13 +218,13 @@ $ H(n) = sum_(i=1)^n 1/i $
 
 Durante l'esecuzione abbiamo utilizzato un *prezzo* (_pricing_).
 Questo valore è definito *solo all'istante* in cui il punto sta *venendo coperto* da un'area $S_i$.
-Per ogni punto $c_s$, definiamolo come il rapporto tra il _costo_ di un'area e il numero di punti non ancora presi dell'area:
-$ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
+Per ogni punto $s$, definiamo il suo prezzo $c_s$ come il rapporto tra il _costo_ di un'area e il numero di punti non ancora coperti dell'area:
+$ forall s in S_i inter R, quad c_s = w_i / (|S_i inter R|) $
 
 #attenzione[
   Differenziamo:
-  - *costo*: costo pagato per selezionare un area, non varia durante l'esecuzione
-  - *prezzo*: rapporto tra il _costo_ di un'area e il numero di punti non ancora presi dell'area, cambia durante l'esecuzione (dato che il numero di punti non presi di una certa area potrebbe diminuire) ed è definito solo nell'istante in cui un punto sta venendo coperto
+  - *costo*: costo pagato per selezionare un'area, non varia durante l'esecuzione
+  - *prezzo*: rapporto tra il _costo_ di un'area e il numero di punti non ancora coperti dell'area, cambia durante l'esecuzione (dato che il numero di punti non coperti di una certa area potrebbe diminuire) ed è definito solo nell'istante in cui un punto sta venendo coperto
 ]
 
 #nota[
@@ -248,9 +248,9 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
     $ = sum_mb(i in I) mr(sum_mb(s in S_i inter R) c_s) $
 
     #esempio[
-      Se un'area $S$ costa $10$ e ha $5$ punti (non ancora coperti), allora il prezzo di ogni punto sarà $c_s = 10 / 5 = 2$. Ma sommandolo per ogni punto $limits(sum)_(s in S) c_s = 5 dot 2 = 10$.
+      Se un'area $S$ costa $10$ e ha $5$ punti (non ancora coperti), allora il prezzo di ogni punto sarà $c_s = 10 / 5 = 2$. Sommandolo per ogni punto $limits(sum)_(s in S) c_s = 5 dot 2 = 10$.
 
-      In caso la stessa area avesse un punto già coperto (quindi $|S \\ R| = 4$), allora funzionerebbe lo stesso:
+      Nel caso in cui la stessa area avesse un punto già coperto (quindi $|S inter R| = 4$), allora funzionerebbe lo stesso:
       $c_s = 10 / 4 = 2.5, quad limits(sum)_(s in S) c_s = 4 dot 2.5 = 10$.
     ]
 
@@ -292,7 +292,7 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
     Quindi l'insieme dei punti ancora da coprire, contiene _almeno_ tutti i punti dopo $s_j$:
     $ R supset.eq {s_j, ..., s_d} $
 
-    Il numero di punti della zona, ancora da coprire è, quindi, almeno il numero di punti da $s_j$ in poi:
+    Il numero di punti dell'area ancora da coprire è quindi almeno il numero di punti da $s_j$ in poi:
     $ |S_k inter R| >= d-j+1 $ <set-cover-punti-da-coprire-sj>
     #nota[
       Non è $=$ ma è $>=$ dato che potrebbero esserci dei punti prima di $j$ appartenenti allo stesso _gruppo_, che vengono coperti allo stesso istante di $s_j$.
@@ -309,7 +309,7 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
     $
       sum_mm(s in S_k) c_s & <= sum_mm(j=1)^mm(d) w_k / (d-j+1) \
                            & <= w_k sum_(j=1)^d 1 / (d-j+1) \
-                           & <= w_k (1/d + 1/(d+1) + ... + 1/1 ) \
+                           & <= w_k (1/d + 1/(d-1) + ... + 1/1 ) \
                            & <= w_k H(d) \
                            & <= w_k H(|S_k|) space qed
     $
@@ -317,7 +317,7 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
 ] <teorema-somma-prezzi-funzione-armonica>
 
 #teorema("Teorema")[
-  L'algoritmo $"PrincingSetCover"$ è una *$H(M)$-approssimazione*, dove $M$ è la cardinalità massima di un'area, $M = limits(max)_k |S_k|$.
+  L'algoritmo $"PricingSetCover"$ è una *$H(M)$-approssimazione*, dove $M$ è la cardinalità massima di un'area, $M = limits(max)_k |S_k|$.
 
   #dimostrazione[
     Riscrivendo il #link-teorema(<teorema-somma-prezzi-funzione-armonica>):
@@ -369,7 +369,7 @@ $ forall s in S_i inter R, quad s_c = w_i / (|S_i inter R|) $
   #dimostrazione[
     Ricordiamo che $M = limits(max)_k |S_k|, quad n = |Omega|, quad H(n) approx ln(n)$.
 
-    La cardinalità massima di una zona è, ovviamente, minore o uguale alla cardinalità dell'universo, $M <= n$:
+    La cardinalità massima di un'area è, ovviamente, minore o uguale alla cardinalità dell'universo, $M <= n$:
     $
       max_k |S_k| & <= |Omega| \
                 M & <= n \
@@ -432,19 +432,19 @@ Per dimostrare che l'analisi effettuata sia stretta, presentiamo un input _pessi
 )
 
 Esecuzione dell'algoritmo:
-- iterazione 1, scegliere tra:
+- Iterazione 1: scegliere tra:
   - _verticale_: prezzo $(1 + epsilon) / (n\/2)$
   - _orizzontale_: prezzo $1 / (n\/2)$ $quad <==$ scelto
-- iterazione 2:
+- Iterazione 2:
   - _verticale_: prezzo $(1 + epsilon) / ((n\/2) - (n\/4)) = (1+epsilon)/(n\/4)$
   - _orizzontale_: prezzo $1 / (n\/4)$ $quad <==$ scelto
-- si continua così $log n$ volte
+- Si continua così $log n$ volte
 
 Di conseguenza la soluzione trovata è:
-$ w = underbrace(log n, "aree"\ "selezionate") dot underbrace(1, "costo"\ "ogni"\ "area") $
+$ w = underbrace(log n, "aree"\ "selezionate") dot underbrace(1, "costo"\ "di"\ "ogni"\ "area") $
 mentre la soluzione ottima sarebbe scegliere le due aree verticali
 $ w^* = 2 + 2 epsilon $
-con tasso di approssimazione:
+con rapporto di approssimazione:
 $ w/w^* = (log n) / (2 + 2 epsilon) = Omega(log n) space qed $
 
 #teorema("Teorema")[
