@@ -12,13 +12,13 @@
 Formalmente: 
 - *$I_Pi$*:
   - $G = (N,A)$, grafo orientato
-  - $S_0,dots,S_(k-1) in bb(N)$, lista di sorgenti
-  - $T_0,dots,T_(k-1) in bb(N)$, lista di destinazioni
+  - $s_0,dots,s_(k-1) in bb(N)$, lista di sorgenti
+  - $t_0,dots,t_(k-1) in bb(N)$, lista di destinazioni
   - $c in bb(N^+)$, tasso di consegtione
 - *$"Amm"_(Pi)$*:
   $ 
     I subset.eq k \
-    forall i in I, exists "un cammino" pi_i: S_i -> T_i \
+    forall i in I, exists "un cammino" pi_i: s_i -> t_i \
     "t.c" forall a in A, "non ci sono più di" c "cammini" pi_i "che passano per" a 
   $
 - *$C_Pi$* = $|I|$, numero di coppie collegate
@@ -32,34 +32,44 @@ $
   ell(pi) = ell(x_1,x_2)+ell(x_2,x_3)+dots+ell(x_(i-1),x_i)
 $
 
-
 == Algoritmo PricingCongestedPaths
 
-- Input: input del problema + $beta > 1$
-- $I <- emptyset$
-- $P <- emptyset$
-- $ell(a) = 1 forall a in A$
-- While true
-  - find the shortest path $pi_i$ connecting $(s_i, t_i)$ for some $i in.not I$ \/\/ trovo il cammino minimo tra ogni coppia sorgente-destinazione, prendo il cammino minimo più piccolo
-  - if such path $exists.not$
-    - break \/\/ tutte le sorgenti sono connesse alle destinazioni
-  - $I <- I union {i}$
-  - $P <- P union {pi_i}$
-  - forall ares $a in pi_i$:
-    - $ell(a) <- ell(a) dot beta$ \/\/ pensalizziamo gli archi usati
-    - if $ell(a) = beta^c$ \/\/ arco da cui sono passati tutti i percorsi possibili
-      - delete $a$ \/\/ nell'analisi, questa cosa viene ritardata alla seconda fase
-- output $I, p$
+L'input di questo problema è analogo a $"CongestedPath"$, con l'aggiunta di una costante $beta$. 
+
+#pseudocode(
+  [*Input* = $"CongestedPath"$ + $beta >1$],
+  [$I <- emptyset$],
+  [$P <- emptyset$ #emph("insieme dei cammini")],
+  [$ell(a)=1, forall a in A$],
+  [*Forever*],
+  indent(
+    [Find the shortest path $pi_i$ connecting $(s_i,t_i)$ for some $i in.not I$],
+    [*If* such path $exists.not$],
+    indent(
+      [*Break*]
+    ),
+    [$I <- I union {i}$],
+    [$P <- P union {pi_i}$],
+    [*Forall* ares $a in pi_i$],
+    indent(
+      [$ell(a) <- ell(a)*beta$],
+      [#emph("penalizzo gli archi usati")],
+      [*If* $ell(a) = beta^c$],
+      indent(
+        [*Delete* $a$],
+        [#emph("L'arco è già stato usato "+$c$+" volte, lo ellimino")]
+      ),
+    ),
+  ),
+  [*Output* $I,P$]
+)
 
 #informalmente[
-  Continuiamo a scegliere il cammino minimo più corto tra sorgente e destinazione.
-  Per fare questa cosa dobbiamo eseguire degli algoritmo di dijkstra (non basta bfs dato che i pesi sugli archi esistono (e cambiano)).
+  L'algoritmo continua a scegliere il cammino minimo più corto tra sorgente e destinazione, utilizzando l'algoritmo di dijkstra (non basta una bfs dato che i pesi sugli archi esistono (e cambiano)).
 
-  Ma andiamo a punire gli archi utilizzati da questo cammino (per evitare di usarli troppe volte).
+  Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte. il loro costo $ell(a)$ viene moltiplicato per $beta$.
 
-  Questa punizione è aumentare il costo degli archi, moltiplicandolo per $beta$.
-
-  Quando un arco arriva a costo $beta^c$, allora questo arco è arrivato ad essere usato $c$ volte, quindi non potrà più essere usato, lo cancelliamo.
+  Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato. Per questo motivo viene cancellato.
 ]
 
 / Cammino Corto:
