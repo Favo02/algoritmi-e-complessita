@@ -128,7 +128,7 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
     Per definizione $pi_i^*$ è un cammino corto utile, di conseguenza l'algoritmo l'avrebbe selezionato aggiungendolo alla soluzione $I$:
     $ overline(ell)(pi_i^*) >= beta^c quad qed $ 
   ]
-]
+]<lemma-soluzione-ottima>
 
 #teorema("Teorema")[
   Il teorema fornisce un limite superiore alla somma del peso degli archi selezionati alla fine della prima fase:
@@ -168,44 +168,63 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
         
       $
   ]
-]
+]<teorema-upper-bound-somma-pesi-archi>
 
-#teorema("Osservazioni")[
-  1. $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) underbrace(>=, "lemma") beta^c |I^* \\ I| $
-  $overline(l)(pi_i^*)$ sono i cammini con lughezza $>= beta^c$ per def di $overline(ell)$
+#teorema("Osservazione 1")[
+  $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) >= beta^c |I^* \\ I| $
 
+  #informalmente()[
+    L'osservazione ci dice che la somma della lunghezza dei cammini selezionati dalla soluzione ottima è $>= beta^c$ per il numero di cammini $pi_i^* "t.c" i in I^*\\I$ 
+  ]
 
-  2. $
-      sum_(i in I^* \\ I) overline(ell)(pi_i^*) underbrace(<=, "per definizione del problema" \ "allora nessun cammino usa un arco più di c volte") underbrace(c sum_(a in A) overline(ell)(a), "tutti gli archi usati esattamente c volte") \
-      <= c(beta^(c+1) |I_s| + m)
-    $
-]
+  #dimostrazione()[
+    Per il #link-teorema(<lemma-soluzione-ottima>), $ overline(ell)(pi_i^*) >= beta^c quad forall i in I^* \\ I quad qed$
+  ]
+]<oss1-congestedpath>
+
+#teorema("Osservazione 2")[
+  $ sum_(i in I^* \\ I)overline(ell)(pi_i^*) <= c(beta^(c+1)|I_s|+m) $
+
+  #dimostrazione()[
+    Per la definizione del problema, nessun arco $a in A$ può essere usato dai cammini più di $c$ volte. Di conseguenza:
+    $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) <= c sum_(a in A) overline(ell)(a) $
+    Per il #link-teorema(<teorema-upper-bound-somma-pesi-archi>): 
+    $ c sum_(a in A) overline(ell)(a) <= c(beta^(c+1)|I_s|+m) quad qed $
+  ]
+
+]<oss2-congestedpath>
 
 #teorema("Teorema")[
-  L'algoritmo PricingCongestedPaths con input $beta = m^(1/(c+1))$ da una $ (2c m^(1/(c+1))+1)"-approssimazione" $
+  L'algoritmo $"PricingCongestedPaths"$ con input $beta = m^(1/(c+1))$ da una $ (2c m^(1/(c+1))+1)"-approssimazione" $
 
   #dimostrazione[
-    Principio di inclusione eslusione:
+    Per il principio di inclusione eslusione $|I^*| = |I^*\\I| + |I^* inter I|$:
     $
-          beta^c |I^*| & <= beta^c |I^* \\ I| + beta^c |I^* inter I| \
-                       & underbrace(<=, "oss1") sum_(i in i^* \\ I) overline(ell)(pi_i^*) + beta^c |I| \
-                       & underbrace(<=, "oss2") c(beta^(c+1) |I_s| + m) + beta^c |I| \
-                       & <= c(beta^(c+1) |I| + m) + beta^c |I| \
-      (|I^*|) / beta^c & <= (c(beta^(c+1) |I| + m) + beta^c |I|) / beta^c \
-                   ... \
-                       & <= c(beta + beta^(-c) m) |I| + |I|
+      beta^c |I^*| & <= beta^c |I^* \\ I| + beta^c |I^* inter I| \
+                   &italic("nota: "mb(|I^* inter I| <= |I|)" in quanto" I "non è ottima")\
+                   & underbrace(<=, #link-teorema(<oss1-congestedpath>)) sum_(i in I^* \\ I) overline(ell)(pi_i^*) + beta^c mb(|I|) \
+                   & underbrace(<=, #link-teorema(<oss2-congestedpath>)) c(beta^(c+1) |I_s| + m) + beta^c |I| \
+                   &italic("siccome" mb(underbrace(|I_s|,"iterazioni fase 1") >= underbrace(|I|,"iterazioni totali"))) \
+                   & <= c(beta^(c+1) mb(|I|) + m) + beta^c |I| \
     $
-
-    $|I^* sect I| <= |I| $ in quato la $|I|$ non essendo ottima ma un approssimazione trova di più rispetto halal sol ottima $|I^*|$
-
-    Vogliamo calcolare il rapporto di approssimazione:
-
-    $ (|I^*|) / (|I|) <= c(beta + beta^(-c) m) + 1 $
-
-    Studiando questa funzione, il minimo si ottiene come:
+    $italic("Dividiamo ora per " mr(beta^c))$
+    $ 
+      (beta^c|I^*|) / mr(beta^c) & <= (c(beta^(c+1) |I| + m) + beta^c |I|) / mr(beta^c) \
+      & <= c(beta^(c+1)|I| + m) / mr(beta^c) + (beta^c|I|) / mr(beta^c)  \
+      & <= (c beta^(c+1)|I|)/mr(beta^c) + (c m) / mr(beta^c) + |I| \
+      & <= c beta |I| + c m beta^(-c) + |I| \
+      & <= c(beta|I|+m beta^(-c))+|I| \
+      & italic("siccome" |I| >= 1 "è una costante")\
+      & <= c(beta+m beta^(-c)) dot |I|+|I|
+    $
+    Calcoliamo il rapporto di approssimazione:
+    $ 
+      (|I^*|) / (|I|) <= (c(beta + beta^(-c) m) dot |I| + |I|) / (|I|)\
+      (|I^*|) / (|I|) <= (c(beta + beta^(-c) m) + 1
+    $
+    L'approssimazione dipende dal parametro *$beta$*. Plottando questa funzione, il minimo si ottiene come:
     $ beta eq.delta m^(1/(c+1)) $
-
-    Quindi il miglior tasso di approssimazione:
+    Quindi il *miglior tasso di approssimazione*:
     $
       (|I^*|) / (|I|) & <= c(m^(1/(c+1)) + m^(1/(c+1))^(-c) m) + 1 \
                       & <= 2c m^(1/(c+1))+1
@@ -214,8 +233,6 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
 ]
 
 Studiamo i casi bassi di $c$, soprattutto il caso in cui i cammini siano proprio disgiunti $c = 1$:
-...
-
 #informalmente[
   Questo tasso di approssimazione fa abbastanza schifo, sopratutto se le coppie sono poche.
   Ha senso questo algoritmo solo se $>> 2sqrt(m) + 1$
