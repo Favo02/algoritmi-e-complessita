@@ -23,6 +23,8 @@
   In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
+== Riduzione di VertexCover a SetCover
+
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
@@ -178,7 +180,7 @@ $ angle.l P_e angle.r quad forall e in E $
     )
   ]
 
-== Algoritmo PricingVertexCover
+=== Algoritmo PricingVertexCover
 
 #informalmente[
   L'algoritmo proposto *non* passa mai per *offerte inique*:
@@ -379,4 +381,177 @@ $ angle.l P_e angle.r quad forall e in E $
   #informalmente[
     Non esistono algoritmi che garantiscono un certo tasso di approssimazione, nemmeno, ad esempio, provando a effettuare un _bruteforce_ su una parte ridotta di lati/vertici.
   ]
+]
+
+== Vertex Cover tramite Programmazione Lineare
+
+#informalmente[
+  Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata su un problema di programmazione lineare.
+]
+
+=== Programmazione Lineare (LP) [PO]
+
+- $I_Pi$:
+  - matrice $A in bb(Q)^(m times n)$
+  - vettore $underline(b) in bb(Q)^m$
+  - vettore $underline(c) in bb(Q)^n$
+- $"Amm"_Pi$: vettore $x in bb(Q)^n$, ogni elemento è:
+  $ A underline(x) >= underline(b) $
+- Funzione obiettivo: $underline(c)^T underline(x)$
+- Tipo $min$
+
+#informalmente[
+  Abbiamo $n$ variabili, gli elementi del vettore $x$.
+  Sono sottoposti a dei vincoli, ogni vincolo è una riga della matrice (ci sono $m$ vincoli).
+
+  Somma pesata degli $x_i >=$ certo valore.
+
+  Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$)
+]
+
+#nota[
+  I vincoli possono essere sia di $>=$ che $<=$ (basta cambiare i segni della riga)
+
+  Se vogliamo un vincolo $=$, basta mettere entrambi i vincoli, sia $>=$ che $<=$.
+
+  #attenzione[
+    I vincoli stretti $>$ o $<$ sono completamnete diversi (non ne parliamo).
+  ]
+]
+
+#informalmente[
+  Ci vuole poco a rendere questa cosa non lineare, basta un valore assoluto o un quadrato di un vincolo o della funzione obiettivo.
+]
+
+#nota[
+  Metodo risolutivo: metodo del simplesso, $in.not "P"$, dato che nel caso peggiore è esponenziale.
+
+  Nel 81 è stato trovato un algoritmo polinomiale (algoritmo del punto interno).
+
+  #attenzione[
+    Nella pratica, quasi sempre il simplesso funziona meglio degli algoritmi polinomiali (nonostante sia NP).
+  ]
+]
+
+#teorema("Teorema")[
+  *$ "LinearProgramming" in "PO" $*
+]
+
+=== Programmazione Lineare Intera (ILP) [NPOc]
+
+#informalmente[
+  Nonostante l'insieme delle soluzioni sia un sottoinsieme rispetto a LP, il problema è più difficile.
+]
+
+- $I_Pi$:
+  - matrice $A in bb(Q)^(m times n)$
+  - vettore $underline(b) in bb(Q)^m$
+  - vettore $underline(c) in bb(Q)^n$
+- $"Amm"_Pi$: vettore $x in bb(Z)^n$, ogni elemento è:
+  $ A underline(x) >= underline(b) $
+- Funzione obiettivo: $underline(c)^T underline(x)$
+- Tipo $min$
+
+#teorema("Teorema")[
+  *$ "IntegerLinearProgramming" in "NPOc" $*
+]
+
+#attenzione[
+  Non ci sono nemmeno tassi di approsimazione decenti.
+]
+
+#nota[
+  Esistono soluzioni esponenziali, come branch and bound.
+]
+
+=== Vertex Cover come ILP
+
+- $I_Pi$:
+  - grafo $G=(V,E)$
+  - $angle.l w_i angle.r_(i in V)$ costi
+
+#informalmente[
+  Vogliamo un insieme di vertici.
+  Possiamo scrivere questo insieme come una variabile booleana per ogni vertice.
+]
+
+$x_i in {0, 1}, quad i in V$
+
+Vincoli:
+$
+  cases(
+    x_i >= 0 quad forall i in V,
+    x_i <= 1 quad forall i in V,
+    x_i + x_j >= 1 quad forall {i, j} in E "per ogni lato deve essere coperto"
+  )
+$
+Obiettivo:
+$ min sum_(i in V) w_i x_i $
+
+Questa è un'istanza di vertex cover *esatta* $Pi$, che è possibile dare ad un solutore di ILP.
+
+=== Soluzione Rilassata
+
+#informalmente[
+  Quando arriviamo ad un'istanza di ILP (quindi NPOc), si può provare a rilassare il problema, ovvero cercare una soluzione in $bb(Q)$.
+]
+
+La soluzione rilassata $tilde(Pi)$ avrà tutte le risposte
+
+#teorema("Teorema")[
+  Se $Pi$ è un problema ILP e $tilde(Pi)$ è la sua versione rilassata LP, allora:
+  $ w^* >= tilde(w)^* $
+
+  #attenzione[
+    Questa cosa vale per i problemi di minimizzazione, per la massimizzazione è il contrario.
+  ]
+]
+
+=== Da Soluzione Rilassata a Soluzione
+
+Ora dalla soluzione rilassata dobbiamo tornare alla soluzione intera.
+
+Sia $tilde(x)^*$ l'ottimo del problema rilassata $tilde(Pi)$ (che si può trovare in tempo polinomiale) e sia $underline(r)$ il vettore:
+$ r_i = cases(1 quad "se" tilde(x_i)^* >= 1/2, 0 "altrimenti") $
+
+Questo arrotondamento è un vertex cover? È una soluzione ammissibile?
+
+#teorema("Osservazione")[
+  $underline(r)$ rappresenta un vertex cover.
+
+  #dimostrazione[
+    Per assurdo, supponiamo esista un lato non coperto, quindi:
+    $
+      {i, j} in E, quad r_i = r_j = 0 \
+      x_i^* < 1/2, quad x_j^* < 1/2 \
+      x_i^* + x_j^* < 1
+    $
+
+    Ma questa cosa è impossibile, dato che esiste il vincolo $x_i^* + x_j^* >= 1, space qed$
+  ]
+]
+
+Quanto è buona questa soluzione?
+
+#teorema("Osservazione")[
+  $forall i in V, quad r_i <= 2 tilde(x_i)^*$
+
+  #dimostrazione[
+    Questa cosa è ovvia, dato che tutti i valori valgono o $0$ o $1$, quindi al massimo si sbaglija di $1$ per ogni vertice.
+  ]
+]
+
+#teorema("Lemma")[
+  $ sum_(i in V) w_i r_i <= 2 w^* $
+
+  #dimostrazione[
+    $
+      sum_(i in V) w_i r_i & underbrace(<=, "oss2") 2 sum_(i in V) w_i tilde(x_i)^* = 2 tilde(w)^* \
+                           & <= 2 w^* space qed
+    $
+  ]
+]
+
+#teorema("Teorema")[
+  $underline(r)$ è una soluzione $2$-approssimata di VertexCover.
 ]
