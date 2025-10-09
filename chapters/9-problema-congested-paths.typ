@@ -131,35 +131,42 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
 ]
 
 #teorema("Teorema")[
-  Se guardo ilcosto totale deglii archi alla fine della prima fase, allora la somma viene $beta^(c+1)$ per il numero di cammini trovati $s$
-
+  Il teorema fornisce un limite superiore alla somma del peso degli archi selezionati alla fine della prima fase:
   $ sum_(a in A) overline(ell)(a) <= beta^(c+1) |I_s| + m $
 
-  dove $I_s$ è l'insieme dei cammini raggiunti nella prima fase (numero di iterazioni) ed $m$ è il numero di archi del grafo
+  Dove: 
+  - $I_s$ è l'insieme dei cammini aggiunti nella prima fase (numero di iterazioni)
+  - $m$ è il numero di archi del grafo
 
   #dimostrazione[
-    Per induzione, guardo come cambia per ogni iterazione la sommatoria.
-    Se aumenta al massimo $beta^(c+1)$ volte ogni iterazione, allora abbiamo dimostrato dato che viene moltiplciato per il numero di iterazioni.
+    La dimostrazioene avviene per induzione: 
+    
+    1. *Passo Base*. All'inizio il peso di tutti gli archi è inizializzato a $1$:
+      $ sum_(a in A) underbrace(ell(a),=1) = m $
 
-    All'inizio ogni arco vale $1$:
-    $ sum_(a in A) ell(a) = m $
 
-    Cosa succede quando viene aggiunto un nuovo cammino $ell -> ell'$?
-
-    $ ell'(a) = cases(ell(a) "se" a in.not Pi, beta ell(a) "se" a in pi) $
-
-    Calcoliamo:
-    $
-      sum_(a in A) ell'(a) - sum_(a in A) ell(a) \ 
-      = sum_(a in A) ell'(a)-ell(a) \ 
-      =
-      sum_(a in pi)(beta ell(a) - ell(a)) + underbrace(sum_(a in.not pi) (ell(a) - ell(a)), 0) \
-      = sum_(a in pi)(beta - 1) ell(a) \
-      = (beta-1) sum_(a in pi) ell(a) = (beta-1) ell(pi) \
-      < (beta-1) underbrace(beta^c, "dato che è corto")<beta^(c+1)-beta^c < beta^(c+1) space qed
-    $
-
-    $ell(pi) < beta^c$ in quanto $ell$ prende solo cammini corti, prima parte dell'algoritmo
+    2. *Passo induttivo*. Ci chiediamo cosa succede quando aggiungo un nuovo cammino $pi$.\
+      Il peso degli archi $forall a in A$ viene aggiornato $ell-> ell^'$:
+      $ 
+        ell^(')(a) = cases(
+          l(a) &"se" a in.not pi \
+          beta dot l(a) &"se" a in pi
+        )  
+      $
+      Calcoliamo ora di quanto è variato il peso degli archi: 
+      $ 
+        sum_(a in A) ell^(')(a) - sum_(a in A) ell(a) \
+        = sum_(a in A) ell^(')(a) - ell(a) \
+        italic("Espandendo la sommatoria") \
+        = sum_(a in pi) (beta ell(a)-ell(a)) - underbrace(sum_(a in.not pi)(ell(a)-ell(a)),0)\
+        italic("raccolgo" mr(beta-1))\
+        = sum_(a in pi) mr((beta-1)) ell(a)\
+        = mr((beta-1)) underbrace(sum_(a in pi) ell(a), ell(pi))\
+        = mr((beta-1)) ell(pi) \
+        italic("siccome siamo nella prima frase:" ell(pi)< beta^c)\
+        = mr((beta-1)) ell(pi) < mr((beta-1)) beta^c < beta^(c+1) quad qed \
+        
+      $
   ]
 ]
 
