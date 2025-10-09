@@ -106,9 +106,9 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
 ]
 
 #attenzione[
-  L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase anche non vengano cancellati archi. Essi saranno cancellati solo all'inizio della seconda fase.
+  L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase non vengano cancellati archi. Essi saranno cancellati solo all'inizio della seconda fase.
 
-  Questa modifica non altera l'algoritmo. Il singolo arco da cancellare peserebbe più di $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino (dato che siamo appunto nella prima fase e quindi esistono cammini corti).
+  Questa modifica non altera l'algoritmo. Il singolo arco da cancellare peserebbe più di $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino, non venendo selezionato (essendo nella prima fase, esistono cammini corti).
 ]
 
 #teorema("Lemma")[
