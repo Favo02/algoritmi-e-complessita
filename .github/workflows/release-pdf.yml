@@ -1,4 +1,4 @@
-name: Create Release with PDF
+name: Create Release with compiled PDF
 
 on:
   push:
