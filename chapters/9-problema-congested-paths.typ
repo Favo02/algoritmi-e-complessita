@@ -108,22 +108,25 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
 #attenzione[
   L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase non vengano cancellati archi. Essi saranno cancellati solo all'inizio della seconda fase.
 
-  Questa modifica non altera l'algoritmo. Il singolo arco da cancellare peserebbe più di $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino, non venendo selezionato (essendo nella prima fase, esistono cammini corti).
+  Questa modifica non altera l'algoritmo. Il singolo arco da cancellare peserebbe più di $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino, l'arco non sarà dunque selezionato (essendo nella prima fase, esistono cammini corti).
 ]
 
 #teorema("Lemma")[
+  Supponiamo ora di eseguire l'algoritmo. Esso produce una soluzione $I$:
+  
   $ forall i in I^* \\ I, quad overline(ell)(pi_i^*) >= beta^c $
 
-  $i$ è una coppia sorgente-destinazione che l'algoritmo non ha collegato ma che la soluzione ottima ha collegato
+  Dove $i$ è una coppia sorgente-destinazione non collegata nella soluzione trovata $I$, ma collegata nella soluzione ottima $I^*$.
+
+  #informalmente[
+    Se esistono coppie sorgente-destinazione non collegate, allora devono per forza essere connesse da cammini lunghi (altriment avrebbe trovato tali cammini).
+  ]
 
   #dimostrazione[
-    Per assurdo esiste un cammino selezionato dalla soluzione ottime $overline(ell)(pi_i^*) < beta^c$
-
-    Ma questo è un cammino corto e utile, assurdo $qed$.
-
-    #informalmente[
-      Se esistono coppie sorgente/destinazione non collegate, allora devono per forza essere connessi da cammini lunghi (altrimenti l'algoritmo lo avrebbe trovato).
-    ]
+    Supponiamo che per assurdo esista un cammino $pi_i^*$ selezionato dalla soluzione ottima tale che: 
+    $ overline(ell)(pi_i^*) < beta^c $
+    Per definizione $pi_i^*$ è un cammino corto utile, di conseguenza l'algoritmo l'avrebbe selezionato aggiungendolo alla soluzione $I$:
+    $ overline(ell)(pi_i^*) >= beta^c quad qed $ 
   ]
 ]
 
