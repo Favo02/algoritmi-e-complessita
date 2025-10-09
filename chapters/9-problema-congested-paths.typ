@@ -12,8 +12,8 @@
 Formalmente: 
 - *$I_Pi$*:
   - $G = (N,A)$, grafo orientato
-  - $s_0,dots,s_(k-1) in bb(N)$, lista di sorgenti
-  - $t_0,dots,t_(k-1) in bb(N)$, lista di destinazioni
+  - $s_0,dots,s_(k-1) in bb(N^+)$, lista di sorgenti
+  - $t_0,dots,t_(k-1) in bb(N^+)$, lista di destinazioni
   - $c in bb(N^+)$, tasso di consegtione
 - *$"Amm"_(Pi)$*:
   $ 
@@ -25,7 +25,7 @@ Formalmente:
 - *$C_Pi$* = $|I|$, numero di coppie collegate
 - *$t_Pi$* = max 
 
-Definiamo anche una *funzione di costo $l$*, la quale associa ad ogni arco un costo. Essa *varia nel tempo*:
+Definiamo anche una *funzione di costo $ell$*, la quale associa ad ogni arco un costo. Essa *varia nel tempo*:
 $ ell : A -> bb(R)^+ $
 Il costo di un cammino $pi$ è definito come: 
 $
@@ -66,9 +66,9 @@ L'input di questo problema è analogo a $"CongestedPath"$, con l'aggiunta di una
 )
 
 #informalmente[
-  L'algoritmo continua a scegliere il cammino minimo più corto tra sorgente e destinazione, utilizzando l'algoritmo di dijkstra (non basta una bfs dato che i pesi sugli archi esistono (e cambiano)).
+  L'algoritmo continua a scegliere il cammino minimo più corto tra sorgente e destinazione, utilizzando l'algoritmo di dijkstra (non basta una bfs dato che i pesi sugli archi esistono e cambiano).
 
-  Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte. il loro costo $ell(a)$ viene moltiplicato per $beta$.
+  Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte. Il loro costo $ell(a)$ viene moltiplicato per $beta$.
 
   Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato. Per questo motivo viene cancellato.
 ]
