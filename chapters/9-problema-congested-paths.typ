@@ -232,8 +232,38 @@ $ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots s
   ]
 ]
 
-Studiamo i casi bassi di $c$, soprattutto il caso in cui i cammini siano proprio disgiunti $c = 1$:
+Studiano l'approssimazione ottenuta, possiamo osservare che dipende dai parametri $beta$ e $c$: 
+
+#figure(
+  box(width: 200pt, height: 150pt)[
+    // Linee della tabella
+    #place(top + left, dx: 40pt, dy: 20pt, line(length: 120pt, angle: 0deg))  // linea orizzontale
+    #place(top + left, dx: 60pt, dy: 0pt, line(length: 150pt, angle: 90deg))  // linea verticale
+    
+    // Intestazioni
+    #place(top + left, dx: 40pt, dy: 0pt, text(size: 12pt)[$c$])
+    #place(top + left, dx: 70pt, dy: 0pt, text(size: 12pt)[Approssimazione])
+    
+    // Valori
+    #place(top + left, dx: 40pt, dy: 40pt, text(size: 12pt)[1])
+    #place(top + left, dx: 70pt, dy: 40pt, text(size: 12pt)[$2sqrt(m) + 1$])
+    
+    #place(top + left, dx: 40pt, dy: 70pt, text(size: 12pt)[2])
+    #place(top + left, dx: 70pt, dy: 70pt, text(size: 12pt)[$4 root(3, m) + 1$])
+    
+    #place(top + left, dx: 40pt, dy: 100pt, text(size: 12pt)[3])
+    #place(top + left, dx: 70pt, dy: 100pt, text(size: 12pt)[$6 root(4, m) + 1$])
+    
+    #place(top + left, dx: 40pt, dy: 130pt, text(size: 12pt)[...])
+    #place(top + left, dx: 70pt, dy: 130pt, text(size: 12pt)[...])
+  ]
+)
+
 #informalmente[
-  Questo tasso di approssimazione fa abbastanza schifo, sopratutto se le coppie sono poche.
-  Ha senso questo algoritmo solo se $>> 2sqrt(m) + 1$
+  Il *tasso di approssimazione ottenuto è pessimo*, sopratutto se le coppie che si vogliono collegare sono poche.
+  Questo algoritmo solo se *$k >> 2sqrt(m) + 1$*. 
+]
+
+#nota()[
+  Una coppia sorgente-destinazione può essere collegata più volte per ottenere dei collegamenti robusti. Ottenere un $k$ alto è più semplice. 
 ]
