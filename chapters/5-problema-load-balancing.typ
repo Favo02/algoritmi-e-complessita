@@ -302,3 +302,83 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
     Il problema di decisione associato a LoadBalancing è fortemente NP completo.
   ]
 ]
+
+== PTAS per 2-Load Balancing _(offline)_
+
+#informalmente[
+  2-load balancing è load balancing con $m$ fissato a 2, quindi con 2 macchine.
+]
+
+- *$I_Pi$*:
+  - $t_0, ..., t_(n-1) in bb(N)^+$
+  - $epsilon > 0 in bb(Q)^+$, otterremo una $1+epsilon$-approsimazione
+- *If* $epsilon >= 1$ *then*
+  - assegna tutti i task a una macchina
+  - *End*
+- Ordiniamo i $t_i$ in ordine non crescente
+- Sia $k = ceil(1/epsilon - 1)$
+- Fase 1: Assegniamo in modo ottimo i primi $k$ task $t_0, ..., t_(k-1)$ (provandoli in brutefoce)
+- Fase 2: I restanti task $t_k, ..., t_(n-1)$ sono assegnati in modo greedy
+
+#attenzione[
+  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$.
+]
+
+#teorema("Teorema")[
+  L'algoritmo è una $(1+epsilon)$-approssimazione per 2-loadbalancing.
+
+  #dimostrazione[
+    $ T = sum_(i in n) t_i $
+
+    Nessuna soluzione può essere migliore di $T/2$, dato che è la media tra le macchine:
+    $ L^* >= T/2 $ <load-balancing-ptas-lstar-tmezzi>
+
+    Caso 1: $epsilon >= 1$
+    $
+      L = T \
+      L / L^* <= T/(T/2) = 2 <= 1 + epsilon space qed
+    $
+
+    Caso 2: $0 < epsilon < 1$
+
+    Senza perdita di generalità, assumiamo che $L_1 >= L_2$
+
+    Sottocaso 2A:
+
+    Alla macchina 1 non ho più assegnato task nella fase 2.
+    Questa cosa è ovviamente ottima, dato che la fase1 era ottima, ma la soluzione dell'algirmto è rimasta la stessa anche dopo aver assegnato i casi rimasti.
+    Per ottenere una soluzione migliore bisognerebbe migliorare la fase1, cosa impossibile dato che è ottima $qed$.
+
+    #informalmente[
+      Se ho piazzato k task in modo ottimo e ci aggiunto altre task, e la soluzione rimane la stessa, è per forza rimasta quella ottima.
+    ]
+
+    Sottocaso 2B:
+
+    Sono stati assegnati task durante la fase 2 anche alla prima macchina.
+
+    Sia $t_h$ l'ultimo task assegnato alla macchina $1$ (per forza di cose durante la fase 2).
+    Il carico in questo momento:
+
+    $
+      L_1 - t_h <= L'_2 <= L_2 \
+      2L_1 - t_h <= L'_2 <= L_1 + L_2 = T \
+      L = L_1 <= t_h / 2 + T/2 #<load-balancing-ptas-l-th-tmezzi>
+    $
+
+    Sappiamo che:
+    $
+      T = sum_(i in n) t_i = t_0 + t_1 + ... + t_(k-1) + ... + t_h + ... + t_(n-1) \
+      >= t_h (k+1) #<load-balancing-ptas-th-k1>
+    $
+
+    Calcoliamo il tasso di approssimazione:
+
+    $
+      L/L^* underbrace(<=, #link-equation(<load-balancing-ptas-lstar-tmezzi>)) L / (T/2) <= (t_h/2 + T/2)/(T/2) \
+      = 1 + t_h/T <= 1+(t_h)/(t_h ( k+1)) \
+      = 1 + 1/k+1 \
+      <= ...
+    $
+  ]
+]
