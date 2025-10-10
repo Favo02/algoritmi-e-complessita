@@ -3,7 +3,7 @@
 = Problema Congested Paths
 
 #attenzione[
-  Questo problema è noto in letteratura come "Disjoints Paths".
+  Questo problema è noto in letteratura come "Disjoint Paths".
 ]
 
 #informalmente[
@@ -29,7 +29,7 @@
 - *$t_Pi = max$*
 
 #nota[
-  È possibile specificare la stessa sorgente o destinazione più volte, basta inserirla più volte nulla lista di sorgenti/destinazioni.
+  È possibile specificare la stessa sorgente o destinazione più volte, basta inserirla più volte nella lista di sorgenti/destinazioni.
   L'algoritmo, lavorando sugli indici, le considererà coppie distinte.
 ]
 
@@ -67,7 +67,7 @@ Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anch
     ),
     [$I <- I union {i}$],
     [$P <- P union {pi_i}$],
-    [*Forall* ares $a in pi_i$ *do* #emph("// per tutti gli archi del cammino")],
+    [*Forall* arcs $a in pi_i$ *do* #emph("// per tutti gli archi del cammino")],
     indent(
       [$ell(a) <- ell(a) dot beta$ #emph("// penalizziamo gli archi usati, aumentando il loro costo")],
       [*If* $ell(a) = beta^c$ *then* #emph("// usato " + $c$ + " volte")],
@@ -85,7 +85,7 @@ Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anch
   Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte.
   Il loro costo $ell(a)$ viene moltiplicato per $beta$.
 
-  Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato.
+  Quando un arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato.
   Per questo motivo viene cancellato.
 ]
 
@@ -113,9 +113,9 @@ $
   underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3 subset.eq dots subset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
 $
 - $mr("fase 1")$: l'algoritmo sceglie un cammino corto utile $pi in C_i$
-- $mb("fase 2")$: i cammini corti utili sono finiti, quindi $C_s = emptyset$ e l'algoritmo temrina. Questa situazione è possibile per due casi:
+- $mb("fase 2")$: i cammini corti utili sono finiti, quindi $C_s = emptyset$ e l'algoritmo termina. Questa situazione è possibile per due casi:
   - non esistono più coppie collegabili
-  - rimangono coppie collegabili solo con camminimi *lunghi*. Definiamo *$overline(ell)$* come la funzione nell'istante $C_s$ dove *non* ci sono più cammini utili
+  - rimangono coppie collegabili solo con cammini *lunghi*. Definiamo *$overline(ell)$* come la funzione nell'istante $C_s$ dove *non* ci sono più cammini utili
 
 #attenzione[
   L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase non vengano cancellati archi, ma solo messi in un _buffer in attesa di cancellazione_.
@@ -138,7 +138,7 @@ $
   ]
 
   #dimostrazione[
-    Supponiamo che per assurdo esista un cammino $pi_i^*$ selezionato dalla soluzione ottima tale che sia corto:
+    Supponiamo per assurdo che esista un cammino $pi_i^*$ selezionato dalla soluzione ottima tale che sia corto:
     $ overline(ell)(pi_i^*) < beta^c $
 
     Ma dato che non è stato selezionato in $I$, allora deve per forza essere lungo:
@@ -228,11 +228,11 @@ $
 ] <congested-paths-oss2>
 
 #teorema("Teorema")[
-  L'algoritmo $"PricingCongestedPaths"$ con input $beta = m^(1/(c+1))$ da una
+  L'algoritmo $"PricingCongestedPaths"$ con input $beta = m^(1/(c+1))$ dà una
   $ (2 c m^(1/(c+1))+1)"-approssimazione" $
 
   #dimostrazione[
-    Partiamo applicando il principio di inclusione eslusione sull'insieme $I^*$:
+    Partiamo applicando il principio di inclusione-esclusione sull'insieme $I^*$:
     $ I^* = (I^*\\I) + (I^* inter I) $.
     Passando alle cardinalità e moltiplicando per $beta^c$:
     $ beta^c |I^*| <= mr(beta^c |I^* \\ I|) + beta^c mb(|I^* inter I|) $
@@ -240,7 +240,7 @@ $
     $ beta^c |I^*| <= mr(sum_(i in I^* \\ I) overline(ell)(pi_i^*)) + beta^c mb(|I|) $
     Per #mr(link-teorema(<congested-paths-oss2>)):
     $ beta^c |I^*| <= mr(c(beta^(c+1) mg(|I_s|) + m)) + beta^c |I| $
-    Siccome il numero di iterazioni totale $mg(|I|)$ è maggiore del numero di iterazioni della prima fase $mg(|I_s|)$:
+    Siccome il numero di iterazioni totali $mg(|I|)$ è maggiore del numero di iterazioni della prima fase $mg(|I_s|)$:
     $ beta^c |I^*| <= c(beta^(c+1) mg(|I|) + m) + beta^c |I| $
     Dividendo per $beta^c$:
     $
@@ -267,7 +267,7 @@ $
   ]
 ]
 
-L'approssimazione ottenuta dipende dal numero di coppie che si vogliono collegare $m$ e dal tasso di approssimazione $c$.
+L'approssimazione ottenuta dipende dal numero di archi $m$ e dal tasso di congestione $c$.
 Tipicamente $c$ è un numero piccolo, fissandolo otteniamo:
 
 #figure(
@@ -285,6 +285,6 @@ Tipicamente $c$ è un numero piccolo, fissandolo otteniamo:
 )
 
 #informalmente[
-  Il tasso di approssimazione ottenuto è *pessimo*, sopratutto se le coppie che si vogliono collegare sono poche.
+  Il tasso di approssimazione ottenuto è *pessimo*, soprattutto se le coppie che si vogliono collegare sono poche.
   Ha senso utilizzare questo algoritmo solo se il numero di coppie sorgente-destinazione è molto elevato *$k >> 2sqrt(m) + 1$*.
 ]
