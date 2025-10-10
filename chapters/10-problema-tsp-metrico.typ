@@ -75,7 +75,7 @@
 - $I_Pi$:
   - grafo non orientato $G(V, E)$
   - pesi dei lati $angle.l delta_e angle.r_(e in E) in bb(Q)^+$
-- $"Amm"_Pi$: circuito hamiltoniamo $pi in G$, cioè un circuito che tocchi tutti i vertici esattamente una volta, oppure $bot$
+- $"Amm"_Pi$: circuito hamiltoniano $pi in G$, cioè un circuito che tocchi tutti i vertici esattamente una volta, oppure $bot$
 - Funzione obiettivo: lunghezza del circuito hamiltoniano:
   $ delta = sum_(c in pi) delta_e $
 - $t_Pi = min$
@@ -126,5 +126,133 @@ Algoritmo:
     - tutti quelli pari in $T$ non li abbiamo toccati
     - tutti quelli dispari in $T$, quindi $D$ abbiamo aggiunto $1$ da $M$
   - esiste un cammino chiamato $tilde(pi)$
-- shortcircuit $tilde(pi) -> pi$
+- $pi <-$ shortcircuit $tilde(pi)$
   - dove passo due volte da un vertice, allora salto quel vertice e vado direttamente a quello successivo (possibile perchè è una cricca)
+
+#teorema("Lemma")[
+  $ delta(T) <= delta^* $
+
+  #dimostrazione[
+    Sia $pi^*$ un TSP ottimo.
+
+    Se togliamo un lato, allora otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree.
+
+    $ forall e in pi^*, quad delta^* >= delta^* - delta_e >= delta(T) space qed $
+
+    Ma lo spanning tree è per forza maggiore o uguale al costo dello spanning tree minimo $T$.
+  ]
+]
+
+#teorema("Lemma")[
+  $ delta(M) <= 1/2 delta^* $
+
+  #dimostrazione[
+    Prendiamo $pi^*$ (TSP ottimo) e cortocircuitiamo sui vertici di $D$ (i vertici di grado dispari sull'albero).
+
+    Possiamo collegare tra loro i vertici $in D$, formando un ciclo $overline(pi)^*$.
+    Per via della disuguaglianza triangolare, allora: $ delta(overline(pi)^*) <= delta(pi^*) $
+
+    Scegliamo metà dei lati di questo circuito in maniera alternata, formando $M_1$ e $M_2$.
+
+    $ delta^* >= quad delta(overline(pi)^*) = delta(M_1) + delta(M_2) $
+
+    Ma $M_1$ e $M_2$ sono dei perfect matching, ma sono maggiori del minimum perfect matching:
+
+    $ delta^* >= quad delta(overline(pi)^*) = delta(M_1) + delta(M_2) >= delta(M) + delta(M) >= 2 delta(M) space qed $
+  ]
+]
+
+#teorema("Teorema")[
+  L'algoritmo di Christofides è una $3/2$-approssimazione per il TSP metrico.
+
+  #dimostrazione[
+    Noi prendiamo $T union M$ e costruiamo un cammino hamiltoniano cortocircuitando un cammino euleriano:
+
+    $
+      delta(pi) & <= delta(pi_"euler") = delta(T) è delta(M) \
+                & <= delta^* + 1/2 delta^* = 3/2 delta^* space qed
+    $
+  ]
+]
+
+=== Strettezza dell'analisi
+
+Per $n$ pari, consideriamo il grafo:
+- cammino di $n$ vertici collegati da dei lati di lunghezza $1$
+- dei lati che saltano di lunghezza $1+epsilon$
+- lati extra per diventare una clique costano come il cammino minimo (fare il cammino minimo tra i due vertici e il lato diretto costa uguale, in modo da mantenere la disuguaglianza metrica)
+- per qualunque $0 < epsilon < 1$ la clique è metrica
+
+Eseguiamo Christofides sulla clique:
+- trovare il MST $T$
+  - è facile dimostrare che è il cammino iniziale con tutti i pesi $1$
+  - i vertici di grado dispari in $T$ sono il primo e l'ultimo
+- $D$ è composto solo da $v_1$ e $v_(n-1)$, quindi il perfect matching è semplicemente il collegamento del loro lato
+  - il lato che li collega è un lato aggiunto per renderla clique, quindi di peso cammino minimo tra $v_1$ e $v_n$, quindi $(1+epsilon) n/2 + 1$
+- unendo $T$ e $M$ otteniamo già un circuito hamiltoniano senza dover fare cortocircuitazione
+  - ha costo:
+  $
+    delta & = (1+epsilon)n/2 + 1 + (n-1) \
+          & = n/2 + epsilon n/2 + 1 + n -1 \
+          & = 3/2 n + epsilon n/2
+  $
+
+Ma circuito hamiltoniano ottimo sarebbe:
+- partendo da un vertice pari $v_2$, saltare di 2 in 2 fino a $v_n$
+- torniamo indietro di $1$ e da $v_(n-1)$ facciamo la stessa cosa all'indietro per i vertici pari, arrivando a $v_0$
+- colleghaimo $v_0$ a $v_1$
+- ha costo:
+  $
+    delta^* & = (1+epsilon) n/2 + (1+epsilon)n/2 + 2 \
+            & = (1+epsilon)n + 2
+  $
+- con tasso di approssimazione:
+  $ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)... ) $
+- se mandiamo $n -> infinity$ e $epsilon -> 0$, allora tende a $3/2$
+
+#teorema("Teorema")[
+  $3/2$ è il miglior tasso di approssimaione noto per TSP metrico
+]
+
+== Inapprossimabilità di TSP
+
+#teorema("Teorema")[
+  Non esiste nessun $alpha > 1$ tale che TSP sia $alpha$-approssimabile (nemmeno sulle clique).
+
+  #attenzione[
+    Si intende il TSP non metrico.
+  ]
+
+  #dimostrazione[
+    Determinare se un grafo ha un circuito hamiltoniano è NPc.
+
+    Supponiamo per assurdo che esista un algoritmo che $alpha$-approssima (per qualche $alpha > 1$) TSP sulle clique.
+
+    Dato un grafo $G$ costruiamo questa clique:
+    $ overline(G) = (V, binom(V, 2)) $
+    $ overline(delta)_{x, y} = cases(1 quad "se" {x, y} in E, ceil(alpha n) + 1 quad "altrimenti") $
+
+    Dando $overline(G), overline(delta)$ all'algorimto, ci verrà resituito un circuito hamiltoniano $pi$ di costo $overline(delta)(pi)$ (non per forza ottimo).
+
+    Esistono due casi:
+    - se $G$ ha un circuito hamiltoniano, allora $overline(G)$ ha ancora un circuito hamiltoniano, di costo $n$ (dato che i lati già in $G$ costano $1$), $overline(delta)^* = n$
+    - se $G$ non ha un circuito hamiltoniano, allora il circuito hamiltoniano trovato su $overline(G)$ deve prendere almeno un arco non in $G$, quindi $overline(delta)^* >= ceil(alpha n) + 1$
+
+    Quindi $overline(delta) <= alpha overline(delta)^*$:
+    - nel primo caso $<= alpha n$
+    - nel secondo caso $>= ceil(alpha n) + 1$
+
+    #informalmente[
+      Se esisteva, allora trova una soluzione di al massimo $alpha n$, se non eisteva allora deve usare un arco aggiuntivo, quindi deve per forza essere $> alpha n$
+    ]
+
+    $
+      overline(delta) <= alpha n quad "se" G "ha un circuito hamiltoniano" \
+      overline(delta) > ceil(alpha n) + 1 quad "se" G "non ha un circuito hamiltoniano" space qed
+    $
+
+    #informalmente[
+      Abbiamo costruito un problema di ottimizzazione, in modo che l'approssimazione trovata cada in uno di due intervalli *disgiunti* che ci permettono di capire qual era l'ottimo.
+    ]
+  ]
+]
