@@ -2,268 +2,289 @@
 
 = Problema Congested Paths
 
-#informalmente[
-  Dato un grafo orientato e una lista di _sorgenti_ e _destinazioni_, vogliamo collegare le sorgenti con le corrispondenti destinazioni attraverso un _cammino_ nel grafo.\
-  Inoltre, dato un tasso di congestione intero $c$, vogliamo che non ci siano più di $c$ cammini che passino per uno stesso arco $a$.
-
-  Obiettivo: massimizzare le coppie collegate.
+#attenzione[
+  Questo problema è noto in letteratura come "Disjoints Paths".
 ]
 
-Formalmente: 
+#informalmente[
+  Dato un grafo orientato e delle _sorgenti_ e _destinazioni_, vogliamo collegare le sorgenti con le corrispondenti destinazioni attraverso un _cammino_ nel grafo.
+
+  Dato un tasso di congestione intero $c$, vogliamo che non ci siano più di $c$ cammini che passino per uno stesso arco.
+
+  Obiettivo: massimizzare le coppie collegate (rispettando il vincolo $c$).
+]
+
 - *$I_Pi$*:
-  - $G = (N,A)$, grafo orientato
-  - $s_0,dots,s_(k-1) in bb(N^+)$, lista di sorgenti
-  - $t_0,dots,t_(k-1) in bb(N^+)$, lista di destinazioni
-  - $c in bb(N^+)$, tasso di consegtione
-- *$"Amm"_(Pi)$*:
-  $ 
-    I subset.eq k \
-    forall i in I, exists "un cammino" pi_i: s_i -> t_i \
-    "t.c" forall a in A, "non ci sono più di" c "cammini" pi_i "che passano per" a 
+  - $G = (N,A)$: grafo orientato
+  - $s_0, ..., s_(k-1) in bb(N)$: lista di sorgenti
+  - $t_0, ..., t_(k-1) in bb(N)$: lista di destinazioni
+  - $c in bb(N^+)$: tasso di congestione
+- *$"Amm"_(Pi)$*: insieme delle coppie collegate
   $
+    I subset.eq k, quad
+    forall i in I, quad exists "un cammino" pi_i: s_i ~> t_i \
+    "t.c." forall a in A, quad "non ci sono più di" c "cammini" pi_i "che passano per" a
+  $
+- *$C_Pi$* = $|I|$: numero di coppie collegate
+- *$t_Pi = max$*
 
-- *$C_Pi$* = $|I|$, numero di coppie collegate
-- *$t_Pi$* = max 
-
-Definiamo anche una *funzione di costo $ell$*, la quale associa ad ogni arco un costo. Essa *varia nel tempo*:
-$ ell : A -> bb(R)^+ $
-Il costo di un cammino $pi$ è definito come: 
-$
-  pi = <x_1,x_2,dots,x_i>\
-  ell(pi) = ell(x_1,x_2)+ell(x_2,x_3)+dots+ell(x_(i-1),x_i)
-$
+#nota[
+  È possibile specificare la stessa sorgente o destinazione più volte, basta inserirla più volte nulla lista di sorgenti/destinazioni.
+  L'algoritmo, lavorando sugli indici, le considererà coppie distinte.
+]
 
 == Algoritmo PricingCongestedPaths
 
-L'input di questo problema è analogo a $"CongestedPath"$, con l'aggiunta di una costante $beta$. 
+Per l'algoritmo abbiamo bisogno di definire:
+
+/ Costo di un cammino $pi$: somma dei costi degli archi su cui passa. La funzione $ell$
+  $
+    pi = angle.l x_1,x_2,dots,x_i angle.r \
+  $
+
+/ Funzione costo $ell$: funzione che associa ad ogni arco un costo. Se il parametro è un cammino, allora restituisce il costo del cammino.
+  $
+    ell : A -> bb(R)^+ \
+    ell(pi) = ell(x_1, x_2)+ell(x_2, x_3)+dots+ell(x_(i-1), x_i)
+  $
+  #attenzione[
+    Questa funzione varia nel tempo, possiamo cambiare il costo di un arco.
+  ]
+
+Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anche un parametro $beta in bb(Q) > 1$ _(di cui vedremo come calcolare il valore)_.
 
 #pseudocode(
-  [*Input* = $"CongestedPath"$ + $beta >1$],
-  [$I <- emptyset$],
-  [$P <- emptyset$ #emph("insieme dei cammini")],
-  [$ell(a)=1, forall a in A$],
+  [*Input* $G=(N, A), space S, space T, space c, space beta >1$],
+  [$I <- emptyset$ #emph("// indici delle coppie collegate")],
+  [$P <- emptyset$ #emph("// insieme dei cammini trovati")],
+  [$ell(a)=1, quad forall a in A$ #emph("// tutti gli archi costano inizialmente 1")],
   [*Forever*],
   indent(
-    [Find the shortest path $pi_i$ connecting $(s_i,t_i)$ for some $i in.not I$],
-    [*If* such path $exists.not$],
+    [$pi_i <-$ find the shortest path connecting $(s_i,t_i)$ for some $i in.not I$ #emph("// cammino più corto tra tutti quelli esistenti tra una coppia sorgente-destinazione")],
+    [*If* such path $exists.not$ *then*],
     indent(
-      [*Break*]
+      [*Break*],
     ),
     [$I <- I union {i}$],
     [$P <- P union {pi_i}$],
-    [*Forall* ares $a in pi_i$],
+    [*Forall* ares $a in pi_i$ *do* #emph("// per tutti gli archi del cammino")],
     indent(
-      [$ell(a) <- ell(a)*beta$],
-      [#emph("penalizzo gli archi usati")],
-      [*If* $ell(a) = beta^c$],
+      [$ell(a) <- ell(a) dot beta$ #emph("// penalizziamo gli archi usati, aumentando il loro costo")],
+      [*If* $ell(a) = beta^c$ *then* #emph("// usato " + $c$ + " volte")],
       indent(
-        [*Delete* $a$],
-        [#emph("L'arco è già stato usato "+$c$+" volte, lo ellimino")]
+        [*Delete* $a$ #emph("// quindi non si può più usare, lo eliminiamo")],
       ),
     ),
   ),
-  [*Output* $I,P$]
+  [*Output* $I, P$],
 )
 
 #informalmente[
-  L'algoritmo continua a scegliere il cammino minimo più corto tra sorgente e destinazione, utilizzando l'algoritmo di dijkstra (non basta una bfs dato che i pesi sugli archi esistono e cambiano).
+  L'algoritmo continua a scegliere il cammino minimo più corto tra una coppia sorgente-destinazione, utilizzando l'algoritmo di Dijkstra (non basta una BFS dato che i pesi sugli archi $ell$ esistono e non sono tutti uguali).
 
-  Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte. Il loro costo $ell(a)$ viene moltiplicato per $beta$.
+  Una volta selezionato il cammino minimo, gli archi che ne fanno parte vengono puniti, in modo da non utilizzarli troppe volte.
+  Il loro costo $ell(a)$ viene moltiplicato per $beta$.
 
-  Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato. Per questo motivo viene cancellato.
+  Quando un'arco ha costo $beta^c$, allora esso è già stato utilizzato $c$ volte, di conseguenza non potrà più essere usato.
+  Per questo motivo viene cancellato.
 ]
 
-Un certo cammino $pi$ inoltre può avere alcune proprietà in determinati istanti dell'esecuzione. 
+Un certo cammino $pi$ può avere alcune proprietà in determinati istanti dell'esecuzione:
 
 / Cammino Corto:
-  Per una certa $ell$ (quindi ad un certo istante), un *cammino $pi$* si dice *corto* se: 
-  *$ ell(pi) < beta^c $*
+  per una certa $ell$ (quindi ad un certo istante), un cammino $pi$ si dice *corto* se il suo costo è minore di $beta^c$:
+  $ ell(pi) < beta^c $
 
-/ Cammini utili: Cammini che *collegano una nuova coppia* (ovvero una coppia non ancora collegata)
+/ Cammino utile: cammino che collega una *nuova coppia* (ovvero una coppia sorgente-destinazione non ancora collegata)
 
-/ $C_i$ insieme dei cammini corti utili: prima dell'$i$-esima iterazione
+/ Insieme dei cammini corti utili $C_i$: insieme dei cammini corti e utili, prima dell'esecuzione dell'$i$-esima iterazione
 
 #attenzione[
-  Queste proprietà variano in base all'esecuzione (istante) in cui siamo
-] 
-
-In un dato istante, le *trasformazioni possibili* per un cammino $pi$ sono: 
-- $pi "utile" -> pi "inutile"$
-- $pi "corto" -> pi "lungo"$
-- $pi "esistente" -> pi "non esistente"$
-
-Possiamo dividere l'esecuzione dell'algoritmo in due fasi: 
-$ underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3, mr("fase 1")) dots subset.eq underbrace(C_s,mb("fase 2," overline(ell)(pi))) = emptyset $
-- $mb("fase 1")$: l'algoritmo sceglie un cammino corto utile
-- $mr("fase 2")$: i cammini corti utili sono finiti: 
-  - non esistono più coppie collegabili
-  - rimangono coppie collegabili solo con camminimi lunghi.\
-    L'algoritmo termina dopo l'istante $s$.\
-    *$overline(ell)$* = la funzione nell'istante $C_s$ dove *non* ci sono più cammini utili  
-
-#informalmente[
-  Dato che l'algoritmo sceglie sempre il cammino utile più corto, fino all'istante $s$ sceglierà sempre cammini corti (cammino più corto di $beta^c$)
+  Queste proprietà variano in base all'istante (iterazione) in cui siamo.
 ]
 
-#attenzione[
-  L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase non vengano cancellati archi. Essi saranno cancellati solo all'inizio della seconda fase.
+In un dato istante, procedendo con l'esecuzione, le *trasformazioni possibili* per un cammino $pi$ sono:
+- $pi "utile" -> pi "inutile"$ _(la coppia che avrebbe collegato viene collegata)_
+- $pi "corto" -> pi "lungo"$ _(il costo dei suoi archi aumenta)_
+- $pi "esistente" -> pi "non esistente"$ _(un suo arco viene cancellato)_
 
-  Questa modifica non altera l'algoritmo. Il singolo arco da cancellare peserebbe più di $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino, l'arco non sarà dunque selezionato (essendo nella prima fase, esistono cammini corti).
+Possiamo dividere l'esecuzione dell'algoritmo in due fasi:
+$
+  underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3 subset.eq dots subset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
+$
+- $mr("fase 1")$: l'algoritmo sceglie un cammino corto utile $pi in C_i$
+- $mb("fase 2")$: i cammini corti utili sono finiti, quindi $C_s = emptyset$ e l'algoritmo temrina. Questa situazione è possibile per due casi:
+  - non esistono più coppie collegabili
+  - rimangono coppie collegabili solo con camminimi *lunghi*. Definiamo *$overline(ell)$* come la funzione nell'istante $C_s$ dove *non* ci sono più cammini utili
+
+#attenzione[
+  L'algoritmo potrebbe essere modificato in modo tale che durante la prima fase non vengano cancellati archi, ma solo messi in un _buffer in attesa di cancellazione_.
+  Essi saranno cancellati solo all'inizio della seconda fase.
+
+  Questa modifica non altera l'algoritmo.
+  Il singolo arco da cancellare peserebbe $beta^c$, di conseguenza solo quell'arco è per forza più lungo di un qualsiasi altro cammino corto (che esistono per forza dato che siamo appunto nella prima fase).
+
+  L'analisi verrà effettuata su questa versione equivalente dell'algoritmo.
 ]
 
 #teorema("Lemma")[
-  Supponiamo ora di eseguire l'algoritmo. Esso produce una soluzione $I$:
-  
+  Supponiamo ora di eseguire l'algoritmo, che produce una soluzione $I$.
+  Tutte le coppie trovate dalla soluzione ottima $I^*$ ma non dalla soluzione $I$ devono essere collegate da un cammino $pi_i^*$ lungo:
+
   $ forall i in I^* \\ I, quad overline(ell)(pi_i^*) >= beta^c $
 
-  Dove $i$ è una coppia sorgente-destinazione non collegata nella soluzione trovata $I$, ma collegata nella soluzione ottima $I^*$.
-
   #informalmente[
-    Se esistono coppie sorgente-destinazione non collegate, allora devono per forza essere connesse da cammini lunghi (altriment avrebbe trovato tali cammini).
+    Se esistono coppie sorgente-destinazione non collegate, allora devono per forza essere connesse da cammini lunghi (altrimenti l'algoritmo avrebbe trovato tali cammini).
   ]
 
   #dimostrazione[
-    Supponiamo che per assurdo esista un cammino $pi_i^*$ selezionato dalla soluzione ottima tale che: 
+    Supponiamo che per assurdo esista un cammino $pi_i^*$ selezionato dalla soluzione ottima tale che sia corto:
     $ overline(ell)(pi_i^*) < beta^c $
-    Per definizione $pi_i^*$ è un cammino corto utile, di conseguenza l'algoritmo l'avrebbe selezionato aggiungendolo alla soluzione $I$:
-    $ overline(ell)(pi_i^*) >= beta^c quad qed $ 
+
+    Ma dato che non è stato selezionato in $I$, allora deve per forza essere lungo:
+    $ overline(ell)(pi_i^*) >= beta^c $
+
+    Questa cosa è assurda $qed$.
   ]
-]<lemma-soluzione-ottima>
+] <congested-paths-lemma-soluzione-ottima>
 
 #teorema("Teorema")[
   Il teorema fornisce un limite superiore alla somma del peso degli archi selezionati alla fine della prima fase:
-  $ sum_(a in A) overline(ell)(a) <= beta^(c+1) |I_s| + m $
+  $ sum_(a in A) overline(ell)(a) quad <= quad beta^(c+1) |I_s| + m $
 
-  Dove: 
+  Dove:
   - $I_s$ è l'insieme dei cammini aggiunti nella prima fase (numero di iterazioni)
   - $m$ è il numero di archi del grafo
 
   #dimostrazione[
-    La dimostrazioene avviene per induzione: 
-    
-    1. *Passo Base*. All'inizio il peso di tutti gli archi è inizializzato a $1$:
-      $ sum_(a in A) underbrace(ell(a),=1) = m $
+    Vogliamo dimostrare che ad ogni iterazione, la somma dei pesi degli archi cresce al massimo di $beta^(c+1)$, lo facciamo per induzione:
+
+    + *Passo Base*. All'inizio il peso di tutti gli archi è inizializzato a $1$:
+      $ sum_(a in A) underbrace(ell(a), =1) = m $
 
 
-    2. *Passo induttivo*. Ci chiediamo cosa succede quando aggiungo un nuovo cammino $pi$.\
-      Il peso degli archi $forall a in A$ viene aggiornato $ell-> ell^'$:
-      $ 
-        ell^(')(a) = cases(
-          l(a) &"se" a in.not pi \
-          beta dot l(a) &"se" a in pi
-        )  
+    + *Passo induttivo*. Quando aggiungo un nuovo cammino $pi$, il peso di tutti gli archi $a in A$ viene aggiornato, modificando la funzione $ell -> ell^'$:
       $
-      Calcoliamo ora di quanto è variato il peso degli archi: 
-      $ 
-        sum_(a in A) ell^(')(a) - sum_(a in A) ell(a) \
-        = sum_(a in A) ell^(')(a) - ell(a) \
-        italic("Espandendo la sommatoria") \
-        = sum_(a in pi) (beta ell(a)-ell(a)) - underbrace(sum_(a in.not pi)(ell(a)-ell(a)),0)\
-        italic("raccolgo" mr(beta-1))\
-        = sum_(a in pi) mr((beta-1)) ell(a)\
-        = mr((beta-1)) underbrace(sum_(a in pi) ell(a), ell(pi))\
-        = mr((beta-1)) ell(pi) \
-        italic("siccome siamo nella prima frase:" ell(pi)< beta^c)\
-        = mr((beta-1)) ell(pi) < mr((beta-1)) beta^c < beta^(c+1) quad qed \
-        
+        ell'(a) = cases(
+          mg(ell(a)) & quad "se" a in.not pi,
+          mg(beta dot ell(a)) & quad "se" a in pi
+        )
       $
+      Calcoliamo ora di quanto è variata la somma del peso degli archi, facendo la differenza tra tutti gli archi della funzione $ell'$ e quelli all'istante precedente $ell$:
+      $
+          & sum_(a in A) ell'(a) - sum_(a in A) ell(a) \
+        = & sum_mb(a in A) (mg(ell'(a)) - ell(a))
+      $
+      Possiamo dividere l'insieme dei lati $a in A$ tra i lati nel nuovo cammino $in pi$ e i lati non nel nuovo cammino $in.not pi$
+      $
+        = sum_mb(a in pi) (mg(beta ell(a)) - ell(a)) - underbrace(sum_mb(a in.not pi)(mg(ell(a)) - ell(a)), = 0)
+      $
+      Raccogliendo $ell(a)$:
+      $
+        = & sum_(a in pi) ell(a) mr((beta-1)) \
+        = & mr((beta-1)) underbrace(sum_(a in pi) ell(a), = ell(pi)) \
+        = & mr((beta-1)) ell(pi)
+      $
+      Siccome siamo nella prima fase, allora $mb(ell(pi)) < beta^c$:
+      $
+        = mr((beta-1)) mb(ell(pi)) quad & < quad mr((beta-1)) mb(beta^c) \
+                                        & < quad beta^(c+1)
+      $
+
+    Abbiamo dimostrato che ad ogni iterazione la somma dei pesi degli archi cresce al massimo di $mp(beta^(c+1))$.
+    Dato che ci sono esattamente $mm(|I_s|)$ esecuzioni nella prima fase e il peso iniziale di $limits(sum)_(a in A) ell(a) = mg(m)$, allora abbiamo dimostrato l'upper bound dei pesi degli archi dopo la prima fase:
+    $ sum_(a in A) overline(ell)(a) quad <= quad mp(beta^(c+1)) mm(|I_s|) + mg(m) space qed $
   ]
-]<teorema-upper-bound-somma-pesi-archi>
+] <congested-paths-teorema-upper-bound-somma-pesi-archi>
 
-#teorema("Osservazione 1")[
-  $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) >= beta^c |I^* \\ I| $
+#teorema("Osservazione")[
+  La somma della lunghezza del peso dei cammini $pi_i^*$ selezionati dalla soluzione ottima $I^*$ ma non dalla soluzione dell'algoritmo $I$ è grande almeno quanto $beta^c$ per il numero di questi cammini:
 
-  #informalmente()[
-    L'osservazione ci dice che la somma della lunghezza dei cammini selezionati dalla soluzione ottima è $>= beta^c$ per il numero di cammini $pi_i^* "t.c" i in I^*\\I$ 
-  ]
-
-  #dimostrazione()[
-    Per il #link-teorema(<lemma-soluzione-ottima>), $ overline(ell)(pi_i^*) >= beta^c quad forall i in I^* \\ I quad qed$
-  ]
-]<oss1-congestedpath>
-
-#teorema("Osservazione 2")[
-  $ sum_(i in I^* \\ I)overline(ell)(pi_i^*) <= c(beta^(c+1)|I_s|+m) $
-
-  #dimostrazione()[
-    Per la definizione del problema, nessun arco $a in A$ può essere usato dai cammini più di $c$ volte. Di conseguenza:
-    $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) <= c sum_(a in A) overline(ell)(a) $
-    Per il #link-teorema(<teorema-upper-bound-somma-pesi-archi>): 
-    $ c sum_(a in A) overline(ell)(a) <= c(beta^(c+1)|I_s|+m) quad qed $
-  ]
-
-]<oss2-congestedpath>
-
-#teorema("Teorema")[
-  L'algoritmo $"PricingCongestedPaths"$ con input $beta = m^(1/(c+1))$ da una $ (2c m^(1/(c+1))+1)"-approssimazione" $
+  $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad >= quad beta^c |I^* \\ I| $
 
   #dimostrazione[
-    Per il principio di inclusione eslusione $|I^*| = |I^*\\I| + |I^* inter I|$:
+    Per il #link-teorema(<congested-paths-lemma-soluzione-ottima>), ogni cammino non selezionato è lungo:
     $
-      beta^c |I^*| & <= beta^c |I^* \\ I| + beta^c |I^* inter I| \
-                   &italic("nota: "mb(|I^* inter I| <= |I|)" in quanto" I "non è ottima")\
-                   & underbrace(<=, #link-teorema(<oss1-congestedpath>)) sum_(i in I^* \\ I) overline(ell)(pi_i^*) + beta^c mb(|I|) \
-                   & underbrace(<=, #link-teorema(<oss2-congestedpath>)) c(beta^(c+1) |I_s| + m) + beta^c |I| \
-                   &italic("siccome" mb(underbrace(|I_s|,"iterazioni fase 1") >= underbrace(|I|,"iterazioni totali"))) \
-                   & <= c(beta^(c+1) mb(|I|) + m) + beta^c |I| \
+                               forall i in I^* \\ I, & quad overline(ell)(pi_i^*) >= beta^c \
+      sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad & >= quad sum_(i in I^* \\ I) beta^c \
+      sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad & >= quad |I^* \\ I| beta^c space qed
     $
-    $italic("Dividiamo ora per " mr(beta^c))$
-    $ 
+  ]
+] <congested-paths-oss1>
+
+#teorema("Osservazione")[
+  La somma dei cammini della soluzione ottima $I^*$ ma non selezionati dalla soluzione dell'algoritmo $I$ è limitata da $c$ volte il peso massimo di un cammino trovata in #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>):
+
+  $ sum_(i in I^* \\ I)overline(ell)(pi_i^*) quad <= quad c(beta^(c+1)|I_s|+m) $
+
+  #dimostrazione[
+    Per definizione del problema, nessun arco $a in A$ può essere usato dai cammini più di $c$ volte.
+    Di conseguenza, anche se tutti i cammini usassero tutti gli archi:
+    $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad <= quad c sum_(a in A) overline(ell)(a) $
+    Per il #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>):
+    $ c mr(sum_(a in A) overline(ell)(a)) <= c mr((beta^(c+1)|I_s|+m)) space qed $
+  ]
+
+] <congested-paths-oss2>
+
+#teorema("Teorema")[
+  L'algoritmo $"PricingCongestedPaths"$ con input $beta = m^(1/(c+1))$ da una
+  $ (2 c m^(1/(c+1))+1)"-approssimazione" $
+
+  #dimostrazione[
+    Partiamo applicando il principio di inclusione eslusione sull'insieme $I^*$:
+    $ I^* = (I^*\\I) + (I^* inter I) $.
+    Passando alle cardinalità e moltiplicando per $beta^c$:
+    $ beta^c |I^*| <= mr(beta^c |I^* \\ I|) + beta^c mb(|I^* inter I|) $
+    Per #mr(link-teorema(<congested-paths-oss1>)) e dato che #mb("l'intersezione") tra due insiemi è sempre $<=$ dei due insiemi originali:
+    $ beta^c |I^*| <= mr(sum_(i in I^* \\ I) overline(ell)(pi_i^*)) + beta^c mb(|I|) $
+    Per #mr(link-teorema(<congested-paths-oss2>)):
+    $ beta^c |I^*| <= mr(c(beta^(c+1) mg(|I_s|) + m)) + beta^c |I| $
+    Siccome il numero di iterazioni totale $mg(|I|)$ è maggiore del numero di iterazioni della prima fase $mg(|I_s|)$:
+    $ beta^c |I^*| <= c(beta^(c+1) mg(|I|) + m) + beta^c |I| $
+    Dividendo per $beta^c$:
+    $
       (beta^c|I^*|) / mr(beta^c) & <= (c(beta^(c+1) |I| + m) + beta^c |I|) / mr(beta^c) \
-      & <= c(beta^(c+1)|I| + m) / mr(beta^c) + (beta^c|I|) / mr(beta^c)  \
-      & <= (c beta^(c+1)|I|)/mr(beta^c) + (c m) / mr(beta^c) + |I| \
-      & <= c beta |I| + c m beta^(-c) + |I| \
-      & <= c(beta|I|+m beta^(-c))+|I| \
-      & italic("siccome" |I| >= 1 "è una costante")\
-      & <= c(beta+m beta^(-c)) dot |I|+|I|
+                           |I^*| & <= c(beta^(c+1)|I| + m) / mr(beta^c) + (beta^c|I|) / mr(beta^c) \
+                           |I^*| & <= (c beta^(c+1)|I|)/mr(beta^c) + (c m) / mr(beta^c) + |I| \
+                           |I^*| & <= c beta |I| + c m beta^(-c) + |I| \
+                           |I^*| & <= c(beta|I|+m beta^(-c))+|I| \
+                           |I^*| & <= c(beta+m beta^(-c)) dot |I|+|I|
     $
     Calcoliamo il rapporto di approssimazione:
-    $ 
-      (|I^*|) / (|I|) <= (c(beta + beta^(-c) m) dot |I| + |I|) / (|I|)\
-      (|I^*|) / (|I|) <= (c(beta + beta^(-c) m) + 1
     $
-    L'approssimazione dipende dal parametro *$beta$*. Plottando questa funzione, il minimo si ottiene come:
+      (|I^*|) / (|I|) <= (c(beta + beta^(-c) m) dot |I| + |I|) / (|I|) \
+      (|I^*|) / (|I|) <= c(beta + beta^(-c) m) + 1
+    $
+    L'approssimazione dipende dal parametro $beta$.
+    Analizzando questa funzione, il minimo si ottiene come:
     $ beta eq.delta m^(1/(c+1)) $
     Quindi il *miglior tasso di approssimazione*:
     $
-      (|I^*|) / (|I|) & <= c(m^(1/(c+1)) + m^(1/(c+1))^(-c) m) + 1 \
-                      & <= 2c m^(1/(c+1))+1
+      (|I^*|) / (|I|) & <= c(m^(1/(c+1)) + m^(-(c/(c+1))) m) + 1 \
+                      & <= 2c m^(1/(c+1))+1 space qed
     $
   ]
 ]
 
-Studiano l'approssimazione ottenuta, possiamo osservare che dipende dai parametri $beta$ e $c$: 
+L'approssimazione ottenuta dipende dal numero di coppie che si vogliono collegare $m$ e dal tasso di approssimazione $c$.
+Tipicamente $c$ è un numero piccolo, fissandolo otteniamo:
 
 #figure(
-  box(width: 200pt, height: 150pt)[
-    // Linee della tabella
-    #place(top + left, dx: 40pt, dy: 20pt, line(length: 120pt, angle: 0deg))  // linea orizzontale
-    #place(top + left, dx: 60pt, dy: 0pt, line(length: 150pt, angle: 90deg))  // linea verticale
-    
-    // Intestazioni
-    #place(top + left, dx: 40pt, dy: 0pt, text(size: 12pt)[$c$])
-    #place(top + left, dx: 70pt, dy: 0pt, text(size: 12pt)[Approssimazione])
-    
-    // Valori
-    #place(top + left, dx: 40pt, dy: 40pt, text(size: 12pt)[1])
-    #place(top + left, dx: 70pt, dy: 40pt, text(size: 12pt)[$2sqrt(m) + 1$])
-    
-    #place(top + left, dx: 40pt, dy: 70pt, text(size: 12pt)[2])
-    #place(top + left, dx: 70pt, dy: 70pt, text(size: 12pt)[$4 root(3, m) + 1$])
-    
-    #place(top + left, dx: 40pt, dy: 100pt, text(size: 12pt)[3])
-    #place(top + left, dx: 70pt, dy: 100pt, text(size: 12pt)[$6 root(4, m) + 1$])
-    
-    #place(top + left, dx: 40pt, dy: 130pt, text(size: 12pt)[...])
-    #place(top + left, dx: 70pt, dy: 130pt, text(size: 12pt)[...])
-  ]
+  table(
+    columns: 2,
+    rows: 20pt,
+    align: center,
+    table.header([Parametro $c$], [Approssimazione]),
+    fill: (_, y) => if y == 0 { gray.lighten(50%) } else { white },
+    [1], [$2sqrt(m) + 1$],
+    [2], [$4 root(3, m) + 1$],
+    [3], [$6 root(4, m) + 1$],
+    [$dots.v$], [$dots.v$],
+  ),
 )
 
 #informalmente[
-  Il *tasso di approssimazione ottenuto è pessimo*, sopratutto se le coppie che si vogliono collegare sono poche.
-  Questo algoritmo solo se *$k >> 2sqrt(m) + 1$*. 
-]
-
-#nota()[
-  Una coppia sorgente-destinazione può essere collegata più volte per ottenere dei collegamenti robusti. Ottenere un $k$ alto è più semplice. 
+  Il tasso di approssimazione ottenuto è *pessimo*, sopratutto se le coppie che si vogliono collegare sono poche.
+  Ha senso utilizzare questo algoritmo solo se il numero di coppie sorgente-destinazione è molto elevato *$k >> 2sqrt(m) + 1$*.
 ]
