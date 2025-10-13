@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Vertex Cover (copertura di vertici)
+= Problema Vertex Cover (copertura di vertici) [NPOc]
 
 #informalmente[
   Dato un grafo $G(V,E)$, vogliamo trovare un sottoinsieme di vertici $X subset.eq V$ tale che ogni lato $in E$ ha almeno un'estremo in $X$.
@@ -23,7 +23,7 @@
   In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
-== Riduzione di VertexCover a SetCover
+== Riduzione di VertexCover a SetCover [H(D)-APX]
 
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
@@ -83,7 +83,7 @@
   ]
 ]
 
-== Vertex Cover mediante Pricing
+== Vertex Cover mediante Pricing [2-APX]
 
 In ogni istante è presente una *funzione di prezzatura* (pricing):
 $ angle.l P_e angle.r quad forall e in E $
@@ -368,7 +368,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 #teorema("Teorema")[
-  Non è noto alcun algoritmo polinomiale che offre un'approsimazione significativamente migliore di $2$.
+  Non è noto alcun algoritmo polinomiale che offre un'approssimazione significativamente migliore di $2$.
 
   #informalmente[
     Neanche selezionando il lato che minimizza il $Delta$ tra tutti i lati selezionabili.
@@ -383,31 +383,31 @@ $ angle.l P_e angle.r quad forall e in E $
   ]
 ]
 
-== Vertex Cover tramite Programmazione Lineare
+== Vertex Cover tramite Programmazione Lineare [2-APX]
+
+Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul problema della programmazione lineare.
+
+=== Problema Programmazione Lineare (LP) [PO]
 
 #informalmente[
-  Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata su un problema di programmazione lineare.
-]
+  Abbiamo $n$ variabili, ovvero gli elementi del vettore $x$.
 
-=== Programmazione Lineare (LP) [PO]
-
-- $I_Pi$:
-  - matrice $A in bb(Q)^(m times n)$
-  - vettore $underline(b) in bb(Q)^m$
-  - vettore $underline(c) in bb(Q)^n$
-- $"Amm"_Pi$: vettore $x in bb(Q)^n$, ogni elemento è:
-  $ A underline(x) >= underline(b) $
-- Funzione obiettivo: $underline(c)^T underline(x)$
-- Tipo $min$
-
-#informalmente[
-  Abbiamo $n$ variabili, gli elementi del vettore $x$.
-  Sono sottoposti a dei vincoli, ogni vincolo è una riga della matrice (ci sono $m$ vincoli).
+  Queste variabili sono sottoposte a dei vincoli, ogni vincolo è una riga della matrice (quindi $m$ vincoli).
 
   Somma pesata degli $x_i >=$ certo valore.
 
   Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$)
 ]
+
+- *$I_Pi$*:
+  - matrice $A in bb(Q)^(m times n)$: vincoli a cui sono sottoposte le variabili, ogni riga rappresenta gli scalari che moltiplicano le variabili
+  - vettore $underline(b) in bb(Q)^m$: limiti o lati destri di ogni vincolo, ovvero il valore a destra della disequazione
+  - vettore $underline(c) in bb(Q)^n$: costi o pesi per calcolare il valore della funzione obiettivo
+- *$"Amm"_Pi$*: vettore $underline(x) in bb(Q)^n$, dove ogni riga rispetta i vincoli:
+  $ A underline(x) >= underline(b) $
+- *$C_Pi$*: il valore pesato del vettore $underline(x)$, dove $T$ all'esponente indica la trasposizione
+  $ underline(c)^T underline(x) $
+- *$t_Pi = min$*
 
 #nota[
   I vincoli possono essere sia di $>=$ che $<=$ (basta cambiare i segni della riga)
@@ -415,91 +415,120 @@ $ angle.l P_e angle.r quad forall e in E $
   Se vogliamo un vincolo $=$, basta mettere entrambi i vincoli, sia $>=$ che $<=$.
 
   #attenzione[
-    I vincoli stretti $>$ o $<$ sono completamnete diversi (non ne parliamo).
+    I vincoli stretti $>$ o $<$ sono molto più complessi _(non li vediamo)_.
   ]
+]
+
+#esempio[
+  Supponiamo di avere le seguenti variabili e vincoli:
+  - $x_1, x_2 in bb(Q)$ (variabili)
+  - Vincoli:
+    - $x_1 + 2x_2 >= 3 quad -> quad A_0 = (1, 2), quad underline(b)_0 = 3$
+    - $2x_1 + x_2 <= 4 quad -> quad A_1 = (-2, -1), quad underline(b)_1 = -4$
+    - $x_1 >= 0 quad quad quad quad -> quad A_2 = (1, 0), quad underline(b)_2 = 0$
+    - $x_2 >= 0 quad quad quad quad -> quad A_3 = (0, 1), quad underline(b)_3 = 0$
+  - Funzione obiettivo: $min(3x_1 + 2x_2)$
+
+  In forma matriciale:
+  $
+    A = mat(1, 2; -2, -1; 1, 0; 0, 1), quad
+    underline(b) = vec(3, -4, 0, 0), quad
+    underline(c) = vec(3, 2)
+  $
 ]
 
 #informalmente[
-  Ci vuole poco a rendere questa cosa non lineare, basta un valore assoluto o un quadrato di un vincolo o della funzione obiettivo.
-]
-
-#nota[
-  Metodo risolutivo: metodo del simplesso, $in.not "P"$, dato che nel caso peggiore è esponenziale.
-
-  Nel 81 è stato trovato un algoritmo polinomiale (algoritmo del punto interno).
-
-  #attenzione[
-    Nella pratica, quasi sempre il simplesso funziona meglio degli algoritmi polinomiali (nonostante sia NP).
-  ]
+  Ci vuole poco a rendere questa cosa non lineare, basta aggiungere un valore assoluto o un quadrato su un vincolo o sulla funzione obiettivo.
 ]
 
 #teorema("Teorema")[
   *$ "LinearProgramming" in "PO" $*
+
+  #dimostrazione[
+    Dimostrato da _Karmarkar, 1981_.
+  ]
+
+  #attenzione[
+    Nonostante esista una soluzione polinomiale, sono spesso preferite soluzioni che, nel caso peggiore, sono _esponenziali_ ma che performano meglio nel mondo reale (come l'algoritmo del Simplesso).
+  ]
 ]
+
 
 === Programmazione Lineare Intera (ILP) [NPOc]
 
 #informalmente[
+  Stesso problema della LP, ma con solo interi come soluzioni ammissibili.
+
   Nonostante l'insieme delle soluzioni sia un sottoinsieme rispetto a LP, il problema è più difficile.
 ]
 
-- $I_Pi$:
-  - matrice $A in bb(Q)^(m times n)$
-  - vettore $underline(b) in bb(Q)^m$
-  - vettore $underline(c) in bb(Q)^n$
-- $"Amm"_Pi$: vettore $x in bb(Z)^n$, ogni elemento è:
-  $ A underline(x) >= underline(b) $
-- Funzione obiettivo: $underline(c)^T underline(x)$
-- Tipo $min$
+- *$I_Pi$*:
+  - matrice $A in bb(Q)^(m times n)$: vincoli
+  - vettore $underline(b) in bb(Q)^m$: limiti destri
+  - vettore $underline(c) in bb(Q)^n$: costi
+- *$"Amm"_Pi$*: vettore $underline(x) in mr(bb(Z)^n)$, dove ogni riga rispetta i vincoli: $A underline(x) >= underline(b)$
+- *$C_Pi$*: il valore pesato della soluzione, $underline(c)^T underline(x)$
+- *$t_Pi = min$*
 
 #teorema("Teorema")[
   *$ "IntegerLinearProgramming" in "NPOc" $*
-]
 
-#attenzione[
-  Non ci sono nemmeno tassi di approsimazione decenti.
-]
+  #attenzione[
+    Non sono note nemmeno approssimazioni con tassi di approssimazione decenti.
 
-#nota[
-  Esistono soluzioni esponenziali, come branch and bound.
+    Gli algoritmi utilizzati sono esponenziali (come il branch and bound).
+  ]
 ]
 
 === Vertex Cover come ILP
 
-- $I_Pi$:
-  - grafo $G=(V,E)$
-  - $angle.l w_i angle.r_(i in V)$ costi
+Possiamo trattare un'istanza di VertexCover come un'istanza di IntegerLinearProgramming.
 
-#informalmente[
-  Vogliamo un insieme di vertici.
-  Possiamo scrivere questo insieme come una variabile booleana per ogni vertice.
-]
+#grid(
+  columns: (1fr, 1fr),
+  // align: center,
+  [
+    $I_"VertexCover"$:
+    - grafo $G = (V,E)$
+    - pesi dei vertici $angle.l w_i angle.r_(i in V)$
+  ],
+  [
+    $I_"ILP"$:
+    - matrice dei vincoli $A$
+    - limiti destri $underline(b)$
+    - costi $underline(c)$
+  ],
+)
 
-$x_i in {0, 1}, quad i in V$
+Descriviamo ogni vertice come una variabile boolenata (presa nella copertura o meno):
+$ x_i in {0, 1} quad forall i in V $
 
-Vincoli:
+Possiamo definire i vincoli (da cui ricaveremo $A$ e $underline(b)$):
 $
   cases(
-    x_i >= 0 quad forall i in V,
-    x_i <= 1 quad forall i in V,
-    x_i + x_j >= 1 quad forall {i, j} in E "per ogni lato deve essere coperto"
+    x_i + x_j >= 1 quad & forall {i, j} in E,
+    x_i >= 0 quad & forall i in V,
+    x_i <= 1 quad & forall i in V
   )
 $
-Obiettivo:
+
+L'obietto è minimizzare il peso dei vertici presi (definendo i pesi $underline(c)$):
 $ min sum_(i in V) w_i x_i $
 
-Questa è un'istanza di vertex cover *esatta* $Pi$, che è possibile dare ad un solutore di ILP.
+Questa è un'istanza di vertex cover *esatta* $Pi$, che è possibile dare ad un solutore di ILP (che è, però, *esponenziale*).
 
-=== Soluzione Rilassata
+=== Vertex Cover come LP approssimata
 
 #informalmente[
-  Quando arriviamo ad un'istanza di ILP (quindi NPOc), si può provare a rilassare il problema, ovvero cercare una soluzione in $bb(Q)$.
+  Dato che il problema di _ILP_ è _NPOc_, si può provare a rilassare il problema, ovvero cercare una soluzioni in $bb(Q)$, rendendolo un probelma di _LP_ (quindi _PO_).
+
+  Le soluzioni in $bb(Q)$ andranno poi approssimate a soluzioni intere, dato che non ha senso avere variabili booleane che valgono un numero diverso da $1$ e $0$.
 ]
 
-La soluzione rilassata $tilde(Pi)$ avrà tutte le risposte
+Possiamo quindi calcolare una soluzione rilassata utilizzando un solutore di LP, dove ogni variabile avrà valore $0 <= x_i <= 1$.
 
 #teorema("Teorema")[
-  Se $Pi$ è un problema ILP e $tilde(Pi)$ è la sua versione rilassata LP, allora:
+  Se un problema $Pi$ è un problema ILP e $tilde(Pi)$ è la sua versione rilassata LP, allora le soluzioni intere sono sicuramente maggiori o uguali a quelle razionali:
   $ w^* >= tilde(w)^* $
 
   #attenzione[
@@ -507,22 +536,29 @@ La soluzione rilassata $tilde(Pi)$ avrà tutte le risposte
   ]
 ]
 
-=== Da Soluzione Rilassata a Soluzione
+Dalla soluzione _rilassata_ ottima $tilde(x)_i^* in bb(Q)^(|V|)$ (ottenibile in tempo polinomiale), dobbiamo trovare una soluzione *intera*.
+Definiamo il vettore $underline(r)$ come:
+$
+  r_i = cases(
+    1 quad & "se" tilde(x_i)^* >= 1/2,
+    0 quad & "altrimenti"
+  )
+$
 
-Ora dalla soluzione rilassata dobbiamo tornare alla soluzione intera.
-
-Sia $tilde(x)^*$ l'ottimo del problema rilassata $tilde(Pi)$ (che si può trovare in tempo polinomiale) e sia $underline(r)$ il vettore:
-$ r_i = cases(1 quad "se" tilde(x_i)^* >= 1/2, 0 "altrimenti") $
-
-Questo arrotondamento è un vertex cover? È una soluzione ammissibile?
+#informalmente[
+  Questa approssimazione è un Vertex Cover valido?
+]
 
 #teorema("Osservazione")[
-  $underline(r)$ rappresenta un vertex cover.
+  Il vettore approssimato $underline(r)$ rappresenta un Vertex Cover *ammissibile*.
 
   #dimostrazione[
-    Per assurdo, supponiamo esista un lato non coperto, quindi:
+    Per assurdo, supponiamo esista un lato ${i, j} in E$ non coperto, quindi entrambi i suoi vertici valgono $0$:
     $
-      {i, j} in E, quad r_i = r_j = 0 \
+      exists space{i, j} in E, quad "t.c." quad r_i = 0 r_j = 0
+    $
+    Per essere stati approssimati a $0$ dovevano valere meno di $1/2$:
+    $
       x_i^* < 1/2, quad x_j^* < 1/2 \
       x_i^* + x_j^* < 1
     $
@@ -531,27 +567,43 @@ Questo arrotondamento è un vertex cover? È una soluzione ammissibile?
   ]
 ]
 
-Quanto è buona questa soluzione?
-
-#teorema("Osservazione")[
-  $forall i in V, quad r_i <= 2 tilde(x_i)^*$
-
-  #dimostrazione[
-    Questa cosa è ovvia, dato che tutti i valori valgono o $0$ o $1$, quindi al massimo si sbaglija di $1$ per ogni vertice.
-  ]
+#informalmente[
+  Quanto è buona questa approssimazione?
 ]
 
+#teorema("Osservazione")[
+  Per ogni vertice, l'approssimazione $r_i$ è al massimo il doppio del valore razionale $tilde(x)_i^*$:
+  $ forall i in V, quad r_i <= 2 tilde(x_i)^* $
+
+  #dimostrazione[
+    Esistono due casi:
+    $
+      cases(
+        mb(0) <= 2 dot (0 <= tilde(x)_i^* < 1/2) & quad "se" r_i = mb(0),
+        mr(1) <= 2 dot (1/2 <= tilde(x)_i^* <= 1) & quad "se" r_i = mr(1),
+      )
+    $
+  ]
+] <vertex-cover-ilp-r-approssimazione>
+
 #teorema("Lemma")[
+  L'approssimazione del vettore $underline(r)$ pesata con $w_i$ è al massimo il doppio della soluzione ottima $w^*$:
+
   $ sum_(i in V) w_i r_i <= 2 w^* $
 
   #dimostrazione[
     $
-      sum_(i in V) w_i r_i & underbrace(<=, "oss2") 2 sum_(i in V) w_i tilde(x_i)^* = 2 tilde(w)^* \
-                           & <= 2 w^* space qed
+      sum_(i in V) w_i mr(r_i) & quad underbrace(<=, #link-teorema(<vertex-cover-ilp-r-approssimazione>)) quad sum_(i in V) w_i mr(2 tilde(x)_i^*) \
+      sum_(i in V) w_i r_i & quad <= quad 2 sum_(i in V) w_i tilde(x)_i^* \
+      sum_(i in V) w_i r_i & quad <= quad 2 w^* space qed
     $
   ]
-]
+] <vertex-cover-ilp-2-approssimazione>
 
 #teorema("Teorema")[
-  $underline(r)$ è una soluzione $2$-approssimata di VertexCover.
+  Il vettore $underline(r)$ è una soluzione $2$-approssimata di VertexCover.
+
+  #dimostrazione[
+    Per #link-teorema(<vertex-cover-ilp-2-approssimazione>).
+  ]
 ]
