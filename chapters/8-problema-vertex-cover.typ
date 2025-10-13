@@ -18,9 +18,9 @@
 - *$t_Pi = min$*
 
 #nota[
-  La notazione $e inter X$ è valida perchè un lato $e$ non è altro che un _insieme_ di due vertici.
+  La notazione $e inter X$ è valida perché un lato $e$ non è altro che un _insieme_ di due vertici.
 
-  In una soluzione ammissibile, almeno un estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
+  In una soluzione ammissibile, almeno un'estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
 == Riduzione di VertexCover a SetCover [H(D)-APX]
@@ -55,7 +55,7 @@
       Coprendo tutti i punti dell'universo, andiamo a coprire tutti i lati, risolvendo VertexCover.
     ]
 
-    Con la funzione $f$ un'istanza di SetCover viene trasformata in un'istanza di VertexCover (in tempo polinomiale).
+    Con la funzione $f$ un'istanza di VertexCover viene trasformata in un'istanza di SetCover (in tempo polinomiale).
     Dobbiamo anche dimostrare che una soluzione di VertexCover sia *valida* anche per SetCover, ovvero che le *soluzioni ammissibili* siano uguali:
     - _SetCover_: ogni punto dell'universo deve essere coperto da almeno un'area
     - _VertexCover_: ogni lato deve avere un'estremità in $X$
@@ -63,7 +63,7 @@
     Ma per come sono create le aree $S_i$ da $f$, ogni punto non è altro che un lato.
     Dato che le soluzioni ammissibili di _SetCover_ comprendono solo le soluzioni dove tutti i punti sono coperti, allora tutti i lati di _VertexCover_ sono coperti.
 
-    Quindi le *soluzioni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, il valore della *funzione obiettivo* viene conservato durante la trasformazione.
+    Quindi le *soluzioni* delle istanze $x'$ e $x''$ sono le *medesime* $qed$, e il valore della *funzione obiettivo* viene conservato durante la trasformazione.
   ]
 ] <vertex-cover-riducibile-set-cover>
 
@@ -73,7 +73,7 @@
 
   #dimostrazione[
     Abbiamo dimostrato che $"VertexCover" <=_p "SetCover"$ (#link-teorema(<vertex-cover-riducibile-set-cover>)).
-    Dato che il valore delle *funzione obiettivo* viene conservato, possiamo usare $"SetCover"$ per risolvere il problema $"VertexCover"$ ottenendo una soluzione con la *stessa approssimazione* $qed$.
+    Dato che il valore della *funzione obiettivo* viene conservato, possiamo usare l'algoritmo di approssimazione per $"SetCover"$ che garantisce un rapporto di approssimazione $H(D)$ anche per $"VertexCover"$, ottenendo una soluzione con la *stessa approssimazione* $qed$.
   ]
 
   #attenzione[
@@ -190,7 +190,7 @@ $ angle.l P_e angle.r quad forall e in E $
 
 #pseudocode(
   [$P_e <- 0, quad forall e in E$],
-  [*While* $exists space overline(e) = {i,j} in E "t.c." P_overline(e) "non è stretta nè su" i "nè su "j$ *do* #emph("// esiste un lato non stretto su nessuno dei due estremi")],
+  [*While* $exists space overline(e) = {i,j} in E "t.c." P_overline(e) "non è stretta né su" i "né su "j$ *do* #emph("// esiste un lato non stretto su nessuno dei due estremi")],
   indent(
     [$overline(e) <- {overline(i),overline(j)}$ #emph(
         "// lato selezionato non stretto",
@@ -396,7 +396,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
 
   Somma pesata degli $x_i >=$ certo valore.
 
-  Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$)
+  Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$).
 ]
 
 - *$I_Pi$*:
@@ -512,7 +512,7 @@ $
   )
 $
 
-L'obietto è minimizzare il peso dei vertici presi (definendo i pesi $underline(c)$):
+L'obiettivo è minimizzare il peso dei vertici presi (definendo i pesi $underline(c)$):
 $ min sum_(i in V) w_i x_i $
 
 Questa è un'istanza di vertex cover *esatta* $Pi$, che è possibile dare ad un solutore di ILP (che è, però, *esponenziale*).
@@ -520,7 +520,7 @@ Questa è un'istanza di vertex cover *esatta* $Pi$, che è possibile dare ad un 
 === Vertex Cover come LP approssimata
 
 #informalmente[
-  Dato che il problema di _ILP_ è _NPOc_, si può provare a rilassare il problema, ovvero cercare una soluzioni in $bb(Q)$, rendendolo un probelma di _LP_ (quindi _PO_).
+  Dato che il problema di _ILP_ è _NPOc_, si può provare a rilassare il problema, ovvero cercare una soluzione in $bb(Q)$, rendendolo un problema di _LP_ (quindi _PO_).
 
   Le soluzioni in $bb(Q)$ andranno poi approssimate a soluzioni intere, dato che non ha senso avere variabili booleane che valgono un numero diverso da $1$ e $0$.
 ]
@@ -534,7 +534,7 @@ Possiamo quindi calcolare una soluzione rilassata utilizzando un solutore di LP,
   #attenzione[
     Questa cosa vale per i problemi di minimizzazione, per la massimizzazione è il contrario.
   ]
-]
+] <vertex-cover-ilp-intere-rilassate>
 
 Dalla soluzione _rilassata_ ottima $tilde(x)_i^* in bb(Q)^(|V|)$ (ottenibile in tempo polinomiale), dobbiamo trovare una soluzione *intera*.
 Definiamo il vettore $underline(r)$ come:
@@ -587,15 +587,15 @@ $
 ] <vertex-cover-ilp-r-approssimazione>
 
 #teorema("Lemma")[
-  L'approssimazione del vettore $underline(r)$ pesata con $w_i$ è al massimo il doppio della soluzione ottima $w^*$:
+  L'approssimazione del vettore $underline(r)$ pesata con $w_i$ è al massimo il doppio della soluzione rilassata ottima $tilde(w)^*$:
 
-  $ sum_(i in V) w_i r_i <= 2 w^* $
+  $ sum_(i in V) w_i r_i <= 2 tilde(w)^* $
 
   #dimostrazione[
     $
       sum_(i in V) w_i mr(r_i) & quad underbrace(<=, #link-teorema(<vertex-cover-ilp-r-approssimazione>)) quad sum_(i in V) w_i mr(2 tilde(x)_i^*) \
       sum_(i in V) w_i r_i & quad <= quad 2 sum_(i in V) w_i tilde(x)_i^* \
-      sum_(i in V) w_i r_i & quad <= quad 2 w^* space qed
+      sum_(i in V) w_i r_i & quad <= quad 2 tilde(w)^* space qed
     $
   ]
 ] <vertex-cover-ilp-2-approssimazione>
@@ -604,6 +604,8 @@ $
   Il vettore $underline(r)$ è una soluzione $2$-approssimata di VertexCover.
 
   #dimostrazione[
-    Per #link-teorema(<vertex-cover-ilp-2-approssimazione>).
+    $
+      sum_(i in V) w_i r_i quad underbrace(<=, #link-teorema(<vertex-cover-ilp-2-approssimazione>)) quad 2 tilde(w)^* quad underbrace(<=, #link-teorema(<vertex-cover-ilp-intere-rilassate>)) quad 2 w^* space qed
+    $
   ]
 ]
