@@ -7,6 +7,9 @@
   Percorrere tutti i ponti una volta sola e tornare al punto di partenza. Vogliamo quindi cercare un cammino Euleriano.
 ]
 
+Si rimanda alle definizioni di circuito, nel capitolo #link-section(<grafi>)
+
+
 #teorema("Teorema")[
   Un (multi)grafo ammette un circuito euleriano se e solo se è connesso e tutti i suoi vertici hanno grafo pari.
 
