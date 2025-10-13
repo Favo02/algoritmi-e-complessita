@@ -1,23 +1,11 @@
 #import "../imports.typ": *
 
-= Problema Traveling Saleman Problem in Spazio Metrico
+= Problema Traveling Saleman in uno spazio metrico
 
 #informalmente[
   Problema dei ponti di Königsberg.
-  Percorrere tutti i ponti una volta sola e tornare nel punto di partenza: cammino Euleriano.
+  Percorrere tutti i ponti una volta sola e tornare al punto di partenza. Vogliamo quindi cercare un cammino Euleriano.
 ]
-
-== Circuiti Euleriani
-
-// TODO: spostare nel primo capitolo queste definizioni?
-
-/ Circuito Euleriano: circuito (cammino da $x$ a $x$) che passa esattamente una volta per ogni lato
-
-/ Connesso: si usa per i grafi non orientati, da un nodo si può raggiungere ogni nodo (quindi dato che non ci sono direzioni, tutti possono raggiungere tutti)
-
-/ Fortemente connesso: solo per i grafi orientati, da ogni nodo si può raggiungere ogni altro nodo
-
-/ Debolemente connesso: se si ignorano le direzioni allora è fortemente connesso (ovvero non ci sono nodi o aree isolate)
 
 #teorema("Teorema")[
   Un (multi)grafo ammette un circuito euleriano se e solo se è connesso e tutti i suoi vertici hanno grafo pari.

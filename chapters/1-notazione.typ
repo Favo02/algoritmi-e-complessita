@@ -93,6 +93,23 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 / Grafo bipartito: i nodi sono divisi in due insiemi disgiunti $G(V_1 union V_2, E)$
 / Cammino: sequenza di nodi distinti connessi da archi (non ripetuti)
 
+/ Multigrafo: grafo orientato costituito da un insieme finito di vertici e lati. Ogni lato può collegare due vertici qualsiasi (anche lo stesso vertice più volte), inoltre, possono esistere più lati tra la stessa coppia di vertici.
+
+/ Circuito Euleriano (in un multigrafo): circuito (cammino da $x$ a $x$) che tocca esattamente una volta ogni lato del grafo.
+
+/ Circuito hamiltoniano: circuito (cammino da $x$ a $x$) che tocca esattamente una volta ogni vertice del grafo. 
+
+/ Grafo Connesso: si usa per i grafi non orientati, da un nodo si può raggiungere ogni altro nodo del grafo (quindi dato che non ci sono direzioni, tutti possono raggiungere tutti)
+
+/ Grafo Fortemente connesso: solo per i grafi orientati, da ogni nodo si può raggiungere ogni altro nodo
+
+/ Grafo Debolemente connesso: Se ignorano le direzioni dei lati, il grafo risulta fortemente connesso (ovvero non ci sono nodi o aree isolate)
+
+/ Clique: Dato un grafo non orientato $G=(V,E)$, una clique è un sottoinsieme dei vertici 
+$C subset.eq V "t.c" forall v_1,v_2 in C, exists (v_1,v_2) in E $.\
+Una clique si dice completa se $C = V$. Una clique completa è sempre un grafo connesso. 
+
+
 == Varie <varie>
 
 / Ottimo: indichiamo l'ottimo con $*$, $y^*$ è la soluzione ottima, $c^*$ è il valore assunto dalla funzione obiettivo sull'output ottimo
