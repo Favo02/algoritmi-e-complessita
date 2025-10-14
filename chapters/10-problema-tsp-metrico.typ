@@ -125,65 +125,171 @@ Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avr
 == Algoritmo di Christofides per TSP metrico
 
 L'algoritmo sfrutta le seguenti componenti: 
-- 
+- *Minimum Spanning Tree*, ovvero una scelta di lati che è un albero e tocca tutti i vertici. Tra tutti i possibili spanning tree, prendiamo il minimo.\ 
+  Tale problema è risolvibile in tempo polinomiale $->$ algoritmo di Kruskal.
 
+- *Minimum-weight perfect matching $in "PO"$*, Dato un grafo $G=(V,E)$ pesato e con un numero pari di vertici, l'obiettivo è trovare un perfect matching di costo minimo (tutte le coppie sposate).\
+ Tale problema è risolvibile in tempo polinomiale $->$ algoritmo di Edmons. 
+ 
+#pseudocode(
+  [*Input*: $G(V, E =binom(V, 2)), angle.l delta_e angle.r_(e in E)$],
+  [$T <- $ *Minimum Spanning Tree*],
+  [$D <- $ insieme dei vertici di grado dispari in $T$],
+  [#emph("Per handshaking lemma " +$|D|$+ "è pari" )],
+  [$M <- $ *Minimum-weight perfect matching* su $D$],
+  [#emph($M$+" e "+$D$+ " possono contenere dei lati ripetuti")],
+  [$M union T <- $ multigrafo],
+  indent(
+    [Tutti i vertici in $M$ hanno grado pari #emph("(per pefect matching)")],
+    [$exists$ un circuito Euleriano $tilde(pi)$],
+  ),
+  [$pi <- tilde(pi)$, *$"Shortcircuit"$* ],
+  [#emph("Il cirucuito euleriano "+$tilde(pi)$+" potrebbe passare per più vertici")],
+)
 
+#nota([
+  Siccome sono in una clique, posso trasformare un circuito Euleriano in un circuito Hamiltoniano effetuando una *cortocircuitazione*: 
+  - Quando incontro un vertice già visitato sul cammino passo ad uno non ancora visitato, sfruttando l'arco diretto.
+  #esempio([
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
 
+      // Vertici del grafo
+      circle((0, 0), radius: 0.15, fill: white, stroke: black)
+      content((0, -0.5), text(size: 10pt)[$4$])
+      content((-0.5, 0), text(size: 10pt)[$A$])
 
+      circle((3.0, -1.0), radius: 0.15, fill: white, stroke: black)
+      content((2, -0.5), text(size: 10pt)[$6$])
+      content((3.2, -0.7), text(size: 10pt)[$B$])
 
+      circle((2.0, 1.0), radius: 0.15, fill: white, stroke: black)
+      content((1, 2), text(size: 10pt)[$$])
+      content((2.0, 1.5), text(size: 10pt)[$C$])
 
+      circle((1, -2), radius: 0.15, fill: white, stroke: black)
+      content((1, -2.5), text(size: 10pt)[$D$])
 
+      circle((-1, -1), radius: 0.15, fill: white, stroke: black)
+      content((-1.3, -1.3), text(size: 10pt)[$E$])
 
+      // Circuito Euleriano con ordine di visita (archi blu solidi)
+      line((0.1, 0.1), (1.9, 0.9), stroke: 2pt + blue)
+      content((1, 0.7), text(size: 9pt, fill: blue)[$1$])
 
+      line((2.1, 0.9), (2.9, -0.9), stroke: 2pt + blue)
+      content((2.7, 0), text(size: 9pt, fill: blue)[$2$])
 
+      line((2.9, -1.1), (1.1, -1.9), stroke: 2pt + blue)
+      content((2, -1.7), text(size: 9pt, fill: blue)[$3$])
 
+      line((0.9, -2), (-0.9, -1.1), stroke: 2pt + blue)
+      content((0, -1.8), text(size: 9pt, fill: blue)[$4$])
 
-Cose necessarie prima dell'algoritmo:
-+ Minimum Spanning Tree [PO]:
-  - Tree = grafo connesso aciclico
-  - Spanning tree = scelta di lati che è un albero e tocca tutti i vertici
-  - Minimum = costo minimo dei possibili spanning tree
-  - con algoritmo di Kruskal, tempo polinomiale
-+ Minimum Weight Perfect Matching [PO]:
-  - Grafo con lati pesati e numero pari di vertici
-  - Vogliamo un perfect matching di costo minimo
-  - con algoritmo di Edmons del'infiorescenza, tempo polinomiale
+      line((-0.9, -0.9), (-0.1, -0.1), stroke: 2pt + blue)
+      content((-0.7, -0.3), text(size: 9pt, fill: blue)[$5$])
 
-Algoritmo:
-- Input:
-  - $G(V, E=binom(V, 2))$ // TODO: mettere in notaazione la clique
-  - $angle.l delta_e angle.r_(e in E)$ metrico
-- $T <-$ minimum spanning tree
-- $D <-$ insieme di vertici di grafo dispari in $T$
-  - per Handshaking lemma, $|D|$ è pari
-- $M <-$ minimum weight perfect matching su $D$
-  - possono esistere dei lati che fanno parte del matching ma non dell'albero
-- $? <- M union T$ multigrafo
-  - tutti i vertici di $M union T$ hanno grado pari
-    - tutti quelli pari in $T$ non li abbiamo toccati
-    - tutti quelli dispari in $T$, quindi $D$ abbiamo aggiunto $1$ da $M$
-  - esiste un cammino chiamato $tilde(pi)$
-- $pi <-$ shortcircuit $tilde(pi)$
-  - dove passo due volte da un vertice, allora salto quel vertice e vado direttamente a quello successivo (possibile perchè è una cricca)
+      // A -> B di nuovo (6) - già visitato! (arco rosso tratteggiato)
+      line((0.1, 0.1), (1.9, 0.9), stroke: (paint: red, thickness: 3pt, dash: "dashed"))
+      content((1.0, 0.15), text(size: 10pt, fill: red)[$6$])
+
+      // Shortcircuit: A -> C diretto (arco verde punteggiato)
+      line((0.1, -0.1), (2.9, -0.9), stroke: (paint: green, thickness: 3pt, dash: "dotted"))
+      content((1.5, -0.8), text(size: 9pt, fill: green)[*shortcut*])
+    }),
+    caption: [Esempio di shortcircuit: il circuito Euleriano $tilde(pi)$ visita B due volte, quindi si effettua un collegamento diretto A→C per ottenere il circuito Hamiltoniano $pi$.]
+  )
+])
+
+])
 
 #teorema("Lemma")[
+  Sia $T$ uno spanning tree minimo per un grafo $G=(V,E)$:
   $ delta(T) <= delta^* $
 
   #dimostrazione[
-    Sia $pi^*$ un TSP ottimo.
-
-    Se togliamo un lato, allora otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree.
+    Sia $pi^*$ un circuito Hamiltoniano ottimo per TSP.\
+    Se togliamo un lato da $pi^*$, otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree.
 
     $ forall e in pi^*, quad delta^* >= delta^* - delta_e >= delta(T) space qed $
 
-    Ma lo spanning tree è per forza maggiore o uguale al costo dello spanning tree minimo $T$.
+    Ma lo spanning tree è per forza $>=$ al costo dello spanning tree minimo $T$.
   ]
 ]
 
 #teorema("Lemma")[
+  Dati: 
+  - $T <- $ minimum spannig tree
+  - $D <- $ insieme dei vertici di  grado dispari di $T$
+  Consideriamo $M$, ovvero il minimum weight perfect matching su $D$: 
   $ delta(M) <= 1/2 delta^* $
 
   #dimostrazione[
+    
+    #esempio([
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // Vertici del grafo (disposizione secondo l'immagine)
+      // Vertici neri (appartenenti a D - grado dispari)
+      circle((0, 0), radius: 0.15, fill: black, stroke: black)
+      content((-0.4, -0.3), text(size: 10pt, fill: black)[$v_1$])
+
+      circle((3, 0), radius: 0.15, fill: black, stroke: black)
+      content((3.4, -0.3), text(size: 10pt)[$v_2$])
+
+      circle((3, 2), radius: 0.15, fill: black, stroke: black)
+      content((3.4, 2.3), text(size: 10pt)[$v_3$])
+
+      circle((0, 2), radius: 0.15, fill: black, stroke: black)
+      content((-0.4, 2.3), text(size: 10pt, fill: black)[$v_4$])
+
+      // Vertici bianchi (grado pari)
+      circle((1.5, 3), radius: 0.15, fill: black, stroke: black)
+      content((1.5, 3.4), text(size: 10pt, fill:black)[$v_5$])
+
+      circle((-0.5, 1), radius: 0.15, fill: white, stroke: black)
+      content((-1, 1), text(size: 10pt)[$v_6$])
+
+      circle((3.5, 1), radius: 0.15, fill: white, stroke: black)
+      content((4, 1), text(size: 10pt)[$v_7$])
+
+      // Circuito Hamiltoniano ottimo π* (archi neri solidi)
+      line((0.15, 0.05), (2.85, 0.05), stroke: 2pt + red)
+      line((2.85, 2), (1.6, 2.85), stroke: 2pt + black)
+      line((1.4, 2.85), (0.15, 2), stroke: 2pt + black)
+      line((0, 1.85), (-0.4, 1.1), stroke: 2pt + black)
+      line((-0.4, 0.9), (0, 0.15), stroke: 2pt + black)
+      line((3.15, 1.85), (3.4, 1.1), stroke: 2pt + black)
+      line((3.4, 0.9), (3, 0.15), stroke: 2pt + black)
+
+      // Matching M₁ (linee rosse)
+      line((3, 2), (0, 2), stroke: 2pt + red)
+      content((4.5, 0.5), text(size: 10pt, fill: red)[$M_1$])
+
+      // Matching M₂ (linee verdi)
+      line((3, 0.15), (3, 1.85), stroke: 2pt + green)
+      content((4.5, 1.5), text(size: 10pt, fill: green)[$M_2$])
+
+      line((0, 0), (0, 2), stroke: 2pt + green)
+      content((4.5, 1.5), text(size: 10pt, fill: green)[$M_2$])
+
+      // Legenda
+      content((3.5, 3.0), text(size: 12pt)[$pi^*$])
+
+      content((1.5, 2.3), text(size: 12pt)[$overline(pi)^*$])
+
+    }),
+    caption: [
+      Dal circuito ottimo $pi^*$ si identificano i vertici di grado dispari $D$ (rispetto all'albero).\ 
+      I matching $mr(M_1)$ e $mg(M_2)$ collegano alternativamente i vertici di $D$ seguendo il percorso cortocircuitato, creando il cammino $overline(pi)^*$.
+    ]
+  )
+  ])
+
+
     Prendiamo $pi^*$ (TSP ottimo) e cortocircuitiamo sui vertici di $D$ (i vertici di grado dispari sull'albero).
 
     Possiamo collegare tra loro i vertici $in D$, formando un ciclo $overline(pi)^*$.
