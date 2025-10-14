@@ -216,7 +216,7 @@ L'algoritmo sfrutta le seguenti componenti:
 
     Ma lo spanning tree è per forza $>=$ al costo dello spanning tree minimo $T$.
   ]
-]
+]<lemma-1-spanning>
 
 #teorema("Lemma")[
   Dati: 
@@ -303,17 +303,16 @@ L'algoritmo sfrutta le seguenti componenti:
     $
 
   ]
-]
+]<lemma-2-multigrafo>
 
 #teorema("Teorema")[
-  L'algoritmo di Christofides è una $3/2$-approssimazione per il TSP metrico.
+  L'algoritmo di Christofides è una *$3/2$-approssimazione* per il TSP metrico.
 
   #dimostrazione[
-    Noi prendiamo $T union M$ e costruiamo un cammino hamiltoniano cortocircuitando un cammino euleriano:
-
+    Consideriamo il multigrafo $T union M$. Esso contiene un cammino Euleriano $pi_"euler"$, l'idea è cortocircuitarlo per ottenere un cammino hamiltoniano $pi$:
     $
-      delta(pi) & <= delta(pi_"euler") = delta(T) è delta(M) \
-                & <= delta^* + 1/2 delta^* = 3/2 delta^* space qed
+      delta(pi) & <= delta(pi_"euler") = delta(T) + delta(M) \
+      delta(pi) &underbrace(<=,#link-teorema(<lemma-1-spanning>) " "e #link-teorema(<lemma-2-multigrafo>)) delta^* + 1/2 delta^* = 3/2 delta^* space qed
     $
   ]
 ]
