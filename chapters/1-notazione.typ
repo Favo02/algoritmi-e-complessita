@@ -94,6 +94,9 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 / Cammino: sequenza di nodi distinti connessi da archi (non ripetuti)
 
 / Multigrafo: grafo orientato costituito da un insieme finito di vertici e lati. Ogni lato può collegare due vertici qualsiasi (anche lo stesso vertice più volte), inoltre, possono esistere più lati tra la stessa coppia di vertici.
+#informalmente()[
+  Ci sono pià lati incidenti sulla stessa coppia di vertici
+]
 
 / Circuito Euleriano (in un multigrafo): circuito (cammino da $x$ a $x$) che tocca esattamente una volta ogni lato del grafo.
 

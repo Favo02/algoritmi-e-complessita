@@ -4,86 +4,122 @@
 
 #informalmente[
   Problema dei ponti di Königsberg.
-  Percorrere tutti i ponti una volta sola e tornare al punto di partenza. Vogliamo quindi cercare un cammino Euleriano.
+  Percorrere tutti i ponti una volta sola e tornare al punto di partenza. Vogliamo quindi cercare un cammino Euleriano. Si rimanda alle definizioni di circuito, nel capitolo #link-section(<grafi>)
 ]
 
-Si rimanda alle definizioni di circuito, nel capitolo #link-section(<grafi>)
-
-
 #teorema("Teorema")[
-  Un (multi)grafo ammette un circuito euleriano se e solo se è connesso e tutti i suoi vertici hanno grafo pari.
+  Un multigrafo ammette un circuito Euleriano sse è connesso e tutti i suoi vertici hanno grado pari.
 
   #dimostrazione[
     #attenzione[
-      Questa non è davvero una dimostrazione, ma solo una costruzione del senso $<==$ dell'implicazione, ovvero come costruire un cammino dato un grafo connesso di grado 2.
+      Questa non è davvero una dimostrazione, ma solo una costruzione che mostra il senso $<==$ dell'implicazione. Ovvero come costruire un circuito dato un grafo connesso di grado $2$.
     ]
 
-    Si va avanti fino a quando non finiscono i vertici e bisogna tornare su un vertice già visitato.
+    //TODO FARE DISEGNO 
 
-    Ma una volta che sono qua, ho visitato tutti i lati?
-
-    Ma dato che ci sono tornato vuole dire che ha almeno 3 lati, ma dato che è di grado pari ci deve per forza essere un altro lato, quindi si può continuare.
-
-    Questa cosa si può continuare fino a quando non si torna nel vertice iniziale.
+    Dato un grafo iniziamo a seguire un cammino che parte dal vertice $x$: 
+    - Si procede con la visita fino a quando non si torna su un vertice già visitato.
+    - Se siamo ritornati su un vertice già visitato, allora ha almeno $3$ lati.
+    - Siccome il grafo ha grado pari, significa che deve per forza esserci un'altro lato
+    - Continuiamo questa procedura fino a quando non si torna al vertice $x$ 
   ]
 ]
 
 == Handshaking Lemma
 
 #informalmente[
-  Se un gruppo di persone si stringe delle mani (non per forza tutti devono stringere delle mani).
+  Se un gruppo di persone in una stanza si stringe la mano (non per forza tutti devono dare la mano), il numero di persone che ha stretto un numero dispari di mani è pari.
 
-  Il numero di persone che ha stretto un numero dispari di mani è pari.
-]
-
-#nota[
-  Questo genere di cose (ovvero avere delle informazioni certe su eventi "strani") si chiaam Teorema di Ramsey.
-
-  Ovvero che appaiono dei pattern inevitabili (da una certa quantità in poi).
+  Questo genere di teorie (asserire dei risultati certi su eventi "strani"), prendono il nome di *Teorema di Ramsey*. Da una certa dimensione del problema in poi, appaiono dei pattern inevitabili.
 ]
 
 #teorema("Lemma")[
   In ogni grafo non orientato, il numero di vertici di grado dispari è pari.
 
   #informalmente[
-    Rappresentazione a grafo delle persone (vertici) e strette di mano (lati)
+    Rappresentazione a grafo delle persone (vertici) e strette di mano (lati).
   ]
 
   #dimostrazione[
-    $d(x)$ è il grafo di un vertice
-    $ sum_(x in V) d(x) = 2 m $
-    Ogni lato viene contato due volte, dato che viene contato sia nel grafo del primo estremo che del secondo estremo.
-
-    Nella sommatoria le quantità pari non interessano, dato che partendo da una cosa pari e sommando pari, si rimane in un numero pari.
-
-    L'unica cosa che può cambiare la parità della sommatoria sono i numeri dispari.
-    Ma dato che alla fine la sommatoria è pari, vuol dire che il numero di cose dispari nella sommatoria è pari.
+    Dato un grafo $G=(V,E)$, sia $d(x),x in V$. Sia $d(x)$ il grado di un vertice: 
+    $ sum_(x in V) d(x)  = 2m $
+    Sto sommando per ogni vertice il suo grado, ogni lato viene contato $2$ volte.\
+    - Le componenti pari della sommatoria non contanto. Partendo da una quantità pari e sommando solamente quote pari il risultato è di nuovo pari. 
+    - Le componenti dispari possono cambiare la parità della sommatoria. Ma siccome la sommatoria finale da un risultato pari, il numero di componenti dispari è pari. 
   ]
 ]
 
 == Problema Commesso Viaggiatore (TSP) [NPOc]
 
-- $I_Pi$:
-  - grafo non orientato $G(V, E)$
-  - pesi dei lati $angle.l delta_e angle.r_(e in E) in bb(Q)^+$
-- $"Amm"_Pi$: circuito hamiltoniano $pi in G$, cioè un circuito che tocchi tutti i vertici esattamente una volta, oppure $bot$
-- Funzione obiettivo: lunghezza del circuito hamiltoniano:
+- *$I_Pi$*:
+  - $G(V, E)$, grafo non orientato
+  - $angle.l delta_e angle.r_(e in E) in bb(Q)^+$, pesi dei lati 
+- *$"Amm"_Pi$*: circuito hamiltoniano $pi in G$, cioè un circuito che tocchi tutti i vertici esattamente una volta, oppure $bot$
+- *$C_Pi$*: lunghezza del circuito hamiltoniano:
   $ delta = sum_(c in pi) delta_e $
-- $t_Pi = min$
+- *$t_Pi$* = $min$
 
 == TSP Metrico [NPOc]
 
-Abbaimo ulteriori vincoli sul grafo:
-+ $G$ è una clique
-+ $delta_e$ è una metrica, cioè:
-  - $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
+Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avremo dei vincoli aggiuntivi sul grafo $G(V,E)$:
++ $G$ è una *clique*
++ $delta_e$ è una *metrica*, cioè:
+  - Vale la distanza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
 
 #attenzione[
   Senza la seconda limitazione, allora è possibile trasformare qualsiasi grafo (non per forza cricca) in una cricca.
+  Basta aggiungere tutti i lati mancanti con un costo enorme.
+  #esempio()[
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-  Basta aggiungere tutti i lati mancanti di costo enorme, quindi l'algoritmo non li sceglierà mai (o se li sceglie vuol dire che la soluzione non è possibile).
+        // Vertici del grafo
+        circle((0, 0), radius: 0.15, fill: white, stroke: black)
+        content((0, -0.5), text(size: 10pt)[$$])
+        content((-0.5, 0), text(size: 10pt)[$v_1$])
 
-  Mentre la seconda restrizione non rende possibile fare questa cosa
+        circle((2, 0), radius: 0.15, fill: white, stroke: black)
+        content((2, -0.5), text(size: 10pt)[$6$])
+        content((2.5, 0), text(size: 10pt)[$v_2$])
+
+        circle((1, 1.5), radius: 0.15, fill: white, stroke: black)
+        content((1, 2), text(size: 10pt)[$5$])
+        content((1.5, 1.5), text(size: 10pt)[$v_3$])
+
+        circle((1, -1.5), radius: 0.15, fill: white, stroke: black)
+        content((1, 2), text(size: 10pt)[$5$])
+        content((1.5, -1.5), text(size: 10pt)[$v_4$])
+
+        // Archi con prezzature
+        line((0, 0), (2, 0), stroke: 1pt + red)
+        content((0.75, 0.25), text(size: 9pt, fill: red)[$17$])
+
+        line((0, 0), (1, 1.5), stroke: 1pt + black)
+        content((0.2, 0.8), text(size: 9pt, fill: black)[$4$])
+
+        line((2, 0), (1, 1.5), stroke: 1pt + black)
+        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
+
+        line((1, 1.4), (1.0, -1.4), stroke: 1pt + black)
+        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
+
+        line((1, -1.5), (2.0, 0.0), stroke: 1pt + black)
+        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
+      
+        line((1, -1.5), (0.0, 0.0), stroke: 1pt + red)
+        content((0.3, -1.0), text(size: 9pt, fill: red)[$17$])
+      
+      }),
+
+
+      caption: [Gli archi di colore $mr("rosso")$ sono quelli fittizzi.\ 
+      Come si può esservare il grafo originale non era una clique],
+    )
+  ]
+  
+  L'algoritmo non li sceglierà mai, in quanto vule trovare il circuito minimo. Se l'algoritmo sceglie dei lati fittizzi nella soluzione prodotta, allora li grafo di partenza non conteneva un circuito hamiltoniano.
+
 ]
 
 #teorema("Teorema")[
