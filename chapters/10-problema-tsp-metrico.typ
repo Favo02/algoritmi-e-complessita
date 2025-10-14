@@ -326,21 +326,21 @@ L'algoritmo sfrutta le seguenti componenti:
 
       // Cammino principale con vertici (figura più grande)
       circle((0, 0), radius: 0.15, fill: white, stroke: black)
-      content((0, -0.5), text(size: 10pt)[$v_1$])
+      content((0, -0.5), text(size: 13pt)[$v_1$])
 
       circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((1.5, -0.5), text(size: 10pt)[$v_2$])
+      content((1.5, -0.5), text(size: 13pt)[$v_2$])
 
       circle((3, 0), radius: 0.15, fill: white, stroke: black)
-      content((3, -0.5), text(size: 10pt)[$v_3$])
+      content((3, -0.5), text(size: 13pt)[$v_3$])
 
-      content((3.8, 0), text(size: 12pt)[$dots.c$])
+      content((3.8, 0), text(size: 13pt)[$dots.c$])
 
       circle((5.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((5.5, -0.5), text(size: 10pt)[$v_(n-1)$])
+      content((5.5, -0.3), text(size: 13pt)[$v_(n-1)$])
 
       circle((7, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.5), text(size: 10pt)[$v_n$])
+      content((7, -0.5), text(size: 13pt)[$v_n$])
 
       // Archi del cammino MST T (gialli) - collegamenti corretti ai bordi dei cerchi
       line((0.15, 0), (1.35, 0), stroke: 4pt + yellow)
@@ -356,18 +356,18 @@ L'algoritmo sfrutta le seguenti componenti:
       content((6.25, 0.4), text(size: 9pt)[$1$])
 
       // Arco del matching M (viola) - curva verso il basso
-      bezier((0.1, -0.15), (3.5, -2), (6.9, -0.15), stroke: 4pt + purple)
+      bezier((0.1, -0.15), (7, 0), (3.5, -2.85), stroke: 3pt + purple)
       content((3.5, -1.7), text(size: 11pt, fill: purple)[$1 + epsilon$])
 
       // Archi di salto per π* (neri) - curvi verso l'alto
-      bezier((0.1, 0.15), (0.75, 1.2), (1.4, 0.15), stroke: 3pt + black)
-      content((0.75, 0.8), text(size: 9pt)[$1 + epsilon$])
+      bezier((0.0, 0.0), (1.5, 0.0), (0.75, 1.15), stroke: 3pt + black)
+      content((0.75, 1.0), text(size: 9pt)[$1 + epsilon$])
 
-      bezier((1.6, 0.15), (2.25, 1.2), (2.9, 0.15), stroke: 3pt + black)  
-      content((2.25, 0.8), text(size: 9pt)[$1 + epsilon$])
+      bezier((1.5, 0.0), (3, 0), (2.25, 1.15), stroke: 3pt + black)  
+      content((2.25, 1.0), text(size: 9pt)[$1 + epsilon$])
 
-      bezier((5.6, 0.15), (6.25, 1.2), (6.9, 0.15), stroke: 3pt + black)
-      content((6.25, 0.8), text(size: 9pt)[$1 + epsilon$])
+      bezier((5.5, 0.0), (7, 0.0), (6.25, 1.15), stroke: 3pt + black)
+      content((6.25, 1.0), text(size: 9pt)[$1 + epsilon$])
 
       // Legenda (spostata a destra)
       content((8.5, 1.5), text(size: 11pt, fill: yellow)[— $T$ (MST)])
