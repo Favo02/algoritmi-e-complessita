@@ -111,15 +111,11 @@ Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avr
         content((0.3, -1.0), text(size: 9pt, fill: red)[$17$])
       
       }),
-
-
       caption: [Gli archi di colore $mr("rosso")$ sono quelli fittizzi.\ 
       Come si può esservare il grafo originale non era una clique],
     )
   ]
-  
-  L'algoritmo non li sceglierà mai, in quanto vule trovare il circuito minimo. Se l'algoritmo sceglie dei lati fittizzi nella soluzione prodotta, allora li grafo di partenza non conteneva un circuito hamiltoniano.
-
+  L'algoritmo non li sceglierà mai, in quanto vuole trovare il circuito minimo. Se l'algoritmo scegliesse dei lati fittizzi nella soluzione prodotta, allora li grafo di partenza non conteneva un circuito Hamiltoniano.
 ]
 
 #teorema("Teorema")[
@@ -127,6 +123,20 @@ Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avr
 ]
 
 == Algoritmo di Christofides per TSP metrico
+
+L'algoritmo sfrutta le seguenti componenti: 
+- 
+
+
+
+
+
+
+
+
+
+
+
 
 Cose necessarie prima dell'algoritmo:
 + Minimum Spanning Tree [PO]:

@@ -112,6 +112,9 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 $C subset.eq V "t.c" forall v_1,v_2 in C, exists (v_1,v_2) in E $.\
 Una clique si dice completa se $C = V$. Una clique completa è sempre un grafo connesso. 
 
+/ Albero: Grafo connesso aciclico.
+
+/ Foresta: Grafo aciclico.
 
 == Varie <varie>
 
