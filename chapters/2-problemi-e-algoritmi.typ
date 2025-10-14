@@ -202,7 +202,7 @@ Possiamo creare il seguente insieme:
   caption: [Rappresentazione dei problemi decidibili e non decidibili],
 )
 
-/ Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un'algoritmo che è in grado di decidere un dato elemento.
+/ Semidecidibili: esistono anche dei problemi semidecidibili, ovvero esistono degli algoritmi in grado di enumerare gli elementi dell'insieme, ma non esiste un algoritmo che è in grado di decidere un dato elemento.
   #informalmente[
     Questo è possibile perchè non è garantito che l'algoritmo *termini* sempre. Dato un input, l'algoritmo è garantito che termini solo per le risposte "vero", mentre non è in grado di determinare una risposta "falso" in tempo finito. Di conseguenza è possibile enumerare gli elementi veri, ma non è possibile sempre riconoscere un dato elemento.
   ]
@@ -251,7 +251,7 @@ Un'altra possibilità è calcolare la media delle risorse impiegate per una cert
     Il quicksort ha complessità nel caso peggiore $O(n^2)$, mentre algoritmi come il mergesort o l'heapsort $O(n log n)$, ma nella pratica il quicksort è il più veloce, dato che nel caso medio performa molto meglio.
   ]
   #esempio[
-    Sono stati trovati algoritmi polinomiali per risolvere i sistemi di equazioni dell'algoritmo del simplesso. Nonostante ciò si continuano ad usare gli algoritmi esponenziali, che però sono effettivamente esponenziali sono in rari casi.
+    Sono stati trovati algoritmi polinomiali per risolvere i sistemi di equazioni dell'algoritmo del simplesso. Nonostante ciò si continuano ad usare gli algoritmi esponenziali, che però sono effettivamente esponenziali solo in rari casi.
   ]
 ]
 
