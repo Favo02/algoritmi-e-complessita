@@ -1,0 +1,67 @@
+name: PR PDF Comment
+
+on:
+  workflow_run:
+    workflows: ["PR PDF Preview"]
+    types: [completed]
+
+jobs:
+  notify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+    - name: Announce PDF artifact on PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const marker = '<!-- pr-pdf-preview -->'
+          const run = context.payload.workflow_run
+          const pr = run.pull_requests && run.pull_requests[0]
+
+          if (!pr) {
+            core.warning('No pull request associated with the workflow run; skipping comment.')
+            return
+          }
+
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          const runId = run.id
+          const workflowUrl = run.html_url || `${context.payload.repository.html_url}/actions/runs/${runId}`
+          const expectedName = `pr-${pr.number}-preview`
+
+          const artifactsResponse = await github.rest.actions.listWorkflowRunArtifacts({
+            owner,
+            repo,
+            run_id: runId,
+          })
+
+          const artifact = artifactsResponse.data.artifacts.find(a => a.name === expectedName)
+
+          if (!artifact) {
+            core.warning(`Artifact ${expectedName} not found on run ${runId}; skipping comment.`)
+            return
+          }
+
+          const body = `${marker}
+📄 **Anteprima PDF disponibile**
+
+L'ultima compilazione è stata eseguita sul commit \`${run.head_sha.substring(0, 7)}\`.
+
+**📥 Per scaricare il PDF:**
+1. [Apri il workflow run](${workflowUrl})
+2. Vai alla sezione **Artifacts**
+3. Scarica \`${expectedName}\`
+
+L'artifact resta disponibile per 30 giorni.`
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pr.number,
+              body,
+            })
+            core.info(`Created new comment on PR #${pr.number}`)
