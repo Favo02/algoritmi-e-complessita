@@ -226,8 +226,8 @@ L'algoritmo sfrutta le seguenti componenti:
   $ delta(M) <= 1/2 delta^* $
 
   #dimostrazione[
-    
-    #esempio([
+    Prendiamo $pi^*$ (TSP ottimo) e cortocircuitiamo sui vertici di $D$ (i vertici di grado dispari sull'albero).
+
   #figure(
     cetz.canvas({
       import cetz.draw: *
@@ -287,21 +287,21 @@ L'algoritmo sfrutta le seguenti componenti:
       I matching $mr(M_1)$ e $mg(M_2)$ collegano alternativamente i vertici di $D$ seguendo il percorso cortocircuitato, creando il cammino $overline(pi)^*$.
     ]
   )
-  ])
+    Possiamo collegare tra loro i vertici $in D$, formando un ciclo $overline(pi)^*$. Grazie alla disuguaglianza triangolare, allora: 
+    $ delta(overline(pi)^*) <= delta(pi^*) $
 
+    $overline(pi)^*$ è un circuito su un numero pari di vertici, lo divido a metà e scelgo in maniera alternata i lati, formando $mr(M_1)$ e $mg(M_2)$.
 
-    Prendiamo $pi^*$ (TSP ottimo) e cortocircuitiamo sui vertici di $D$ (i vertici di grado dispari sull'albero).
+    $ delta^* >= quad delta(overline(pi)^*) = delta(mr(M_1)) + delta(mg(M_2)) $
 
-    Possiamo collegare tra loro i vertici $in D$, formando un ciclo $overline(pi)^*$.
-    Per via della disuguaglianza triangolare, allora: $ delta(overline(pi)^*) <= delta(pi^*) $
+    Ma $mr(M_1)$ e $mg(M_2)$ sono dei perfect matching, ma sono maggiori del minimum perfect matching $M$:
 
-    Scegliamo metà dei lati di questo circuito in maniera alternata, formando $M_1$ e $M_2$.
+    $ 
+      delta^* >= delta(mr(M_1)) + delta(mg(M_2)) >= delta(M) + delta(M) >= 2 delta(M) space\ 
+      delta^* >= 2 delta(M) \
+      delta(M) <= 1/2 delta^*
+    $
 
-    $ delta^* >= quad delta(overline(pi)^*) = delta(M_1) + delta(M_2) $
-
-    Ma $M_1$ e $M_2$ sono dei perfect matching, ma sono maggiori del minimum perfect matching:
-
-    $ delta^* >= quad delta(overline(pi)^*) = delta(M_1) + delta(M_2) >= delta(M) + delta(M) >= 2 delta(M) space qed $
   ]
 ]
 
