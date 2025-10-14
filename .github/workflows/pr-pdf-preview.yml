@@ -1,4 +1,4 @@
-name: Generate temporary PDF in Pull Requests
+name: PR PDF Preview
 
 on:
   pull_request:
