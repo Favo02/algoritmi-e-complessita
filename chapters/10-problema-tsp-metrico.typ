@@ -319,6 +319,8 @@ L'algoritmo sfrutta le seguenti componenti:
 
 === Strettezza dell'analisi
 
+Per dimostrare che l'analisi proposta è stretta, costruiamo un grafo per cui l'algoritmo proposto è una $3/2$-approssimazione.\
+Consideriamo il seguente cammino, con *$n$ pari*:
 #esempio([
   #figure(
     cetz.canvas({
@@ -326,48 +328,54 @@ L'algoritmo sfrutta le seguenti componenti:
 
       // Cammino principale con vertici (figura più grande)
       circle((0, 0), radius: 0.15, fill: white, stroke: black)
-      content((0, -0.5), text(size: 13pt)[$v_1$])
+      content((0, -0.35), text(size: 13pt)[$v_1$])
 
       circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((1.5, -0.5), text(size: 13pt)[$v_2$])
+      content((1.5, -0.35), text(size: 13pt)[$v_2$])
 
       circle((3, 0), radius: 0.15, fill: white, stroke: black)
-      content((3, -0.5), text(size: 13pt)[$v_3$])
+      content((3, -0.35), text(size: 13pt)[$v_3$])
 
       content((3.8, 0), text(size: 13pt)[$dots.c$])
 
       circle((5.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((5.5, -0.3), text(size: 13pt)[$v_(n-1)$])
+      content((5.8, -0.35), text(size: 12pt)[$v_(n-1)$])
+
+      circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
+      content((7, -0.40), text(size: 13pt)[$v_n$])
 
       circle((7, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.5), text(size: 13pt)[$v_n$])
+      content((7, -0.40), text(size: 13pt)[$v_n$])
 
       // Archi del cammino MST T (gialli) - collegamenti corretti ai bordi dei cerchi
       line((0.15, 0), (1.35, 0), stroke: 4pt + yellow)
-      content((0.75, 0.4), text(size: 9pt)[$1$])
+      content((0.75, 0.25), text(size: 9pt)[$1$])
 
       line((1.65, 0), (2.85, 0), stroke: 4pt + yellow)
-      content((2.25, 0.4), text(size: 9pt)[$1$])
+      content((2.25, 0.25), text(size: 9pt)[$1$])
 
       line((4.65, 0), (5.35, 0), stroke: 4pt + yellow)
-      content((5, 0.4), text(size: 9pt)[$1$])
+      content((5, 0.25), text(size: 9pt)[$1$])
 
       line((5.65, 0), (6.85, 0), stroke: 4pt + yellow)
-      content((6.25, 0.4), text(size: 9pt)[$1$])
+      content((6.25, 0.25), text(size: 9pt)[$1$])
 
       // Arco del matching M (viola) - curva verso il basso
       bezier((0.1, -0.15), (7, 0), (3.5, -2.85), stroke: 3pt + purple)
-      content((3.5, -1.7), text(size: 11pt, fill: purple)[$1 + epsilon$])
+      content((3.5, -1.7), text(size: 11pt, fill: purple)[$(1+epsilon) dot n/2 + 1$])
 
       // Archi di salto per π* (neri) - curvi verso l'alto
-      bezier((0.0, 0.0), (1.5, 0.0), (0.75, 1.15), stroke: 3pt + black)
-      content((0.75, 1.0), text(size: 9pt)[$1 + epsilon$])
+      bezier((0.0, 0.0), (3, 0.0), (1.5, 1.15), stroke: 2pt + black)
+      content((0.75, 1.0), text(size: 9pt)[$$])
 
-      bezier((1.5, 0.0), (3, 0), (2.25, 1.15), stroke: 3pt + black)  
-      content((2.25, 1.0), text(size: 9pt)[$1 + epsilon$])
+      bezier((1.5, 0.0), (3.8, 0), (3.0, -1.55), stroke: 2pt + black)  
+      content((1.55, 0.8), text(size: 9pt)[$1 + epsilon$])
 
-      bezier((5.5, 0.0), (7, 0.0), (6.25, 1.15), stroke: 3pt + black)
-      content((6.25, 1.0), text(size: 9pt)[$1 + epsilon$])
+      bezier((3.8, 0.0), (5.5, 0), (4.5, -1.55), stroke: 2pt + black)  
+      content((2.25, 1.0), text(size: 9pt)[$$])
+
+      bezier((4.5, 0.0), (7, 0.0), (5.55, 1.55), stroke: 2pt + black)
+      content((5.75, 1.0), text(size: 9pt)[$1 + epsilon$])
 
       // Legenda (spostata a destra)
       content((8.5, 1.5), text(size: 11pt, fill: yellow)[— $T$ (MST)])
@@ -378,47 +386,122 @@ L'algoritmo sfrutta le seguenti componenti:
       content((-0.8, 1), text(size: 14pt, weight: "bold")[$G$])
     }),
     caption: [
-      Esempio di strettezza per l'algoritmo di Christofides: cammino con $n$ vertici dove MST $T$ ha peso $n-1$, 
-      matching $M$ ha peso $1+epsilon$, ma il circuito ottimo $pi^*$ usa archi di salto di peso $1+epsilon$.
+      Per $n$ pari consideriamo un cammino così composto:\ 
+      $n$ vertici collegati da dei lati di lunghezza $1$\
+      dei lati alternati di lunghezza $1+epsilon$\
+      I lati $mp("viola")$ serve per far diventare il grafo $G$ una clique, costano quanto il cammino minimo.
     ]
   )
 ])
+Per qualunque $epsilon$ compreso fra *$0 < epsilon < 1$*, la clique sopra proposta è metrica: 
+$ underbrace(d(v_1,v_2),1) + underbrace(d(v_2,v_3),"1") <= underbrace(d(v_1,v_3),1+epsilon) $
+#dimostrazione()[
+  Eseguiamo ora l'algorimto di Christofides sulla clique metrica: 
+  - $my(T) <- "MST"$, è possibile osservare che: 
+    - MST è il cammino giallo (solo lati con peso $1$)
 
-Per $n$ pari, consideriamo il grafo:
-- cammino di $n$ vertici collegati da dei lati di lunghezza $1$
-- dei lati che saltano di lunghezza $1+epsilon$
-- lati extra per diventare una clique costano come il cammino minimo (fare il cammino minimo tra i due vertici e il lato diretto costa uguale, in modo da mantenere la disuguaglianza metrica)
-- per qualunque $0 < epsilon < 1$ la clique è metrica
+  - $D <- {v_1,v_n}$
+    - Gli unici vertici di grado dispari sono $v_1,v_n$ in quanto hanno grado $1$
 
-Eseguiamo Christofides sulla clique:
-- trovare il MST $T$
-  - è facile dimostrare che è il cammino iniziale con tutti i pesi $1$
-  - i vertici di grado dispari in $T$ sono il primo e l'ultimo
-- $D$ è composto solo da $v_1$ e $v_(n-1)$, quindi il perfect matching è semplicemente il collegamento del loro lato
-  - il lato che li collega è un lato aggiunto per renderla clique, quindi di peso cammino minimo tra $v_1$ e $v_n$, quindi $(1+epsilon) n/2 + 1$
-- unendo $T$ e $M$ otteniamo già un circuito hamiltoniano senza dover fare cortocircuitazione
-  - ha costo:
-  $
-    delta & = (1+epsilon)n/2 + 1 + (n-1) \
-          & = n/2 + epsilon n/2 + 1 + n -1 \
-          & = 3/2 n + epsilon n/2
+  - Chiamo con $mp(M)$ il matching minimo su $D$. Dato che $D$ ha solo $2$ vertici, li sposiamo con l'arco che li collega. Il suo peso è il cammino minimo (dato che è lato aggiunto per rendere $G$ una clique), calcolato come:
+   - Prendo gli archi alternati (con costo $1+epsilon$)
+   - Prendo l'arco di costo $1$ che collega $v_(n-1)$ a $v_n$
+  Il costo di $M = mp((1+epsilon) dot n/2 + 1)$ 
+
+  - Unendo $my(T) union mp(M)$ otteniamo un circuito hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo: 
+  $ 
+    delta &= (1+epsilon)n/2+ 1 + (n-1)\
+          &= n/2 + epsilon n/2 + 1 + n -1\
+          &= 3/2 n + epsilon n/2
   $
 
-Ma circuito hamiltoniano ottimo sarebbe:
-- partendo da un vertice pari $v_2$, saltare di 2 in 2 fino a $v_n$
-- torniamo indietro di $1$ e da $v_(n-1)$ facciamo la stessa cosa all'indietro per i vertici pari, arrivando a $v_0$
-- colleghaimo $v_0$ a $v_1$
-- ha costo:
+  Tuttavia il cammino ottimo del grafo $delta^*$ ha il seguente costo: 
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // Cammino principale con vertici (figura più grande)
+      circle((0, 0), radius: 0.15, fill: white, stroke: black)
+      content((0, -0.35), text(size: 13pt)[$v_1$])
+
+      circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
+      content((1.5, -0.35), text(size: 13pt)[$v_2$])
+
+      circle((3, 0), radius: 0.15, fill: white, stroke: black)
+      content((3, -0.35), text(size: 13pt)[$v_3$])
+
+      content((3.8, 0), text(size: 13pt)[$dots.c$])
+
+      circle((5.5, 0), radius: 0.15, fill: white, stroke: black)
+      content((5.8, -0.35), text(size: 12pt)[$v_(n-1)$])
+
+      circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
+      content((7, -0.40), text(size: 13pt)[$v_n$])
+
+      circle((7, 0), radius: 0.15, fill: white, stroke: black)
+      content((7, -0.40), text(size: 13pt)[$v_n$])
+
+      // Archi del cammino MST T (gialli) - collegamenti corretti ai bordi dei cerchi
+      line((0.15, 0), (1.35, 0), stroke: 4pt + purple)
+      content((0.75, 0.25), text(size: 9pt)[$1$])
+
+      line((1.65, 0), (2.85, 0), stroke: 4pt + black)
+      content((2.25, 0.25), text(size: 9pt)[$1$])
+
+      line((4.65, 0), (5.35, 0), stroke: 4pt + black)
+      content((5, 0.25), text(size: 9pt)[$1$])
+
+      line((5.65, 0), (6.85, 0), stroke: 4pt + yellow)
+      content((6.25, 0.25), text(size: 9pt)[$1$])
+
+      // Arco del matching M (viola) - curva verso il basso
+      bezier((0.1, -0.15), (7, 0), (3.5, -2.85), stroke: 2pt + black)
+      content((3.5, -1.7), text(size: 11pt, fill: black)[$(1+epsilon) dot n/2 + 1$])
+
+      // Archi di salto per π* (neri) - curvi verso l'alto
+      bezier((0.0, 0.0), (3, 0.0), (1.5, 1.15), stroke: 2pt + yellow)
+      content((0.75, 1.0), text(size: 9pt)[$$])
+
+      bezier((1.5, 0.0), (3.8, 0), (3.0, -1.55), stroke: 2pt + purple)  
+      content((1.55, 0.8), text(size: 9pt)[$1 + epsilon$])
+
+      bezier((3.8, 0.0), (4.5, 0), (4.5, -1.55), stroke: 2pt + purple)  
+      content((2.25, 1.0), text(size: 9pt)[$$])
+
+      bezier((4.5, 0.0), (7, 0.0), (5.55, 1.55), stroke: 2pt + purple)
+      content((5.75, 1.0), text(size: 9pt)[$1 + epsilon$])
+
+         bezier((5.5, 0.0), (3.5, 0.0), (4.55, 1.55), stroke: 2pt + yellow)
+      content((4.35, 1.0), text(size: 9pt)[$1 + epsilon$])
+
+
+      // Legenda (spostata a destra)
+      content((8.5, 1.5), text(size: 11pt, fill: yellow)[— ritorno])
+      content((8.5, 1), text(size: 11pt, fill: purple)[— andata])
+
+      // Etichetta del grafo
+      content((-0.8, 1), text(size: 14pt, weight: "bold")[$G$])
+    }),
+    caption: [
+      Il cammino ottimo è definito da : 
+      - $mp("Andata")$, peso = $(1+epsilon)n/2 +1$
+      - $my("Ritorno")$, peso = $(1+epsilon)n/2+1$
+    ]
+  )
+  Il peso totale del cammino è $delta^*$:
+  $ 
+    delta^* &= ((1+epsilon)n/2 +1) + mp((1+epsilon)n/2 +1)\
+    &= (1+epsilon)n/2 + (1+epsilon)n/2 + 2 \
+    &= (1+epsilon)n + 2
   $
-    delta^* & = (1+epsilon) n/2 + (1+epsilon)n/2 + 2 \
-            & = (1+epsilon)n + 2
-  $
-- con tasso di approssimazione:
-  $ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)... ) $
-- se mandiamo $n -> infinity$ e $epsilon -> 0$, allora tende a $3/2$
+  Consideriamo ora il rapporto di approssimazione:
+  $ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)n+2) $
+
+  Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
+]
 
 #teorema("Teorema")[
-  $3/2$ è il miglior tasso di approssimaione noto per TSP metrico
+  *$3/2$* è il miglior tasso di approssimaione noto per *TSP metrico*
 ]
 
 == Inapprossimabilità di TSP
@@ -431,26 +514,27 @@ Ma circuito hamiltoniano ottimo sarebbe:
   ]
 
   #dimostrazione[
-    Determinare se un grafo ha un circuito hamiltoniano è NPc.
+    Determinare se un *grafo* ha un *circuito hamiltoniano* è *$"NPc"$*.
 
     Supponiamo per assurdo che esista un algoritmo che $alpha$-approssima (per qualche $alpha > 1$) TSP sulle clique.
 
-    Dato un grafo $G$ costruiamo questa clique:
-    $ overline(G) = (V, binom(V, 2)) $
-    $ overline(delta)_{x, y} = cases(1 quad "se" {x, y} in E, ceil(alpha n) + 1 quad "altrimenti") $
+    Dato un grafo $G$ (con $n$ nodi) costruiamo la seguente clique:
+    $ overline(G) = (V, E = binom(V, 2)) $
+    $ overline(delta)_{x, y} = cases(1 quad "se" {x, y} in E, ceil(alpha n) + 1 in.not E) $
 
-    Dando $overline(G), overline(delta)$ all'algorimto, ci verrà resituito un circuito hamiltoniano $pi$ di costo $overline(delta)(pi)$ (non per forza ottimo).
+    Eseguendo l'algorimto con $overline(G)$ e $overline(delta)$, ci verrà resituito un circuito hamiltoniano $pi$ di costo $overline(delta)(pi)$ (non per forza ottimo).
 
     Esistono due casi:
-    - se $G$ ha un circuito hamiltoniano, allora $overline(G)$ ha ancora un circuito hamiltoniano, di costo $n$ (dato che i lati già in $G$ costano $1$), $overline(delta)^* = n$
-    - se $G$ non ha un circuito hamiltoniano, allora il circuito hamiltoniano trovato su $overline(G)$ deve prendere almeno un arco non in $G$, quindi $overline(delta)^* >= ceil(alpha n) + 1$
+    - *$overline(delta)^* = n$*, se $G$ ha un circuito hamiltoniano, allora $overline(G)$ ha ancora un circuito hamiltoniano di costo $n$ (dato che i lati già in $G$ costano $1$)
+    - *$overline(delta)^* >= ceil(alpha n) + 1$*, se $G$ non ha un circuito hamiltoniano, allora il circuito hamiltoniano trovato su $overline(G)$ deve prendere almeno un arco non in $G$, quindi:
+    $ overline(delta) <= alpha overline(delta)^* $
 
-    Quindi $overline(delta) <= alpha overline(delta)^*$:
-    - nel primo caso $<= alpha n$
-    - nel secondo caso $>= ceil(alpha n) + 1$
+    Esistono due sotto-casi:
+      - nel primo caso $<= alpha n$
+      - nel secondo caso $>= ceil(alpha n) + 1$
 
     #informalmente[
-      Se esisteva, allora trova una soluzione di al massimo $alpha n$, se non eisteva allora deve usare un arco aggiuntivo, quindi deve per forza essere $> alpha n$
+      Se esiste un circuito hamiltoniano, allora trova una soluzione di al massimo $alpha n$, se non eiste allora il cammino deve usare un arco aggiuntivo, quindi deve per forza essere $> alpha n$
     ]
 
     $

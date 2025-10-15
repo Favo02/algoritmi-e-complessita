@@ -13,6 +13,7 @@
 #let mr(body) = text(fill: red, $#body$)
 #let mp(body) = text(fill: purple, $#body$)
 #let mb(body) = text(fill: blue, $#body$)
+#let my(body) = text(fill: yellow, $#body$)
 
 // colored boxes
 #let nota(body) = { gentle-clues.info(title: "Nota")[#body] }
