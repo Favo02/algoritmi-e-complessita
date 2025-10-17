@@ -166,3 +166,9 @@ Sia $xi_i$ l'evento all'$i$-esima contrazione non si è contratto un lato di $E_
     $ <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) $
   ]
 ]
+
+#informalmente[
+  Perchè abbiamo eseguito l'algoritmo quel numero di volte?
+
+  Perchè così abbiamo una funzione di probabilità che tende a $1$ per $n -> infinity$, quindi è quasi certo che trovi l'ottimo
+]
