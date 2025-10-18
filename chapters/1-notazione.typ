@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Notazione <notazione>
+= Notazione e Proprietà Notevoli <notazione>
 
 == Insiemi numerici <insiemi-numerici>
 
@@ -119,3 +119,21 @@ Una clique si dice completa se $C = V$. Una clique completa è sempre un grafo c
 == Varie <varie>
 
 / Ottimo: indichiamo l'ottimo con $*$, $y^*$ è la soluzione ottima, $c^*$ è il valore assunto dalla funzione obiettivo sull'output ottimo
+
+== Probabilità <probabilita>
+
+/ Chain Rule:
+  trasformare l'intersezione di eventi (non disgiunti) in probabilità condizionate: <chain-rule>
+  $
+    P[xi_1 inter xi_2 inter xi_3] = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] \
+    P[xi_1 inter ... inter xi_n] = product_(k=1)^n P [xi_k | inter.big_(j=1)^(k-1) xi_j]
+  $
+
+/ Union Bound:
+  limitare superiormente l'unione di eventi (non disgiunti).
+  Ignoriamo le sovrapposizioni degli eventi, per questo motivo è $<=$ e non $=$: <union-bound>
+  $ P[union.big_i xi_i] <= sum_i P[xi_i] $
+
+/ Disuguaglianza di Markov:
+  per ogni variabile aleatoria non negativa e con media finita e per ogni $alpha > 0$ <disuguaglianza-di-markov>
+  $ P[X >= alpha] <= E[X]/alpha $

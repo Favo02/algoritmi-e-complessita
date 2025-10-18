@@ -1,0 +1,36 @@
+name: PR PDF Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ main ]
+    paths:
+      - '**.typ'
+
+jobs:
+  generate-pdf:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Setup Typst
+      uses: typst-community/setup-typst@v3
+
+    - name: Compile Typst document
+      run: |
+        typst compile main.typ algoritmi-e-complessita-preview.pdf
+
+    - name: Upload PDF as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-${{ github.event.pull_request.number }}-preview
+        path: algoritmi-e-complessita-preview.pdf
+        retention-days: 30
