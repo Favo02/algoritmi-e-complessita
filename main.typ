@@ -66,3 +66,4 @@
 #include "chapters/6-problema-center-selection.typ"
 #include "chapters/7-problema-set-cover.typ"
 #include "chapters/8-problema-vertex-cover.typ"
+#include "chapters/9-problema-congested-paths.typ"
