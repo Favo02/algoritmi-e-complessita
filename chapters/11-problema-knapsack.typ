@@ -3,86 +3,98 @@
 = Problema Knapsack (dello zaino) [NPOc] [FPTAS]
 
 #informalmente[
-  Abbiamo degli oggetti di un certo peso e valore e uno zaino con una capacità massima.
-
-  Vogliamo portare via il massimo valore di oggetti che stanno nello zaino.
+  Dati un insieme di oggetti ciascuno con un certo peso e valore, uno zaino con una capacità massima, vogliamo mettere nello zaino un sotto-insieme di oggetti di valore massimo non superando la capienza dello zaino.
 ]
 
-- $I_Pi$:
-  - $n in bb(N)^*$: numero oggetti
-  - $v_0, ..., v_(n-1) in bb(N)^*$: valore oggetti
-  - $w_0, ..., w_(n-1) in bb(N)^*, quad w_i <= W$: peso oggetti
-  - $W in bb(N)^*$: capacità zaino
-- $"Amm"_Pi$: $I subset.eq n$ i pesi non eccedono lo zaino
+Formalmente:
+- *$I_Pi$*:
+  - $n in bb(N)^*$, numero oggetti
+  - $v_0, ..., v_(n-1) in bb(N)^*$, valore oggetti
+  - $w_0, ..., w_(n-1) in bb(N)^* quad t.c quad w_i <= W$, peso degli oggetti
+  - $W in bb(N)^+$, capacità dello zaino
+- *$"Amm"_Pi$*: $I subset.eq n "t.c" $ i pesi degli oggetti non eccedono la capacità dello zaino
   $ sum_(i in I) w_i <= W $
-- $C_Pi$: massimo valore degli oggetti presi
-  $ v = sum_(i in I) v_i $
-- $t_Pi = max$
+- *$C_Pi$*: massimo valore degli oggetti presi
+  $ 
+    v = sum_(i in I) v_i \
+    C_pi = max(v)
+  $
+- *$t_Pi$*= $max$
 
 #attenzione[
-  Anche se sappiamo che non possiamo risolverlo _bene_, ha comunque senso provarci.
-  Magari per le nostre istanze funziona bene oppure lo vogliamo eseguire su numeri piccoli.
+  Anche se sappiamo che questo problema non può essere risolto in modo efficiente ha comunque senso proporre una soluzione che ci provi.
+  Magari per un certo insieme di istanze (di piccola taglia), l'algoritmo proposto funziona bene. 
 ]
 
 == Soluzione esatta basata sulla DP
 
-#informalmente[
-  La soluzione è esatta, ma non è polinomiale (ovviamente, dato che il problema di decisione associato è NPc).
+#nota()[
+  Non è possibile utilizzare un approccio dived-et-impera in quanto i vari sotto-problemi che si verrebero a creare non sono disgiunti. Per questo motivo si ricorre alla programmazione dinamica. 
 ]
 
-*Parametri* della DP:
-- $i$ (righe) = considero solo i primi $i$ oggetti
-- $w$ (colonne) = capacità dello zaino
-- cella = massimo valore ricavabile con i primi $i$ oggetti in capacità $w$
-- soluzione finale = cella in basso a destra, ovvero tutti gli oggetti con zaino di capacità $W$
+#informalmente[
+  La *soluzione* proposta con questo approccio è *esatta* (fornsice l'ottimo), ma *non è polinomiale* (in quanto il problema di decisione associato è $"NPc"$).
+]
 
+In un'approccio che sfrutta la DP, è essenziale la scelta dei parametri. Essi devono avere la seguente caratteristica: 
+- Deve essere facile rimpire la prima riga e colonna della tabella. 
+*Parametri*:
+- *$i$* (righe) = considero solo i primi $i$ oggetti
+- *$w$* (colonne) = capacità dello zaino
+- *$v[i,w]$* cella = massimo valore ricavabile con i primi $i$ oggetti con uno zaino di capacità $w$
+- *soluzione finale* = cella in basso a destra, ovvero considero tutti gli $N$ oggetti con uno zaino di capacità $W$
+
+Una volta scelti i parametri è necessario scegliere una *regola di riempimento* (determina la direzione in cui riempiamo la tabella).\
 *Partenza* della DP:
-- è facile riempire la prima riga: con $0$ oggetti ovviamente si possono portare via $0$ di valore
-- è facile riempire la prima colonna: con zaino di capacità $0$, ovviamente possiamo portare via $0$ di valore
+- Prima riga: con $0$ oggetti disponibili, otteniamo $0$ di valore
+- Prima colonna: con uno zaino di capacità $0$, possiamo portare via $0$ oggetti, di conseguenza il valore è $0$
 
-*Transizioni* della DP: come riempiamo le altre celle? dobbiamo capire da cosa dipende ogni cella (e queste celle da cui dipende devono esser già riempite, ad esempio se dipende solo da celle sopra, basta riempire la tabella riga per riga):
-- cella $i+1, w+1$:
-  - sicuramente sarà possibile portare via lo almeno stesso valore preso nella cella $i+1, w$ (dato che lo zaino è più piccolo)
-  - sicuramente sarà possibile portare via lo almeno stesso valore preso nella cella $i, w+1$ (dato che abbiamo solo un oggetto in più ma zaino grande uguale)
-
-  $
-    v[i+1, w+1] = cases(
-      "// l'oggeto è troppo grosso per stare nello zaino da solo, quindi sicuramente non si prende:"\
-      v[i, w+1] "se" w_i > w+1,
-      "// posso prendere o non prendere l'oggetto:" \
-      max(
-        cases(
-          quad v[i, w+1] "// non prendo l'isemo oggetto",
-          quad v_i + v[i, w+1-w_i] "// prendo l'oggetto togliendo spazio nello zaino"
-        )
-      ) "altrimenti"
-    )
-  $
+*Transizioni* della DP: Data la cella corrente da riempire, dobbiamo determinare le celle da cui dipende (devono essere già riempite):
+$
+  v[i+1,w+1] = cases(
+    v[i,w+1] &"se" w_i > w+1 \
+    max(v[i,w+1], v_i + v[i,w+1-w_i]) &"altimenti" 
+  ) 
+$
+#informalmente()[
+  - Primo caso: l'oggeto $i$ è più grande della capacità dello zaino $w+1$ (anche se preso da solo).
+  - Secondo caso: scelgo se non prendere o prendere l'oggetto $i-"esimo"$, nel caso riduco la capacità dello zaino. 
+]
 
 #nota[
-  Non c'è bisogno di tenere l'intera tabella, basta solo tenere la riga precedente, quindi si ottimizza lo spazio, al posto di avere N*W di spazio, abbiamo 2*W
+  Grazie al criterio di riempimento scelto (*per righe*) non c'è bisogno di tenere l'intera tabella in memoria, basta solamente tenere la riga precedente e la corrente. Lo spazio occupato è $Theta(2W)$, al posto di $Theta(N dot M)$
 ]
+
+Algoritmo: 
+#pseudocode(
+  [$v[i,0] <- 0 quad forall i in n $],
+  [$v[0,w] <- 0 quad forall w in W$],
+  [*For*$(i=0 ; i<n-1; i=_+1)$],
+  indent(
+    [*For*$(w=0 ; w<w-1; w=_+1)$],
+    indent(
+      [*If* $w[i] <= w+1$],
+      indent(
+        [$v[i+1,w+1] = max(v[i,w+1],v[i]+v[i,w+1-w_i])$]
+      ),
+      [*Else*],
+      indent(
+        [$v[i+1,w+1] = v[i,w+1]$]
+      ),
+    ),
+  ),
+  [*End*]
+)
+
 
 #attenzione[
-  Questo algoritmo sembra polinomiale, $O(N dot W)$.
-  Ma è polinomiale sul valore di $W$.
-
-  Ma $W$ è scritto in binario, quindi è esponenziale sulla sulla lunghezza, quinid esponenziale.
-
-  Questo algoritmo è pseudopolinomiale.
+  Questo algoritmo a prima vista sembra polinomiale, $O(N dot W)$. Tuttavia, il secondo ciclo dipende dal valore di $W$ e non dalla sua lunghezza (lunghezza in binario $!=$ valore).\
+  Questo *algoritmo è pseudopolinomiale*.
 
   #nota[
-    $N$ non è esponenziale perchè non ci serve davvero, si potrebbe non mettere come input ma intuirlo dalla lunghezza dei pesi/valori.
+    $n$ (numero di oggetti) non è esponenziale perchè non ci serve davvero, si potrebbe dedurlo dalla lunghezza dei pesi/valori.
   ]
 ]
-
-*Algoritmo* della DP:
-
-- $forall i in n, quad v[i, 0] = 0$
-- $forall w in W, quad v[0, w] = 0$
-- for (i = 0; i < n-1, i++)
-  - for (w = 0; w < W-1, w++)
-    - if (w[i] <= w+1)
 
 == Ulteriore soluzione basata su DP
 
