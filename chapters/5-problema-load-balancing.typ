@@ -312,7 +312,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 Formalmente:
 - *$I_Pi$*:
   - $t_0, ..., t_(n-1) in bb(N)^+$
-  - $epsilon > 0 in bb(Q)^+$, tasso di approsimazione desiderato, $1+epsilon$-approsimazione
+  - $epsilon > 0 in bb(Q)^+$, tasso di approssimazione desiderato, $1+epsilon$-approssimazione
 - *$"Amm"_(Pi)$*: 
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
