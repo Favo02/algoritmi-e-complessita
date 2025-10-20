@@ -381,6 +381,8 @@ $ forall s in S_i inter R, quad c_s = w_i / (|S_i inter R|) $
 
 == Strettezza dell'analisi
 
+// TODO: reviewing setcover
+
 Per dimostrare che l'analisi effettuata sia stretta, presentiamo un input _pessimo_ che arriva esattamente al bound di approssimazione:
 - esistono $n$ punti nell'universo $Omega$
 - esistono due aree _verticali_ che coprono ciascuna $n/2$ punti e che costano $1+epsilon$
