@@ -305,23 +305,48 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
 == PTAS per 2-Load Balancing _(offline)_
 
-#informalmente[
-  2-load balancing è load balancing con $m$ fissato a 2, quindi con 2 macchine.
+#nota[
+  Se prendiamo le istanze del problema di $"LoadBalancing"$ e fissiamo $m=2$ (2 macchine), riusciamo a costruire un algoritmo tale per cui $2-"LoadBalancing" in "PTAS"$
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $t_0, ..., t_(n-1) in bb(N)^+$
-  - $epsilon > 0 in bb(Q)^+$, otterremo una $1+epsilon$-approsimazione
-- *If* $epsilon >= 1$ *then*
-  - assegna tutti i task a una macchina
-  - *End*
-- Ordiniamo i $t_i$ in ordine non crescente
-- Sia $k = ceil(1/epsilon - 1)$
-- Fase 1: Assegniamo in modo ottimo i primi $k$ task $t_0, ..., t_(k-1)$ (provandoli in brutefoce)
-- Fase 2: I restanti task $t_k, ..., t_(n-1)$ sono assegnati in modo greedy
+  - $epsilon > 0 in bb(Q)^+$, tasso di approsimazione desiderato, $1+epsilon$-approsimazione
+- *$"Amm"_(Pi)$*: 
+  $
+    "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
+  $
+- *$C_pi$*: 
+  $
+    L = max_(i in m)(L_i), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
+  $
+- *$t_pi$* = $"min"$
+
+Algoritmo: 
+#pseudocode(
+  [*Input* $<- t_0,dots,t_(n-1), quad epsilon > 0$],
+  [*If* $epsilon >= 1$],
+  indent(
+    [Assegna tutti i task ad una macchina sola, approsimazione pessima],
+    [*Stop*]
+  ),
+  [Ordiniamo i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
+  [*Fase $1$*],
+  indent(
+    [$k <- ceil(1/epsilon-1)$],
+    [Assegnamo in modo ottimo i task $t_0,t_1,dots,t_(k-1)$],
+    [#emph("lo span è minimo")]
+  ),
+  [*Fase* $2$],
+  indent(
+    [I restanti task $t_k,t_(k+1),dots,t_(n-1)$ vengono assegnati in modo greedy]
+  )
+  
+)
 
 #attenzione[
-  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$.
+  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$. Per $epsilon -> 0$ i tempi di esecuzione diventano esponenziali
 ]
 
 #teorema("Teorema")[
