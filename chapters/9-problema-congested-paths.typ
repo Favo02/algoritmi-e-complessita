@@ -37,7 +37,7 @@
 
 Per l'algoritmo abbiamo bisogno di definire:
 
-/ Costo di un cammino $pi$: somma dei costi degli archi su cui passa. La funzione $ell$
+/ Costo di un cammino $pi$: somma dei costi degli archi su cui passa.
   $
     pi = angle.l x_1,x_2,dots,x_i angle.r \
   $
