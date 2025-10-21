@@ -99,36 +99,31 @@ Algoritmo:
 == Ulteriore soluzione basata su DP
 
 *Parametri* della DP:
-- $i$ (righe) = considero solo i primi $i$ oggetti
-- $v$ (colonne) = voglio portare a casa un valore maggiore o uguale a $v$. Da $0$ a $sum_(i in n) v_i$
-- cella w[i, v]: minimo peso che devo sopportare per portare via almeno $v$ con i primi $i$ oggetti (in caso non si possa, $infinity$, ovvero anche con zaino infinito, sarebbe impossibile portare via $>= v$ valore)
-- soluzione: guardiamo l'ultima riga, ovvero dove considero tutti gli elementi. Ma alcuni elementi di questa riga potrebbero essere maggiori di $W$, ovvero più del vincolo dello zaino. Quindi dobbiamo trovare l'elemento più a destra $<= W$, quindi di valore (valore della colonna) più grande rimanendo dei vincoli.
+- *$i$* (righe) = Considero solo i primi $i$ oggetti
+- *$v$* (colonne) = Voglio portare a casa un valore $>=$ $v$. Da $0$ a $V = sum_(i in n) v_i$
+- *$w[i, v]$* (cella) =  Minimo peso che devo sopportare per portare via almeno valore $v$ con i primi $i$ oggetti (non sempre è possibile, anche con uno zaino $infinity$)
+- *soluzione* = Considero solamente l'ultima riga ($n$ oggetti). Alcune celle potrebbero essere $> W$, ovvero più grandi della capacità dello zaino. La soluzione finale è la cella con valore più alto t.c $<= W$.
 
 *Partenza* della DP:
-- cella $0,0 = 0$: per portare a casa $0$ di valore con $0$ oggetti ci basta $0$ capacità dello zaino
-- riga $0 = infinity$: per portare via $v>0$ valore con $0$ oggetti è impossibile, qunid anche con zaino fininito è impossibile
-- colonna $0 = 0$: per portare via $v= 0$ con $i$ oggetti, allora ci basta uno zaino di capacità $0$
+- $w[0,0] = 0$. Per portare a casa $0$ di valore avendo $0$ oggetti basta uno zaino con capacità $= 0$
+- $w[0,v] = infinity quad forall v in V$. Portare via $v > 0$ di valore con $0$ oggetti è impossibile
+- $w[i,0] = 0 quad forall i in n$. Per portare via $v=0$ valore con $i$ oggetti disponibili, basta avere uno zaino con capacità $0$
 
-*Transizioni* della DP: come riempiamo le altre celle?
-- $
-    w[i+1, v+1] = min(
-      w[i, v+1],
-      w_i + w[i, v+1 - v_i]
-    )
-  $
-- questa cosa è imprecisa dato che potrebbe andare in negativo, perciò andrebbe scritta con i due casi:
-  $
-    w[i+1, v+1] = cases(
-      min(
-        w[i, v+1],
-        w_i + w[i, v+1 - v_i]
-      ),
-      ...
-    )
-  $
+*Transizioni* della DP:
+$
+  v[i+1,w+1] = cases(
+    min(underbrace(w[i,v+1],"oggetto "i" non preso"), underbrace(w_i+w[i, v+1-v_i],"prendo oggetto "i)) "se" &v_i <= v+1 \
+    \
+    w[i,v+1] &"altrimenti"
+  )
+$
+#nota()[
+  è necessario fare due casi in quanto la componente $v+1-v_i$ può essere negativa. $v_i > v+1$ significa che l'oggeto $i$ ha talmente tanto valore che può essere preso da solo (secondo caso). 
+]
 
+//TODO provare a spiegare meglio (?)
 #attenzione[
-  Dato che ancora una volta la complessità dipende dal *valore* (e non dalla lunghezza) dell'input, allora è ancora esponenziale (*pseudopolinomiale*).
+  Dato che ancora una volta la complessità dipende dal *valore* (e non dalla lunghezza) dell'input, allora l'approccio proposto è esponenziale (*pseudopolinomiale*).
 ]
 
 == Scaling per Colonna
