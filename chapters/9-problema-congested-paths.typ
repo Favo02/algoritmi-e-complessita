@@ -187,8 +187,7 @@ $
       $
       Siccome siamo nella prima fase, allora $mb(ell(pi)) < beta^c$:
       $
-        = mr((beta-1)) mb(ell(pi)) quad & < quad mr((beta-1)) mb(beta^c) \
-                                        & < quad beta^(c+1)
+        = mr((beta-1)) mb(ell(pi)) quad < quad mr((beta-1)) mb(beta^c) quad < quad beta^(c+1)
       $
 
     Abbiamo dimostrato che ad ogni iterazione la somma dei pesi degli archi cresce al massimo di $mp(beta^(c+1))$.
