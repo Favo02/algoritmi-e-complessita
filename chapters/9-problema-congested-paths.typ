@@ -197,7 +197,7 @@ $
 ] <congested-paths-teorema-upper-bound-somma-pesi-archi>
 
 #teorema("Osservazione")[
-  La somma della lunghezza del peso dei cammini $pi_i^*$ selezionati dalla soluzione ottima $I^*$ ma non dalla soluzione dell'algoritmo $I$ è grande almeno quanto $beta^c$ per il numero di questi cammini:
+  La somma del peso dei cammini $pi_i^*$ selezionati dalla soluzione ottima $I^*$ ma non dalla soluzione dell'algoritmo $I$ è grande almeno quanto $beta^c$ per il numero di questi cammini:
 
   $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad >= quad beta^c |I^* \\ I| $
 
