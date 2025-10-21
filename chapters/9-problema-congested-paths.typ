@@ -110,7 +110,7 @@ In un dato istante, procedendo con l'esecuzione, le *trasformazioni possibili* p
 
 Possiamo dividere l'esecuzione dell'algoritmo in due fasi:
 $
-  underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3 subset.eq dots subset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
+  underbrace(C_0 supset.eq C_1 supset.eq C_2 supset.eq C_3 supset.eq dots supset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
 $
 - $mr("fase 1")$: l'algoritmo sceglie un cammino corto utile $pi in C_i$
 - $mb("fase 2")$: i cammini corti utili sono finiti, quindi $C_s = emptyset$ e l'algoritmo termina. Questa situazione è possibile per due casi:
