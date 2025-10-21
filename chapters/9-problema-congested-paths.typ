@@ -212,7 +212,7 @@ $
 ] <congested-paths-oss1>
 
 #teorema("Osservazione")[
-  La somma dei cammini della soluzione ottima $I^*$ ma non selezionati dalla soluzione dell'algoritmo $I$ è limitata da $c$ volte il peso massimo di un cammino trovata in #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>):
+  La somma del peso dei cammini selezionati dalla soluzione ottima $I^*$, ma non dalla soluzione dell'algoritmo $I$, è limitata da $c$ volte il peso massimo della somma dei cammini alla fine della prima fase (trovato in #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>)):
 
   $ sum_(i in I^* \\ I)overline(ell)(pi_i^*) quad <= quad c(beta^(c+1)|I_s|+m) $
 
