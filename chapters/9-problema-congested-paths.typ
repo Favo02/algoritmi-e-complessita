@@ -232,7 +232,7 @@ $
 
   #dimostrazione[
     Partiamo applicando il principio di inclusione-esclusione sull'insieme $I^*$:
-    $ I^* = (I^*\\I) + (I^* inter I) $.
+    $ I^* = (I^*\\I) + (I^* inter I) $
     Passando alle cardinalità e moltiplicando per $beta^c$:
     $ beta^c |I^*| <= mr(beta^c |I^* \\ I|) + beta^c mb(|I^* inter I|) $
     Per #mr(link-teorema(<congested-paths-oss1>)) e dato che #mb("l'intersezione") tra due insiemi è sempre $<=$ dei due insiemi originali:
