@@ -37,7 +37,7 @@
 
 Per l'algoritmo abbiamo bisogno di definire:
 
-/ Costo di un cammino $pi$: somma dei costi degli archi su cui passa. La funzione $ell$
+/ Costo di un cammino $pi$: somma dei costi degli archi su cui passa.
   $
     pi = angle.l x_1,x_2,dots,x_i angle.r \
   $
@@ -110,7 +110,7 @@ In un dato istante, procedendo con l'esecuzione, le *trasformazioni possibili* p
 
 Possiamo dividere l'esecuzione dell'algoritmo in due fasi:
 $
-  underbrace(C_0 subset.eq C_1 subset.eq C_2 subset.eq C_3 subset.eq dots subset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
+  underbrace(C_0 supset.eq C_1 supset.eq C_2 supset.eq C_3 supset.eq dots supset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset
 $
 - $mr("fase 1")$: l'algoritmo sceglie un cammino corto utile $pi in C_i$
 - $mb("fase 2")$: i cammini corti utili sono finiti, quindi $C_s = emptyset$ e l'algoritmo termina. Questa situazione è possibile per due casi:
@@ -187,8 +187,7 @@ $
       $
       Siccome siamo nella prima fase, allora $mb(ell(pi)) < beta^c$:
       $
-        = mr((beta-1)) mb(ell(pi)) quad & < quad mr((beta-1)) mb(beta^c) \
-                                        & < quad beta^(c+1)
+        = mr((beta-1)) mb(ell(pi)) quad < quad mr((beta-1)) mb(beta^c) quad < quad beta^(c+1)
       $
 
     Abbiamo dimostrato che ad ogni iterazione la somma dei pesi degli archi cresce al massimo di $mp(beta^(c+1))$.
@@ -198,7 +197,7 @@ $
 ] <congested-paths-teorema-upper-bound-somma-pesi-archi>
 
 #teorema("Osservazione")[
-  La somma della lunghezza del peso dei cammini $pi_i^*$ selezionati dalla soluzione ottima $I^*$ ma non dalla soluzione dell'algoritmo $I$ è grande almeno quanto $beta^c$ per il numero di questi cammini:
+  La somma del peso dei cammini $pi_i^*$ selezionati dalla soluzione ottima $I^*$ ma non dalla soluzione dell'algoritmo $I$ è grande almeno quanto $beta^c$ per il numero di questi cammini:
 
   $ sum_(i in I^* \\ I) overline(ell)(pi_i^*) quad >= quad beta^c |I^* \\ I| $
 
@@ -213,7 +212,7 @@ $
 ] <congested-paths-oss1>
 
 #teorema("Osservazione")[
-  La somma dei cammini della soluzione ottima $I^*$ ma non selezionati dalla soluzione dell'algoritmo $I$ è limitata da $c$ volte il peso massimo di un cammino trovata in #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>):
+  La somma del peso dei cammini selezionati dalla soluzione ottima $I^*$, ma non dalla soluzione dell'algoritmo $I$, è limitata da $c$ volte il peso massimo della somma dei cammini alla fine della prima fase (trovato in #link-teorema(<congested-paths-teorema-upper-bound-somma-pesi-archi>)):
 
   $ sum_(i in I^* \\ I)overline(ell)(pi_i^*) quad <= quad c(beta^(c+1)|I_s|+m) $
 
@@ -233,7 +232,7 @@ $
 
   #dimostrazione[
     Partiamo applicando il principio di inclusione-esclusione sull'insieme $I^*$:
-    $ I^* = (I^*\\I) + (I^* inter I) $.
+    $ I^* = (I^*\\I) + (I^* inter I) $
     Passando alle cardinalità e moltiplicando per $beta^c$:
     $ beta^c |I^*| <= mr(beta^c |I^* \\ I|) + beta^c mb(|I^* inter I|) $
     Per #mr(link-teorema(<congested-paths-oss1>)) e dato che #mb("l'intersezione") tra due insiemi è sempre $<=$ dei due insiemi originali:
