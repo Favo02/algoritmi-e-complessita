@@ -1,4 +1,4 @@
-name: Generate temporary PDF in Pull Requests
+name: PR PDF Preview
 
 on:
   pull_request:
@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: read
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
 
     - name: Setup Typst
       uses: typst-community/setup-typst@v3
@@ -29,35 +31,6 @@ jobs:
     - name: Upload PDF as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: algoritmi-e-complessita-preview
+        name: pr-${{ github.event.pull_request.number }}-preview
         path: algoritmi-e-complessita-preview.pdf
         retention-days: 30
-
-    - name: Comment PDF on PR
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const prNumber = context.payload.pull_request.number;
-
-          // Web URL to the workflow run where artifact can be downloaded
-          const workflowUrl = `${context.payload.repository.html_url}/actions/runs/${context.runId}`;
-
-          // Create a more helpful comment with clear download instructions
-          const comment = `📄 **Preview PDF Successfully Generated!**
-
-          The latest PDF has been compiled from commit ${context.sha.substring(0, 7)}.
-
-          **📥 To download the PDF:**
-          1. Click here: [View workflow run](${workflowUrl})
-          2. Scroll down to the "Artifacts" section
-          3. Click on \`algoritmi-e-complessita-preview\` to download the PDF
-
-          The artifact will be available for 30 days.`
-
-          // Create new comment
-          await github.rest.issues.createComment({
-            issue_number: prNumber,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
