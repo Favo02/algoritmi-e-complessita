@@ -102,7 +102,7 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
   #dimostrazione[
     Basta tagliare tutti gli archi del vertice $v$ di grado $d$ minimo, isolando di conseguenza il vertice $v$.
   ]
-]
+]<taglio-minimo-grado>
 
 == Contrazione di un Lato
 
@@ -206,42 +206,43 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
   [*Output* la classe di equivalenza di una delle due estremità]
 )
 
-
 #nota[
-  Ad ogni contrazione, i due vertici compressi si uniscono nella stessa classe di equivalenza.
-
-  Dato che ci fermiamo ad esattamente due nodi, allora avremo due classi di equivalenza.
+  Ad ogni contrazione, i due vertici compressi si uniscono nella stessa classe di equivalenza.\
+  Dato che ci fermiamo ad esattamente due nodi rimanenti, allora avremo due classi di equivalenza.
 ]
 
-#informalmente[
-  Otterremo l'ottimo con una certa probabilità.
-
-  Ma se non otteniamo l'ottimo, allora non sappiamo di quanto è sbagliato quella soluzione.
+#attenzione()[
+  L'algoritmo produce l'ottimo con una certa probabilità.\
+  Tuttavia se l'algoritmo non trova la *soluzione* ottima, *non sappiamo* di quanto essa è *distante dall'ottimo*.
 ]
 
+=== Correttezza dell'algoritmo
 Sia:
-- $S^*$ scelta di vertici che da luogo al taglio più piccolo possibile
-- $k^*$ la dimensione del taglio minimo:
-  $ k^* = |E_(S^*) "dove" E_(S^*) = {e | e inter S^* != emptyset, e inter S^*^C != emptyset } | $
-- $G_i$ il grafo prima dell'$i$ contrazione ($G_1, G_2, ...$)
+- *$S^*$* la scelta di vertici che da luogo al taglio più piccolo possibile
+- *$k^*$* la dimensione del taglio minimo:
+  $ k^* = |E_(S^*)| "dove" E_(S^*) = {e | e inter S^* != emptyset, e inter S^*^C != emptyset }  $
+- *$G_i$* il grafo prima dell'$i-"esima"$ contrazione ($G_1, G_2, ...$)
 
 #teorema("Osservazione")[
   Il numero di nodi del del grafo $G_i$ è:
-  $ n_G_i = n-i $
+  $ |V_{G_i}| = n_G_i = n-i+1 $
 
   #dimostrazione[
-    Ad ogni cotnrazione uniamo due nodi, quindi si riduce di uno il numero inizial e di nodi.
-    %
+    Ad ogni cotnrazione uniamo due nodi, il numero di nodi viene ridotto di $1$ ad ogni iterazione $qed$.
   ]
 ]
 
 #teorema("Osservazione")[
-  Ogni taglio di $G_i$ corrisponde ad untaglio di $G$ della stessa dimensione.
-
-  Implica che grado minimo di $G_i >= k^*$
+  Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ della stessa dimensione $==>$ grado minimo di $G_i >= k^*$
 
   #dimostrazione[
-    Dato che il taglio minimo è minore o uguale del grado minimo del grafo e dato che ogni taglio di $G_i$ è anche un taglio di $G$, allora $qed$.
+    Sia $C_i$ il taglio minimo per $G_i$ e $d(G_i)$ il vertice con il grado minimo. Per #link-teorema(<taglio-minimo-grado>): 
+    $ C_i <= min d(G_i) $
+    Siccome ogni taglio di $G_i$ è anche un taglio di $G$, i tagli minimi coincidono:  
+    $ 
+      C &<= G_i \
+      G_i &>= C = k^* quad qed
+    $
   ]
 ]
 
