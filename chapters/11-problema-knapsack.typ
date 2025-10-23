@@ -96,11 +96,11 @@ Algoritmo:
   ]
 ]
 
-== Ulteriore soluzione basata su DP
+== Ulteriore soluzione basata su DP<seconda-versione-dp>
 
 *Parametri* della DP:
 - *$i$* (righe) = Considero solo i primi $i$ oggetti
-- *$v$* (colonne) = Voglio portare a casa un valore $>=$ $v$. Da $0$ a $V = sum_(i in n) v_i$
+- *$v$* (colonne) = Voglio portare a casa un valore $>=$ $v$. Da $0$ a $V = sum_(i in n) v_i$. Il numero di colonne è $n V$ (dove $V = max_i v_i$)
 - *$w[i, v]$* (cella) =  Minimo peso che devo sopportare per portare via almeno valore $v$ con i primi $i$ oggetti (non sempre è possibile, anche con uno zaino $infinity$)
 - *soluzione* = Considero solamente l'ultima riga ($n$ oggetti). Alcune celle potrebbero essere $> W$, ovvero più grandi della capacità dello zaino. La soluzione finale è la cella con valore più alto t.c $<= W$.
 
@@ -130,69 +130,98 @@ $
 
 #informalmente[
   Approccio Turco: Dato che la Turchia era super super super inflazionata (un caffè costava milioni), è stata introdotta la lira pesante, ovvero la stessa valuta di prima ma divisa per $10000$.
-
-  L'idea è la stessa, al posto di usare tutte le colonne su $sum_W$, allora le _compattiamo_ abbassando la scala.
-  Questo compatta tanti valori in una stessa colonna, sarà necessario arrotondare tante colonne in una stessa (questo sarà la fonte dell'approssimazione).
 ]
+
+L'idea dello scaling è rendere l'algorimto precedentemente presentato polinomiale. Per farlo andiamo a *ridurre il numero di colonne*. Al posto di usare tutte le colonne su $sum_W$, le _compattiamo_ abbassando la scala. Questo permette di compattare tanti valori in una stessa colonna, sarà necessario arrotondare (l'algoritmo si trasofrma in una versione approssimata).
 
 #attenzione[
-  Questa cosa è applicabile solo alla seconda versione di DP.
+  Questo tipo di tecnica è applicabile *solo alla seconda versione di DP* #link-section(<seconda-versione-dp>).
 
-  Vogliamo *sempre* qualcosa di ammissibile, ma in caso subottimo.
-  Mentre invece compattando i pesi della prima DP, staremmo mischiando soluzioni ammissibili e non ammissibili, generando soluzioni sub-ammissibili (concetto che non abbiamo nemmeno introdotto e non vogliamo).
+  Se applicassimo la tecnica alla prima versione della DP andremo a mischiare delle soluzioni ammissibili e non ammissibili, *generando soluzioni sub-ammissibili* (concetto che non abbiamo nemmeno formalizzato).
 ]
 
-Prendiamo un'istanza di knapsack:
+Dati per lo scaling: 
+- Istanza di knapsack 
 $ X =(v_i, w_i, W), quad v_i, w_i, W in bb(N)^+ $
-E un tasso di approssimazione per produrre una $1+epsilon$-approssimazione:
-$ epsilon in (0, 1] $
-Theta: tasso di quanto un valore vecchio vale nuovo
-$ theta := (epsilon V) / (2n), quad V = max_(i in n) v_i $
-Nuova istanza dove i valori sono scalati ma reali:
+- Tasso di approssimazione $epsilon in (0, 1]$
+- Parametro $theta$. Esso rappresenta il *fattore di scaling*, ovvero di quanto comprimiamo i valori dell'istanza originaria
+$ theta = (epsilon V) / (2n), quad V = max_(i in n) v_i $
+
+#informalmente()[
+  $theta$ rappresenta l'unità di misura della nuova scala di valori:
+  - Più $theta$ è grande, più comprimiamo (meno colonne, più approssimazione).
+  - Più $theta$ è piccolo, meno comprimiamo (più colonne, meno approssimazione).
+]
+
+Risultato: 
+- *$overline(I)$*. Nuova istanza dove i valori sono scalati ma reali:
 $ overline(X) = (overline(v_i), w_i, W), quad overline(v_i) = ceil(v_i / theta) theta $
-Nuova istanza dove i valori sono scalati ma interi:
+
+- *$hat(I)$*. Nuova istanza dove i valori sono scalati ma interi:
 $ hat(X) = (hat(v_i), w_i, W) quad hat(v_i) = ceil(v_i / theta) $
 
-Tutte queste istanze hanno delle soluzioni ottime, $ I^*, overline(I^*), hat(I^*) $
-e dei valori ottimi:
+Tutte queste istanze hanno delle soluzioni ottime: 
+$ I^*, overline(I^*), hat(I^*) $
+E dei valori ottimi:
 $ v^*, overline(v^*), hat(v^*) $
 
+#esempio[
+
+  Supponiamo $n = 3$, $ε = 0.1$, $V = 1000$:
+  
+  $θ = (0.1 · 1000)/(2 · 3) = 100/6 ≈ 16.67$
+  
+  Valori originali: $v = [150, 299, 1000]$
+  
+  Valori scalati reali: $overline(v) = [⌈150/16.67⌉ · 16.67, ⌈299/16.67⌉ · 16.67, ⌈1000/16.67⌉ · 16.67] = [167, 317, 1000]$
+  
+  Valori scalati interi: $hat(v) = [⌈150/16.67⌉, ⌈299/16.67⌉, ⌈1000/16.67⌉] = [10, 19, 60]$
+  
+  *Risultato*: invece di $sum v_i = 1449$ colonne, ora abbiamo $max hat(v_i) = 60$ colonne
+]
+
 #teorema("Osservazione")[
-  Risolvere l'istanza compressa reale e la soluzione compressa intera danno le stesse soluzioni dato che differiscono solo di un coefficiente moltiplicativo fissato.
+  Risolvere l'istanza reale $overline(I)$ e l'istanza intera $hat(I)$ è la stessa cosa. Entrambe forniscono le stesse soluzioni in quanto *differiscono solamente di un coefficiente moltiplicativo fissato*.
   $
     overline(I^*) = hat(I^*) \
     overline(v^*) = theta hat(v^*)
   $
-  Solo che l'istanza reale non sappiamo come risolverla, invece quella intera possiamo usare la programmazione dinamica.
+  L'istanza $overline(I)$ essendo intera è risolvibile attraverso la programmazione dinamica.
 ]
 
 #teorema("Teorema")[
-  Sia $I$ una soluzione ammissibile di $X$ (problema originale non compresso).
+  Sia $I$ una soluzione ammissibile di $X$ (problema originale non compresso), $I in "Amm"_X$.
 
   La soluzione ottima del problema compresso intero $hat(I^*)$:
 
   $ (1+epsilon) sum_(i in hat(I^*)) v_i quad >= quad sum_(i in I) v_i $
 
   #dimostrazione[
-    Dividendo, approssimando e rimoltiplicando per la stessa costante, allora si ottiene un valore sicuramente uguale (arrotondamento non necessario) o maggiore (arrotondamento effettuato per ececsso):
+    Dato un valore $v_i$ quando lo approssimo per $theta$, trovo un valore $v_i^' >= v^i$ (a casua della presenza dell'arrotondamento per ecesso). Di conseguenza:
     $
-      sum_(i in I) v_i & <= sum_(i in I) ceil(v_i / theta) theta \
-                       & = sum_(i in I) overline(v_i) \
-                       & <= sum_(i in overline(I^*)) overline(v_i) \
-                       & = sum_(i in hat(I^*)) overline(v_i) \
-                       & "dato che approssimando cresce al massimo di " theta \
-                       & <= sum_(i in overline(I^*)) (v_i + theta) \
-                       & = sum_(i in hat(I^*)) v_i + n theta \
-                       & = sum_(i in hat(I^*)) v_i + n (epsilon V) / (2 n) \
-                       & = sum_(i in hat(I^*)) v_i + (epsilon V) / (2) \
+      sum_(i in I) v_i & <= sum_(i in I) ceil(v_i / theta) theta = sum_(i in I) overline(v_i) \
+      & "Dato che" overline(I)^* "è ottima e il problema è di massimizzazione"
+      \
+        & <= sum_(i in overline(I^*)) overline(v_i) underbrace(=,mr(overline(I)^* = hat(I)^*)) sum_(i in hat(I^*)) overline(v_i) \
+
+        & "Dato che ogni valore cresce al massimo di" theta \
+
+        & <= sum_(i in overline(I^*)) (v_i + theta) \
+
+        & = sum_(i in hat(I^*)) v_i + n theta \
+
+        & = sum_(i in hat(I^*)) v_i + n (epsilon V) / (2 n) \
+
+        & = sum_(i in hat(I^*)) v_i + (epsilon V) / (2) \
     $
 
-    Riscrivendo, questa cosa è valida per ogni I soluzione ammissibile:
+    Riscrivendo la disequazione:
     $ sum_(i in I) v_i <= sum_(i in hat(I^*)) v_i + (epsilon V) / 2 $ <temp-asterisco>
 
-    In particolare questo è vero per $I = {i_max}$ dove $i_max$ è l'indice per cui $v_i_max = V$.
+    In particolare, la disequazione vale per $I = {i_max}$ dove $i_max$ è l'indice per cui $v_i_max = V$.
     $
       V & <= sum_(i in hat(I^*)) v_i + (epsilon V) / 2 \
+      & "siccome" epsilon <= 1 "possiamo approssimarlo" \
         & <= sum_(i in hat(I^*)) v_i + V/2
     $
     $
@@ -201,33 +230,34 @@ $ v^*, overline(v^*), hat(v^*) $
 
     Seguendo da #link-equation(<temp-asterisco>):
     $
-      sum_(i in I) v_i <= sum_(i in hat(I^*)) v_i + epsilon sum_(i in ) ... \
-      ... \
-      qed
+      sum_(i in I) v_i & <= sum_(i in hat(I^*)) v_i + epsilon sum_(i in hat(I)^*) v_i \
+      & "raccogliendo" (1+epsilon) \
+      &= (1+epsilon) sum_(i in hat(I)^*) v_i quad qed\
     $
   ]
 ]
 
 #teorema("Teorema")[
   $ (1+epsilon) sum_(i in hat(I^*)) v_i >= v^* $
+  dove $(1+epsilon) sum_(i in hat(I^*)) v_i$ è il valore ottimo che porto a casa applicando la DP al problema $hat(X)$.
 
   #dimostrazione[
     $
-      (1 + epsilon) sum_(i in hat(I^*)) v_i >= sum_(i in I^*) v_i = v^* space qed
+      (1 + epsilon) sum_(i in hat(I^*)) v_i >= sum_(i in I^*) v_i underbrace(=,"in quanto considero" \ hat(I^*) ) v^* space quad qed
     $
   ]
 ]
 
-Tasso di approssimazione...
+=== Tasso di approssimazione
 
-Quante colonne ci sono (ovvero, quanto abbiamo compresso)?
+Quante colonne ci sono (ovvero, quanto abbiamo compresso). Per prima cosa calcoliamo il valore compresso: 
 
-$ hat(V) = ceil(V/theta) = ceil((V 2 n) / (epsilon V)) = ceil((2n)/epsilon) <= (2n)/epsilon + 1 $
+$ hat(V) = ceil(V/theta) = ceil((V) / ((epsilon V)/(2n))) = ceil( (V 2n)/(epsilon V))=  ceil((2n)/epsilon) <= (2n)/epsilon + 1 $
 
-#informalmente[
-  Ovvero, il numero di colonne della programmazione dinamica è $n hat(V) = O((2n^2)/ epsilon)$
+#nota[
+  Il numero di colonne della programmazione dinamica è $n hat(V) = O((2n^2)/ epsilon)$
 
-  Per riempire la tabella di $hat(X)$ ci vuole tempo $O((2 n^3)/ epsilon)$, di conseguenza è polinomiale anche su $epsilon$, quinid FPTAS
+  Per riempire la tabella di $hat(X)$ ci vuole tempo $O((2 n^3)/ epsilon)$, di conseguenza è polinomiale anche su $epsilon$, quindi $in$ FPTAS
 ]
 
 #teorema("Teorema")[
