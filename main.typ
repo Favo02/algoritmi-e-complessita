@@ -64,9 +64,9 @@
 #include "chapters/4-problema-max-bimatching.typ"
 #include "chapters/5-problema-load-balancing.typ"
 #include "chapters/6-problema-center-selection.typ"
-
+#include "chapters/7-problema-set-cover.typ"
 #include "chapters/8-problema-vertex-cover.typ"
-
+#include "chapters/9-problema-congested-paths.typ"
 
 
 
