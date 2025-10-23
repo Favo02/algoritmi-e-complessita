@@ -3,8 +3,48 @@
 = Problema Min Cut (taglio minimo) [NPOc]
 
 #informalmente[
-  Vogliamo dividere i vertici di un grafo in due insiemi (non vuoti).
-  Vogliamo minimizzare i lati da tagliare per ottenere questa cosa.
+  Il problema consiste nel dividere i vertici di un grafo in due insiemi disgiunti(non vuoti). L'obbiettivo è minimizzare i lati da "tagliare" per ottenere la divisione.
+
+  #esempio([
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // Vertici del grafo
+      circle((0, 1), radius: 0.15, fill: white, stroke: black)
+      content((-0.4, 1), text(size: 10pt)[$1$])
+
+      circle((2, 1), radius: 0.15, fill: white, stroke: black)
+      content((2.4, 1), text(size: 10pt)[$2$])
+
+      circle((-1, -1), radius: 0.15, fill: white, stroke: black)
+      content((-1.4, -1), text(size: 10pt)[$3$])
+
+      circle((3, -1), radius: 0.15, fill: white, stroke: black)
+      content((3.4, -1), text(size: 10pt)[$4$])
+
+      circle((1, -2.5), radius: 0.15, fill: white, stroke: black)
+      content((1, -3), text(size: 10pt)[$5$])
+
+      // Archi normali (neri spessi)
+      line((0.1, 0.9), (1.9, 0.9), stroke: 2pt + black)         // 1-2
+      line((0.1, 0.85), (-0.9, -0.85), stroke: 2pt + red)     // 1-3
+      line((1.9, 0.85), (2.9, -0.85), stroke: 2pt + black)      // 2-4
+      line((-0.85, -1.1), (0.85, -2.4), stroke: 2pt + black)    // 3-5
+      line((2.85, -1.1), (1.15, -2.4), stroke: 2pt + red)     // 4-5
+
+      // Archi del taglio (attraversano la linea blu tratteggiata)
+      line((0.1, 0.8), (2.9, -0.8), stroke: 2pt + black)        // 1-4
+      line((1.9, 0.8), (-0.9, -0.8), stroke: 2pt + red)       // 2-3
+      // Linea tratteggiata blu per indicare il taglio (diagonale)
+      line((-1.5, 0.5), (3.5, -2), stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+      
+    }),
+    caption: [
+      Esempio di taglio. La linea $mb("blu")$ separa i vertici in due insiemi, gli archi in $mr("rosso")$ costituiscono il taglio.
+    ]
+    )
+  ])
 ]
 
 - $I_Pi$: $G = (V,E)$ grafo non orientato
