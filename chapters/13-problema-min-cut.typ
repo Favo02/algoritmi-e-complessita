@@ -190,18 +190,22 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
   é possibile che una contrazione possa generare dei *multigrafi*. Questo evento avviene quando esiste un vertice connesso ad entrambe le estremità del lato che stiamo contraendo.
 ]
 
-Tutti i lati di un grafo contratto corrispondono ad un singolo lato del grafo originale.
-Alcuni lati possono proprio sparire.
-
 == Algoritmo di Karger
 
-- If $G$ non è connesso
-  - Output una qualunque componente connessa
-- Else:
-  - While $|V| > 2$:
-    - $e <-$ lato a caso \/\/ parte probabilistica
-    - $G <- G arrow.b e$
-- Ouput classe di equivalenza di una delle due estremità
+#pseudocode(
+  [*If* $G$ non è connesso],
+  indent(
+    [emphetti una qualunque componente connessa],
+    [*Stop*]
+  ),
+  [*While* $|V|>2$],
+  indent(
+    [$e<- "lato random di" G$ #emph("// scelta non deterministica")],
+    [$G <- G arrow.b e$]
+  ),
+  [*Output* la classe di equivalenza di una delle due estremità]
+)
+
 
 #nota[
   Ad ogni contrazione, i due vertici compressi si uniscono nella stessa classe di equivalenza.
