@@ -48,7 +48,7 @@
 ]
 
 Formalizzazione del problema: 
-- *$I_Pi$*: $G = (V,E)$ grafo non orientato
+- *$I_Pi$*: $G = (V,E)$ grafo non orientato. Con *$n$* numero di vertici e *$m$* numero di lati. 
 
 - *$"Amm"_Pi$*: insieme di vertici che non comprende tutti i vertici e diverso dall'insieme vuoto 
 $ S subset.eq V, quad emptyset != S != V $
@@ -233,63 +233,62 @@ Sia:
 ]
 
 #teorema("Osservazione")[
-  Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ della stessa dimensione $==>$ grado minimo di $G_i >= k^*$
+  Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ della stessa dimensione $==>$ grado minimo di $min d_{G_i}(v) >= k^*$
 
   #dimostrazione[
-    Sia $C_i$ il taglio minimo per $G_i$ e $d(G_i)$ il vertice con il grado minimo. Per #link-teorema(<taglio-minimo-grado>): 
-    $ C_i <= min d(G_i) $
+    Sia $C_i$ il taglio minimo per $G_i$ e $d_{G_i}(v)$ il grado di un vertice. Per #link-teorema(<taglio-minimo-grado>): 
+    $ C_i <= min d_{G_i}(v) $
     Siccome ogni taglio di $G_i$ è anche un taglio di $G$, i tagli minimi coincidono:  
     $ 
-      C &<= G_i \
-      G_i &>= C = k^* quad qed
+      C &<= min d_{G_i}(v) \
+      min d_{G_i}(v) &>= C = k^* quad qed
     $
   ]
-]
+]<min-cut-oss-2>
 
 #teorema("Osservazione")[
-  Sommiamo i gradi di $G_i$
+  Sommiamo i gradi di $G_i$, per #link-teorema(<min-cut-oss-2>):
   $
-    mr(sum_(v in V_G_i) d_(G_i)(v)) >= k^* (n-i+1) \
-    mr(2 m_G_i) >= k^* (n-i+1) \
-    m_G_i >= (k^* (n-i+1))/2
+    mr(sum_(v in V_G_i) d_(G_i)(v)) >= k^* underbrace(n-i+1,"num nodi" G_i) \
+    underbrace(mr(2 m_G_i),"ogni lato lo conto"\ 2 "volte") >= k^* (n-i+1) \
+    underbrace(m_G_i,"lati di" G_i) >= (k^* (n-i+1))/2
   $
+]<min-cut-oss-3>
 
-  #dimostrazione[
-    Sommando il grado di ogni vertice, stiamo praticamnete contanto ogni lato due volte (roba in rosso).
-
-    Per il >= sfruttate le scorse due proprietà.
-  ]
-]
-
-Sia $xi_i$ l'evento all'$i$-esima contrazione non si è contratto un lato di $E_S^*$.
+Sia *$xi_i$* l'evento: $"all'"i"-esima iterazione non si è contratto un lato di" E_S^*$.
 
 #informalmente[
-  $xi_i$: non abbiamo tagliato nessun lato che andava preservato, ci è andata bene col lato casuale.
+  $xi_i$ rappresenta la casistica in cui *nessun lato della soluzione ottima è stato tagliato* all'i-esima iterazione; Siamo stati "fortunati" con la scelta del lato casuale.
 ]
 
 #teorema("Lemma")[
-  Probabilità che non tagliamo un lato che ci serve all'$i$-esima iterazione, posto che non lo abbiamo fatto prima:
+  Consideriamo ora la probabilità che all'$i$-esima iterazione nessun lato della soluzione ottima $E_s^*$ è stato tagliato (supponendo che non sia successo prima):
   $ P[xi_i | xi_1, ..., xi_(i-1)] >= (n-i-1)/(n-i+1) $
 
   #dimostrazione[
+    Consideriamo ora la probabilità "all'$i$-esima iterazione ho contratto un lato che non dovevo":
     $
       P[xi_i | xi_1, ..., xi_(i-1)] & = 1- P[not xi_i | xi_1, ..., xi_(i-1)] \
-                                    & = 1 - (k^*)/m_G_i
+                                    & = 1 - mb(k^*)/mr(m_G_i)
     $
-    $k^*$: casi favorevoli
-    $m_G_i$: casi possibilie
+    dove:
+    - $mb(k^*)$: casi favorevoli ($"#"$ taglio minimo)
+    - $mr(m_G_i)$: casi possibilii ($"#"$ archi $G_i$)
 
-    Per osservazione 3:
     $
-      >= 1 - (k^* 2)/(k^*(n-i+1)) \
-      = (n-i+1-2)/(n-i+1) \
-      = (n-i-1)/(n-i+1) space qed
+      1 - mb(k^*)/mr(m_G_i) & underbrace(>=,#link-teorema(<min-cut-oss-3>)) 1 - (k^* dot 2)/(k^* dot (n-i+1)) \
+                            & =1- 2/(n-i+1) \
+                            & = (n-i+1-2)/(n-i+1) \
+                            & = (n-i-1)/(n-i+1) space qed
     $
+  ]
+  #nota()[
+    Tale probabilità è sufficientemente piccola per affermare che l'algoritmo non tocca il taglio minimo. 
   ]
 ]
 
 #teorema("Teorema")[
-  L'algoritmo di Karger trova il taglio minimo con probabbilità $>= 1/binom(n, 2)$.
+  L'algoritmo di Karger trova il *taglio minimo* con *probabilità $>= 1/binom(n, 2)$*.
 
   #dimostrazione[
     Vogliamo dimostrare:
