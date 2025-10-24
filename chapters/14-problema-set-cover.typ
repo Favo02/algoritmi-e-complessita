@@ -23,6 +23,7 @@ $
   forall a > 0, P[X >= a] <= E[X] / a 
 $
 Sfrutto la *Legge di concentrazione* = Vogliamo sapere di quanto una v.a $X$ si discosta da un certo valore $a$, possiamo sfruttare il valore atteso.
+<disuguaglianza-markov>
 
 == Definizione del problema
 
