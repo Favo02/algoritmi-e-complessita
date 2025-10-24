@@ -50,10 +50,10 @@
 Formalizzazione del problema: 
 - *$I_Pi$*: $G = (V,E)$ grafo non orientato. Con *$n$* numero di vertici e *$m$* numero di lati. 
 
-- *$"Amm"_Pi$*: insieme di vertici che non comprende tutti i vertici e diverso dall'insieme vuoto 
+- *$"Amm"_Pi$*: insieme di vertici che non comprende tutti i vertici del grafo ed è diverso dall'insieme vuoto 
 $ S subset.eq V, quad emptyset != S != V $
 
-- *$C_Pi$*: il numero dei lati che rientrano nel taglio, ovvero i lati con un estremità $in S$ e l'altra $in.not S$
+- *$C_Pi$*: il numero dei lati che rientrano nel taglio, ovvero i lati con un'estremità $in S$ e l'altra $in.not S$
 $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != emptyset } $
 
 - *$t_pi$* = $min$
@@ -195,7 +195,7 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
 #pseudocode(
   [*If* $G$ non è connesso],
   indent(
-    [emphetti una qualunque componente connessa],
+    [emetti una qualunque componente connessa],
     [*Stop*]
   ),
   [*While* $|V|>2$],
