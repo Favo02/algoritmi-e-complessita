@@ -28,51 +28,59 @@ Sfrutto la *Legge di concentrazione* = Vogliamo sapere di quanto una v.a $X$ si 
 == Definizione del problema
 
 #informalmente[
-  Problema già visto, avevamo trovato una soluzione approssimata basata sul pricing
+  Problema già visto, avevamo trovato una soluzione approssimata basata sul pricing.
 ]
 
+Definizione formale: 
 - *$I_Pi$*:
   - $S_1, S_2, ..., S_m subset.eq 2^Omega, quad limits(union.big)_(i=1)^m S_i = Omega, quad |Omega| = n$: insiemi delle aree che unite coprono tutto l'universo (possono anche sovrapporsi)
   - $w_1, w_2, ..., w_m in bb(Q)^+$: costi delle aree
 - *$"Amm"_Pi$* $= I subset.eq {1, ..., m}, quad limits(union.big)_(i in I) S_i = Omega$: un insieme di indici di aree che coprono tutti i punti
-- *$C_Pi$*: somma dei costi delle aree selezionate
+- *$C_Pi$*= somma dei costi delle aree selezionate
   $ w = sum_(i in I) w_i $
 - *$t_Pi = min$*
 
 == Set Cover come Programmazione Lineare
 
-Il problema si può vedere come un problema di programmazione lineare intera $P$.
+Il problema si può vedere come un problema di programmazione lineare $"PL"$ intera.\
 
-Ogni insieme si può vedere come una variabile booleana:
-- $x_j >= 0 quad forall j in m$
-- $x_j <= 1 quad forall j in m$
+Formalizzazione:
+- *Vincoli*. Ogni insieme $S_i$ può essere visto come una variabile booleana $x_j$:
+  - $x_j >= 0 quad forall j in {1,dots,m}$
+  - $x_j <= 1 quad forall j in {1,dots,m}$
+- *$"Sol"_"amm"$*. Ogni punto $p in Omega$ dell'universo deve essere preso. Definiamo il vincolo che conta quante aree hanno preso un certo punto $p$, deve essere almeno una:
+$ forall p in Omega quad sum_(p in S_i) x_i >= 1 $
+- *$C_Pi$*. La soluzione è il costo delle aree prese:
+$ min x_1 w_1 + x_2 w_2 + ... x_n w_n $
 
-La soluzione deve essere ammissibile, quindi ogni punto deve essere preso. Definiamo il vincolo che conta quante aree hanno preso quel punto, e deve essere almeno uno:
-- $sum_(p in S_i) x_i >= 1 quad forall p in Omega$
+#nota()[
+  Il numero di vincoli è polinomiale rispetto a $n$ e $m$.
+]
+Il problema è che la programmazione lineare intera (PLI) non si può risolvere in tempo polinomiale. Andiamo a rilassare i vincoli, ottenendo un problema di programmazione lineare non intera. Nella versione rilassata i vincoli $x_i in [0,1]$, non sono più solo $0$ o $1$.
 
-La soluzione è il costo delle aree prese:
-- $min x_1 w_1 + x_2 w_2 + ... x_n w_n$
-
-Il numero di vincoli è polinomiale rispetto a $n$ e $m$.
-
-Il problema è che la programmazione lineare intera non si può risolvere.
-Quindi rilassiamo i vincoli e lo trattiamo come problema di programmazione lineare.
-
-=== Algoritmo Rilassato
+=== Algoritmo Rilassato (PL non intera)
 
 #informalmente[
   Per ogni area, la inseriamo nella soluzione con una certa probabilità.
   La probabilità con cui inseriamo è la soluzione della programmazione lineare.
 ]
 
-- Input $k in bb(N)^+$ \/\/ Fattore di quanto "pompiamo" la probabilità calcolata dal solver LP
-- Risolvi $P$ come LP _(non intera)_
-- Sia $hat(x_!), ... hat(x_m) in [0,1]$
-- $I <- emptyset$
-- for $i = 1, ..., m$ do
-  - for $t = 1, ..., ceil(k + ln n)$ do
-    - con probabilità $hat(x_i)$ inserisci $i in I$
-- Output $I$
+Sia $P$ la versione del problema di programmazione intera non rilassato. 
+
+#pseudocode(
+  [*Input* $k in bb(N)^+$ #emph("// fattore di quanto pompiamo la probabilità calcolata dal solver LP")],
+  [Risolvi $P$ come $"LP"$ #emph("// non intera")],
+  [Sia $hat(x_1),dots,hat(x_m) in [0,1]$],
+  [$I <- emptyset$],
+  [*For* $t=1, dots, ceil(k+ln m)$],
+  indent(
+    [*For* $i = 1,dots,m$],
+    indent(
+      [Inserisci $i in I$ con probabilità $hat(x_i)$ #emph("// i viene inserito con una probabilità "+$>= P(hat(x_i))$+" in quanto iteriamo "+$k+ln n$)] 
+    ),
+  ),
+  [*Output* $I$]
+)
 
 #teorema("Teorema")[
   #attenzione[
