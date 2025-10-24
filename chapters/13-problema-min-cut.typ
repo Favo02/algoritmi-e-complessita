@@ -285,52 +285,59 @@ Sia *$xi_i$* l'evento: $"all'"i"-esima iterazione non si è contratto un lato di
   #nota()[
     Tale probabilità è sufficientemente piccola per affermare che l'algoritmo non tocca il taglio minimo. 
   ]
-]
+]<min-cut-lemma-p>
 
 #teorema("Teorema")[
   L'algoritmo di Karger trova il *taglio minimo* con *probabilità $>= 1/binom(n, 2)$*.
 
   #dimostrazione[
-    Vogliamo dimostrare:
+    Vogliamo dimostrare che durante l'esecuzione dell'algoritmo *non* vengono toccati i vertici del taglio minimo:
     $ P[xi_1 inter x_2 inter ... inter xi_(n-2)] $
-
-    Attraverso la regola della catena (=) e usando il Lemma1 (>=):
+    
+    Applicando la regola della catena: 
     $
-      & = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] \
-      & >= (n-2)/n dot (n-3)/(n-1) dot ... dot 1/3 \
-      & = (limits(product)_(i=1)^(n-2)i)/(limits(product)_(i=3)^n i) \
-      & = (1dot 2)/(n ( n-1)) = 1/binom(n, 2) space qed
+      & = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] dots \
+
+      & underbrace(>=,#link-teorema(<min-cut-lemma-p>)) (n-2)/n dot (n-3)/(n-1) dot ... dot 1/3 \
+
+      & = (limits(product)_(i=1)^(n-2)i)/(limits(product)_(i=3)^n i) underbrace(=,"molti termini" \ "si semplificano") (n-2)! / (mr(n!)/(2)) \
+
+      & = (2 (n-2)!)/(mr((n-2)!(n-1)n)) = 2/(n(n-1)) =1/binom(n, 2) space qed
     $
   ]
 ]
 
 #attenzione[
-  Questa proprietà è molto piccola, quindi non molto buona.
+  La probabilità trovata è *molto piccola* (decresce in modo quadratico al cresceredi $n$), di conseguenza l'algoritmo trova raramente l'ottimo.
 
-  Possiamo però iterare questo algoritmo, in modo da far crescere la probabilitò.
-  Tra tutte le iterazioni prendiamo quella migliore (minima).
+  Possiamo però *iterare l'algoritmo*, in modo da far *crescere* la *probabilità* di trovare l'ottimo.
+  Tra tutte le iterazioni prendiamo la soluzione migliore (minima).
 ]
 
 #teorema("Corollario")[
-  Eseguendo Karger $binom(n, 2) ln n$ volte, otteniamo il taglio minimo con probabilità $>= 1 - 1/n$.
+  Eseguendo Karger $binom(n, 2) ln n$ volte, otteniamo il taglio minimo con probabilità *$>= 1 - 1/n$*.
 
   #dimostrazione[
-    Ogni volta, la probabilità di NON trovare l'ottimo è
+    Ad ogni iterazione, la probabilità che l'algoritmo *NON* trovi l'ottimo è
     $ <= 1 - 1/binom(n, 2) $
 
-    Quindi, eseguendo l'algoritmo $binom(n, 2) ln n$ volte, diventa:
-    $ <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) $
+    Eseguendo l'algoritmo iterato per $binom(n, 2) ln n$ volte, la probabilità diventa:
+    $ <= underbrace((1 - 1/binom(n, 2))^(binom(n, 2) ln n),"probabilità di non trovare l'ottimo" \ "ad una qualunque esecuzione") $
 
-    Dato che sempre vale la proprietà:
+    Sfruttando la $mb("proprietà")$:
     $ forall x >= 1, quad 1/4 <= (1-1/x)^x <= 1/e $
 
-    Allora:
-    $ <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) $
+    Allora Sfruttando la $mb("proprietà")$ con $x = binom(n,2) $:
+    $ <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) <= (1/e)^(ln n) underbrace(<=,"prob di non trovare l'ottimo" \ "sup. limitata da") 1/n quad qed
+    $
+
+    Siccome abbiamo calcolato un limite superiore alla probabilità che l'algoritmo non trova l'ottimo, basta girare tale probabilità: 
+    $ >= 1-1/n $
   ]
 ]
 
 #informalmente[
-  Perchè abbiamo eseguito l'algoritmo quel numero di volte?
+  Perchè l'algoritmo viene eseguito questo numero specifico di volte (polinomiale)?
 
-  Perchè così abbiamo una funzione di probabilità che tende a $1$ per $n -> infinity$, quindi è quasi certo che trovi l'ottimo
+  Perchè in questo modo abbiamo una funzione di *probabilità* che tende a *$1$* per *$n -> infinity$*, quindi è quasi certo che l'algoritmo trovi l'ottimo.
 ]
