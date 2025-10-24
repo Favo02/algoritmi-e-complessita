@@ -2,6 +2,30 @@
 
 = Problema Set Cover (basato sul Probabilistic Rounding)
 
+== Proprietà utili
+
+Definiamo con $xi_i$ un evento
+
+/ Chain Rule:
+$
+  P[xi_1 inter xi_2 inter dots inter xi_n] = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_2 xi_1] dots
+$ 
+<chain-rule>
+
+/ Union Bound: Permette di stimare la probabilità dell'unione di event: 
+$
+  P[union.big_i xi_i] underbrace(<=,"contiamo più volte la" \ "sovrapposizione degli insiemi") sum_i P[xi_i]
+$
+<union-bound>
+
+/ Disuguaglianza di Markov: La Proprietà $forall$ v.a $X$ con media finita: 
+$
+  forall a > 0, P[X >= a] <= E[X] / a 
+$
+Sfrutto la *Legge di concentrazione* = Vogliamo sapere di quanto una v.a $X$ si discosta da un certo valore $a$, possiamo sfruttare il valore atteso.
+
+== Definizione del problema
+
 #informalmente[
   Problema già visto, avevamo trovato una soluzione approssimata basata sul pricing
 ]
