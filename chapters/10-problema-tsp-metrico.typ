@@ -24,7 +24,7 @@
 
 Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo dei vincoli sul grafo $G(V,E)$:
 + $G$ è una *clique*
-+ $delta_e$ è una *metrica*, cioè vale la distanza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
++ $delta_e$ è una *metrica*, cioè vale la disuguaglianza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
 
 #attenzione[
   Senza la seconda limitazione, sarebbe possibile trasformare qualsiasi grafo (non per forza cricca) in una cricca.
@@ -73,7 +73,7 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
       ],
     )
   ]
-  L'algoritmo non li sceglierà mai, in quanto vuole trovare il circuito minimo. Se l'algoritmo scegliesse dei lati fittizzi nella soluzione prodotta, allora li grafo di partenza non conteneva un circuito Hamiltoniano.
+  L'algoritmo non li sceglierà mai, in quanto vuole trovare il circuito minimo. Se l'algoritmo scegliesse dei lati fittizi nella soluzione prodotta, allora il grafo di partenza non conteneva un circuito Hamiltoniano.
 ]
 
 #teorema("Teorema")[
@@ -86,7 +86,7 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
   [*Input*: $G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
   [$T <-$ #link(<tsp-minimum-spanning-tree>)[Minimum spanning tree#super[1]] su $G$],
   [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]] + ", " + $|D|$ + " è pari")],
-  [$M <-$ #link(<tsp-minumum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
+  [$M <-$ #link(<tsp-minimum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
   [$tilde(pi) <-$ Circuito Euleriano su $M union T$ #emph("// la sua esistenza è garantita da " + link(<tsp-esistenza-circuito-euleriano>)[esistenza circuito Euleriano#super[4]])],
   [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]] ],
 )
@@ -126,8 +126,8 @@ L'algoritmo sfrutta le seguenti componenti:
     Questo genere di risultati, ovvero inferire dei risultati (come pattern che si ripetono) partendo solo da una struttura di una determinata dimensione viene chiamata #link("https://en.wikipedia.org/wiki/Ramsey_theory")[*Teoria di Ramsey*].
   ]
 
-- *Minimum-Weight Perfect Matching*#super[3]: <tsp-minumum-weight-perfect-matching>
-  dato un grafo pesato con un numero di vertici pari, un perfect matching è una scelta di lati che fa sposare tutti (da cui perfect) i vertici.
+- *Minimum-Weight Perfect Matching*#super[3]: <tsp-minimum-weight-perfect-matching>
+  dato un grafo pesato con un numero di vertici pari, un perfect matching è una scelta di lati che fa sposare tutti (da cui perfect) i vertici, ovvero ogni vertice è incidente esattamente a un lato del matching.
   Tra tutti i matching possibili, viene scelto quello di peso (somma dei lati) minore.\
   Tale problema è risolvibile in tempo polinomiale ($in "PO"$) utilizzando l'#link("https://en.wikipedia.org/wiki/Blossom_algorithm")[algoritmo di _Edmonds_].
 
@@ -138,14 +138,14 @@ L'algoritmo sfrutta le seguenti componenti:
 
     #dimostrazione[
       #attenzione[
-        Questa non è una _dimostrazione_, ma solo una _costruzione_ del senso $<==$ dell'implicazione, ovvero come costruire un circuito Euleriano dato un multigrafo connesso con tutti i vertici di di grado pari.
+        Questa non è una _dimostrazione_, ma solo una _costruzione_ del senso $<==$ dell'implicazione, ovvero come costruire un circuito Euleriano dato un multigrafo connesso con tutti i vertici di grado pari.
       ]
 
       Dato un multigrafo non orientato con tutti i vertici di grado pari:
       - si può partire da un vertice qualsiasi $a$
       - seguire un qualsiasi arco non ancora visitato
       - se si torna su un vertice già visitato $b$ (quindi sono stati usati $3$ dei suoi lati incidenti, in questo esempio $mb(1\, 2\, 4)$), esso ha per forza almeno un ulteriore lato (#mb(5)) dato che deve essere di grado pari
-      - si continua così fino a quando i lati non esauriscono (in questo caso si è per forza sul vertice iniziale)
+      - si continua così fino a quando i lati non si esauriscono (in questo caso si è per forza sul vertice iniziale)
 
       #figure(
         cetz.canvas({
@@ -193,14 +193,14 @@ L'algoritmo sfrutta le seguenti componenti:
 
   $M union T$ è un multigrafo dato che $M$ (il matching) e $T$ (l'albero di copertura) possono contenere dei lati in comune.
   Questo multigrafo ha tutti i vertici di grado *pari*:
-  - tutti i vertici $in T \\ M$ avevano già grado pari (altrimenti sarebbero $in D$ e quindi non nel matching $M$)
+  - tutti i vertici $in T \\ M$ avevano già grado pari (altrimenti sarebbero $in D$ e quindi nel matching $M$)
   - tutti i vertici $in T inter M$ avevano grado dispari in $T$, a cui è stato aggiunto un lato dal matching $M$ (per sposarli), rendendoli pari
   Quindi, per #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>), esiste un circuito Euleriano sul multigrafo $M union T$.
 
 - *Cortocircuitazione*#super[5]: <tsp-cortocircuitazione>
-  un circuito Euleriano, passa una sola volta da tutti i lati, ma potrebbe passare più volte da alcuni vertici (come ad esempio mostrato nella dimostrazione di #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>)).
+  un circuito Euleriano passa una sola volta da tutti i lati, ma potrebbe passare più volte da alcuni vertici (come ad esempio mostrato nella dimostrazione di #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>)).
   Per ottenere un circuito Hamiltoniano possiamo sfruttare la cortocircuitazione, ovvero saltare direttamente al vertice successivo a quello già incontrato.
-  Questa cosa è possibile perchè il grafo è una *clique* e perchè vale la *disuguaglianza triangolare* (migliorando quindi il peso finale).
+  Questa cosa è possibile perché il grafo è una *clique* e perché vale la *disuguaglianza triangolare* (migliorando quindi il peso finale).
 
   #esempio([
     #figure(
@@ -263,13 +263,13 @@ L'algoritmo sfrutta le seguenti componenti:
 === Analisi dell'approssimazione
 
 #teorema("Lemma")[
-  Sia $T$ uno spanning tree minimo per un grafo, il suo peso (somma del peso dei lati selezionati) è minore della soluzione ottima $delta^*$ (lunghezza del circuito Hamiltoniano più corto):
+  Sia $T$ uno spanning tree minimo per un grafo, il suo peso (somma del peso dei lati selezionati) è minore o uguale della soluzione ottima $delta^*$ (lunghezza del circuito Hamiltoniano più corto):
   $ delta(T) <= delta^* $
 
   #dimostrazione[
     Sia $pi^*$ un circuito Hamiltoniano ottimo per TSP.
 
-    Togliendo un lato da $pi^*$, otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree $T'$.
+    Togliendo un lato da $pi^*$, otteniamo un grafo aciclico che copre tutti i vertici, ovvero uno spanning tree $T'$.
     Per definizione, $T$ è il più piccolo tra tutti gli alberi ricoprenti.
 
     $
@@ -289,7 +289,7 @@ L'algoritmo sfrutta le seguenti componenti:
 
   #dimostrazione[
     Prendiamo il circuito Hamiltoniano ottimo $pi^*$, questo circuito passa per forza da tutti i vertici di $D$.
-    Possiamo circuitare tutti questi vertici e ottenere un circuito $mb(overline(pi)^*)$. Questo circuito tocca tutti i vertici (neri) che vogliamo far sposare nel matching $M$.
+    Possiamo cortocircuitare tutti questi vertici e ottenere un circuito $mb(overline(pi)^*)$. Questo circuito tocca tutti i vertici (neri) che vogliamo far sposare nel matching $M$.
 
     #figure(
       cetz.canvas({
@@ -359,7 +359,7 @@ L'algoritmo sfrutta le seguenti componenti:
     $ delta(overline(pi)^*) <= delta(pi^*) $
 
     I vertici riempiti di nero vanno sposati da un matching perfetto.
-    Due modi di ottenere ciò è alternare gli archi di $mb(overline(pi)^*)$, generando i matching $mr(M_1)$ e $mg(M_2)$.
+    Due modi per ottenere ciò sono alternare gli archi di $mb(overline(pi)^*)$, generando i matching $mr(M_1)$ e $mg(M_2)$.
 
     #figure(
       cetz.canvas({
@@ -547,8 +547,8 @@ Eseguiamo ora l'algoritmo di Christofides su $G$:
 
 - $D <- {v_1, v_n}$: gli unici vertici di grado dispari in $T$ sono $v_1$ e $v_n$ (grado $1$)
 
-- $mm(M) <- "MWPM"(D)$: minimum-weight perfect matching tra soli due vertici è semplicemente l'arco che li collega, di peso il cammino minimo tra $v_1$ e $v_n$, calcolato:
-  - archi alternati da $v_1 ~> v_3$, $v_3 ~> v_5$, ..., $v_(n-3) ~> v_(n-1)$ (con ciascuno costo $1+epsilon$)
+- $mm(M) <- "MWPM"(D)$: minimum-weight perfect matching tra soli due vertici è semplicemente l'arco che li collega, di peso uguale al cammino minimo tra $v_1$ e $v_n$, calcolato come:
+  - archi alternati da $v_1 ~> v_3$, $v_3 ~> v_5$, ..., $v_(n-3) ~> v_(n-1)$ (ciascuno di costo $1+epsilon$)
   - arco di costo $1$ che collega $v_(n-1)$ a $v_n$
   - costo di $mm(M = (1+epsilon) n/2 + 1)$
 
@@ -670,7 +670,7 @@ Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccol
 
 
 #teorema("Teorema")[
-  *$3/2$* è il miglior tasso di approssimaione noto per *TSP metrico*.
+  *$3/2$* è il miglior tasso di approssimazione noto per *TSP metrico*.
 ]
 
 == Inapprossimabilità di TSP
@@ -696,16 +696,16 @@ Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccol
       )
     $
 
-    Eseguendo l'algorimto su $overline(G)$, ci verrà resituito un circuito Hamiltoniano $pi$ di costo $overline(delta)$.
+    Eseguendo l'algorimto su $overline(G)$, ci verrà restituito un circuito Hamiltoniano $pi$ di costo $overline(delta)$.
     Quindi, per definizione di approssimazione:
     $ overline(delta) <= alpha overline(delta)^* $
 
-    Le soluzioni $overline(delta)^* e overline(delta)$ si dividono in due casi:
+    Le soluzioni $overline(delta)^*$ e $overline(delta)$ si dividono in due casi:
 
     - il grafo originale $G$ *ha* un cammino Hamiltoniano
       - la soluzione _ottima_ su $overline(G)$ usa solo archi del grafo originale, quindi di peso $1$:
         $ overline(delta)^* = 1 dot n $
-      - la soluzione _approssimata_ su $overline(G)$ è al massimo $alpha$ l'ottimo:
+      - la soluzione _approssimata_ su $overline(G)$ è al massimo $alpha$ volte l'ottimo:
         $ overline(delta) <= alpha n $
 
     - il grafo originale $G$ *non* ha un cammino Hamiltoniano
