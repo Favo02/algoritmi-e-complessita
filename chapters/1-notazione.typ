@@ -100,9 +100,9 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 
 / Multigrafo: grafo in cui possono esistere _più lati_ tra la stessa coppia di vertici.
 
-/ Circuito Euleriano: circuito che tocca esattamente una volta ogni _lato_ del grafo.
+/ Cammino/Circuito Euleriano: cammino/circuito che tocca esattamente una volta ogni _lato_ del grafo.
 
-/ Circuito Hamiltoniano: circuito che tocca esattamente una volta ogni _vertice_ del grafo.
+/ Cammino/Circuito Hamiltoniano: cammino/circuito che tocca esattamente una volta ogni _vertice_ del grafo.
 
 / Grafo (non orientato) connesso: da un nodo si può raggiungere ogni altro nodo del grafo (ciò implica, dato che i lati non sono orientati, che ogni nodo può raggiungere qualsiasi altro nodo).
 
@@ -113,11 +113,15 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 / Clique (cricca): insieme di vertici di un grafo, in cui ogni vertice è connesso direttamente ad ogni altro vertice. Formalmente, dato un grafo non orientato $G=(V, E)$:
   $ C subset.eq V quad "t.c." quad forall v_1,v_2 in C, v_1 != v_2 quad => quad (v_1,v_2) in E $
 
-/ Clique (cricca) completa: clique che include tutti i vertici del grafo, formalmente $C = V$. Una clique completa corrisponde a un grafo completo ed è sempre connessa.
+/ Clique (cricca) completa $G(V, binom(E, 2))$: clique che include tutti i vertici del grafo, formalmente $C = V$. Una clique completa corrisponde a un grafo completo ed è sempre connessa.
 
 / Albero: grafo connesso aciclico (non deve per forza avere una radice).
 
 / Foresta: grafo aciclico.
+
+/ Grado di un vertice $d(v)$: numero di lati (o archi) incidenti su quel vertice.
+
+/ Grado di un grafo $d(G)$: _non propriamente definito su grafo_, di solito si intende il grado massimo o minimo tra tutti i vertici del grafo. Oppure un grafo con tutti i vertici dello stesso grado.
 
 == Varie <varie>
 

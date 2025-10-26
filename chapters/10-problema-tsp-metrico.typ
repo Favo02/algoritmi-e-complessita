@@ -1,118 +1,76 @@
 #import "../imports.typ": *
 
-= Problema Traveling Saleman in uno spazio metrico
+= Problema Travelling Salesman (Commesso Viaggiatore) Metrico (TSP Metrico)
 
-#informalmente[
-  Problema dei ponti di Königsberg.
-  Percorrere tutti i ponti una volta sola e tornare al punto di partenza. Vogliamo quindi cercare un cammino Euleriano. Si rimanda alle definizioni di circuito, nel capitolo #link-section(<grafi>)
+#nota[
+  Si rimanda alla sezione #link-section(<grafi>) per le definizioni necessarie (clique, cammino/circuito Hamiltoniano/Euleriano).
 ]
 
-#teorema("Teorema")[
-  Un multigrafo ammette un circuito Euleriano sse è connesso e tutti i suoi vertici hanno grado pari.
-
-  #dimostrazione[
-    #attenzione[
-      Questa non è davvero una dimostrazione, ma solo una costruzione che mostra il senso $<==$ dell'implicazione. Ovvero come costruire un circuito dato un grafo connesso di grado $2$.
-    ]
-
-    //TODO FARE DISEGNO 
-
-    Dato un grafo iniziamo a seguire un cammino che parte dal vertice $x$: 
-    - Si procede con la visita fino a quando non si torna su un vertice già visitato.
-    - Se siamo ritornati su un vertice già visitato, allora ha almeno $3$ lati.
-    - Siccome il grafo ha grado pari, significa che deve per forza esserci un'altro lato
-    - Continuiamo questa procedura fino a quando non si torna al vertice $x$ 
-  ]
-]
-
-== Handshaking Lemma
-
-#informalmente[
-  Se un gruppo di persone in una stanza si stringe la mano (non per forza tutti devono dare la mano), il numero di persone che ha stretto un numero dispari di mani è pari.
-
-  Questo genere di teorie (asserire dei risultati certi su eventi "strani"), prendono il nome di *Teorema di Ramsey*. Da una certa dimensione del problema in poi, appaiono dei pattern inevitabili.
-]
-
-#teorema("Lemma")[
-  In ogni grafo non orientato, il numero di vertici di grado dispari è pari.
-
-  #informalmente[
-    Rappresentazione a grafo delle persone (vertici) e strette di mano (lati).
-  ]
-
-  #dimostrazione[
-    Dato un grafo $G=(V,E)$, sia $d(x),x in V$. Sia $d(x)$ il grado di un vertice: 
-    $ sum_(x in V) d(x)  = 2m $
-    Sto sommando per ogni vertice il suo grado, ogni lato viene contato $2$ volte.\
-    - Le componenti pari della sommatoria non contanto. Partendo da una quantità pari e sommando solamente quote pari il risultato è di nuovo pari. 
-    - Le componenti dispari possono cambiare la parità della sommatoria. Ma siccome la sommatoria finale da un risultato pari, il numero di componenti dispari è pari. 
-  ]
-]
-
-== Problema Commesso Viaggiatore (TSP) [NPOc]
+== Problema TSP [NPOc]
 
 - *$I_Pi$*:
-  - $G(V, E)$, grafo non orientato
-  - $angle.l delta_e angle.r_(e in E) in bb(Q)^+$, pesi dei lati 
-- *$"Amm"_Pi$*: circuito hamiltoniano $pi in G$, cioè un circuito che tocchi tutti i vertici esattamente una volta, oppure $bot$
-- *$C_Pi$*: lunghezza del circuito hamiltoniano:
-  $ delta = sum_(c in pi) delta_e $
+  - $G(V, E)$: grafo non orientato
+  - $chevron.l delta_e chevron.r_(e in E) in bb(Q)^+$: pesi dei lati
+- *$"Amm"_Pi$*: circuito Hamiltoniano $pi in G$ (tutti i lati una volta), oppure $bot$ (se non esiste)
+- *$C_Pi$*: peso del circuito Hamiltoniano:
+  $ delta = sum_(e in pi) delta_e $
 - *$t_Pi$* = $min$
 
-== TSP Metrico [NPOc]
+#teorema("Teorema")[
+  *$ "TSP" in "NPOc" $*
+]
 
-Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avremo dei vincoli aggiuntivi sul grafo $G(V,E)$:
+== Problema TSP Metrico [NPOc]
+
+Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo dei vincoli sul grafo $G(V,E)$:
 + $G$ è una *clique*
-+ $delta_e$ è una *metrica*, cioè:
-  - Vale la distanza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
++ $delta_e$ è una *metrica*, cioè vale la distanza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
 
 #attenzione[
-  Senza la seconda limitazione, allora è possibile trasformare qualsiasi grafo (non per forza cricca) in una cricca.
-  Basta aggiungere tutti i lati mancanti con un costo enorme.
-  #esempio()[
+  Senza la seconda limitazione, sarebbe possibile trasformare qualsiasi grafo (non per forza cricca) in una cricca.
+  Basterebbe aggiungere tutti i lati mancanti con un costo enorme, in modo che non vengano mai scelti dall'algoritmo.
+
+  #esempio[
     #figure(
       cetz.canvas({
         import cetz.draw: *
 
         // Vertici del grafo
         circle((0, 0), radius: 0.15, fill: white, stroke: black)
-        content((0, -0.5), text(size: 10pt)[$$])
         content((-0.5, 0), text(size: 10pt)[$v_1$])
 
         circle((2, 0), radius: 0.15, fill: white, stroke: black)
-        content((2, -0.5), text(size: 10pt)[$6$])
         content((2.5, 0), text(size: 10pt)[$v_2$])
 
         circle((1, 1.5), radius: 0.15, fill: white, stroke: black)
-        content((1, 2), text(size: 10pt)[$5$])
         content((1.5, 1.5), text(size: 10pt)[$v_3$])
 
         circle((1, -1.5), radius: 0.15, fill: white, stroke: black)
-        content((1, 2), text(size: 10pt)[$5$])
         content((1.5, -1.5), text(size: 10pt)[$v_4$])
 
-        // Archi con prezzature
+        // Archi con prezzature corrette
         line((0, 0), (2, 0), stroke: 1pt + red)
-        content((0.75, 0.25), text(size: 9pt, fill: red)[$17$])
+        content((0.7, 0.25), text(size: 9pt, fill: red)[$17$])
 
         line((0, 0), (1, 1.5), stroke: 1pt + black)
-        content((0.2, 0.8), text(size: 9pt, fill: black)[$4$])
+        content((0.3, 0.8), text(size: 9pt, fill: black)[$4$])
 
         line((2, 0), (1, 1.5), stroke: 1pt + black)
-        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
+        content((1.7, 0.8), text(size: 9pt, fill: black)[$1$])
 
         line((1, 1.4), (1.0, -1.4), stroke: 1pt + black)
-        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
+        content((0.8, -0.5), text(size: 9pt, fill: black)[$5$])
 
         line((1, -1.5), (2.0, 0.0), stroke: 1pt + black)
-        content((1.8, 0.8), text(size: 9pt, fill: black)[$1$])
-      
+        content((1.7, -0.8), text(size: 9pt, fill: black)[$6$])
+
         line((1, -1.5), (0.0, 0.0), stroke: 1pt + red)
         content((0.3, -1.0), text(size: 9pt, fill: red)[$17$])
-      
       }),
-      caption: [Gli archi di colore $mr("rosso")$ sono quelli fittizzi.\ 
-      Come si può esservare il grafo originale non era una clique],
+      caption: [
+        Gli archi di colore $mr("rosso")$ sono fittizzi, aggiunti al grafo originale (non clique) per renderlo cricca.\
+        Il costo è calcolato come la somma di tutti gli archi $+1$.
+      ],
     )
   ]
   L'algoritmo non li sceglierà mai, in quanto vuole trovare il circuito minimo. Se l'algoritmo scegliesse dei lati fittizzi nella soluzione prodotta, allora li grafo di partenza non conteneva un circuito Hamiltoniano.
@@ -122,386 +80,597 @@ Tuttavia vedremo una versione del problema che lavora in uno spazio metrico. Avr
   *$ "TSP Metrico" in "NPOc" $*
 ]
 
-== Algoritmo di Christofides per TSP metrico
+== Algoritmo di Christofides per TSP metrico [$3/2$-APX]
 
-L'algoritmo sfrutta le seguenti componenti: 
-- *Minimum Spanning Tree*, ovvero una scelta di lati che è un albero e tocca tutti i vertici. Tra tutti i possibili spanning tree, prendiamo il minimo.\ 
-  Tale problema è risolvibile in tempo polinomiale $->$ algoritmo di Kruskal.
-
-- *Minimum-weight perfect matching $in "PO"$*, Dato un grafo $G=(V,E)$ pesato e con un numero pari di vertici, l'obiettivo è trovare un perfect matching di costo minimo (tutte le coppie sposate).\
- Tale problema è risolvibile in tempo polinomiale $->$ algoritmo di Edmons. 
- 
 #pseudocode(
-  [*Input*: $G(V, E =binom(V, 2)), angle.l delta_e angle.r_(e in E)$],
-  [$T <- $ *Minimum Spanning Tree*],
-  [$D <- $ insieme dei vertici di grado dispari in $T$],
-  [#emph("Per handshaking lemma " +$|D|$+ "è pari" )],
-  [$M <- $ *Minimum-weight perfect matching* su $D$],
-  [#emph($M$+" e "+$D$+ " possono contenere dei lati ripetuti")],
-  [$M union T <- $ multigrafo],
-  indent(
-    [Tutti i vertici in $M$ hanno grado pari #emph("(per pefect matching)")],
-    [$exists$ un circuito Euleriano $tilde(pi)$],
-  ),
-  [$pi <- tilde(pi)$, *$"Shortcircuit"$* ],
-  [#emph("Il cirucuito euleriano "+$tilde(pi)$+" potrebbe passare per più vertici")],
+  [*Input*: $G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
+  [$T <-$ #link(<tsp-minimum-spanning-tree>)[Minimum spanning tree#super[1]] su $G$],
+  [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]] + ", " + $|D|$ + " è pari")],
+  [$M <-$ #link(<tsp-minumum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
+  [$tilde(pi) <-$ Circuito Euleriano su $M union T$ #emph("// la sua esistenza è garantita da " + link(<tsp-esistenza-circuito-euleriano>)[esistenza circuito Euleriano#super[4]])],
+  [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]] ],
 )
 
-#nota([
-  Siccome sono in una clique, posso trasformare un circuito Euleriano in un circuito Hamiltoniano effetuando una *cortocircuitazione*: 
-  - Quando incontro un vertice già visitato sul cammino passo ad uno non ancora visitato, sfruttando l'arco diretto.
+L'algoritmo sfrutta le seguenti componenti:
+
+- *Minimum Spanning Tree*#super[1]: <tsp-minimum-spanning-tree>
+  dato un grafo pesato, uno spanning tree è una scelta di lati che forma un albero (quindi aciclico) e tocca tutti i vertici.
+  Tra tutti gli spanning tree possibili, viene scelto quello di peso (somma degli archi) minima.\
+  Tale problema è risolvibile in tempo polinomiale ($in "PO"$) utilizzando l'#link("https://en.wikipedia.org/wiki/Kruskal's_algorithm")[algoritmo di _Kruskal_].
+
+- *Handshaking Lemma*#super[2]: <tsp-handshaking-lemma>
+
+  #informalmente[
+    Se un gruppo di persone si stringono tra di loro (in maniera arbitraria) la mano, il numero di persone che ha stretto un numero dispari di mani è pari.
+
+    Le persone sono rappresentate come i vertici e le strette di mano come i lati di un grafo.
+  ]
+
+  #teorema("Lemma")[
+    In ogni grafo non orientato, il numero di vertici di grado dispari è pari.
+
+    #dimostrazione[
+      Dato un grafo $G=(V,E)$:
+      $ sum_(x in V) d(x) & = 2m $
+      dove $d(x), x in V$ è il grado di un vertice e $m$ è il numero di lati del grafo.
+
+      Sommando il grado di ogni vertice del grafo, allora ogni lato viene contato $2$ volte (una per ognuna delle sue estremità), ottenendo $2m$.
+
+      Dato che questo numero è pari, allora può essere scomposto in componenti pari e componenti dispari:
+      - i vertici di grado *pari* possono essere ignorati, dato che la somma di una qualsiasi quantità di numeri pari rimane sempre pari
+      - i vertici di grado *dispari* devono per forza essere in quantità pari, dato che solo sommando un numero pari di numeri dispari si ottiene un risultato pari
+    ]
+  ]
+
+  #nota[
+    Questo genere di risultati, ovvero inferire dei risultati (come pattern che si ripetono) partendo solo da una struttura di una determinata dimensione viene chiamata #link("https://en.wikipedia.org/wiki/Ramsey_theory")[*Teoria di Ramsey*].
+  ]
+
+- *Minimum-Weight Perfect Matching*#super[3]: <tsp-minumum-weight-perfect-matching>
+  dato un grafo pesato con un numero di vertici pari, un perfect matching è una scelta di lati che fa sposare tutti (da cui perfect) i vertici.
+  Tra tutti i matching possibili, viene scelto quello di peso (somma dei lati) minore.\
+  Tale problema è risolvibile in tempo polinomiale ($in "PO"$) utilizzando l'#link("https://en.wikipedia.org/wiki/Blossom_algorithm")[algoritmo di _Edmonds_].
+
+- *Esistenza Circuito Euleriano su $M union T$*#super[4]: <tsp-esistenza-circuito-euleriano>
+
+  #teorema("Teorema")[
+    Un multigrafo ammette un circuito Euleriano se e solo se è connesso e tutti i suoi vertici hanno grado *pari*.
+
+    #dimostrazione[
+      #attenzione[
+        Questa non è una _dimostrazione_, ma solo una _costruzione_ del senso $<==$ dell'implicazione, ovvero come costruire un circuito Euleriano dato un multigrafo connesso con tutti i vertici di di grado pari.
+      ]
+
+      Dato un multigrafo non orientato con tutti i vertici di grado pari:
+      - si può partire da un vertice qualsiasi $a$
+      - seguire un qualsiasi arco non ancora visitato
+      - se si torna su un vertice già visitato $b$ (quindi sono stati usati $3$ dei suoi lati incidenti, in questo esempio $mb(1\, 2\, 4)$), esso ha per forza almeno un ulteriore lato (#mb(5)) dato che deve essere di grado pari
+      - si continua così fino a quando i lati non esauriscono (in questo caso si è per forza sul vertice iniziale)
+
+      #figure(
+        cetz.canvas({
+          import cetz.draw: *
+
+          // Vertices
+          circle((0, 2), radius: 0.15, fill: white, stroke: black)
+          content((-0.4, 2), text(size: 10pt)[$a$])
+
+          circle((2, 3), radius: 0.15, fill: white, stroke: black)
+          content((2, 3.4), text(size: 10pt)[$b$])
+
+          circle((4, 3), radius: 0.15, fill: white, stroke: black)
+          content((4.4, 3), text(size: 10pt)[$c$])
+
+          circle((4, 1), radius: 0.15, fill: white, stroke: black)
+          content((4.4, 1), text(size: 10pt)[$d$])
+
+          circle((2, 0), radius: 0.15, fill: white, stroke: black)
+          content((2, -0.4), text(size: 10pt)[$e$])
+
+          // Path edges with numbering
+          line((0.15, 2.05), (1.85, 2.95), mark: (end: ">"))
+          content((1, 2.7), text(size: 9pt, fill: blue)[$1$])
+
+          line((2.15, 3), (3.85, 3), mark: (end: ">"))
+          content((3, 3.3), text(size: 9pt, fill: blue)[$2$])
+
+          line((4, 2.85), (4, 1.15), mark: (end: ">"))
+          content((4.3, 2), text(size: 9pt, fill: blue)[$3$])
+
+          line((3.85, 1.05), (2.15, 2.95), mark: (end: ">"))
+          content((3, 1.8), text(size: 9pt, fill: blue)[$4$])
+
+          line((2, 2.85), (2, 0.15), mark: (end: ">"))
+          content((2.3, 1.5), text(size: 9pt, fill: blue)[$5$])
+
+          line((1.85, 0.05), (0.15, 1.95), mark: (end: ">"))
+          content((0.8, 0.8), text(size: 9pt, fill: blue)[$6$])
+        }),
+        caption: [Esempio di circuito Euleriano che visita il vertice $b$ più volte prima di tornare al punto di partenza $a$.],
+      )
+    ]
+  ] <tsp-metrico-teorema-circuito-euleriano-grado-pari>
+
+  $M union T$ è un multigrafo dato che $M$ (il matching) e $T$ (l'albero di copertura) possono contenere dei lati in comune.
+  Questo multigrafo ha tutti i vertici di grado *pari*:
+  - tutti i vertici $in T \\ M$ avevano già grado pari (altrimenti sarebbero $in D$ e quindi non nel matching $M$)
+  - tutti i vertici $in T inter M$ avevano grado dispari in $T$, a cui è stato aggiunto un lato dal matching $M$ (per sposarli), rendendoli pari
+  Quindi, per #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>), esiste un circuito Euleriano sul multigrafo $M union T$.
+
+- *Cortocircuitazione*#super[5]: <tsp-cortocircuitazione>
+  un circuito Euleriano, passa una sola volta da tutti i lati, ma potrebbe passare più volte da alcuni vertici (come ad esempio mostrato nella dimostrazione di #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>)).
+  Per ottenere un circuito Hamiltoniano possiamo sfruttare la cortocircuitazione, ovvero saltare direttamente al vertice successivo a quello già incontrato.
+  Questa cosa è possibile perchè il grafo è una *clique* e perchè vale la *disuguaglianza triangolare* (migliorando quindi il peso finale).
+
   #esempio([
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-      // Vertici del grafo
-      circle((0, 0), radius: 0.15, fill: white, stroke: black)
-      content((0, -0.5), text(size: 10pt)[$4$])
-      content((-0.5, 0), text(size: 10pt)[$A$])
+        // Vertici
+        circle((0, 2), radius: 0.15, fill: white, stroke: black)
+        content((-0.4, 2), text(size: 10pt)[$a$])
 
-      circle((3.0, -1.0), radius: 0.15, fill: white, stroke: black)
-      content((2, -0.5), text(size: 10pt)[$6$])
-      content((3.2, -0.7), text(size: 10pt)[$B$])
+        circle((2, 3), radius: 0.15, fill: white, stroke: black)
+        content((2, 3.4), text(size: 10pt)[$b$])
 
-      circle((2.0, 1.0), radius: 0.15, fill: white, stroke: black)
-      content((1, 2), text(size: 10pt)[$$])
-      content((2.0, 1.5), text(size: 10pt)[$C$])
+        circle((4, 3), radius: 0.15, fill: white, stroke: black)
+        content((4.4, 3), text(size: 10pt)[$c$])
 
-      circle((1, -2), radius: 0.15, fill: white, stroke: black)
-      content((1, -2.5), text(size: 10pt)[$D$])
+        circle((4, 1), radius: 0.15, fill: white, stroke: black)
+        content((4.4, 1), text(size: 10pt)[$d$])
 
-      circle((-1, -1), radius: 0.15, fill: white, stroke: black)
-      content((-1.3, -1.3), text(size: 10pt)[$E$])
+        circle((2, 0), radius: 0.15, fill: white, stroke: black)
+        content((2, -0.4), text(size: 10pt)[$e$])
 
-      // Circuito Euleriano con ordine di visita (archi blu solidi)
-      line((0.1, 0.1), (1.9, 0.9), stroke: 2pt + blue)
-      content((1, 0.7), text(size: 9pt, fill: blue)[$1$])
+        // Archi aggiunti per rendere il grafo una clique (grigio chiaro)
+        line((0.15, 1.93), (3.85, 2.93), stroke: (paint: gray.lighten(50%), thickness: 0.5pt))
+        line((0.15, 1.93), (3.85, 1.07), stroke: (paint: gray.lighten(50%), thickness: 0.5pt))
+        line((4, 2.85), (2.15, 0.15), stroke: (paint: gray.lighten(50%), thickness: 0.5pt))
 
-      line((2.1, 0.9), (2.9, -0.9), stroke: 2pt + blue)
-      content((2.7, 0), text(size: 9pt, fill: blue)[$2$])
+        // Circuito Euleriano (archi neri solidi)
+        line((0.15, 2.05), (1.85, 2.95), mark: (end: ">"), stroke: black)
+        content((1, 2.7), text(size: 9pt)[$mb(1)$])
 
-      line((2.9, -1.1), (1.1, -1.9), stroke: 2pt + blue)
-      content((2, -1.7), text(size: 9pt, fill: blue)[$3$])
+        line((2.15, 3), (3.85, 3), mark: (end: ">"), stroke: black)
+        content((3, 3.3), text(size: 9pt)[$mb(2)$])
 
-      line((0.9, -2), (-0.9, -1.1), stroke: 2pt + blue)
-      content((0, -1.8), text(size: 9pt, fill: blue)[$4$])
+        line((4, 2.85), (4, 1.15), mark: (end: ">"), stroke: black)
+        content((4.3, 2), text(size: 9pt)[$mb(3)$])
 
-      line((-0.9, -0.9), (-0.1, -0.1), stroke: 2pt + blue)
-      content((-0.7, -0.3), text(size: 9pt, fill: blue)[$5$])
+        line((3.85, 1.05), (2.15, 2.95), mark: (end: ">"), stroke: (paint: red, dash: "dashed"))
+        content((3, 1.8), text(size: 9pt)[$mb(4)$])
 
-      // A -> B di nuovo (6) - già visitato! (arco rosso tratteggiato)
-      line((0.1, 0.1), (1.9, 0.9), stroke: (paint: red, thickness: 3pt, dash: "dashed"))
-      content((1.0, 0.15), text(size: 10pt, fill: red)[$6$])
+        line((2, 2.85), (2, 0.15), mark: (end: ">"), stroke: (paint: red, dash: "dashed"))
+        content((2.3, 1.5), text(size: 9pt)[$mb(5)$])
 
-      // Shortcircuit: A -> C diretto (arco verde punteggiato)
-      line((0.1, -0.1), (2.9, -0.9), stroke: (paint: green, thickness: 3pt, dash: "dotted"))
-      content((1.5, -0.8), text(size: 9pt, fill: green)[*shortcut*])
-    }),
-    caption: [Esempio di shortcircuit: il circuito Euleriano $tilde(pi)$ visita B due volte, quindi si effettua un collegamento diretto A→C per ottenere il circuito Hamiltoniano $pi$.]
-  )
-])
+        // Shortcut: d -> e diretto (arco verde)
+        line((3.85, 0.93), (2.15, 0.05), mark: (end: ">"), stroke: green)
+        content((3.3, 0.4), text(size: 9pt, fill: green)[$<= 9$])
 
-])
+        // e -> a (continua normalmente)
+        line((1.85, 0.05), (0.15, 1.95), mark: (end: ">"), stroke: black)
+        content((0.8, 0.8), text(size: 9pt)[$mb(6)$])
+      }),
+      caption: [
+        Esempio di cortocircuitazione: il circuito Euleriano visita $b$ due volte.
+        Invece di seguire $d -> b -> e$ ($mb(4)$ e $mb(5)$), si sfrutta l'arco diretto $mg(d -> e)$ (che esiste dato che è una clique) per ottenere un circuito Hamiltoniano.
+        Per disuguaglianza triangolare, questo arco è di peso $<= 9$.
+      ],
+    )
+  ])
+
+=== Analisi dell'approssimazione
 
 #teorema("Lemma")[
-  Sia $T$ uno spanning tree minimo per un grafo $G=(V,E)$:
+  Sia $T$ uno spanning tree minimo per un grafo, il suo peso (somma del peso dei lati selezionati) è minore della soluzione ottima $delta^*$ (lunghezza del circuito Hamiltoniano più corto):
   $ delta(T) <= delta^* $
 
   #dimostrazione[
-    Sia $pi^*$ un circuito Hamiltoniano ottimo per TSP.\
-    Se togliamo un lato da $pi^*$, otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree.
+    Sia $pi^*$ un circuito Hamiltoniano ottimo per TSP.
 
-    $ forall e in pi^*, quad delta^* >= delta^* - delta_e >= delta(T) space qed $
+    Togliendo un lato da $pi^*$, otteniamo un grafo aciclico che copre tutti i lati, ovvero uno spanning tree $T'$.
+    Per definizione, $T$ è il più piccolo tra tutti gli alberi ricoprenti.
 
-    Ma lo spanning tree è per forza $>=$ al costo dello spanning tree minimo $T$.
+    $
+      forall e in pi^*, quad delta^* quad >= quad underbrace(delta^* - delta_e, delta(T')) quad >= quad delta(T) space qed
+    $
   ]
-]<lemma-1-spanning>
+] <tsp-lemma-1-spanning>
 
 #teorema("Lemma")[
-  Dati: 
-  - $T <- $ minimum spannig tree
-  - $D <- $ insieme dei vertici di  grado dispari di $T$
-  Consideriamo $M$, ovvero il minimum weight perfect matching su $D$: 
+  Dati:
+  - $T$: minimum spannig tree su un grafo $G$
+  - $D$: insieme dei vertici di grado dispari di $T$
+  - $M$: minimum weight perfect matching su $D$
+
+  Allora il peso del matching $M$ dei vertici di grado dispari è al massimo la metà della soluzione ottima $delta^*$:
   $ delta(M) <= 1/2 delta^* $
 
   #dimostrazione[
-    Prendiamo $pi^*$ (TSP ottimo) e cortocircuitiamo sui vertici di $D$ (i vertici di grado dispari sull'albero).
+    Prendiamo il circuito Hamiltoniano ottimo $pi^*$, questo circuito passa per forza da tutti i vertici di $D$.
+    Possiamo circuitare tutti questi vertici e ottenere un circuito $mb(overline(pi)^*)$. Questo circuito tocca tutti i vertici (neri) che vogliamo far sposare nel matching $M$.
 
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-      // Vertici del grafo (disposizione secondo l'immagine)
-      // Vertici neri (appartenenti a D - grado dispari)
-      circle((0, 0), radius: 0.15, fill: black, stroke: black)
-      content((-0.4, -0.3), text(size: 10pt, fill: black)[$v_1$])
+        // Posizioni dei 9 vertici
+        let positions = (
+          (0, 2), // v1
+          (1.5, 2.8), // v2
+          (3, 2.8), // v3
+          (4.5, 2), // v4
+          (4.5, 0.5), // v5
+          (3, -0.3), // v6
+          (1.5, -0.3), // v7
+          (0, 0.5), // v8
+        )
 
-      circle((3, 0), radius: 0.15, fill: black, stroke: black)
-      content((3.4, -0.3), text(size: 10pt)[$v_2$])
+        // Circuito Hamiltoniano principale (nero)
+        let hamiltonian = (
+          (0, 1),
+          (1, 2),
+          (2, 3),
+          (3, 4),
+          (4, 5),
+          (5, 6),
+          (6, 7),
+          (7, 0),
+        )
 
-      circle((3, 2), radius: 0.15, fill: black, stroke: black)
-      content((3.4, 2.3), text(size: 10pt)[$v_3$])
+        for edge in hamiltonian {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: 1pt + black)
+        }
 
-      circle((0, 2), radius: 0.15, fill: black, stroke: black)
-      content((-0.4, 2.3), text(size: 10pt, fill: black)[$v_4$])
+        // Circuito secondario su 4 vertici (rosso)
+        // Seleziono v2, v4, v6, v7 (indici 1, 3, 5, 6)
+        let secondary = ((1, 3), (3, 5), (5, 6), (6, 1))
 
-      // Vertici bianchi (grado pari)
-      circle((1.5, 3), radius: 0.15, fill: black, stroke: black)
-      content((1.5, 3.4), text(size: 10pt, fill:black)[$v_5$])
+        for edge in secondary {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+        }
 
-      circle((-0.5, 1), radius: 0.15, fill: white, stroke: black)
-      content((-1, 1), text(size: 10pt)[$v_6$])
+        // Vertici del circuito secondario (neri)
+        let secondary_vertices = (1, 3, 5, 6)
 
-      circle((3.5, 1), radius: 0.15, fill: white, stroke: black)
-      content((4, 1), text(size: 10pt)[$v_7$])
+        // Disegno i vertici
+        for (i, pos) in positions.enumerate() {
+          let fill_color = if i in secondary_vertices { black } else { white }
+          circle(pos, radius: 0.15, fill: fill_color, stroke: black)
+          content((pos.at(0) + 0.3, pos.at(1) - 0.3), text(size: 10pt)[$v_#(i + 1)$])
+        }
+      }),
+      caption: [
+        Il circuito Hamiltoniano principale (nero) collega tutti i vertici,
+        mentre il circuito $mb("blu")$ collega i vertici di grado dispari in $T$ (riempiti di nero).
 
-      // Circuito Hamiltoniano ottimo π* (archi neri solidi)
-      line((0.15, 0.05), (2.85, 0.05), stroke: 2pt + red)
-      line((2.85, 2), (1.6, 2.85), stroke: 2pt + black)
-      line((1.4, 2.85), (0.15, 2), stroke: 2pt + black)
-      line((0, 1.85), (-0.4, 1.1), stroke: 2pt + black)
-      line((-0.4, 0.9), (0, 0.15), stroke: 2pt + black)
-      line((3.15, 1.85), (3.4, 1.1), stroke: 2pt + black)
-      line((3.4, 0.9), (3, 0.15), stroke: 2pt + black)
+        #nota[
+          Il grafo disegnato è semplificato, ovviamente i vertici neri hanno ulteriori archi incidenti, che li rendono di grado dispari sull'albero (non disegnato).
+        ]
+      ],
+    )
 
-      // Matching M₁ (linee rosse)
-      line((3, 2), (0, 2), stroke: 2pt + red)
-      content((4.5, 0.5), text(size: 10pt, fill: red)[$M_1$])
-
-      // Matching M₂ (linee verdi)
-      line((3, 0.15), (3, 1.85), stroke: 2pt + green)
-      content((4.5, 1.5), text(size: 10pt, fill: green)[$M_2$])
-
-      line((0, 0), (0, 2), stroke: 2pt + green)
-      content((4.5, 1.5), text(size: 10pt, fill: green)[$M_2$])
-
-      // Legenda
-      content((3.5, 3.0), text(size: 12pt)[$pi^*$])
-
-      content((1.5, 2.3), text(size: 12pt)[$overline(pi)^*$])
-
-    }),
-    caption: [
-      Dal circuito ottimo $pi^*$ si identificano i vertici di grado dispari $D$ (rispetto all'albero).\ 
-      I matching $mr(M_1)$ e $mg(M_2)$ collegano alternativamente i vertici di $D$ seguendo il percorso cortocircuitato, creando il cammino $overline(pi)^*$.
-    ]
-  )
-    Possiamo collegare tra loro i vertici $in D$, formando un ciclo $overline(pi)^*$. Grazie alla disuguaglianza triangolare, allora: 
+    Dato che il circuito $mb(overline(pi)^*)$ è ottenuto #link(<tsp-cortocircuitazione>)[cortocircuitando] $pi^*$, allora grazie alla disuguaglianza triangolare è sicuramente più corto:
     $ delta(overline(pi)^*) <= delta(pi^*) $
 
-    $overline(pi)^*$ è un circuito su un numero pari di vertici, lo divido a metà e scelgo in maniera alternata i lati, formando $mr(M_1)$ e $mg(M_2)$.
+    I vertici riempiti di nero vanno sposati da un matching perfetto.
+    Due modi di ottenere ciò è alternare gli archi di $mb(overline(pi)^*)$, generando i matching $mr(M_1)$ e $mg(M_2)$.
 
-    $ delta^* >= quad delta(overline(pi)^*) = delta(mr(M_1)) + delta(mg(M_2)) $
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-    Ma $mr(M_1)$ e $mg(M_2)$ sono dei perfect matching, ma sono maggiori del minimum perfect matching $M$:
+        // Posizioni dei vertici
+        let positions = (
+          (0, 2), // v1
+          (1.5, 2.8), // v2
+          (3, 2.8), // v3
+          (4.5, 2), // v4
+          (4.5, 0.5), // v5
+          (3, -0.3), // v6
+          (1.5, -0.3), // v7
+          (0, 0.5), // v8
+        )
 
-    $ 
-      delta^* >= delta(mr(M_1)) + delta(mg(M_2)) >= delta(M) + delta(M) >= 2 delta(M) space\ 
-      delta^* >= 2 delta(M) \
-      delta(M) <= 1/2 delta^*
+        // Circuito principale (nero)
+        let hamiltonian = (
+          (0, 1),
+          (1, 2),
+          (2, 3),
+          (3, 4),
+          (4, 5),
+          (5, 6),
+          (6, 7),
+          (7, 0),
+        )
+
+        for edge in hamiltonian {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: 1pt + black)
+        }
+
+        // Circuito secondario su vertici neri (blu tratteggiato)
+        let secondary = ((1, 3), (3, 5), (5, 6), (6, 1))
+
+        for edge in secondary {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+        }
+
+        // Matching M1 (rosso)
+        let m1_edges = ((1, 3), (5, 6))
+        for edge in m1_edges {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: (paint: red.transparentize(50%), thickness: 3pt))
+        }
+
+        // Matching M2 (verde)
+        let m2_edges = ((3, 5), (6, 1))
+        for edge in m2_edges {
+          let p1 = positions.at(edge.at(0))
+          let p2 = positions.at(edge.at(1))
+          line(p1, p2, stroke: (paint: green.transparentize(50%), thickness: 3pt))
+        }
+
+        // Vertici del circuito secondario (neri)
+        let secondary_vertices = (1, 3, 5, 6)
+
+        for (i, pos) in positions.enumerate() {
+          let fill_color = if i in secondary_vertices { black } else { white }
+          circle(pos, radius: 0.15, fill: fill_color, stroke: black)
+          content((pos.at(0) + 0.3, pos.at(1) - 0.3), text(size: 10pt)[$v_#(i + 1)$])
+        }
+      }),
+      caption: [
+        I matching $mr(M_1)$ e $mg(M_2)$ ottenuti alternando gli archi del circuito $mb(overline(pi)^*)$.
+      ],
+    )
+
+    I due matching $mr(M_1)$ e $mg(M_2)$ sono, quindi, più corti della soluzione ottima $delta^*$:
+    $ delta^* quad >= quad delta(mb(overline(pi)^*)) quad = quad delta(mr(M_1)) + delta(mg(M_2)) $
+
+    Ma il matching $M$ è il *minimum* perfect matching, quindi è per forza corto almeno quanto $mr(M_1)$ e $mg(M_2)$:
+    $
+      delta(mr(M_1)) quad >= quad delta(M) \
+      delta(mg(M_2)) quad >= quad delta(M)
     $
 
+    Unendo tutti i pezzi:
+    $
+      delta^* quad >= quad delta(mr(M_1)) & + delta(mg(M_2)) quad >= quad 2 delta(M) space \
+                             delta^* quad & >= quad 2 delta(M) \
+                            delta(M) quad & <= quad 1/2 delta^* space qed
+    $
   ]
-]<lemma-2-multigrafo>
+] <tsp-lemma-2-multigrafo>
 
 #teorema("Teorema")[
   L'algoritmo di Christofides è una *$3/2$-approssimazione* per il TSP metrico.
 
   #dimostrazione[
-    Consideriamo il multigrafo $T union M$. Esso contiene un cammino Euleriano $pi_"euler"$, l'idea è cortocircuitarlo per ottenere un cammino hamiltoniano $pi$:
+    Il multigrafo $T union M$ contiene un circuito Euleriano $pi_"Euler"$ (per  #link-teorema(<tsp-metrico-teorema-circuito-euleriano-grado-pari>)).
+    È possibile cortocircuitarlo per ottenere un circuito Hamiltoniano $pi$ (che è più corto di $pi_"Euler"$):
     $
-      delta(pi) & <= delta(pi_"euler") = delta(T) + delta(M) \
-      delta(pi) &underbrace(<=,#link-teorema(<lemma-1-spanning>) " "e #link-teorema(<lemma-2-multigrafo>)) delta^* + 1/2 delta^* = 3/2 delta^* space qed
+      delta(pi) quad & <= quad delta(pi_"Euler") \
+      delta(pi) quad & <= quad delta(T) + delta(M) \
+      delta(pi) quad & <= quad underbrace(delta^*, #link-teorema(<tsp-lemma-1-spanning>)) + underbrace(1/2 delta^*, #link-teorema(<tsp-lemma-2-multigrafo>)) \
+      delta(pi) quad &<= quad 3/2 delta^* space qed
     $
   ]
 ]
 
 === Strettezza dell'analisi
 
-Per dimostrare che l'analisi proposta è stretta, costruiamo un grafo per cui l'algoritmo proposto è una $3/2$-approssimazione.\
-Consideriamo il seguente cammino, con *$n$ pari*:
-#esempio([
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+Per dimostrare che l'analisi proposta è stretta, costruiamo un grafo per cui l'algoritmo genera una soluzione che è esattamente una $3/2$ volte l'ottimo.
 
-      // Cammino principale con vertici (figura più grande)
-      circle((0, 0), radius: 0.15, fill: white, stroke: black)
-      content((0, -0.35), text(size: 13pt)[$v_1$])
+Per un qualsiasi $0 < epsilon < 1$, costruiamo la clique $G$ con un numero $n$ di vertici *pari*:
+- ogni vertice tra $1$ e $n-1$ è connesso al successivo da un #text(fill: red)[arco di peso $1$]
+  $ forall i in [1, n), quad (v_i, v_(i+1)) in E, quad delta((v_i, v_(i+1))) = mr(1) $
+- ogni vertice tra $1$ e $n-2$ è connesso a due vertici dopo da un #text(fill: blue)[arco di peso $1 + epsilon$]
+  $ forall i in [1, n-1), quad (v_i, v_(i+2)) in E, quad delta((v_i, v_(i+2))) = mb(1 + epsilon) $
+- tutti i lati mancanti per rendere $G$ una clique, di #text(fill: green)[peso cammino minimo tra i due vertici] (in modo da mantenere la disuguaglianza triangolare)
+  $ forall i, j in [1, n], quad (v_i, v_j) in E, quad delta((v_i, v_j)) = mg("cammino minimo") $
 
-      circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((1.5, -0.35), text(size: 13pt)[$v_2$])
+Per qualunque $epsilon$ compreso fra $0 < epsilon < 1$, la clique è metrica:
+$ underbrace(d(v_1,v_2), 1) + underbrace(d(v_2,v_3), "1") <= underbrace(d(v_1,v_3), 1+epsilon) $
 
-      circle((3, 0), radius: 0.15, fill: white, stroke: black)
-      content((3, -0.35), text(size: 13pt)[$v_3$])
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      content((3.8, 0), text(size: 13pt)[$dots.c$])
+    // Archi peso 1 (rosso)
+    line((0.15, 0), (1.35, 0), stroke: 2pt + red)
+    content((0.75, 0.2), text(size: 9pt, fill: red)[$1$])
 
-      circle((5.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((5.8, -0.35), text(size: 12pt)[$v_(n-1)$])
+    line((1.65, 0), (2.85, 0), stroke: 2pt + red)
+    content((2.25, 0.2), text(size: 9pt, fill: red)[$1$])
 
-      circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.40), text(size: 13pt)[$v_n$])
+    line((3.15, 0), (4.35, 0), stroke: 2pt + red)
+    content((3.75, 0.2), text(size: 9pt, fill: red)[$1$])
 
-      circle((7, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.40), text(size: 13pt)[$v_n$])
+    line((6.65, 0), (7.85, 0), stroke: 2pt + red)
+    content((7.25, 0.2), text(size: 9pt, fill: red)[$1$])
 
-      // Archi del cammino MST T (gialli) - collegamenti corretti ai bordi dei cerchi
-      line((0.15, 0), (1.35, 0), stroke: 4pt + yellow)
-      content((0.75, 0.25), text(size: 9pt)[$1$])
+    // Archi peso 1+epsilon (blu)
+    bezier((0.1, 0.1), (2.9, 0.1), (1.5, 0.8), stroke: 2pt + blue.transparentize(50%))
+    content((1.5, 0.7), text(size: 9pt, fill: blue)[$1+epsilon$])
 
-      line((1.65, 0), (2.85, 0), stroke: 4pt + yellow)
-      content((2.25, 0.25), text(size: 9pt)[$1$])
+    bezier((1.6, 0.1), (4.4, 0.1), (3, 0.8), stroke: 2pt + blue.transparentize(50%))
+    content((3, 0.7), text(size: 9pt, fill: blue)[$1+epsilon$])
 
-      line((4.65, 0), (5.35, 0), stroke: 4pt + yellow)
-      content((5, 0.25), text(size: 9pt)[$1$])
+    // Archi cammino minimo (verde)
+    bezier((0, -0.15), (8, -0.15), (4, -1.5), stroke: 2pt + green.transparentize(50%))
+    content((4, -1), text(size: 9pt, fill: green)[cammino minimo])
 
-      line((5.65, 0), (6.85, 0), stroke: 4pt + yellow)
-      content((6.25, 0.25), text(size: 9pt)[$1$])
+    bezier((0.1, -0.1), (6.4, -0.1), (3.25, -1.2), stroke: 2pt + green.transparentize(50%))
 
-      // Arco del matching M (viola) - curva verso il basso
-      bezier((0.1, -0.15), (7, 0), (3.5, -2.85), stroke: 3pt + purple)
-      content((3.5, -1.7), text(size: 11pt, fill: purple)[$(1+epsilon) dot n/2 + 1$])
+    bezier((1.6, -0.1), (7.9, -0.1), (4.75, -1.2), stroke: 2pt + green.transparentize(50%))
 
-      // Archi di salto per π* (neri) - curvi verso l'alto
-      bezier((0.0, 0.0), (3, 0.0), (1.5, 1.15), stroke: 2pt + black)
-      content((0.75, 1.0), text(size: 9pt)[$$])
+    // Vertici
+    circle((0, 0), radius: 0.15, fill: white, stroke: black)
+    content((0, -0.4), text(size: 10pt)[$v_1$])
 
-      bezier((1.5, 0.0), (3.8, 0), (3.0, -1.55), stroke: 2pt + black)  
-      content((1.55, 0.8), text(size: 9pt)[$1 + epsilon$])
+    circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((1.5, -0.4), text(size: 10pt)[$v_2$])
 
-      bezier((3.8, 0.0), (5.5, 0), (4.5, -1.55), stroke: 2pt + black)  
-      content((2.25, 1.0), text(size: 9pt)[$$])
+    circle((3, 0), radius: 0.15, fill: white, stroke: black)
+    content((3, -0.4), text(size: 10pt)[$v_3$])
 
-      bezier((4.5, 0.0), (7, 0.0), (5.55, 1.55), stroke: 2pt + black)
-      content((5.75, 1.0), text(size: 9pt)[$1 + epsilon$])
+    circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((4.5, -0.4), text(size: 10pt)[$v_4$])
 
-      // Legenda (spostata a destra)
-      content((8.5, 1.5), text(size: 11pt, fill: yellow)[— $T$ (MST)])
-      content((8.5, 1), text(size: 11pt, fill: purple)[— $M$ (Matching)])
-      content((8.5, 0.5), text(size: 11pt)[— Salti per $pi^*$])
+    content((5.5, 0), text(size: 10pt)[$dots.c$])
 
-      // Etichetta del grafo
-      content((-0.8, 1), text(size: 14pt, weight: "bold")[$G$])
-    }),
-    caption: [
-      Per $n$ pari consideriamo un cammino così composto:\ 
-      $n$ vertici collegati da dei lati di lunghezza $1$\
-      dei lati alternati di lunghezza $1+epsilon$\
-      I lati $mp("viola")$ serve per far diventare il grafo $G$ una clique, costano quanto il cammino minimo.
-    ]
-  )
-])
-Per qualunque $epsilon$ compreso fra *$0 < epsilon < 1$*, la clique sopra proposta è metrica: 
-$ underbrace(d(v_1,v_2),1) + underbrace(d(v_2,v_3),"1") <= underbrace(d(v_1,v_3),1+epsilon) $
-#dimostrazione()[
-  Eseguiamo ora l'algorimto di Christofides sulla clique metrica: 
-  - $my(T) <- "MST"$, è possibile osservare che: 
-    - MST è il cammino giallo (solo lati con peso $1$)
+    circle((6.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((6.5, -0.4), text(size: 10pt)[$v_(n-1)$])
 
-  - $D <- {v_1,v_n}$
-    - Gli unici vertici di grado dispari sono $v_1,v_n$ in quanto hanno grado $1$
+    circle((8, 0), radius: 0.15, fill: white, stroke: black)
+    content((8, -0.4), text(size: 10pt)[$v_n$])
+  }),
+  caption: [
+    Esempio _parziale_ della clique $G$ con $n$ pari. Gli archi $mr("rossi")$ hanno peso $mr(1)$, gli archi $mb("blu")$ hanno peso $mb(1+epsilon)$, e gli archi $mg("verdi")$ hanno peso uguale al $mg("cammino minimo")$ tra i vertici.
+  ],
+)
 
-  - Chiamo con $mp(M)$ il matching minimo su $D$. Dato che $D$ ha solo $2$ vertici, li sposiamo con l'arco che li collega. Il suo peso è il cammino minimo (dato che è lato aggiunto per rendere $G$ una clique), calcolato come:
-   - Prendo gli archi alternati (con costo $1+epsilon$)
-   - Prendo l'arco di costo $1$ che collega $v_(n-1)$ a $v_n$
-  Il costo di $M = mp((1+epsilon) dot n/2 + 1)$ 
+Eseguiamo ora l'algoritmo di Christofides su $G$:
 
-  - Unendo $my(T) union mp(M)$ otteniamo un circuito hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo: 
-  $ 
-    delta &= (1+epsilon)n/2+ 1 + (n-1)\
-          &= n/2 + epsilon n/2 + 1 + n -1\
-          &= 3/2 n + epsilon n/2
-  $
+- $mo(T) <- "MST"(G)$: cammino che connette ogni vertice al successivo (solo lati con peso $1$)
+  - costo di $mo(T = 1 (n-1))$
 
-  Tuttavia il cammino ottimo del grafo $delta^*$ ha il seguente costo: 
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+- $D <- {v_1, v_n}$: gli unici vertici di grado dispari in $T$ sono $v_1$ e $v_n$ (grado $1$)
 
-      // Cammino principale con vertici (figura più grande)
-      circle((0, 0), radius: 0.15, fill: white, stroke: black)
-      content((0, -0.35), text(size: 13pt)[$v_1$])
+- $mm(M) <- "MWPM"(D)$: minimum-weight perfect matching tra soli due vertici è semplicemente l'arco che li collega, di peso il cammino minimo tra $v_1$ e $v_n$, calcolato:
+  - archi alternati da $v_1 ~> v_3$, $v_3 ~> v_5$, ..., $v_(n-3) ~> v_(n-1)$ (con ciascuno costo $1+epsilon$)
+  - arco di costo $1$ che collega $v_(n-1)$ a $v_n$
+  - costo di $mm(M = (1+epsilon) n/2 + 1)$
 
-      circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((1.5, -0.35), text(size: 13pt)[$v_2$])
+- Unendo $mo(T) union mm(M)$ otteniamo un circuito Hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo:
+$
+  delta & = mm((1+epsilon)n/2+ 1) + mo((n-1)) \
+  delta & = n/2 + epsilon n/2 cancel(+1) + n cancel(-1) \
+  delta & = 3/2 n + epsilon n/2
+$
 
-      circle((3, 0), radius: 0.15, fill: white, stroke: black)
-      content((3, -0.35), text(size: 13pt)[$v_3$])
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      content((3.8, 0), text(size: 13pt)[$dots.c$])
+    // MST T (arancione) - archi peso 1
+    line((0.15, 0), (1.35, 0), stroke: 3pt + orange)
+    line((1.65, 0), (2.85, 0), stroke: 3pt + orange)
+    line((3.15, 0), (4.35, 0), stroke: 3pt + orange)
+    line((6.65, 0), (7.85, 0), stroke: 3pt + orange)
 
-      circle((5.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((5.8, -0.35), text(size: 12pt)[$v_(n-1)$])
+    // Matching M (marrone) - arco curvo da v1 a vn
+    bezier((0, -0.1), (8, -0.1), (4, -1.5), stroke: 3pt + maroon)
+    content((4, -1.2), text(size: 9pt, fill: maroon)[$(1+epsilon)n/2 + 1$])
 
-      circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.40), text(size: 13pt)[$v_n$])
+    // Vertici
+    circle((0, 0), radius: 0.15, fill: white, stroke: black)
+    content((0, -0.4), text(size: 10pt)[$v_1$])
 
-      circle((7, 0), radius: 0.15, fill: white, stroke: black)
-      content((7, -0.40), text(size: 13pt)[$v_n$])
+    circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((1.5, -0.4), text(size: 10pt)[$v_2$])
 
-      // Archi del cammino MST T (gialli) - collegamenti corretti ai bordi dei cerchi
-      line((0.15, 0), (1.35, 0), stroke: 4pt + purple)
-      content((0.75, 0.25), text(size: 9pt)[$1$])
+    circle((3, 0), radius: 0.15, fill: white, stroke: black)
+    content((3, -0.4), text(size: 10pt)[$v_3$])
 
-      line((1.65, 0), (2.85, 0), stroke: 4pt + black)
-      content((2.25, 0.25), text(size: 9pt)[$1$])
+    circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((4.5, -0.4), text(size: 10pt)[$v_4$])
 
-      line((4.65, 0), (5.35, 0), stroke: 4pt + black)
-      content((5, 0.25), text(size: 9pt)[$1$])
+    content((5.5, 0), text(size: 10pt)[$dots.c$])
 
-      line((5.65, 0), (6.85, 0), stroke: 4pt + yellow)
-      content((6.25, 0.25), text(size: 9pt)[$1$])
+    circle((6.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((6.5, -0.4), text(size: 10pt)[$v_(n-1)$])
 
-      // Arco del matching M (viola) - curva verso il basso
-      bezier((0.1, -0.15), (7, 0), (3.5, -2.85), stroke: 2pt + black)
-      content((3.5, -1.7), text(size: 11pt, fill: black)[$(1+epsilon) dot n/2 + 1$])
+    circle((8, 0), radius: 0.15, fill: white, stroke: black)
+    content((8, -0.4), text(size: 10pt)[$v_n$])
+  }),
+  caption: [
+    Circuito Hamiltoniano prodotto dall'algoritmo di Christofides.
+    Gli archi $mo("arancioni")$ rappresentano il MST $mo(T)$,
+    mentre l'arco $mm("marrone")$ rappresenta il matching $mm(M)$ tra $v_1$ e $v_n$.
+  ],
+)
 
-      // Archi di salto per π* (neri) - curvi verso l'alto
-      bezier((0.0, 0.0), (3, 0.0), (1.5, 1.15), stroke: 2pt + yellow)
-      content((0.75, 1.0), text(size: 9pt)[$$])
+Tuttavia il circuito Hamiltoniano ottimo $delta^*$ è formato da:
+- archi alternati da $mp(v_1 ~> v_3)$, $mp(v_3 ~> v_5)$, ..., $mp(v_(n-3) ~> v_(n-1))$
+- usare un arco di costo $1$ per raggiungere $v_n$: $mp(v_(n-1) ~> v_n)$
+- tornare indietro sfruttando ancora gli archi alternati $mr(v_n ~> v_(n-2))$, $mr(v_(n-2) ~> v_(n-4))$, ..., $mr(v_(4) ~> v_2)$
+- usare un arco di costo $1$ per raggiungere $v_1$: $mr(v_2 ~> v_1)$
 
-      bezier((1.5, 0.0), (3.8, 0), (3.0, -1.55), stroke: 2pt + purple)  
-      content((1.55, 0.8), text(size: 9pt)[$1 + epsilon$])
+$
+  delta^* & = mp((1+epsilon)n/2 +1) + mr((1+epsilon)n/2 +1) \
+  delta^* & = (1+epsilon)n/2 + (1+epsilon)n/2 + 2 \
+  delta^* & = (1+epsilon)n + 2
+$
 
-      bezier((3.8, 0.0), (4.5, 0), (4.5, -1.55), stroke: 2pt + purple)  
-      content((2.25, 1.0), text(size: 9pt)[$$])
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      bezier((4.5, 0.0), (7, 0.0), (5.55, 1.55), stroke: 2pt + purple)
-      content((5.75, 1.0), text(size: 9pt)[$1 + epsilon$])
+    // Archi alternati andata (viola) v1->v3, v3->v5, ..., v(n-1)->vn
+    bezier((0.1, 0.1), (2.9, 0.1), (1.5, 0.8), stroke: 2pt + purple)
+    content((1.5, 0.7), text(size: 9pt, fill: purple)[$1+epsilon$])
 
-         bezier((5.5, 0.0), (3.5, 0.0), (4.55, 1.55), stroke: 2pt + yellow)
-      content((4.35, 1.0), text(size: 9pt)[$1 + epsilon$])
+    bezier((3.1, 0.1), (5.9, 0.1), (4.5, 0.8), stroke: 2pt + purple)
+    content((4.5, 0.7), text(size: 9pt, fill: purple)[$1+epsilon$])
 
+    line((6.15, 0), (7.35, 0), stroke: 2pt + purple)
+    content((6.75, 0.2), text(size: 9pt, fill: purple)[$1$])
 
-      // Legenda (spostata a destra)
-      content((8.5, 1.5), text(size: 11pt, fill: yellow)[— ritorno])
-      content((8.5, 1), text(size: 11pt, fill: purple)[— andata])
+    // Archi alternati ritorno (rosso) vn->v(n-2), v(n-2)->v(n-4), ..., v2->v1
+    bezier((7.4, -0.1), (4.6, -0.1), (6, -0.8), stroke: 2pt + red)
+    content((6, -0.7), text(size: 9pt, fill: red)[$1+epsilon$])
 
-      // Etichetta del grafo
-      content((-0.8, 1), text(size: 14pt, weight: "bold")[$G$])
-    }),
-    caption: [
-      Il cammino ottimo è definito da : 
-      - $mp("Andata")$, peso = $(1+epsilon)n/2 +1$
-      - $my("Ritorno")$, peso = $(1+epsilon)n/2+1$
-    ]
-  )
-  Il peso totale del cammino è $delta^*$:
-  $ 
-    delta^* &= ((1+epsilon)n/2 +1) + mp((1+epsilon)n/2 +1)\
-    &= (1+epsilon)n/2 + (1+epsilon)n/2 + 2 \
-    &= (1+epsilon)n + 2
-  $
-  Consideriamo ora il rapporto di approssimazione:
-  $ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)n+2) $
+    bezier((4.4, -0.1), (1.6, -0.1), (3, -0.8), stroke: 2pt + red)
+    content((3, -0.7), text(size: 9pt, fill: red)[$1+epsilon$])
 
-  Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
-]
+    line((1.35, 0), (0.15, 0), stroke: 2pt + red)
+    content((0.75, -0.2), text(size: 9pt, fill: red)[$1$])
+
+    // Vertici
+    circle((0, 0), radius: 0.15, fill: white, stroke: black)
+    content((0, -0.4), text(size: 10pt)[$v_1$])
+
+    circle((1.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((1.5, -0.4), text(size: 10pt)[$v_2$])
+
+    circle((3, 0), radius: 0.15, fill: white, stroke: black)
+    content((3, -0.4), text(size: 10pt)[$v_3$])
+
+    circle((4.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((4.5, -0.4), text(size: 10pt)[$v_4$])
+
+    circle((6, 0), radius: 0.15, fill: white, stroke: black)
+    content((6, -0.4), text(size: 10pt)[$v_5$])
+
+    circle((7.5, 0), radius: 0.15, fill: white, stroke: black)
+    content((7.5, -0.4), text(size: 10pt)[$v_6$])
+  }),
+  caption: [
+    Circuito Hamiltoniano ottimo $delta^*$.
+    Gli archi $mp("viola")$ rappresentano il percorso in andata alternato ($mp(v_1 ~> v_3 ~> v_5 ~> v_6)$),
+    mentre gli archi $mr("rossi")$ rappresentano il ritorno alternato ($mr(v_6 ~> v_4 ~> v_2 ~> v_1)$).
+  ],
+)
+
+Consideriamo ora il rapporto di approssimazione:
+$ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)n+2) quad -->_(n->infinity \ epsilon -> 0) quad 3/2 $
+
+Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
+
 
 #teorema("Teorema")[
-  *$3/2$* è il miglior tasso di approssimaione noto per *TSP metrico*
+  *$3/2$* è il miglior tasso di approssimaione noto per *TSP metrico*.
 ]
 
 == Inapprossimabilità di TSP
@@ -510,40 +679,51 @@ $ underbrace(d(v_1,v_2),1) + underbrace(d(v_2,v_3),"1") <= underbrace(d(v_1,v_3)
   Non esiste nessun $alpha > 1$ tale che TSP sia $alpha$-approssimabile (nemmeno sulle clique).
 
   #attenzione[
-    Si intende il TSP non metrico.
+    Valido per il TSP *non* metrico.
   ]
 
   #dimostrazione[
-    Determinare se un *grafo* ha un *circuito hamiltoniano* è *$"NPc"$*.
+    Determinare se un *grafo* ha un *circuito Hamiltoniano* è *$"NPc"$*.
 
     Supponiamo per assurdo che esista un algoritmo che $alpha$-approssima (per qualche $alpha > 1$) TSP sulle clique.
 
-    Dato un grafo $G$ (con $n$ nodi) costruiamo la seguente clique:
-    $ overline(G) = (V, E = binom(V, 2)) $
-    $ overline(delta)_{x, y} = cases(1 quad "se" {x, y} in E, ceil(alpha n) + 1 in.not E) $
+    Dato un grafo $G = (V, E)$ con $n$ nodi, costruiamo la seguente clique:
+    $ overline(G) = (V, binom(V, 2)) $
+    $
+      overline(delta)_{x, y} = cases(
+        1 quad & "se" {x, y} in E,
+        ceil(alpha n) + 1 quad & "altrimenti"
+      )
+    $
 
-    Eseguendo l'algorimto con $overline(G)$ e $overline(delta)$, ci verrà resituito un circuito hamiltoniano $pi$ di costo $overline(delta)(pi)$ (non per forza ottimo).
-
-    Esistono due casi:
-    - *$overline(delta)^* = n$*, se $G$ ha un circuito hamiltoniano, allora $overline(G)$ ha ancora un circuito hamiltoniano di costo $n$ (dato che i lati già in $G$ costano $1$)
-    - *$overline(delta)^* >= ceil(alpha n) + 1$*, se $G$ non ha un circuito hamiltoniano, allora il circuito hamiltoniano trovato su $overline(G)$ deve prendere almeno un arco non in $G$, quindi:
+    Eseguendo l'algorimto su $overline(G)$, ci verrà resituito un circuito Hamiltoniano $pi$ di costo $overline(delta)$.
+    Quindi, per definizione di approssimazione:
     $ overline(delta) <= alpha overline(delta)^* $
 
-    Esistono due sotto-casi:
-      - nel primo caso $<= alpha n$
-      - nel secondo caso $>= ceil(alpha n) + 1$
+    Le soluzioni $overline(delta)^* e overline(delta)$ si dividono in due casi:
+
+    - il grafo originale $G$ *ha* un cammino Hamiltoniano
+      - la soluzione _ottima_ su $overline(G)$ usa solo archi del grafo originale, quindi di peso $1$:
+        $ overline(delta)^* = 1 dot n $
+      - la soluzione _approssimata_ su $overline(G)$ è al massimo $alpha$ l'ottimo:
+        $ overline(delta) <= alpha n $
+
+    - il grafo originale $G$ *non* ha un cammino Hamiltoniano
+      - la soluzione _ottima_ su $overline(G)$ deve usare almeno un arco di costo $ceil(alpha n) + 1$:
+        $ overline(delta)^* >= ceil(alpha n) + 1 $
+      - la soluzione _approssimata_ su $overline(G)$ deve essere grande almeno quanto l'ottimo:
+        $ overline(delta) >= ceil(alpha n) + 1 $
+
+    Di conseguenza, dato che i due intervalli sono *disgiunti*, allora osservando la soluzione approssimata è possibile dedurre l'ottimo, decidendo il problema di decisione:
+    $
+                overline(delta) <= alpha n quad & "se" G "ha un circuito Hamiltoniano" \
+      overline(delta) >= ceil(alpha n) + 1 quad & "se" G "non ha un circuito Hamiltoniano"
+    $
+
+    Questa cosa è assurda, dato che il problema di decisione è NPc, quindi non può esistere un algoritmo di approssimazione, $qed$.
 
     #informalmente[
-      Se esiste un circuito hamiltoniano, allora trova una soluzione di al massimo $alpha n$, se non eiste allora il cammino deve usare un arco aggiuntivo, quindi deve per forza essere $> alpha n$
-    ]
-
-    $
-      overline(delta) <= alpha n quad "se" G "ha un circuito hamiltoniano" \
-      overline(delta) > ceil(alpha n) + 1 quad "se" G "non ha un circuito hamiltoniano" space qed
-    $
-
-    #informalmente[
-      Abbiamo costruito un problema di ottimizzazione, in modo che l'approssimazione trovata cada in uno di due intervalli *disgiunti* che ci permettono di capire qual era l'ottimo.
+      Abbiamo costruito un problema di ottimizzazione partendo da quello di decisione, in modo che l'approssimazione cada in uno di due intervalli *disgiunti* che ci permettono di capire qual era l'ottimo.
     ]
   ]
 ]

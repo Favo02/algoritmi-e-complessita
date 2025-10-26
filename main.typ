@@ -20,6 +20,8 @@
 #show: equate.equate.with(breakable: true, sub-numbering: true) // equations settings
 #show: gentle-clues.gentle-clues.with(breakable: true) // colored boxes
 #show: codly.codly-init.with() // code setup
+#show link: underline // undeline links
+#set figure(supplement: "Figura") // rename Figure to Figura
 
 // page break every chapter
 #show heading.where(level: 1): it => {
