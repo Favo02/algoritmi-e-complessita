@@ -61,15 +61,15 @@ Il problema è che la programmazione lineare intera (PLI) non si può risolvere 
 === Algoritmo Rilassato (PL non intera)
 
 #informalmente[
-  Per ogni area, la inseriamo nella soluzione con una certa probabilità.
-  La probabilità con cui inseriamo è la soluzione della programmazione lineare.
+  Ogni area $S_i$ viene inserita nella soluzione con una certa probabilità.
+  La probabilità con cui inseriamo un area nella soluzione dipende dalla soluzione della programmazione lineare.
 ]
 
-Sia $P$ la versione del problema di programmazione intera non rilassato. 
+Sia $hat(V)$ la versione del problema di programmazione intera non rilassato. 
 
 #pseudocode(
   [*Input* $k in bb(N)^+$ #emph("// fattore di quanto pompiamo la probabilità calcolata dal solver LP")],
-  [Risolvi $P$ come $"LP"$ #emph("// non intera")],
+  [Risolvi $hat(V)$ come $"LP"$ #emph("// non intera")],
   [Sia $hat(x_1),dots,hat(x_m) in [0,1]$],
   [$I <- emptyset$],
   [*For* $t=1, dots, ceil(k+ln m)$],
@@ -90,43 +90,61 @@ Sia $P$ la versione del problema di programmazione intera non rilassato.
   L'algoritmo produce una soluzione ammissibile con probabilità $>= 1- e^(-k)$
 
   #dimostrazione[
+    sia $hat(v)$ la soluzione ottenuta risolvendo il problema di LP rilassato:
     $ hat(v) = sum_(i = 1)^m w_i hat(x_i) $
 
-    Sia $v^*$ la soluzione ottima del problema originale (quindi risolto sugli interi).
-
-    Per come funzioan il rilassament, allora:
+    Sia $v^*$ la soluzione ottima del problema originale (quindi risolto sugli interi).\
+    Siccome rilassiamo un problema di minimizzazione, allora:
     $ hat(v) <= v^* $
 
-    Quanto è probabile che la soluzione sia ammissibile?
+    Quanto è probabile che la soluzione $hat(v)$ sia ammissibile?
 
-    $ P["sol ammissibile"] = 1 - P["almeno un punto non coeprto"] $
+    $ P["sol ammissibile"] = 1 - P["almeno un punto non è coperto"] $
 
-    Chiamiamo $xi_p$ l'evento: $p$ non è coeprto nella soluzione, quindi (anche applicando lo union bound):
-
+    Chiamiamo *$xi_p$* l'evento: il punto *$p$* *non è coperto* nella soluzione, di conseguenza: 
+    $ P["almeno un punto non è coperto"] = P[union.big_(p in Omega) xi_p] $
+    Applichiamo ora l'union buond #link-teorema(<union-bound>) :
     $
       P["sol ammissibile"] & = 1 - P[union.big_(p in Omega) xi_p] \
-                           & >= 1- sum_(p in Omega) P[xi_p]
+                           & >= 1- sum_(p in Omega) underbrace(P[xi_p],"probabilità che il punto" p \ "non sia coperto")
     $
 
-    Dobbiamo calcolare l'evento di ogni songolo punto $xi_p$:
+    Calcoliamo ora l'evento $xi_p$ per ogni singolo punto (siccome le iterazioni sono indipendenti possiamo moltiplicarle):
     $
-      = 1- sum_(p in Omega) product_(i "t.c." p in S_i) P[i in.not I] \
-      1 - sum_(p in Omega) product_(i "t.c." p in S_i) (1 - hat(x_i))^(k + ln n) \
-      >= 1 sum_(p in Omega) product_(i "t.c." p in S_i) e^(-hat(x_i) ( k + ln n)) \
-      >= 1 sum_(p in Omega) e^((k + ln n) mr(limits(sum)_(i "t.c." p in S_i) hat(x_i))
+       &>= 1- sum_(p in Omega) P[xi_p] \ 
+       &= 1- sum_(p in Omega) product_(i "t.c."\ p in S_i) P[i in.not I] \
     $
+    Siccome un area viene aggiunta alla soluzione $I$ con $P(hat(x_i))$ e ci proviamo $k+ln n$ volte:
+    $
+          &= 1 - sum_(p in Omega) product_(i "t.c." p in S_i) (1 - hat(x_i))^(k + ln n) \
 
-    Ma dato che per ogni punto $p$ il vincolo dice che la sommatoria rossa deve essere $>= 1$, allora
+          & mb("Usando" 1-x <= e^(-x) "in quanto" x_i in [0,1]) \
 
+          &>= 1 sum_(p in Omega) product_(i "t.c." p in S_i) e^(-hat(x_i) ( k + ln n)) \
+
+          &mb("Per le proprietà degli esponenziali") mr(e^a dot e^b = e^(a+b))\
+
+          &>= 1 sum_(p in Omega) e^mr(limits(sum)_(i "t.c." p in S_i) -hat(x_i) (k + ln n)) \
+
+          &>= 1 sum_(p in Omega) e^(-(k + ln n) mr(limits(sum)_(i "t.c." p in S_i) hat(x_i)))
     $
-      >= 1-sum_(p in Omega) e^(-(k + ln n)) \
-      ...
+    Per i vincoli del problema sappiamo che $forall p in Omega, mr(limits(sum)_(p in S_i) hat(x_i) >=1)$, possiamo quindi vederla come una costante:
+    $
+      &>= 1-sum_(p in Omega) e^(-(k + ln n)) \
+      &mb("Per" e^(a+b) = e^a dot e^b) \
+      &= 1-sum_(p in Omega) e^(-k) dot e^(-ln n)\
+      &mb("Per" e^(-x) = 1/a^x) \
+      &= 1-sum_(p in Omega) e^(-k) dot 1/e^(ln n)\
+      &= 1-sum_(p in Omega) e^(-k) dot 1/n\
+      &= 1-e^(-k) underbrace(sum_(p in Omega)  dot 1/n,n "volte" 1/n)\
+      &= 1-e^(-k) quad qed\
+      
     $
 
   ]
 
-  #informalmente[
-    Al crescere di $k$, aumenta la probabilità di ottenere una soluzione ammissibile, ma abbassa la qualità della soluzione (prendiamo più aree, quindi paghiamo di più).
+  #nota[
+    Man mano che $k$ cresce, *aumenta* la probabilità di *ottenere una soluzione ammissibile*. Tuttavia, la qualità della soluzione ottenuta decresce (prendiamo più aree paghando di più).
   ]
 ]
 
