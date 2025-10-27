@@ -137,95 +137,96 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
       &= 1-sum_(p in Omega) e^(-k) dot 1/e^(ln n)\
       &= 1-sum_(p in Omega) e^(-k) dot 1/n\
       &= 1-e^(-k) underbrace(sum_(p in Omega)  dot 1/n,n "volte" 1/n)\
-      &= 1-e^(-k) quad qed\
-      
+      &= 1-e^(-k) quad qed\ 
     $
-
   ]
 
   #nota[
     Man mano che $k$ cresce, *aumenta* la probabilità di *ottenere una soluzione ammissibile*. Tuttavia, la qualità della soluzione ottenuta decresce (prendiamo più aree paghando di più).
   ]
-]
+]<set-cover-ammissibile>
 
 #teorema("Teorema")[
   Per ogni $1/alpha in [0, 1]$:
   $ P["fattore di approssimazione" >= alpha (k + ln n)] <= 1/alpha $
 
   #informalmente[
-    Stiamo dimostrando che la probabilità che il fattore di approssimazine sia grande (quindi una brutta soluzione) sia bassa.
-
-    Dobbiamo anche vedere che $alpha$ conviene dare in input all'algoritmo.
+    Stiamo dimostrando che la probabilità di avere un fattore di approssimazione grande (quindi una brutta soluzione) è bassa.\
+    Dobbiamo anche capire che $alpha$ conviene dare in input all'algoritmo.
   ]
 
   #dimostrazione[
-    La probabilità che $i in I$ è $<= (k + ln n) hat(x_i)$.
+    Sappiamo che la probabilità che un insieme $i$ appartenga alla soluzione è: 
+    $ P[i in I] <= (k + ln n) hat(x_i) $
+    <oss-1-bound-prob>
 
-    Sia $xi_(t,i)$ l'evento "l'elemento $i$ è inserito nella soluzione $I$ nalla $t$-esima iterazione"
-
-    Quindi se l'evento è stato inserito, è se è stato selezionato almeno una volta, quindi per union bound
+    Sia *$F_(t,i)$* l'evento: "l'elemento $i$ è inserito nella soluzione $I$ durante la $t$-esima iterazione". Dove: 
+    $
+      "Probabilità che l'evento" i "è nella soluzione" = P[union.big_(t=1)^(k+ln n)F_(t,i)]
+    $
+    Applicando l'union bound #link-teorema(<union-bound>), otteniamo:
 
     $
-      P[union.big_(t=1)^(k + ln n) xi_(t, i)] & <= sum_(t=1)^(k + ln n) P[xi_(t, i)] \
+      P[union.big_(t=1)^(k + ln n) xi_(t, i)] & <= sum_(t=1)^(k + ln n) underbrace(P[xi_(t, i)],hat(x_i) "sol LP") \
                                               & = (k + ln n) hat(x_i)
     $
 
-    Il costo che paghiamo alla fine $v$, è il suo valore atteso, ovvero la somma di tutti i costi delle singole aree pagate:
+    Il costo della soluzione finale $v$, equivale al suo valore atteso, ovvero la somma di tutti i costi delle singole aree pagate:
     $
-      E[v] & = sum_i w_i P[i in I] \
-           & <= sum_i w_i hat(x_i) (k + ln n) \
+      E[mg(v)] = sum_i w_i P[i in I] &underbrace(<=,#link-teorema(<oss-1-bound-prob>)) sum_i w_i hat(x_i) (k + ln n) \
            & = (k + ln n) mr(sum_i w_i hat(x_i)) \
-           & = (k + ln n) mr(hat(v)) \
-           & <= v^* (k + ln n)
+           & = (k + ln n) mr(hat(v)) underbrace(<=,hat(v) "è il problema" \ "rilassato") mb(v^*) (k + ln n)
     $
-
     Dove:
-    - $hat(v)$ è la funzione obiettivo del problema rilassato.
-    - $v^*$ è l'ottimo del problema originale (non rilassato)
-    - $v$ è l'output del nostro algoritmo probabilistico
+    - $mr(hat(v))$ = è la funzione obiettivo del problema rilassato.
+    - $mb(v^*)$ = è l'ottimo del problema originale (non rilassato)
+    - $mp(v)$ = è l'output dell'algoritmo probabilistico
 
-    Quindi (e dato che $v^*$ + costante):
+    Riscrivendo la disequazione otteniamo:
     $
-      E[v] / v^* <= k + ln n \
-      E[v / v^*] <= k + ln n
-    $
+      E[mp(v)] <= mb(v^*)(k+ln n)\
+      E[mp(v)] / mb(v^*) <= k + ln n \
+      E[mp(v) / mb(v^*)] <= k + ln n
+    $<min-cut-bound-valore-atteso>
 
-    Applichiamo la disuguaglianza di Markov (alla variabile aleatoria $v$): // TODO: link
+
+    Applichiamo la disuguaglianza di Markov #link-teorema(<disuguaglianza-markov>) (con $mr(a) = alpha(k+ln n)$, $mb(X) = mp(v)/mb(v^*)$ ): // TODO: link
     $
-      P[v/v^* >= alpha(k + ln n)] <= E[v/v^*] / (alpha (k + ln n)) \
-      <= (k + ln n) / (alpha (k + ln n))\
-      = 1/alpha space qed
+      P[mb(X) >= mr(a)] <= E[mb(X)]/mr(a) \ 
+      = P[v/v^* >= alpha(k + ln n)] <= E[v/v^*] / (alpha (k + ln n)) underbrace(<=,#link-teorema(<min-cut-bound-valore-atteso>))& (k + ln n) / (alpha (k + ln n)) = 1/alpha quad  qed
     $
 
   ]
+]<set-cover-approssimazione>
+
+#nota()[
+  Usare bene i due teoremi #link-teorema(<set-cover-ammissibile>) per l'ammisibilità e #link-teorema(<set-cover-approssimazione>) per l'approssimazione, significa trovare un valore di *$k$ bilanciato*:
+  1. Nel primo caso vorremo un $k$ alto, per aumentare l'ammissibilità
+  2. Nel secondo caso vorremmo un $k$ basso, per avere una soluzione più vicina all'ottimo
 ]
 
-Nel teorema che riguarda l'ammissibilità vorremmo tenere un $k$ alto per avere un algoritmo che produce con alta probabilità una soluzione ammissibile.
-Mentre nel secondo teorema, con $k$ alti, otteniamo fattori di approssimazione tanto alti.
-Quindi $k$ va bilanciato.
-
 #teorema("Corollario")[
-  Eseguendo l'algoritmo con $k = 3$, c'è almeno il $45%$ di probabilità di ottenere una soluzione ammissibile con un rapporto di approssimazione di al massimo $6 + 2 ln n$.
+  Eseguendo l'algoritmo con *$k = 3$*, c'è almeno il *$45%$* di probabilità di ottenere una soluzione ammissibile con un rapporto di approssimazione di al massimo $6 + 2 ln n$.
 
   #dimostrazione[
     Sia:
-    - $xi_"non-amm"$ l'evento "l'algoritmo ha prodotto una soluzione non ammissibile"
-    - $xi_"non-ott"$ l'evento "la soluzione prodotta ha un tasso di approssimazione $> 6 + 2 ln n$"
+    - *$xi_"non-amm"$* l'evento = "l'algoritmo ha prodotto una soluzione non ammissibile"
+    - *$xi_"non-ott"$* l'evento = "la soluzione prodotta ha un tasso di approssimazione $> 6 + 2 ln n$"
 
-    Primo teorema:
-    $ P[xi_"non-amm"] <= e^-3 $
+    1. Usando il teorema #link-teorema(<set-cover-ammissibile>), sappiamo che viene prodotta una soluzione ammissibile con probabilità $>= 1-e^(-k)$:
+    $ P[xi_"non-amm"] <= e^(-3) $
 
-    Secondo teorema:
+    2. Sfruttando il teorema #link-teorema(<set-cover-approssimazione>) con $alpha = 2$:
     $
       P[xi_"non-ott"] & = P["fatt approx" > 6 + 2 ln n] \
-                      & <= 1/2 ("Teorema 2 con" alpha = 2)
+                      & <= 1/2 
     $
 
-    Unione dei due eventi:
+    3. Per ottenere la probabilità di una soluzione ammissibile e entro un certo tasso di approssimazione, dobbiamo unire i due eventi:
     $
-      P[xi_"ok"] & = 1 - P[xi_"non-amm" union xi_"non-ott"] \
-                 & >= 1- (P[xi_"non-amm"] + P[xi_"non-ott"]) \
-                 & >= 1 - ()
+      P[xi_"ok"] &= 1 - P[xi_"non-amm" union xi_"non-ott"] \
+                 & underbrace(>=, #link-teorema(<union-bound>)) 1- (P[xi_"non-amm"] + P[xi_"non-ott"]) \
+                 & >= 1 - (e^(-3) + 1/2) tilde.equiv 45% space qed
     $
   ]
 ]
