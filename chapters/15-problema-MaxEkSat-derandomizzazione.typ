@@ -67,7 +67,9 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
     $
     Ma qual'è il numero di assegnamenti che rendo una clausola *$C_j$ vera*: 
     - $mr(2^n)$ = $"#"$ Assegnamenti totali
-    - $mb(2^(n-k))$ = $"#"$ Assegnamenti delle variabili non coinvolte in $C_j$, in quanto ogni clausola ha $k$ variabili.
+  
+    - $mb(2^(n-k))$ = $"#"$ Assegnamenti delle variabili non coinvolte in $C_j$. Una clausola $C_j$ è falsa solo quando tutti i $k$ letterali sono falsi (essendo in or). Quindi c'è *solo un modo* di assegnare le $k$ variabili *per falsificare $C_j$*, le restanti $(n-k)$ variabili non coinvolte possono assumere un valore qualsiasi ($2^(n-k)$). 
+
     - $mr(2^n)-mb(2^(n-k))$ = $"#"$ combinazioni di assegnamenti $b_1 in 2,dots,b_n in 2$ che rendono vera $C_j = 1$
     $
       E[T] &= 1/2^n sum_(j=1)^t (mr(2^n)-mb(2^(n-k)))\
@@ -75,7 +77,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
       &= (t 2^n / 2^n) - (t(2^n/2^k)dot 1/2^n)\
       &= t - t / 2^k\
       &mb("Raccologo" t)\
-      &= t(1 - 1/2^k)\
+      &= mb(t)(1 - 1/2^k)\
       &= t dot (2^k - 1)/2^k
     $
     Quindi abbiamo dimostrato che:
