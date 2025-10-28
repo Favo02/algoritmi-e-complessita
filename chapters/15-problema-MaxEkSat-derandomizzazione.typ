@@ -2,7 +2,7 @@
 
 = $"Max"E_k"Sat"$
 
-Si tratta di una versione ristretta di $"MaxSat"$.
+Si tratta di una versione ristretta di $"MaxSat"$ //TODO LINK.
 Formalmente: 
 - *$I_pi$*: Formula CNF, in cui ogni clausola contiene esattamente $k$ letterali (su variabili distinte)
   #esempio()[
@@ -26,10 +26,10 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
   Chiamo ora con $C$ il numero di clausole rese vere dall'algoritmo probabilistico, per il teorema: 
   $ E[C] >= (2^k-1)/2^k T $
   Calcoliamo il rapporto di approssimazione:
-  $ T^* / E[C] =  T / ((2^k-1)/2^k T) = 2^k / (2^k-1) $ 
+  $ T / E[C] =  T / ((2^k-1)/2^k T) = 2^k / (2^k-1) $ 
 
   #informalmente()[
-    La Formula, anche se non è soddisfacibile, ha almeno $7/8$ di clausole rese vere da un assegnamento casuale. La frazione di clausole rese vere è molto alta, questo ha delle implicazioni sulla bontà dell'approsimazione.
+    Una Formula CNF, anche se non è soddisfacibile, ha almeno $7/8$ di clausole rese vere da un assegnamento casuale. La frazione di clausole rese vere è molto alta, questo ha delle implicazioni sulla bontà dell'approsimazione.
   ]
   #dimostrazione()[
     Siano $X_1,dots,X_n$ le variabili che compaiono nella formula di ingresso. Ogni variabile $X_i$ può essere vista come una v.a che segue una distribuzione *uniforme* con $p = 1/2$:
@@ -47,9 +47,9 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
 
     Sfruttiamo ora la $mb("legge del valore atteso totale")$. Essa afferma che date due v.a $X$ e $Y$ definite sul medesimo spazio di probabilità: $mb(E[E[X|Y]]=E[X])$.
     #informalmente()[
-      Anizichè calcolare $E[T]$ direttamente lo calcoliamo condizionato su tutti i possibili assegnamenti delle variabili, $E[T|X_1=b_1,dots,X_n=b_n] dot P[X_1=b_1,dots,X_n=b_n]$
+      Anizichè calcolare $E[T]$ direttamente lo calcoliamo condizionato su tutti i possibili assegnamenti delle variabili moltiplicati per la loro probabilità, $E[T|X_1=b_1,dots,X_n=b_n] dot P[X_1=b_1,dots,X_n=b_n]$
     ]
-    Applichiamo le legge:
+    Applichiamo la $mb("legge del valore atteso")$:
     $
       E[T] = E[E[T|X]]\
       = sum_(b_1 in 2)sum_(b_2 in 2) dots sum_(b_n in 2) E[T|X_1=b_1,dots,X_n=b_n] dot P[X_1=b_1,dots,X_n=b_n]\
@@ -65,7 +65,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
       = 1/2^n sum_(b_1 in 2)sum_(b_2 in 2) dots sum_(b_n in 2) mb(sum_(j=1)^t) E[mb(C_j)|X_1=b_1,dots,X_n = b_n]
       
     $
-    Ma qual'è il numero di assegnamenti che rendo una clausola *$C_j$ vera*: 
+    Ma qual'è il numero di assegnamenti che rendono una clausola *$C_j$ vera*: 
     - $mr(2^n)$ = $"#"$ Assegnamenti totali
   
     - $mb(2^(n-k))$ = $"#"$ Assegnamenti delle variabili non coinvolte in $C_j$. Una clausola $C_j$ è falsa solo quando tutti i $k$ letterali sono falsi (essendo in or). Quindi c'è *solo un modo* di assegnare le $k$ variabili *per falsificare $C_j$*, le restanti $(n-k)$ variabili non coinvolte possono assumere un valore qualsiasi ($2^(n-k)$). 
