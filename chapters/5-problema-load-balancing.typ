@@ -305,7 +305,7 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
 Formalmente:
 - *$I_Pi$*:
-  - $t_0, ..., t_(n-1) in bb(N)^+$: durata delle task
+  - $t_0, ..., t_(n-1) in bb(N)^+$: durata dei task
   - $epsilon > 0 in bb(Q)^+$: tasso di approssimazione desiderato, otterremo una $(1+epsilon)$-approssimazione
 - *$"Amm"_(Pi)$*:
   $
@@ -323,7 +323,7 @@ Algoritmo:
   [*Input*: $t_0,dots,t_(n-1), quad epsilon > 0$],
   [*If* $epsilon >= 1$ *then*],
   indent(
-    [Assegna tutti i task ad una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
+    [Assegna tutti i task a una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
     [*Stop*],
   ),
   [Ordinare i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
@@ -371,7 +371,7 @@ Algoritmo:
         Alla macchina $1$ *non* vengono assegnati dei task nella _fase$2$_:
 
         Dato che nella _fase$2$_ la soluzione prodotta nella _fase$1$_ (quindi ottima) non viene toccata, essa rimane ottima.
-        Per ottenere una soluzione migliore bisognerebbe migliorare la _fase$1$_, ma questo è impossibile in quanto è ottima $qed$.
+        Per ottenere una soluzione migliore bisognerebbe migliorare la _fase$1$_, ma questo è impossibile in quanto è già ottima $qed$.
 
         #dimostrazione[
           Dimostrazione del fatto "banale".
@@ -427,22 +427,22 @@ Algoritmo:
         $
 
         Ricordando che, per #link-equation(<ptas-load-balancing-perdita-generalita>), $L = L_1$:
-        $ L quad = quad L_1 <= t_h / 2 + T/2 $ <load-balancing-ptas-l-th-tmezzi>
+        $ L quad = quad L_1 quad <= quad t_h / 2 + T/2 $ <load-balancing-ptas-l-th-tmezzi>
 
         Sappiamo che il lavoro totale è la somma di tutti i task:
-        $ T = sum_(i in n) t_i = underbrace(t_0 + ... + t_(k), forall > t_h) + ... + t_h + ... + t_(n-1) $
+        $ T = sum_(i in n) t_i = underbrace(t_0 + ... + t_k, "tutti" >= t_h) + ... + t_h + ... + t_(n-1) $
 
-        Ma dato sono ordinati, i primi $k+1$ task sono tutti più grandi di $t_h$ (che è per forza nella seconda fase, quindi dopo $t_k$):
+        Ma dato che sono ordinati, i primi $k+1$ task sono tutti più grandi o uguali di $t_h$ (che è per forza nella seconda fase, quindi dopo $t_k$). In particolare, per ogni $i <= k$ vale $t_i >= t_h$, quindi:
         $
-          T >= t_h (k+1) #<load-balancing-ptas-th-k1>
-        $
+          T quad >= quad sum_(i=0)^k t_i quad >= quad t_h (k+1)
+        $ <load-balancing-ptas-th-k1>
 
         Calcoliamo il tasso di approssimazione:
         $
           L/mr(L^*) & underbrace(<=, #link-equation(<load-balancing-ptas-lstar-tmezzi>)) L / mr(T/2) \
-          mb(L)/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-l-th-tmezzi>)) mb(t_h/2 + T/2)/(T/2) quad = 1 + t_h/mg(T) \
-          L/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-th-k1>)) 1+(t_h)/mg(t_h ( k+1)) quad = 1+ 1/(mr(k)+1) \
-          L/L^* & underbrace(<=, mr(k >= ceil(1/epsilon-1))) 1 + 1/(mr(ceil(1/epsilon-1))+1) \
+          mb(L)/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-l-th-tmezzi>)) mb(t_h/2 + T/2)/(T/2) quad = quad 1 + t_h/mg(T) \
+          L/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-th-k1>)) 1+(t_h)/mg(t_h ( k+1)) quad = quad 1+ 1/(mr(k)+1) \
+          L/L^* & underbrace(<=, mr(k = ceil(1/epsilon-1))) 1 + 1/(mr(ceil(1/epsilon-1))+1) \
           L/L^* & <= 1 + 1/(1/epsilon-1+1) \
           L/L^* & <= 1 + epsilon space qed
         $
