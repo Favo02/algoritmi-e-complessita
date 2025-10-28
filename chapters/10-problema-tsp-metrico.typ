@@ -549,13 +549,14 @@ Eseguiamo ora l'algoritmo di Christofides su $G$:
 - $mm(M) <- "MWPM"(D)$: minimum-weight perfect matching tra soli due vertici è semplicemente l'arco che li collega, di peso uguale al cammino minimo tra $v_1$ e $v_n$, calcolato come:
   - archi alternati da $v_1 ~> v_3$, $v_3 ~> v_5$, ..., $v_(n-3) ~> v_(n-1)$ (ciascuno di costo $1+epsilon$)
   - arco di costo $1$ che collega $v_(n-1)$ a $v_n$
-  - costo di $mm(M = (1+epsilon) n/2 + 1)$
+  - costo di $mm(M = (1+epsilon) (n-2)/2 + 1)$
 
 - Unendo $mo(T) union mm(M)$ otteniamo un circuito Hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo:
 $
-  delta & = mm((1+epsilon)n/2+ 1) + mo((n-1)) \
-  delta & = n/2 + epsilon n/2 cancel(+1) + n cancel(-1) \
-  delta & = 3/2 n + epsilon n/2
+  delta & = mm((1+epsilon)(n-2)/2 + 1) + mo((n-1)) \
+  delta & = (n-2)/2 + epsilon(n-2)/2 + 1 + n - 1 \
+  delta & = 3/2 n - 1 + epsilon(n-2)/2 \
+  delta & = 3/2 n + epsilon n/2 - (1 + epsilon)
 $
 
 #figure(
@@ -570,7 +571,7 @@ $
 
     // Matching M (marrone) - arco curvo da v1 a vn
     bezier((0, -0.1), (8, -0.1), (4, -1.5), stroke: 3pt + maroon)
-    content((4, -1.2), text(size: 9pt, fill: maroon)[$(1+epsilon)n/2 + 1$])
+    content((4, -1.2), text(size: 9pt, fill: maroon)[$(1+epsilon)(n-2)/2 + 1$])
 
     // Vertici
     circle((0, 0), radius: 0.15, fill: white, stroke: black)
@@ -601,15 +602,17 @@ $
 )
 
 Tuttavia il circuito Hamiltoniano ottimo $delta^*$ è formato da:
-- archi alternati da $mp(v_1 ~> v_3)$, $mp(v_3 ~> v_5)$, ..., $mp(v_(n-3) ~> v_(n-1))$
+- archi alternati da $mp(v_1 ~> v_3)$, $mp(v_3 ~> v_5)$, ..., $mp(v_(n-3) ~> v_(n-1))$ (ciascuno di costo $1+epsilon$), per un totale di $(n-2)/2$ archi
 - usare un arco di costo $1$ per raggiungere $v_n$: $mp(v_(n-1) ~> v_n)$
-- tornare indietro sfruttando ancora gli archi alternati $mr(v_n ~> v_(n-2))$, $mr(v_(n-2) ~> v_(n-4))$, ..., $mr(v_(4) ~> v_2)$
+- tornare indietro sfruttando ancora gli archi alternati $mr(v_n ~> v_(n-2))$, $mr(v_(n-2) ~> v_(n-4))$, ..., $mr(v_4 ~> v_2)$ (ciascuno di costo $1+epsilon$), per un totale di $(n-2)/2$ archi
 - usare un arco di costo $1$ per raggiungere $v_1$: $mr(v_2 ~> v_1)$
 
 $
-  delta^* & = mp((1+epsilon)n/2 +1) + mr((1+epsilon)n/2 +1) \
-  delta^* & = (1+epsilon)n/2 + (1+epsilon)n/2 + 2 \
-  delta^* & = (1+epsilon)n + 2
+  delta^* & = mp((1+epsilon)(n-2)/2 + 1) + mr((1+epsilon)(n-2)/2 + 1) \
+  delta^* & = (1+epsilon)(n-2)/2 + (1+epsilon)(n-2)/2 + 2 \
+  delta^* & = (1+epsilon)(n-2) + 2 \
+  delta^* & = n + epsilon n - 2 - 2 epsilon + 2 \
+  delta^* & = (1+epsilon)n - 2 epsilon
 $
 
 #figure(
@@ -663,7 +666,9 @@ $
 )
 
 Consideriamo ora il rapporto di approssimazione:
-$ delta/delta^* = (3/2 n + epsilon n/2) / ((1+epsilon)n+2) quad -->_(n->infinity \ epsilon -> 0) quad 3/2 $
+$
+  delta/delta^* = (3/2 n + epsilon n/2 - (1 + epsilon)) / ((1+epsilon)n - 2 epsilon) quad -->_(n->infinity \ epsilon -> 0) quad 3/2
+$
 
 Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
 
