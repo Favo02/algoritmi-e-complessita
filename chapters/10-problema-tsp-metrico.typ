@@ -11,7 +11,7 @@
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
   - $chevron.l delta_e chevron.r_(e in E) in bb(Q)^+$: pesi dei lati
-- *$"Amm"_Pi$*: circuito Hamiltoniano $pi in G$ (tutti i lati una volta), oppure $bot$ (se non esiste)
+- *$"Amm"_Pi$*: circuito Hamiltoniano $pi in G$ (tocca esattamente una volta ogni vertice del grafo), oppure $bot$ (se non esiste)
 - *$C_Pi$*: peso del circuito Hamiltoniano:
   $ delta = sum_(e in pi) delta_e $
 - *$t_Pi$* = $min$
@@ -27,8 +27,7 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
 + $delta_e$ è una *metrica*, cioè vale la disuguaglianza triangolare $delta_{x,y} + delta_{y,z} >= delta_{x,z}$
 
 #attenzione[
-  Senza la seconda limitazione, sarebbe possibile trasformare qualsiasi grafo (non per forza cricca) in una cricca.
-  Basterebbe aggiungere tutti i lati mancanti con un costo enorme, in modo che non vengano mai scelti dall'algoritmo.
+  Senza la seconda limitazione, sarebbe possibile trasformare qualsiasi grafo in una cricca: basterebbe aggiungere tutti i lati mancanti con un costo enorme, in modo che non vengano mai scelti dall'algoritmo.
 
   #esempio[
     #figure(
@@ -85,7 +84,7 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
 #pseudocode(
   [*Input*: $G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
   [$T <-$ #link(<tsp-minimum-spanning-tree>)[Minimum spanning tree#super[1]] su $G$],
-  [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]] + ", " + $|D|$ + " è pari")],
+  [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// " + $|D|$ + " è pari per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]])],
   [$M <-$ #link(<tsp-minimum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
   [$tilde(pi) <-$ Circuito Euleriano su $M union T$ #emph("// la sua esistenza è garantita da " + link(<tsp-esistenza-circuito-euleriano>)[esistenza circuito Euleriano#super[4]])],
   [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]] ],
@@ -95,7 +94,7 @@ L'algoritmo sfrutta le seguenti componenti:
 
 - *Minimum Spanning Tree*#super[1]: <tsp-minimum-spanning-tree>
   dato un grafo pesato, uno spanning tree è una scelta di lati che forma un albero (quindi aciclico) e tocca tutti i vertici.
-  Tra tutti gli spanning tree possibili, viene scelto quello di peso (somma degli archi) minima.\
+  Tra tutti gli spanning tree possibili, viene scelto quello di peso (somma degli archi) minimo.\
   Tale problema è risolvibile in tempo polinomiale ($in "PO"$) utilizzando l'#link("https://en.wikipedia.org/wiki/Kruskal's_algorithm")[algoritmo di _Kruskal_].
 
 - *Handshaking Lemma*#super[2]: <tsp-handshaking-lemma>
