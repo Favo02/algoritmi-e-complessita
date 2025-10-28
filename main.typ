@@ -67,3 +67,4 @@
 #include "chapters/7-problema-set-cover.typ"
 #include "chapters/8-problema-vertex-cover.typ"
 #include "chapters/9-problema-congested-paths.typ"
+#include "chapters/15-problema-MaxEkSat-derandomizzazione.typ"
