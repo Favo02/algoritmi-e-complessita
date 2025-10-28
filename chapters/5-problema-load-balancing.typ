@@ -287,12 +287,6 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   #dimostrazione[
     Dimostrato da _Hochbaum-Shmoys 1988_.
   ]
-
-  #informalmente[
-    Per ottenere una $epsilon$-approssimazione, basta fare _brute force_ (provando tutte le combinazioni) di un certo numero di task (che dipende dal tasso $epsilon$ richiesto) e poi continuare in maniera Greedy. Al diminuire di $epsilon$ il tempo richiesto cresce in maniera esponenziale.
-
-    Non vedremo come implementare questa variante.
-  ]
 ]
 
 #teorema("Teorema")[
@@ -303,124 +297,154 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   ]
 ]
 
-== PTAS per 2-Load Balancing _(offline)_
+=== PTAS per 2-Load Balancing _(offline)_
 
 #nota[
-  Se prendiamo le istanze del problema di $"LoadBalancing"$ e fissiamo $m=2$ (2 macchine), riusciamo a costruire un algoritmo tale per cui $2-"LoadBalancing" in "PTAS"$
+  Versione semplificata del problema $"LoadBalancing"$, con $m = 2$, ovvero solo $2$ macchine.
 ]
 
 Formalmente:
 - *$I_Pi$*:
-  - $t_0, ..., t_(n-1) in bb(N)^+$
-  - $epsilon > 0 in bb(Q)^+$, tasso di approssimazione desiderato, $1+epsilon$-approssimazione
-- *$"Amm"_(Pi)$*: 
+  - $t_0, ..., t_(n-1) in bb(N)^+$: durata delle task
+  - $epsilon > 0 in bb(Q)^+$: tasso di approssimazione desiderato, otterremo una $(1+epsilon)$-approssimazione
+- *$"Amm"_(Pi)$*:
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
-- *$C_pi$*: 
+- *$C_Pi$*:
   $
-    L = max_(i in m)(L_i), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
+    L = max(L_1, L_2), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
   $
-- *$t_pi$* = $"min"$
+- *$t_Pi$* = $"min"$
 
-Algoritmo: 
+Algoritmo:
+
 #pseudocode(
-  [*Input* $<- t_0,dots,t_(n-1), quad epsilon > 0$],
-  [*If* $epsilon >= 1$],
+  [*Input*: $t_0,dots,t_(n-1), quad epsilon > 0$],
+  [*If* $epsilon >= 1$ *then*],
   indent(
-    [Assegna tutti i task ad una macchina sola, approsimazione pessima],
-    [*Stop*]
+    [Assegna tutti i task ad una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
+    [*Stop*],
   ),
-  [Ordiniamo i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
+  [Ordinare i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
   [*Fase $1$*],
   indent(
     [$k <- ceil(1/epsilon-1)$],
-    [Assegnamo in modo ottimo i task $t_0,t_1,dots,t_(k-1)$],
-    [#emph("lo span è minimo")]
+    [Assegna in modo ottimo i task $t_0,t_1,dots,t_(k-1)$ #emph("// bruteforce, lo span è minimo")],
   ),
-  [*Fase* $2$],
+  [*Fase $2$*],
   indent(
-    [I restanti task $t_k,t_(k+1),dots,t_(n-1)$ vengono assegnati in modo greedy]
-  )
-  
+    [Assegna i restanti $t_k,t_(k+1),dots,t_(n-1)$ in modo greedy],
+  ),
 )
 
 #attenzione[
-  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$. Per $epsilon -> 0$ i tempi di esecuzione diventano esponenziali
+  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$.
+  Per $epsilon -> 0$ i tempi di esecuzione diventano esponenziali.
 ]
 
 #teorema("Teorema")[
-  L'algoritmo proposto è una $(1+epsilon)$-approssimazione per $2$-$"LoadBalancing"$.
+  L'algoritmo è una $(1+epsilon)$-approssimazione per $2$-$"LoadBalancing"$.
 
   #dimostrazione[
+    Definiamo $T$ come la somma del lavoro da effettuare, ovvero la somma delle task:
     $ T = sum_(i in n) t_i $
 
     Nessuna soluzione può essere migliore di $T/2$, dato che è la media tra le macchine:
     $ L^* >= T/2 $ <load-balancing-ptas-lstar-tmezzi>
 
-    *Caso 1*: $epsilon >= 1$
-    $
-      L = T \
-      #emph("Tutti i task sono assegnati ad una macchina "+$L_1$)\
-      L / L^* <= T/(T/2) = 2/T T = 2 underbrace(<=,epsilon >=1) 1 + epsilon space qed
-    $
-    *Caso 2*: $0 < epsilon < 1$
+    / Caso 1: $epsilon >= 1$:
 
-      Senza perdita di generalità, assumiamo che $L_1 >= L_2$. Ovvero che la macchina $L_1$ sia sempre la più carica
-
-    - Sottocaso $2-"A"$: Alla macchina $L_1$ non vengono assegnati task nella fase$2$:
-
-      Dato che nella fase$2$ la soluzione ottima prodotta nella fase$1$ non viene toccata, essa rimane ottima.
-      Per ottenere una soluzione migliore bisognerebbe migliorare la fase$1$, questo è impossibile in quanto è ottima $qed$.
-
-      #informalmente[
-        Se ho assegnato $k$ task in modo ottimo alla macchina $L_1$ e aggiungo altri task alla macchina $L_2$, lo span ottimo rimane quello di $L_1$.
-      ]
-      #dimostrazione()[
-        Dimostrazione del fatto "banale".\
-        Sia *$L$* una soluzione prodotta dall'algoritmo, dove $L = L_1 >= L_2$, vogliamo dimostrare che *l'assegnazione dei task a $L_1$ è ottima*.\
-        Sia $x$ la somma delle durate $t_i$ dopo i primi $k$ task (fase$2$). Per ipotesi $(L_1,L_2-x)$ è un'assegnazione ottima dei primi $k$ task.\
-
-        Supponiamo per assurdo che ci sia un modo migliore di $(L_1,L_2)$ per assegnare i task alle macchine, ovvero il carico $(L_1^*,L_2^*)$:
-        $ L > L^* = L_1^*>=L_2^* $ 
-        Chiamiamo con $x_1$ e $x_2$ la somma dei task assegnati nella fase$2$ $(x_1+x_2 = x)$. Nella fase$1$ i carichi assegnati alle due macchine sono $(L_1^*-x_1,L_2^*-x_2)$. Ci sono due casi possibili: 
-        - $L_1^*-x_1 >= L_2^* -x_2$: Il carico dopo la prima fase è $L_1^*-x_1 <= L_1^* < L$, ma questo è assurdo in quanto $L_1$ è il carico ottimo per i primi $k$ task.
-        - $L_2^*-x_2 >= L_1^*-x_1$: Il carico dopo la prima fase è $L_2^* - x_2 <= L_2^* < L$, ma questo è assurdo in quanto $L_1$ è il carico ottimo per i primi $k$ task.
-      ]
-
-   - Sottocaso $2-"B"$: Sono stati assegnati task durante la fase$2$ ache alla macchina $L_1$.
-
-      Abbiamo detto che l'algoritmo si suddivide in $2$ fasi: 
-      $ 
-        underbrace(t_0 t_1 dots t_(k-1), mb("fase1")), underbrace(t_k t_(k+1)dots t_h t_(n-1),mr("fase2")) 
+      Tutti i carichi sono assegnati ad una macchina, quindi lo span finale $L$ sarà uguale al lavoro:
+      $ L = T $
+      Considerando il rapporto di approssimazione:
       $
-      Sia $mr(t_h)$ l'ultimo task assegnato alla macchina $L_1$ (per forza assegnato durante la $mr("fase2")$).
-      Il carico all'istante $h$ è dato da:
-      $
-        L_1 - t_h <= underbrace(L'_2,"carico che aveva" L_2\ "all'assegnazione di" t_h) <= L_2 \
-        2L_1 - t_h <= L'_2 <= underbrace(L_1 + L_2 = T,"somma di tutti i task")\
-        2L_1 - t_h <= T \
-        L_1 - t_h / 2 <= T/2 \
-        L = L_1 <= t_h / 2 + T/2 #<load-balancing-ptas-l-th-tmezzi>
+        L / L^* quad <= quad T/(T/2) quad = quad (2T)/T quad = quad 2 quad underbrace(<=, epsilon >=1) quad 1 + epsilon space qed
       $
 
-      Sappiamo che:
-      $
-        T = sum_(i in n) t_i = t_0 + t_1 + ... + t_(k-1) + ... + t_h + ... + t_(n-1) \
-        >= t_h (k+1) #<load-balancing-ptas-th-k1>
-      $
-      In quanto nella sommatoria sommo *$k+1$* task ciascuno di *durata maggiore di $t_h$*.\
-      Calcoliamo il tasso di approssimazione:
+    / Caso 2: $0 < epsilon < 1$:
 
-    $
-      L/L^* &underbrace(<=, #link-equation(<load-balancing-ptas-lstar-tmezzi>)) L / (T/2) \
-      &underbrace(<=, #link-equation(<load-balancing-ptas-l-th-tmezzi>)) (t_h/2 + T/2)/(T/2) \
-      &= 1 + t_h/T \
-      &underbrace(<=, #link-equation(<load-balancing-ptas-th-k1>)) 1+(t_h)/(t_h ( k+1)) \
-      &= 1+ 1/(k+1) \
-      &underbrace(<=, k >= ceil(1/epsilon-1)) 1 + 1/(ceil(1/epsilon-1)+1) \
-      &<= 1 + 1/(1/epsilon-1+1) = 1 + epsilon
-  $
+      Senza perdita di generalità, assumiamo che la macchina $L_1$ sia la più carica al termine dell'algoritmo _(è possibile fare il ragionamento inverso)_:
+      $ L = L_1 >= L_2 $ <ptas-load-balancing-perdita-generalita>
+
+      / Sottocaso 2A:
+        Alla macchina $1$ *non* vengono assegnati dei task nella _fase$2$_:
+
+        Dato che nella _fase$2$_ la soluzione prodotta nella _fase$1$_ (quindi ottima) non viene toccata, essa rimane ottima.
+        Per ottenere una soluzione migliore bisognerebbe migliorare la _fase$1$_, ma questo è impossibile in quanto è ottima $qed$.
+
+        #dimostrazione[
+          Dimostrazione del fatto "banale".
+
+          Sia $L$ una soluzione prodotta dall'algoritmo, dove $L = L_1 >= L_2$ (senza perdita di generalità, #link-equation(<ptas-load-balancing-perdita-generalita>)).
+
+          Sia $x$ la somma delle task $t_i$ assegnate durante la _fase$2$_: $x = limits(sum)_(i = k)^(n-1) t_i$
+
+          L'assegnazione ottima dei primi $k$ task (_fase$1$_) è $(L_1, L_2 - x)$:
+          - macchina $1$: per ipotesi, alla prima macchina non verranno assegnati task nella _fase$2$_, quindi il suo carico dopo la _fase$1$_ rimarrà uguale al carico finale $L_1$
+          - macchina $2$: tutti i task rimanenti $x$ vengono assegnati ad essa, quindi il carico dopo la _fase$1$_ sarà quello finale $L_2$ meno quelli assegnati durante la seconda fase, $L_2 - x$
+
+          Supponiamo per assurdo che ci sia un modo migliore rispetto a $(L_1, L_2)$ per assegnare tutti i task alle macchine, chiamandolo $(L_1^*, L_2^*)$:
+          $
+            L quad > quad L^* quad = quad L_1^* underbrace(>=, #link-equation(<ptas-load-balancing-perdita-generalita>)) L_2^*
+          $
+
+          Questo assegnamento ottimo, assegna durante la _fase$2$_ rispettivamente $x_1$ e $x_2$ somma di task alle macchine $1$ e $2$.
+          Quindi alla fine della prima fase, per questo assegnamento ottimo i carichi varrebbero $(L_1^* - x_1, L_2^* - x_2)$.
+
+          Alla fine della _fase$1$_ ci sono due casi possibili:
+          - la prima macchina era più carica
+            $
+              L_1^* - x_1 >= L_2^* - x_2 \
+              L_1^* - x_1 quad <= quad L_1^* quad < quad L quad = quad L_1
+            $
+          - la seconda macchina era più carica
+            $
+              L_2^* - x_2 >= L_1^* - x_1 \
+              L_2^* - x_2 quad <= quad L_2^* quad <= quad L^* quad < quad L quad = quad L_1
+            $
+
+          In entrambi i casi otteniamo un assurdo, dato che $L_1$ è il carico ottimo per i primi $k$ task, $qed$.
+        ]
+
+      / Sottocaso 2B: Alla macchina $1$ vengono assegnati dei task nella _fase$2$_:
+
+        Abbiamo detto che l'algoritmo si suddivide in $2$ fasi:
+        $
+          underbrace(t_0\, t_1\, dots\, t_(k-1), "fase1"), underbrace(t_k\, t_(k+1)\, dots\, t_h\, dots\, t_(n-1), "fase2")
+        $
+
+        Sia $t_h$ l'ultimo task assegnato alla macchina $1$ (assegnato durante la _fase$2$_).
+
+        Dato che $t_h$ è stato assegnato alla macchina $1$, allora in quell'istante il suo carico doveva essere minore del carico della macchina $2$, chiamato $L'_2$:
+        $ L_1 - t_h quad <= quad L'_2 quad <= L_2 $
+
+        Sommando $L_1$ da entrambe le parti:
+        $
+            2 L_1 - t_h quad & <= quad L'_2 quad <= quad underbrace(mr(L_1 + L_2), "lavoro totale") \
+            2 L_1 - t_h quad & <= quad mr(T) \
+          L_1 - t_h / 2 quad & <= quad T/2
+        $
+
+        Ricordando che, per #link-equation(<ptas-load-balancing-perdita-generalita>), $L = L_1$:
+        $ L quad = quad L_1 <= t_h / 2 + T/2 $ <load-balancing-ptas-l-th-tmezzi>
+
+        Sappiamo che il lavoro totale è la somma di tutti i task:
+        $ T = sum_(i in n) t_i = underbrace(t_0 + ... + t_(k), forall > t_h) + ... + t_h + ... + t_(n-1) $
+
+        Ma dato sono ordinati, i primi $k+1$ task sono tutti più grandi di $t_h$ (che è per forza nella seconda fase, quindi dopo $t_k$):
+        $
+          T >= t_h (k+1) #<load-balancing-ptas-th-k1>
+        $
+
+        Calcoliamo il tasso di approssimazione:
+        $
+          L/mr(L^*) & underbrace(<=, #link-equation(<load-balancing-ptas-lstar-tmezzi>)) L / mr(T/2) \
+          mb(L)/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-l-th-tmezzi>)) mb(t_h/2 + T/2)/(T/2) quad = 1 + t_h/mg(T) \
+          L/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-th-k1>)) 1+(t_h)/mg(t_h ( k+1)) quad = 1+ 1/(mr(k)+1) \
+          L/L^* & underbrace(<=, mr(k >= ceil(1/epsilon-1))) 1 + 1/(mr(ceil(1/epsilon-1))+1) \
+          L/L^* & <= 1 + 1/(1/epsilon-1+1) \
+          L/L^* & <= 1 + epsilon space qed
+        $
   ]
 ]
-.
