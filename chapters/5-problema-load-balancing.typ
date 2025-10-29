@@ -287,12 +287,6 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
   #dimostrazione[
     Dimostrato da _Hochbaum-Shmoys 1988_.
   ]
-
-  #informalmente[
-    Per ottenere una $epsilon$-approssimazione, basta fare _brute force_ (provando tutte le combinazioni) di un certo numero di task (che dipende dal tasso $epsilon$ richiesto) e poi continuare in maniera Greedy. Al diminuire di $epsilon$ il tempo richiesto cresce in maniera esponenziale.
-
-    Non vedremo come implementare questa variante.
-  ]
 ]
 
 #teorema("Teorema")[
@@ -300,5 +294,157 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 
   #dimostrazione[
     Il problema di decisione associato a LoadBalancing è fortemente NP completo.
+  ]
+]
+
+=== PTAS per 2-Load Balancing _(offline)_
+
+#nota[
+  Versione semplificata del problema $"LoadBalancing"$, con $m = 2$, ovvero solo $2$ macchine.
+]
+
+Formalmente:
+- *$I_Pi$*:
+  - $t_0, ..., t_(n-1) in bb(N)^+$: durata dei task
+  - $epsilon > 0 in bb(Q)^+$: tasso di approssimazione desiderato, otterremo una $(1+epsilon)$-approssimazione
+- *$"Amm"_(Pi)$*:
+  $
+    "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
+  $
+- *$C_Pi$*:
+  $
+    L = max(L_1, L_2), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
+  $
+- *$t_Pi$* = $"min"$
+
+Algoritmo:
+
+#pseudocode(
+  [*Input*: $t_0,dots,t_(n-1), quad epsilon > 0$],
+  [*If* $epsilon >= 1$ *then*],
+  indent(
+    [Assegna tutti i task a una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
+    [*Stop*],
+  ),
+  [Ordinare i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
+  [*Fase $1$*],
+  indent(
+    [$k <- ceil(1/epsilon-1)$],
+    [Assegna in modo ottimo i task $t_0,t_1,dots,t_(k-1)$ #emph("// bruteforce, lo span è minimo")],
+  ),
+  [*Fase $2$*],
+  indent(
+    [Assegna i restanti $t_k,t_(k+1),dots,t_(n-1)$ in modo greedy],
+  ),
+)
+
+#attenzione[
+  Questo algoritmo rimane polinomiale sulla lunghezza dell'input, ovvero su $n$, ma diventa esponenziale su $epsilon$.
+  Per $epsilon -> 0$ i tempi di esecuzione diventano esponenziali.
+]
+
+#teorema("Teorema")[
+  L'algoritmo è una $(1+epsilon)$-approssimazione per $2$-$"LoadBalancing"$.
+
+  #dimostrazione[
+    Definiamo $T$ come la somma del lavoro da effettuare, ovvero la somma delle task:
+    $ T = sum_(i in n) t_i $
+
+    Nessuna soluzione può essere migliore di $T/2$, dato che è la media tra le macchine:
+    $ L^* >= T/2 $ <load-balancing-ptas-lstar-tmezzi>
+
+    / Caso 1: $epsilon >= 1$:
+
+      Tutti i carichi sono assegnati ad una macchina, quindi lo span finale $L$ sarà uguale al lavoro:
+      $ L = T $
+      Considerando il rapporto di approssimazione:
+      $
+        L / L^* quad <= quad T/(T/2) quad = quad (2T)/T quad = quad 2 quad underbrace(<=, epsilon >=1) quad 1 + epsilon space qed
+      $
+
+    / Caso 2: $0 < epsilon < 1$:
+
+      Senza perdita di generalità, assumiamo che la macchina $L_1$ sia la più carica al termine dell'algoritmo _(è possibile fare il ragionamento inverso)_:
+      $ L = L_1 >= L_2 $ <ptas-load-balancing-perdita-generalita>
+
+      / Sottocaso 2A:
+        Alla macchina $1$ *non* vengono assegnati dei task nella _fase$2$_:
+
+        Dato che nella _fase$2$_ la soluzione prodotta nella _fase$1$_ (quindi ottima) non viene toccata, essa rimane ottima.
+        Per ottenere una soluzione migliore bisognerebbe migliorare la _fase$1$_, ma questo è impossibile in quanto è già ottima $qed$.
+
+        #dimostrazione[
+          Dimostrazione del fatto "banale".
+
+          Sia $L$ una soluzione prodotta dall'algoritmo, dove $L = L_1 >= L_2$ (senza perdita di generalità, #link-equation(<ptas-load-balancing-perdita-generalita>)).
+
+          Sia $x$ la somma delle task $t_i$ assegnate durante la _fase$2$_: $x = limits(sum)_(i = k)^(n-1) t_i$
+
+          L'assegnazione ottima dei primi $k$ task (_fase$1$_) è $(L_1, L_2 - x)$:
+          - macchina $1$: per ipotesi, alla prima macchina non verranno assegnati task nella _fase$2$_, quindi il suo carico dopo la _fase$1$_ rimarrà uguale al carico finale $L_1$
+          - macchina $2$: tutti i task rimanenti $x$ vengono assegnati ad essa, quindi il carico dopo la _fase$1$_ sarà quello finale $L_2$ meno quelli assegnati durante la seconda fase, $L_2 - x$
+
+          Supponiamo per assurdo che ci sia un modo migliore rispetto a $(L_1, L_2)$ per assegnare tutti i task alle macchine, chiamandolo $(L_1^*, L_2^*)$:
+          $
+            L quad > quad L^* quad = quad L_1^* underbrace(>=, #link-equation(<ptas-load-balancing-perdita-generalita>)) L_2^*
+          $
+
+          Questo assegnamento ottimo, assegna durante la _fase$2$_ rispettivamente $x_1$ e $x_2$ somma di task alle macchine $1$ e $2$.
+          Quindi alla fine della prima fase, per questo assegnamento ottimo i carichi varrebbero $(L_1^* - x_1, L_2^* - x_2)$.
+
+          Alla fine della _fase$1$_ ci sono due casi possibili:
+          - la prima macchina era più carica
+            $
+              L_1^* - x_1 >= L_2^* - x_2 \
+              L_1^* - x_1 quad <= quad L_1^* quad < quad L quad = quad L_1
+            $
+          - la seconda macchina era più carica
+            $
+              L_2^* - x_2 >= L_1^* - x_1 \
+              L_2^* - x_2 quad <= quad L_2^* quad <= quad L^* quad < quad L quad = quad L_1
+            $
+
+          In entrambi i casi otteniamo un assurdo, dato che $L_1$ è il carico ottimo per i primi $k$ task, $qed$.
+        ]
+
+      / Sottocaso 2B: Alla macchina $1$ vengono assegnati dei task nella _fase$2$_:
+
+        Abbiamo detto che l'algoritmo si suddivide in $2$ fasi:
+        $
+          underbrace(t_0\, t_1\, dots\, t_(k-1), "fase1"), underbrace(t_k\, t_(k+1)\, dots\, t_h\, dots\, t_(n-1), "fase2")
+        $
+
+        Sia $t_h$ l'ultimo task assegnato alla macchina $1$ (assegnato durante la _fase$2$_).
+
+        Dato che $t_h$ è stato assegnato alla macchina $1$, allora in quell'istante il suo carico doveva essere minore del carico della macchina $2$, chiamato $L'_2$:
+        $ L_1 - t_h quad <= quad L'_2 quad <= L_2 $
+
+        Sommando $L_1$ da entrambe le parti:
+        $
+            2 L_1 - t_h quad & <= quad L'_2 quad <= quad underbrace(mr(L_1 + L_2), "lavoro totale") \
+            2 L_1 - t_h quad & <= quad mr(T) \
+          L_1 - t_h / 2 quad & <= quad T/2
+        $
+
+        Ricordando che, per #link-equation(<ptas-load-balancing-perdita-generalita>), $L = L_1$:
+        $ L quad = quad L_1 quad <= quad t_h / 2 + T/2 $ <load-balancing-ptas-l-th-tmezzi>
+
+        Sappiamo che il lavoro totale è la somma di tutti i task:
+        $ T = sum_(i in n) t_i = underbrace(t_0 + ... + t_k, "tutti" >= t_h) + ... + t_h + ... + t_(n-1) $
+
+        Ma dato che sono ordinati, i primi $k+1$ task sono tutti più grandi o uguali di $t_h$ (che è per forza nella seconda fase, quindi dopo $t_k$). In particolare, per ogni $i <= k$ vale $t_i >= t_h$, quindi:
+        $
+          T quad >= quad sum_(i=0)^k t_i quad >= quad t_h (k+1)
+        $ <load-balancing-ptas-th-k1>
+
+        Calcoliamo il tasso di approssimazione:
+        $
+          L/mr(L^*) & underbrace(<=, #link-equation(<load-balancing-ptas-lstar-tmezzi>)) L / mr(T/2) \
+          mb(L)/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-l-th-tmezzi>)) mb(t_h/2 + T/2)/(T/2) quad = quad 1 + t_h/mg(T) \
+          L/L^* & underbrace(<=, #link-equation(<load-balancing-ptas-th-k1>)) 1+(t_h)/mg(t_h ( k+1)) quad = quad 1+ 1/(mr(k)+1) \
+          L/L^* & underbrace(<=, mr(k = ceil(1/epsilon-1))) 1 + 1/(mr(ceil(1/epsilon-1))+1) \
+          L/L^* & <= 1 + 1/(1/epsilon-1+1) \
+          L/L^* & <= 1 + epsilon space qed
+        $
   ]
 ]
