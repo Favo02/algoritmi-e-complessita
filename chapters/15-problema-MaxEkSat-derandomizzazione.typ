@@ -131,3 +131,47 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
 #teorema("Crollario")[
   Esiste un assegnamento $b_1,dots b_n in 2$ (dove $n$ è il numero di variabili) t.c il numero di clausole soddisfatte è $ >= (2^k-1)/2^k t$ 
 ]
+
+== Algoritmo Derandomizzato
+#pseudocode(
+  [$D <- emptyset$],
+  [*For* $i=1,2,dots,n$ #emph("// Scorro tutte le "+$n$+" variabili")],
+  indent(
+    [$Delta_0 <- 0$],
+    [$Delta_1 <- 0$],
+    [$Delta_(D_0) <- 0$],
+    [$Delta_(D_1) <- 0$],
+    [*For* $j=1,2,dots,t$ #emph("// Scorro tutte le clausole")],
+    indent(
+      [*If* $j in D$],
+      indent(
+        [*continue*]
+      ),
+      [*If* $x_i$ non compare nelle clausola $j$-esima],
+      indent(
+        [*continue*]
+      ),
+      [$h <-$ numero di variabili di indice $>= i$ nella clausola $j$-esima],
+      [*If* $x_i$ compare positiva],
+      indent(
+        [$Delta_0 <- Delta_0 - 1/2^h$],
+        [$Delta_1 <- Delta_1 + 1/2^h$],
+        [$Delta_(D_1) <- Delta_(D_1) union {j}$]
+      ),[*Else*],indent(
+        [$Delta_0 <- Delta_0 + 1/2^h$],
+        [$Delta_1 <- Delta_1 - 1/2^h$],
+        [$Delta_(D_0) <- Delta_(D_0) union {j}$]
+      )
+    ),
+    [*If* $Delta_0 > Delta_1$],
+    indent(
+      [$x[i]<- 0$],
+      [$D <- D union Delta_(D_0)$]
+    ),[*Else*],indent(
+      [$x[i]<- 1$],
+      [$D <- D union Delta_(D_1)$]
+    )
+  ),
+
+
+)
