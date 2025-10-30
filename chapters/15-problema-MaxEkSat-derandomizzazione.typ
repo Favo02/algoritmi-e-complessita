@@ -88,11 +88,55 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
     $
       E[T/t] = (2^k-1)/2^k space qed
     $
+  ]
+]<teorema-upper-bound-maxeksat>
+
+#teorema("Lemma")[
+  #informalmente()[
+    Si tratta di una generalizzazione del teorema precedente #link-teorema(<teorema-upper-bound-maxeksat>) ($j=0$). Il lemma ci sta dicendo che c'è un modo per scegliere l'assegnamento delle prime $j$ variabili per manterenere un numero medio di clauosole soddisfatte: $E[T] >= (2^k-1)/2^k$
+  ]
+  Per ogni $j=0,dots,n$ esiste una scelta di bit ${b_1,b_2,dots,b_j} in 2$ t.c: 
+  $ E[T|X_1=b_1,dots,X_j=b_j] >= (2^k-1)/2^k t $
+
+  #dimostrazione()[
+    Per *induzione su $j$*.
+    - *Caso base* (*$j=0$*). Ci rifacciamo al teorea precedente #link-teorema(<teorema-upper-bound-maxeksat>). Con $j=0$, non scegliamo le variabili, dal teorema precedente sappiamo che un qualunque assegnamento casuale soddisfa almeno $E[T] >= (2^k-1)/2^k space qed$. 
+
+    - *Passo induttivo* (*$j >0$*). Esistono $b_1,dots,b_(j-1) in 2$ assegnamenti per cui il teorema vale (fino a $j-1$). Di conseguenza: 
+      $ (2^k-1)/2^k <= E[T|X_1=b_1,dots,X_(j-1)=b_(j-1)] $
+      Abbiamo due possibilità per l'assegnamento della variabile $X_j$:
+      $ 
+        underbrace(E[T|X_1=b_1,dots,X_(j-1)=b_(j-1),mb(X_j=0)],mb(e_0)) dot P[mb(X_j=0)]\ 
+        + \ 
+        underbrace(E[T|X_1=b_1,dots,X_(j-1)=b_(j-1),mr(X_j=1)],mr(e_1)) dot P[mr(X_j=1)]\
+        = mb(e_0)1/2 + mr(e_1)1/2
+      $
+      Riassumendo: 
+      $ 
+        (2^k-1)/2^k <= mb(e_0)1/2 + mr(e_1)1/2
+      $
+      Supponiamo per *assurdo* che: 
+      $
+        e_0 < (2^k-1)/2^k t space "," space e_1 < (2^k-1)/2^k t
+      $
+      Allora anche la media pesata di $e_1$ e $e_2$ sarebbe $<$: 
+      $
+        (2^k-1)/2^k t <= e_0 1/2 + e_1 1/2 &< (2^k-1)/2^k t \
+        (2^k-1)/2^k &< (2^k-1)/2^k space "contraddizione"
+      $
+      Questa è una contraddizione dell'ipotesi induttiva ($(2^k-1)/2^k <= e_0 1/2 + e_1 1/2$), almeno uno tra $e_1$ e $e_2$ deve essere $>= (2^k-1)/2^k space qed$
+
+
+
+
+
+
+
+
 
 
 
 
 
   ]
-
 ]
