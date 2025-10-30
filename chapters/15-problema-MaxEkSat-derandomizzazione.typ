@@ -214,9 +214,9 @@ $
     $
       (t^*)/hat(t) underbrace(<=,"al massimo " t^*\ "soddisfa" t "clausole") t/hat(t)
     $
-    Per il #link-teorema(<teorema-upper-bound-maxeksat>) sappiamo che $hat(t) >= (2^k-1)/2^k hat(t)$, di conseguenza: 
+    Per il #link-teorema(<teorema-upper-bound-maxeksat>) sappiamo che $hat(t) >= (2^k-1)/2^k t$, di conseguenza: 
     $
-      t/hat(t) &>= t / ((2^k-1)/2^k hat(t))\ 
+      t/hat(t) &>= hat(t) / ((2^k-1)/2^k t)\ 
       &<= (hat(t) (2^k)/2^(k-1)) / hat(t) = 2^k / 2^(k-1) space qed
     $
   ]
