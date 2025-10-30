@@ -190,4 +190,34 @@ Le casistiche a cui non siamo interessati sono:
 1. Se il valore di verità della clausola $C_j$ è già determinato dalle variabili $X_1,dots,X_(i-1)$ precedenti, $X_i$ può assumere un valore qualsiasi.
 2. Se $X_i$ non compare nella clausola $C_j$
 
-L'unico caso a cui siamo interessati è che $X_i$ compare in $C_j$ e il valore di $C_j$ non è ancora stato determinato. 
+L'unico caso a cui siamo interessati è che $X_i$ compare in $C_j$ e il valore di $C_j$ non è ancora stato determinato.\ 
+Sia $h$ il numero di variabili da $X_i$ in poi ($X_i$ inclusa). All'istante $i$ ci sono ancora *$(2^h-1)/2^h$* assegnamenti futuri che rendono $C_j$ vera.
+
+
+- Supponiamo che $X_i in C_j$ e *$X_i = 0$*
+  $
+    Delta &= underbrace((2^(h-1) -1)/2^(h-1), E[C_j] "dopo l'assegnamento"\ "di" x_i) - underbrace((2^h-1)/2^h, E[C_j] "prima dell'assegnamento" \ "di" x_i) \
+    &= (2^h-2-2^h+1)/2^h = -1/2^h
+  $
+  Il $Delta$ viene negativo in quanto sto perdendo delle possibilità di rendere vera la clausola $C_j$ 
+
+- Supponiamo che $X_i in C_j$ e *$X_i = 1$*
+$
+  Delta = underbrace(1,C_j "è stata resa vera dopo" \ "assegnamento di " x_i) - underbrace((2^h-1)/2^h,E[C_j] "dopo l'assegnamento" \ "di" x_i) = 1/2^h
+$
+
+#teorema("Teorema")[
+  L'algoritmo deterministico è una $2^k/(2^k-1)$-approssimazione per $"Max"E_k"Sat"$.
+
+  #dimostrazione()[
+    Sia $hat(t)$ il numero di clausole soddisfatte dall'algoritmo e sia $t^*$ l'ottimo. Calcoliamo il rapporto di approsimazione: 
+    $
+      (t^*)/hat(t) underbrace(<=,"al massimo " t^*\ "soddisfa" t "clausole") t/hat(t)
+    $
+    Per il #link-teorema(<teorema-upper-bound-maxeksat>) sappiamo che $hat(t) >= (2^k-1)/2^k hat(t)$, di conseguenza: 
+    $
+      t/hat(t) &>= t / ((2^k-1)/2^k hat(t))\ 
+      &<= (hat(t) (2^k)/2^(k-1)) / hat(t) = 2^k / 2^(k-1) space qed
+    $
+  ]
+]
