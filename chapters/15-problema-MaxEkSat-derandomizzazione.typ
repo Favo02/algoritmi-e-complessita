@@ -125,18 +125,9 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
         (2^k-1)/2^k &< (2^k-1)/2^k space "contraddizione"
       $
       Questa è una contraddizione dell'ipotesi induttiva ($(2^k-1)/2^k <= e_0 1/2 + e_1 1/2$), almeno uno tra $e_1$ e $e_2$ deve essere $>= (2^k-1)/2^k space qed$
-
-
-
-
-
-
-
-
-
-
-
-
-
   ]
+]
+
+#teorema("Crollario")[
+  Esiste un assegnamento $b_1,dots b_n in 2$ (dove $n$ è il numero di variabili) t.c il numero di clausole soddisfatte è $ >= (2^k-1)/2^k t$ 
 ]
