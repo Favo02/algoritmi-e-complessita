@@ -134,16 +134,17 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
 
 == Algoritmo Derandomizzato
 #pseudocode(
-  [$D <- emptyset$],
+  [$D <- emptyset$ #emph("// insieme delle clausole già decise")],
   [*For* $i=1,2,dots,n$ #emph("// Scorro tutte le "+$n$+" variabili")],
   indent(
-    [$Delta_0 <- 0$],
+    [$Delta_0 <- 0$ #emph("quanto guadagno in valore atteso se "+$x_i=0$)],
     [$Delta_1 <- 0$],
     [$Delta_(D_0) <- 0$],
     [$Delta_(D_1) <- 0$],
+    [#emph("// le variabili "+$< i$+" sono già decise")],
     [*For* $j=1,2,dots,t$ #emph("// Scorro tutte le clausole")],
     indent(
-      [*If* $j in D$],
+      [*If* $j in D$ #emph("// clausola "+$j$+ " già decisa")],
       indent(
         [*continue*]
       ),
@@ -155,7 +156,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
       [*If* $x_i$ compare positiva],
       indent(
         [$Delta_0 <- Delta_0 - 1/2^h$],
-        [$Delta_1 <- Delta_1 + 1/2^h$],
+        [$Delta_1 <- Delta_1 + 1/2^h$ #emph("// come l'assegnamento "+$x_i=1$+" influenza le clausole successive")],
         [$Delta_(D_1) <- Delta_(D_1) union {j}$]
       ),[*Else*],indent(
         [$Delta_0 <- Delta_0 + 1/2^h$],
@@ -163,7 +164,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
         [$Delta_(D_0) <- Delta_(D_0) union {j}$]
       )
     ),
-    [*If* $Delta_0 > Delta_1$],
+    [*If* $Delta_0 > Delta_1$ #emph("// prendo l'assegnamento migliore per il futuro")],
     indent(
       [$x[i]<- 0$],
       [$D <- D union Delta_(D_0)$]
@@ -172,6 +173,21 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
       [$D <- D union Delta_(D_1)$]
     )
   ),
-
-
 )
+
+=== Funzionamento dell'algoritmo
+
+#informalmente()[
+  L'idea alla base dell'algoritmo è decidere man mano il valore di verità di una variabile $x_i$.\
+  In particolare viene valutato cosa succede se $x_i = 1$ o $x_i=0$, in termini di clausole future che tale assegnamento rende vere (variabili $Delta$).
+]
+Formalmente stiamo andando a studiare come cambia:
+$ E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1),mr(X_i=b_i)] $
+al variare del valore $mr(b_i)$ assegnato a $mr(X_i)$. Di conseguenza il $Delta$ è definito come: 
+$ Delta = E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1),mr(X_i=b_i)] - E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1)] $
+
+Le casistiche a cui non siamo interessati sono: 
+1. Se il valore di verità della clausola $C_j$ è già determinato dalle variabili $X_1,dots,X_(i-1)$ precedenti, $X_i$ può assumere un valore qualsiasi.
+2. Se $X_i$ non compare nella clausola $C_j$
+
+L'unico caso a cui siamo interessati è che $X_i$ compare in $C_j$ e il valore di $C_j$ non è ancora stato determinato. 
