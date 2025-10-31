@@ -18,7 +18,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
 ]
 
 #teorema("Teorema")[
-  Un assegnamento *casuale* delle variabili rende in media vere almeno *$>= (2^k-1)/2^k$* delle clausole.
+  Un assegnamento *casuale* delle variabili rende in media vere almeno *$>= (2^k-1)/2^k$* delle clausole totali.
   
   Sia $T$ il numero di clausole della formula, di conseguenza:
   $ (2^(k)-1) / 2^k <= underbrace(C^*,"sol ottima") <= T $
@@ -26,7 +26,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
   Chiamo ora con $C$ il numero di clausole rese vere dall'algoritmo probabilistico, per il teorema: 
   $ E[C] >= (2^k-1)/2^k T $
   Calcoliamo il rapporto di approssimazione:
-  $ T / E[C] =  T / ((2^k-1)/2^k T) = 2^k / (2^k-1) $ 
+  $ C^* / C = T / E[C] =  T / ((2^k-1)/2^k T) = 2^k / (2^k-1) $ 
 
   #informalmente()[
     Una Formula CNF, anche se non è soddisfacibile, ha almeno $7/8$ di clausole rese vere da un assegnamento casuale. La frazione di clausole rese vere è molto alta, questo ha delle implicazioni sulla bontà dell'approsimazione.
@@ -84,7 +84,7 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
     $
       E[T] = t dot (2^k - 1)/2^k
     $
-    Il che significa che il numero atteso di *clausole soddisfatte* è *almeno* $(2^k-1)/2^k$ volte il numero totale di clausole $t$:
+    Il che significa che il numero atteso di *clausole soddisfatte* ($E[T]$) è *almeno* $(2^k-1)/2^k$ volte il numero totale di clausole $t$:
     $
       E[T/t] = (2^k-1)/2^k space qed
     $
@@ -181,27 +181,27 @@ Se riuscissi a risolvere questa versione del problema in tempo polinomiale riusc
   L'idea alla base dell'algoritmo è decidere man mano il valore di verità di una variabile $x_i$.\
   In particolare viene valutato cosa succede se $x_i = 1$ o $x_i=0$, in termini di clausole future che tale assegnamento rende vere (variabili $Delta$).
 ]
-Formalmente stiamo andando a studiare come cambia:
+Formalmente stiamo andando a studiare come ad ogni iterazione $i$ cambia :
 $ E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1),mr(X_i=b_i)] $
 al variare del valore $mr(b_i)$ assegnato a $mr(X_i)$. Di conseguenza il $Delta$ è definito come: 
-$ Delta = E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1),mr(X_i=b_i)] - E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1)] $
+$ Delta = underbrace(E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1),mr(X_i=b_i)],E[C_j] "dopo l'assegnamento di" x_i) - underbrace(E[C_j|X_1=b_1, X_2=b_2,dots,X_(i-1)=b_(i-1)],E[C_j] "prima dell'assegnamento di" x_i) $
 
-Le casistiche a cui non siamo interessati sono: 
-1. Se il valore di verità della clausola $C_j$ è già determinato dalle variabili $X_1,dots,X_(i-1)$ precedenti, $X_i$ può assumere un valore qualsiasi.
+Le casistiche a cui *non* siamo interessati sono: 
+1. Se il valore di verità della clausola $C_j$ è già determinato dalle variabili $X_1,dots,X_(i-1)$ precedenti. La variabile $X_i$ può assumere un valore qualsiasi.
 2. Se $X_i$ non compare nella clausola $C_j$
 
 L'unico caso a cui siamo interessati è che $X_i$ compare in $C_j$ e il valore di $C_j$ non è ancora stato determinato.\ 
-Sia $h$ il numero di variabili da $X_i$ in poi ($X_i$ inclusa). All'istante $i$ ci sono ancora *$(2^h-1)/2^h$* assegnamenti futuri che rendono $C_j$ vera.
+Sia *$h$* il numero di variabili da *$X_i$ in poi* ($X_i$ inclusa). All'istante $i$ ci sono ancora *$(2^h-1)/2^h$* assegnamenti futuri che rendono $C_j$ vera.
 
-
-- Supponiamo che $X_i in C_j$ e *$X_i = 0$*
+- Supponiamo che $X_i in C_j$ e *$mb(X_i = 0)$*
   $
     Delta &= underbrace((2^(h-1) -1)/2^(h-1), E[C_j] "dopo l'assegnamento"\ "di" x_i) - underbrace((2^h-1)/2^h, E[C_j] "prima dell'assegnamento" \ "di" x_i) \
     &= (2^h-2-2^h+1)/2^h = -1/2^h
   $
-  Il $Delta$ viene negativo in quanto sto perdendo delle possibilità di rendere vera la clausola $C_j$ 
-
-- Supponiamo che $X_i in C_j$ e *$X_i = 1$*
+  #nota()[
+    Il $Delta$ viene negativo in quanto sto perdendo delle possibilità di rendere vera la clausola $C_j$ 
+  ]
+- Supponiamo che $X_i in C_j$ e *$mr(X_i = 1)$*
 $
   Delta = underbrace(1,C_j "è stata resa vera dopo" \ "assegnamento di " x_i) - underbrace((2^h-1)/2^h,E[C_j] "dopo l'assegnamento" \ "di" x_i) = 1/2^h
 $
