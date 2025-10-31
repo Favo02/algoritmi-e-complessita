@@ -76,7 +76,7 @@ Ma i tipi diversi di blocco sono "abbastanza" pochi, ovvero $2^(1/2 log n)$.
 
 Costruiamo una tabella di rank esplicita per ogni tipo di blocco. Ogni tabella è fatta: quanti uni ci sono dall'inizio del blocco fino al ogni posizione, quinid hanno $1/2 log n$ righe, e ognuna deve tenere un intero lungo $log(1/2 log n)$.
 
-In totale:
+In totale per la parte di 4 russians trick:
 $
   underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n log (1/2 log n), "singola tabella") \
   = sqrt(n) 1/2 log n log log sqrt(n) \
@@ -84,6 +84,12 @@ $
 $
 
 Il vettore va tenuto proprio per poter usare questo trick, per poter isolare i blocchi.
+
+#nota[
+  Jacobson usa come grandezza $1/2 log n$.
+  Questo $1/2$ quando facciamo i conti diventa una radice ($n^(1/2)$).
+  Quindi si potrebbe usare un qualsiasi numero $< 1$ in modo da mantenere questa funzione un $o(n)$.
+]
 
 Anche poter estrarre il blocco (quindi fare una sottosequenza del vettore originale), assumiamo si faccia in tempo costante, ma non è scontato.
 
@@ -109,3 +115,89 @@ Abbiamo usato due cose:
   Questa cosa di ridurre il porblema talmente tanto da poter memorizzare tutte le possibili casi.
 
   Questo trick si usa molto spesso nelle strutture succinte, si chiama Trucco dei quattro russi (Four Russians Trick).
+
+== Struttura di Clark per la Select
+
+Se memorizzassimo la tabella intera, occuperebbe $n log n$ bit, quindi troppi.
+
+Andiamo a memorizzare la tabella a livelli:
+
+- I livello $P_1, ..., P_t$: memorizzo solo gli $1$ in posizioni multiple di $log n log log n$, quindi occupa (dove $t$ è il numero di $1$ nella tabella) $t / (log n log log n)$ righe, ognuna grande $log n$, quindi:
+  $
+    t / (log n log log n) log n \
+    underbrace(<=, t <= n) n / (log n log log n) log n \
+    = n / (log log n) \
+    = o(n)
+  $
+
+- II livello: chiamiamo $r_i = P_(i+1) - P_i$, ovvero da differenza tra due elementi memorizzati nel primo livello.
+  Per come funziona il livello I, allora: $r_i >= log n log log n$
+
+  - Caso II A: gli $1$ tra le due posizioni sono molto sparsi:
+    $ r_i >= (log n log log n)^2 $
+    quindi memorizziamo esplicitamente le posizioni degli $log n log log n$ uni intermedi, come offset da $P_i$.
+    Spazio occupato: questi uni intermedi sono $log n log log n$ ed ognuno è al massimo grande come $r_i$ (quindi occupa $log r_i$ bit):
+    $
+      (log n log log n) log r_i \
+      = ((log n log log n)^2 log r_i) / (log n log log n) \
+      <= (r_i log r_i) / (log n log log n) \
+      <= (r_i log n) / (log n log log n) \
+      ...
+    $
+
+  - Caso II B: gli uni sono densi, $ r_i < (log n log log n)^2 $
+    quindi memorizziamo solo le posizioni multiple di $log r_i log log n$ (analogamente al primo livello), chiamate $S_i^0, s_i^1, ...$
+    Se memorizzassimo tutto sarebbe $log n log log n$, ma dato che ne memorizziamo meno, allora abbiamo $(log n log log n) / (log r_i log log n)$ righe della tabella.
+    Ognuna, dato che memorizziamo l'offset, allora ognuno è tra $0$ e $r_i$, quindi:
+    $
+      (log n log log n) / (log r_i log log n) log r_i \
+      <= r_i / (log log n)
+    $
+
+  - Spazio occupato II livello (senza terzo livello caso II B):
+    Mancano ancora degli uni intermedi, ma iniziamo a calcolare lo spazio totale: in entrambi i sottocasi, occupiamo la stessa quantità:
+    $ sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log log n) $
+    dato che è una sommatoria telescopica, allora
+    $ = (P_(t/(log n log log n)) - P_0) / (log log n) $
+    il numeratore è la differenza tra l'ultimo uno e il primo uno, quidi:
+    $ <= n / (log log n) = o(n) $
+
+- III livello (solo per il caso II B):
+  $ r_i < (log n log log n)^2 $
+  Se siamo tra $P_i$ e $P_(i+1)$ ma $r_i < (log n log log n)^2$, abbiamo memorizzato in modo esplciito solo le posisizioni $S_i^0, S_i^1, ..., S_i^((log n log log n)/(log r_i log log n))$ multiple di $log r_i log log n$
+
+  Calcoliamo la differenza tra due posizioni $S$:
+  $ overline(r_i^j) = s_i^(j+1) - s_i^j $
+
+  + non può essere più piccola di $overline(r_i^j) >= log r_i log log n$
+  + dato che siamo nel caso II B, $overline(r_i^j) <= r_i < (log n log log n)^2$
+
+  Anche in questo livello abbiamo bisogno di distinguere in due casi:
+
+  - Caso III A: gli uni sono sparsi: $overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2$
+    quindi memorizziamo esplicitamente le posizioni intermedie come offset da $S_i$
+    Spazio occupato: dobbiamo memorizzare $log r_i log log n$ righe, oguna offset, quindi $log overline(r_i^j)$:
+    $
+      (log r_i log log n) log overline(r_i^j) \
+      = (log r_i (log log n)^2 log overline(r_i^j)) / (log log n) \
+      <= overline(r_i^j) / (log log n)
+    $
+
+  - Caso III B: $overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2$
+    usiamo il four russians trick.
+    Spazio occupato:
+
+    Oss1:
+    $
+      log overline(r_i^j) <= log r_i \
+      <= log (log n (log log n)^2) \
+      = 2 log log n + 2 log log log \
+      <= 4 log log n
+    $
+
+    Oss2:
+    $ overline(r_i^j) < log overline(i^j) ... $
+
+    Quindi abbiamo $ underbrace(2^overline(r_i^j), "numero tabelle") underbrace(overline(r_i^j), "righe") underbrace(log overline(r_i^j), "bit per tabella") \
+    <= ...
+    = o(n) $
