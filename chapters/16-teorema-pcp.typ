@@ -278,17 +278,27 @@ Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabi
     L'output della macchina $V$ dipende da $V(x,w,r)$.
   ]
 
-
-
-
-
-
-
-
-
-
-
 == Classe PCP
+
+Siano $r,q$ due funzioni: *$r,q: bb(N) -> bb(N)$*.\
+La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste un probabilistc checher $V$ t.c: 
+1. $V$ lavora in tempo polinomiale
+2. $V$ effettua al più $q(|x|)$ query
+3. $V$ estrae al più $r(|x|)$ bit random
+4. Sia $x in 2^*$, una stringa di bit: 
+   $
+     cases(
+      "Se" mb( x in L) "allora" exists w in 2^* "t.c" P[V(x,w)="YES"]=1 space \
+      "Se" mr(x in.not L) "allora" forall w in 2^* P[V(x,w)="YES"]<1/2 
+
+     )
+   $
+
+
+
+
+
+
 
 - fissare due funzioni
 - un verificatore per un linguaggio
