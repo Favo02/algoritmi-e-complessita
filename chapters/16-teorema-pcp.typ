@@ -281,7 +281,7 @@ Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabi
 == Classe PCP
 
 Siano $r,q$ due funzioni: *$r,q: bb(N) -> bb(N)$*.\
-La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste un probabilistc checher $V$ t.c: 
+La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste un probabilistc checker $V$ t.c: 
 1. $V$ lavora in tempo polinomiale
 2. $V$ effettua al più $q(|x|)$ query
 3. $V$ estrae al più $r(|x|)$ bit random
