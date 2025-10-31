@@ -114,3 +114,14 @@ Quando iniziamo a rappresentare cose molto molto grosse (come l'intero genoma um
 
 Queste strutture efficienti sono fatte bottom-up, quindi partendo da qualcosa di semplice si vanno a costruire cose complesse
 
+#attenzione[
+  Strutture dati succinte e Metodi di compressione dei dati (zip, tar, codifiche audio/video) sono cose molto diverse.
+  Prima di tutto molte codifiche per audio/video sono lossy (ovvero possono perdere informazione), quindi possono non rispettare il teorema di Shannon.
+
+  Mentre per quelle lossless (tipo tar, zip) la chiara differenza è che la struttura dati viene usata così, mentre le compressioni prima di essere usati devono essere decompressi.
+  Per le strutture dati, non esiste questo concetto di decompressione.
+]
+
+Esistono due tipi di strutture:
+- strutture statiche: vengono costruite e poi si usano solo in lettura (non possono essere modificate)
+- strutture dinamiche: possono essere modificate (e spesso sono trattate in maniera completamnete diverse da quelle statiche)
