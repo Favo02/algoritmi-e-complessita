@@ -88,10 +88,40 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 
 == Grafi <grafi>
 
-/ Grafo NON orientato: vertici e lati $G(V, E)$
-/ Grafo orientato: nodi e archi $G(V, E)$
-/ Grafo bipartito: i nodi sono divisi in due insiemi disgiunti $G(V_1 union V_2, E)$
-/ Cammino: sequenza di nodi distinti connessi da archi (non ripetuti)
+/ Grafo non orientato: vertici e lati $G(V, E)$.
+
+/ Grafo orientato: nodi e archi $G(V, E)$.
+
+/ Grafo bipartito: i nodi sono divisi in due insiemi disgiunti $G(V_1 union V_2, E)$.
+
+/ Cammino: sequenza di nodi distinti connessi da archi (non ripetuti).
+
+/ Circuito: cammino che termina sul vertice di partenza.
+
+/ Multigrafo: grafo in cui possono esistere _più lati_ tra la stessa coppia di vertici.
+
+/ Cammino/Circuito Euleriano: cammino/circuito che tocca esattamente una volta ogni _lato_ del grafo.
+
+/ Cammino/Circuito Hamiltoniano: cammino/circuito che tocca esattamente una volta ogni _vertice_ del grafo.
+
+/ Grafo (non orientato) connesso: da un nodo si può raggiungere ogni altro nodo del grafo (ciò implica, dato che i lati non sono orientati, che ogni nodo può raggiungere qualsiasi altro nodo).
+
+/ Grafo (orientato) fortemente connesso: da ogni nodo si può raggiungere ogni altro nodo.
+
+/ Grafo (orientato) debolmente connesso: ignorando le direzioni dei lati, il grafo risulta fortemente connesso (ovvero non ci sono nodi o aree isolate).
+
+/ Clique (cricca): insieme di vertici di un grafo, in cui ogni vertice è connesso direttamente ad ogni altro vertice. Formalmente, dato un grafo non orientato $G=(V, E)$:
+  $ C subset.eq V quad "t.c." quad forall v_1,v_2 in C, v_1 != v_2 quad => quad (v_1,v_2) in E $
+
+/ Clique (cricca) completa $G(V, binom(E, 2))$: clique che include tutti i vertici del grafo, formalmente $C = V$. Una clique completa corrisponde a un grafo completo ed è sempre connessa.
+
+/ Albero: grafo connesso aciclico (non deve per forza avere una radice).
+
+/ Foresta: grafo aciclico.
+
+/ Grado di un vertice $d(v)$: numero di lati (o archi) incidenti su quel vertice.
+
+/ Grado di un grafo $d(G)$: _non propriamente definito su grafo_, di solito si intende il grado massimo o minimo tra tutti i vertici del grafo. Oppure un grafo con tutti i vertici dello stesso grado.
 
 == Varie <varie>
 

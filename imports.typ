@@ -7,7 +7,7 @@
 #import "@preview/codly:1.3.0" // code
 
 // colored math text
-#let mg(body) = text(fill: olive, $#body$)
+#let mg(body) = text(fill: green, $#body$)
 #let mm(body) = text(fill: maroon, $#body$)
 #let mo(body) = text(fill: orange, $#body$)
 #let mr(body) = text(fill: red, $#body$)
