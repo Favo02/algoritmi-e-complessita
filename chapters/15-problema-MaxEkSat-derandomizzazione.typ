@@ -221,3 +221,7 @@ $
     $
   ]
 ]
+
+#nota()[
+  Durante il processo di derandomizzazione abbiamo usato la $mb("proprietà di internalità della media")$. L'intervallo di valori che una v.a può assumere contiene la sua media. Questo ci permette di inseguire il valore più piccolo rimanendo dentro la media della v.a.
+]
