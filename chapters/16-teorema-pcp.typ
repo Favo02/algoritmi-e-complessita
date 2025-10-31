@@ -184,18 +184,99 @@ Per introdurre il teorema PCP, dobbiamo introdurre un nuovo modello di calcolo, 
   )
 
 #nota()[
-  L'Output della macchina non dipende solo dall'input $x in 2^*$, ma anche dalla stringa oracolica estratta $w in 2^*$.
+  L'Output della macchina *non* dipende solo dall'input $x in 2^*$, ma anche dalla stringa oracolica estratta $w in 2^*$.
 ]
-
-
-
-
-
 
 #teorema("Teorema")[
+  Un linguaggio binario $L subset.eq 2^*$ sta in $"NP"$ sse esiste una Macchina di Turing con oracolo $V$ (verificatore) t.c: 
+  - $V(x,w)$ risponde in tempo polinomiale in $|x|$.
+  - $forall x in 2^* space exists w in 2^*$ t.c $V(x,w)="YES" "sse" x in L$. Ovvero se $x in L$ esiste una stringa dell'oracolo $w$ che fa accettare $x$. Se $x in.not L$ non esiste alcuna stringa che lo fa accettare.
 
+  #informalmente()[
+    Andiamo a guardare tutte i rami di esecuzione dell'albero delle interrogazioni. La stringa oracolica *$w$* è la rappresentazione binaria di un *ramo* (traccia i valori restituiti da un istruzione magica). Quando chiediamo che esista una stringa $w$, stiamo chiedendo che ci sia un ramo dove l'input $x$ viene accettato.
+  ] 
 ]
 
+=== Macchine di Turing con oracolo e probabilistiche
+
+Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabilità. 
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // Titolo
+      content((0, 3.8), text(size: 12pt, weight: "bold")[Macchina di Turing Probabilistica con Oracolo])
+
+      // Input x dall'alto
+      line((0, 3), (0, 2.5), stroke: 2pt + black)
+      line((-0.1, 2.7), (0, 2.5), stroke: 2pt + black)
+      line((0.1, 2.7), (0, 2.5), stroke: 2pt + black)
+      content((0.5, 3.2), text(size: 12pt)[$x in 2^*$])
+
+      // Bit random dall'alto a sinistra
+      line((-1.5, 2.8), (-0.8, 2.2), stroke: 2pt + purple)
+      line((-0.9, 2.3), (-0.8, 2.2), stroke: 2pt + purple)
+      line((-0.95, 2.1), (-0.8, 2.2), stroke: 2pt + purple)
+      content((-2.2, 3.1), text(size: 11pt, fill: purple)[$r <= 2^*$ bit random])
+
+      // Macchina V (rettangolo principale)
+      rect((-1.2, 0.3), (1.2, 2.5), stroke: 3pt + black, fill: gray.lighten(90%))
+      content((0, 1.4), text(size: 16pt, weight: "bold")[$V$])
+      content((0, 0.8), text(size: 10pt)[$V(x,w,pi)$])
+
+      // Output YES (destra alto)
+      line((1.2, 2), (2.8, 2.8), stroke: 2pt + black)
+      line((2.6, 2.7), (2.8, 2.8), stroke: 2pt + black)
+      line((2.65, 2.6), (2.8, 2.8), stroke: 2pt + black)
+      content((3.2, 2.8), text(size: 11pt)[YES])
+
+      // Output NO (destra basso)
+      line((1.2, 0.8), (2.8, 0.2), stroke: 2pt + black)
+      line((2.6, 0.3), (2.8, 0.2), stroke: 2pt + black)
+      line((2.65, 0.4), (2.8, 0.2), stroke: 2pt + black)
+      content((3.2, 0.2), text(size: 11pt)[NO])
+
+      // Connessione all'oracolo (freccia verso il basso)
+      line((0, 0.3), (0, -0.5), stroke: 2pt + black)
+      line((-0.1, -0.3), (0, -0.5), stroke: 2pt + black)
+      line((0.1, -0.3), (0, -0.5), stroke: 2pt + black)
+      content((0.7, -0.1), text(size: 9pt)[$q$ query])
+
+      // Oracolo (rettangolo in basso)
+      rect((-2, -1.8), (2, -0.5), stroke: 3pt + black, fill: yellow.lighten(80%))
+      content((-1, -1.15), text(size: 12pt, weight: "bold")[Oracolo])
+      content((0.8, -1.15), text(size: 11pt)[$w in 2^*$])
+
+      // Query (linee verticali)
+      line((-1.2, -1.8), (-1.2, -2.5), stroke: 2pt + blue)
+      content((-1.2, -2.8), text(size: 9pt)[$i_1$])
+      
+      line((-0.4, -1.8), (-0.4, -2.5), stroke: 2pt + blue)
+      content((-0.4, -2.8), text(size: 9pt)[$i_2$])
+
+      content((0.2, -2.3), text(size: 10pt)[$dots$])
+
+      line((0.8, -1.8), (0.8, -2.5), stroke: 2pt + blue)
+      content((0.8, -2.8), text(size: 9pt)[$i_q$])
+
+      // Risposta dall'oracolo
+      line((1.5, -0.5), (1.5, 0.1), stroke: 2pt + blue)
+      line((1.4, -0.1), (1.5, 0.1), stroke: 2pt + blue)
+      line((1.6, -0.1), (1.5, 0.1), stroke: 2pt + blue)
+      content((2.3, -0.2), text(size: 9pt, fill: blue)[risposte $b_j$])
+    }),
+    caption: [
+      Schema di una Macchina di Turing probabilistica con oracolo.
+    ]
+  )
+  Funzionamento: 
+  - Il verificatore $V$ riceve input $x$, ed estrae $r <= 2^*$ bit random.
+  - Intteroga l'oracolo in *$q$* posizioni (r_i), e restituisce YES o NO. 
+  - La probabilità di accettazione di $x$, dipende da *tutte* le estrazioni random che portano a YES:
+  $ P[v(x,w) = "YES"] = ({r | V(x,w,r) = "yes"}) $
+  #nota()[
+    L'output della macchina $V$ dipende da $V(x,w,r)$.
+  ]
 
 
 
@@ -207,7 +288,7 @@ Per introdurre il teorema PCP, dobbiamo introdurre un nuovo modello di calcolo, 
 
 
 
-
+== Classe PCP
 
 - fissare due funzioni
 - un verificatore per un linguaggio
