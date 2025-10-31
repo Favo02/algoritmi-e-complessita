@@ -4,9 +4,197 @@
 
 == Introduzione al teorema PCP
 
+#informalmente()[
+  Utilizzeremo il teorema PCP per dimostrare delle proprietà di Inapprossimabilità per quanto riguarda dei problemi di decisione. 
+]
+
+=== Macchine di Turing con oracolo
+
+Per introdurre il teorema PCP, dobbiamo introdurre un nuovo modello di calcolo, ovvero le Macchine di Turing con oracolo. 
+
+
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
+
+    // Macchina M (rettangolo principale)
+    rect((-1, 0.5), (1, 2), stroke: 3pt + black, fill: gray.lighten(90%))
+    content((0, 1.25), text(size: 14pt, weight: "bold")[$M$])
+
+    // Input x
+    line((-2.5, 1.25), (-1, 1.25), stroke: 2pt + black)
+    line((-1.2, 1.35), (-1, 1.25), stroke: 2pt + black)
+    line((-1.2, 1.15), (-1, 1.25), stroke: 2pt + black)
+    content((-2, 1.6), text(size: 11pt)[$x in 2^*$])
+
+    // Output YES
+    line((1, 1.8), (2.5, 2.5), stroke: 2pt + black)
+    line((2.3, 2.4), (2.5, 2.5), stroke: 2pt + black)
+    line((2.35, 2.3), (2.5, 2.5), stroke: 2pt + black)
+    content((2.8, 2.5), text(size: 11pt)[YES])
+
+    // Output NO
+    line((1, 0.8), (2.5, 0.2), stroke: 2pt + black)
+    line((2.3, 0.3), (2.5, 0.2), stroke: 2pt + black)
+    line((2.35, 0.4), (2.5, 0.2), stroke: 2pt + black)
+    content((2.8, 0.2), text(size: 11pt)[NO])
+
+    // Connessione all'oracolo (freccia verso il basso)
+    line((0, 0.5), (0, -0.5), stroke: 2pt + black)
+    line((-0.1, -0.3), (0, -0.5), stroke: 2pt + black)
+    line((0.1, -0.3), (0, -0.5), stroke: 2pt + black)
+
+    // Oracolo (rettangolo in basso)
+    rect((-2, -1.5), (2, -0.5), stroke: 3pt + black, fill: yellow.lighten(80%))
+    content((-0.9, -1), text(size: 12pt, weight: "bold")[Oracolo])
+    content((0.8, -1), text(size: 11pt)[$w in 2^*$])
+
+    // Query (linee verticali che rappresentano le posizioni interrogate)
+    line((-1.2, -1.5), (-1.2, -2.2), stroke: 2pt + black)
+    content((-1.2, -2.5), text(size: 9pt)[$i_1$])
+    
+    line((-0.4, -1.5), (-0.4, -2.2), stroke: 2pt + black)
+    content((-0.4, -2.5), text(size: 9pt)[$i_2$])
+
+    content((0.2, -2), text(size: 10pt)[$dots$])
+
+    line((0.8, -1.5), (0.8, -2.2), stroke: 2pt + black)
+    content((0.8, -2.5), text(size: 9pt)[$i_q$])
+
+    // Etichetta "Stringa dell'oracolo"
+    content((3.5, -1), text(size: 9pt, style: "italic")[Stringa dell'oracolo])
+  }),
+  caption: [
+    Schema di una Macchina di Turing con oracolo.\ 
+  ]
+)
+*Funzionamento*: 
+- La macchina $M$ riceve in input una query $x in 2^*$. Essa viene scritta su un apposito nastro.
+
+- Viene interrogato l'oracolo in *$q$* posizioni specifiche (*limitiamo l'accesso all'oracolo*). Le query $Q_i$ interrogano posizioni specifiche $i_j$ della stringa oracolica $w$, ottenendo risposte $b_j in {0,1}$. 
+
+- L'albero delle interrogazioni si ramifica in base alle risposte, portando a una decisione finale YES/NO (foglie). L'output dipende da *$M(x,w)$*
+
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // ===== PARTE SINISTRA: NASTRO E ORACOLO =====
+      
+      // Titolo nastro
+      content((-2, 3.2), text(size: 11pt, weight: "bold")[Nastro di Query])
+        content((-4, 2.5), text(size: 11pt, weight: "bold")[$Q?$])
+      
+      // Celle del nastro
+      for i in range(5) {
+        let x = -3.5 + i * 0.9
+        rect((x, 2.2), (x + 0.8, 2.8), stroke: 2pt + black, fill: white)
+        if i == 0 {
+          content((x + 0.4, 2.5), text(size: 10pt)[$i_1$])
+        } else if i == 1 {
+          content((x + 0.4, 2.5), text(size: 10pt)[$i_2$])
+        } else if i == 2 {
+          content((x + 0.4, 2.5), text(size: 10pt)[$i_3$])
+        } else if i == 3 {
+          content((x + 0.4, 2.5), text(size: 10pt)[$dots$])
+        } else {
+          content((x + 0.4, 2.5), text(size: 10pt)[$i_q$])
+        }
+      }
+
+      // Titolo stringa oracolo
+      content((-1.0, -0.2), text(size: 11pt, weight: "bold")[Stringa Oracolo $w$])
+      
+      // Celle della stringa oracolo
+      for i in range(7) {
+        let x = -3.5 + i * 0.7
+        rect((x, 0.2), (x + 0.6, 0.7), stroke: 1.5pt + black, fill: yellow.lighten(80%))
+        if i == 1 {
+          content((x + 0.3, 0.45), text(size: 9pt)[$b_1$])
+        } else if i == 3 {
+          content((x + 0.3, 0.45), text(size: 9pt)[$b_2$])
+        } else if i == 5 {
+          content((x + 0.3, 0.45), text(size: 9pt)[$b_3$])
+        } else {
+          content((x + 0.3, 0.45), text(size: 8pt)[$dot$])
+        }
+      }
+
+      // Frecce dalle query alla stringa oracolo
+      line((-3.1, 2.2), (-2.9, 0.7), stroke: 2pt + blue)
+      line((-2.95, 0.8), (-2.9, 0.7), stroke: 2pt + blue)
+      line((-2.85, 0.8), (-2.9, 0.7), stroke: 2pt + blue)
+      content((-2.6, 1.5), text(size: 9pt, fill: blue)[$Q_1$])
+
+      line((-2.2, 2.2), (-2, 0.7), stroke: 2pt + blue)
+      line((-2.05, 0.8), (-2, 0.7), stroke: 2pt + blue)
+      line((-1.95, 0.8), (-2, 0.7), stroke: 2pt + blue)
+      content((-1.7, 1.5), text(size: 9pt, fill: blue)[$Q_2$])
+
+      line((-1.3, 2.2), (-1.1, 0.7), stroke: 2pt + blue)
+      line((-1.15, 0.8), (-1.1, 0.7), stroke: 2pt + blue)
+      line((-1.05, 0.8), (-1.1, 0.7), stroke: 2pt + blue)
+      content((-0.8, 1.5), text(size: 9pt, fill: blue)[$Q_3$])
+
+      // ===== PARTE DESTRA: ALBERO DELLE INTERROGAZIONI =====
+      content((3.5, 3.2), text(size: 11pt, weight: "bold")[Albero delle Interrogazioni])
+
+      // Radice (più grande)
+      circle((3, 2.3), radius: 0.35, fill: white, stroke: 2pt + black)
+      content((3, 2.3), text(size: 11pt)[$Q?$])
+
+      // Primo livello (Q₀, Q₁)
+      circle((1.8, 1), radius: 0.35, fill: white, stroke: 2pt + black)
+      content((1.8, 1), text(size: 10pt)[$Q_0$])
+      
+      circle((4.2, 1), radius: 0.35, fill: white, stroke: 2pt + black)
+      content((4.2, 1), text(size: 10pt)[$Q_1$])
+
+      // Archi dal root
+      line((2.85, 2.15), (2, 1.15), stroke: 2pt + black)
+      content((1.8, 1.7), text(size: 10pt)[$b=0$])
+      
+      line((3.15, 2.15), (4, 1.15), stroke: 2pt + black)
+      content((4.2, 1.7), text(size: 10pt)[$b=1$])
+
+      // Secondo livello (sotto Q₁)
+      circle((3.6, -0.2), radius: 0.35, fill: white, stroke: 2pt + black)
+      content((3.6, -0.2), text(size: 9pt)[$Q_0^1$])
+      
+      circle((4.8, -0.2), radius: 0.35, fill: white, stroke: 2pt + black)
+      content((4.8, -0.2), text(size: 9pt)[$Q_1^1$])
+
+      // Archi secondo livello
+      line((4.1, 0.85), (3.7, -0.05), stroke: 2pt + black)
+      content((3.55, 0.4), text(size: 10pt)[$0$])
+      
+      line((4.4, 0.85), (4.7, -0.05), stroke: 2pt + black)
+      content((4.75, 0.4), text(size: 10pt)[$1$])
+
+      // Foglie (decisioni YES/NO) più grandi
+      rect((3.2, -1.1), (4, -0.7), stroke: 2pt + green, fill: green.lighten(90%))
+      content((3.6, -0.9), text(size: 9pt, fill: green, weight: "bold")[YES])
+      
+      rect((4.4, -1.1), (5.2, -0.7), stroke: 2pt + red, fill: red.lighten(90%))
+      content((4.8, -0.9), text(size: 9pt, fill: red, weight: "bold")[NO])
+
+      line((3.6, -0.4), (3.6, -0.7), stroke: 2pt + black)
+      line((4.8, -0.4), (4.8, -0.7), stroke: 2pt + black)
+    }),
+  )
+
+#nota()[
+  L'Output della macchina non dipende solo dall'input $x in 2^*$, ma anche dalla stringa oracolica estratta $w in 2^*$.
+]
 
 
 
+
+
+
+#teorema("Teorema")[
+
+]
 
 
 
