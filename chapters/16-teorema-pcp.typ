@@ -1,8 +1,25 @@
 #import "../imports.typ": *
 
-#todo
+= Teorema PCP (picipi)
 
-= Teorema PCP
+== Introduzione al teorema PCP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - fissare due funzioni
 - un verificatore per un linguaggio
