@@ -195,7 +195,7 @@ Per introdurre il teorema PCP, dobbiamo introdurre un nuovo modello di calcolo, 
   #informalmente()[
     Andiamo a guardare tutte i rami di esecuzione dell'albero delle interrogazioni. La stringa oracolica *$w$* è la rappresentazione binaria di un *ramo* (traccia i valori restituiti da un istruzione magica). Quando chiediamo che esista una stringa $w$, stiamo chiedendo che ci sia un ramo dove l'input $x$ viene accettato.
   ] 
-]
+]<teormea-l-in-np>
 
 === Macchine di Turing con oracolo e probabilistiche
 
@@ -300,24 +300,208 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
   - *$"PCP"[0,"Poly"] = "NP"$*. Posso accedere all'oracolo solo un numero polinomiale di volte e non possono essere estratti bit random. 
 ]
 
+ #teorema("Teorema")[
+    *$"NP" = "PCP"["O"(log n), O(1)]$*.\
+    Per la definizione di PCP, dato un qualunque linguaggio $L in "NP"$: 
+    $
+      exists underbrace(q in bb(N),"costante"), exists underbrace((n) in O(log n),"funzione logaritmica") "t.c" L in "PCP"[r(n),q]
+    $
+    Il linguaggio $L$ è accettato da un classificatore $V$ che usa $q$ interrogazioni all'oracolo e un numero logaritmico di bit random (è una sorta di *trade-off*). 
+
+    #informalmente()[
+      Possiamo affermare che la randomizzazione è esponenzialmente più forte del determinismo.   
+    ]
+  ]
+  Per costruire un verificatore in grado di riconoscere il linguaggio $L$ useremo un verificatore in forma normale. 
+
+  === Verificatori in forma normale
+
+  Sia $L$ un linguaggio, $L in "PCP"[r(n),q]$. Esiste un verificatore $V$ in grado di accettare $L$, costruito nel seguente modo: 
+  - $V$ prende in input una query $x in 2^*$
+  - $V$ estrae $2^r(n)$ bit
+  - $V$ accede al oracolo un numero $<= q$ di volte. 
+
+  #nota()[
+    Faremo le seguenti *assunzioni*:
+    1. Assumiamo che il verificatore $V$ legga *essattamente* $q$ bit dall'oracolo $w$ e estrae *esattamente* $2^n$ bit random. Si tratta di un assunzione *wrost-case* (passo da $<=$ ad $=$)
+
+    2. Posso assumere che tutti i bit randomo vengano estratti all'inizio. Dopo aver letto l'input il verificatore $V$ estraee $R in 2^(r(n))$
+
+    3. Posso assumere che le $q$ posizione della stringa oracolica $w$ lette  da $V$ siano *fisse* e dipendenti solo da *$x$* e da *$R$*.
+    #dimostrazione()[ //TODO RINCONTROLLARE
+      Inizialmente ci troviamo nella seguente situazione. 
+      #figure(
+        cetz.canvas({
+          import cetz.draw: *
+
+          // Input e stringa random in alto
+          content((0, 5.9), text(size: 11pt)[$x in 2^* \ R in 2^(r(n))$])
+          line((0, 5.3), (0, 4.8), stroke: 2pt + black)
+          line((-0.1, 5), (0, 4.8), stroke: 2pt + black)
+          line((0.1, 5), (0, 4.8), stroke: 2pt + black)
+
+
+          // Livello 0: radice
+          rect((-1, 4.3), (1, 4.8), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((0, 4.55), text(size: 11pt, weight: "bold")[$W_(i_1)(x,R)$])
+
+          // Archi dal livello 0 al livello 1
+          line((-0.5, 4.3), (-2, 3.3), stroke: 2pt + black)
+          content((-1.5, 3.9), text(size: 10pt)[$0$])
+          
+          line((0.5, 4.3), (2, 3.3), stroke: 2pt + black)
+          content((1.5, 3.9), text(size: 10pt)[$1$])
+
+          // Livello 1: due nodi
+          rect((-3, 2.8), (-1, 3.3), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-2, 3.05), text(size: 10pt)[$W_(i_2^0)(x,R)$])
+
+          rect((1, 2.8), (3, 3.3), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((2, 3.05), text(size: 10pt)[$W_(i_2^1)(x,R)$])
+
+          // Archi dal livello 1 al livello 2 (sinistra)
+          line((-2.5, 2.8), (-3.5, 1.8), stroke: 2pt + black)
+          content((-3.2, 2.4), text(size: 9pt)[$0$])
+          
+          line((-1.5, 2.8), (-0.5, 1.8), stroke: 2pt + black)
+          content((-0.8, 2.4), text(size: 9pt)[$1$])
+
+          // Archi dal livello 1 al livello 2 (destra)
+          line((1.5, 2.8), (0.5, 1.8), stroke: 2pt + black)
+          content((0.8, 2.4), text(size: 9pt)[$0$])
+          
+          line((2.5, 2.8), (3.5, 1.8), stroke: 2pt + black)
+          content((3.2, 2.4), text(size: 9pt)[$1$])
+
+          // Livello 2: quattro nodi (rappresentati)
+          rect((-4.5, 1.3), (-2.5, 1.8), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-3.5, 1.55), text(size: 9pt)[$W_(i_3)^(00)(x,R)$])
+
+          rect((-1.5, 1.3), (0.5, 1.8), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-0.5, 1.55), text(size: 9pt)[$W_(i_3)^(01)(x,R)$])
+
+          // Puntini per indicare continuazione
+          content((0, 0.8), text(size: 14pt)[$dots.v$])
+
+          // Livello q (foglie) - alcuni esempi
+          rect((-5, -0.5), (-3.5, 0), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-4.25, -0.25), text(size: 9pt)[$W_(i_q)(x,R)$])
+
+          rect((-2, -0.5), (-0.5, 0), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-1.25, -0.25), text(size: 9pt)[$W_(i_q)(x,R)$])
+
+          rect((0.5, -0.5), (2, 0), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((1.25, -0.25), text(size: 9pt)[$W_(i_q)(x,R)$])
+
+          rect((3, -0.5), (4.5, 0), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((3.75, -0.25), text(size: 9pt)[$W_(i_q)(x,R)$])
+
+          // Etichetta profondità
+          line((5, 4.5), (5, -0.25), stroke: 2pt + black)
+          line((4.9, 4.4), (5, 4.5), stroke: 2pt + black)
+          line((5.1, 4.4), (5, 4.5), stroke: 2pt + black)
+          content((5.5, 2), text(size: 11pt)[$q$])
+
+        }),
+        caption: [
+          Albero delle interrogazioni del verificatore adattivo.\
+          Le posizioni dell'$i$-esima query che vengono interrogate dipendono dal risultato \ delle $i-1$ query precedenti. 
+        ]
+      )
+      Siccome l'albero delle interrogazioni è alto $q$ (costante) e ogni nodo ha al massimo $2$ figli, l'abero ha al massimo $2^q$ foglie. Possiamo collezionare tutte le possibili posizioni dell'oracolo che vengono interrogate lungo un qualsiasi ramo, ci sono al massimo *$overline(q) = 2^q$* posizioni distinte (una per ogni folgia dell'albero). Per questo scopo utilizziamo una DFS o BFS. Il risultato di questa operazione è un oracolo *non adattivo* in cui: 
+      - Inizialmente vengono collezionate tutte le $overline(q) = 2^q$ possibili interrogazioni.
+      - L'oracolo viene intterogato $2^q$ volte, tuttavia siccome $q=O(1)$, anche $overline(q) = O(1)$  
+      - Successivamente viene simulata l'esecuzione usando le risposte già collezionate. 
+
+
+      #esempio()[
+      #figure(
+        cetz.canvas({
+          import cetz.draw: *
+
+          // Input e stringa random in alto
+          content((-1, 5.8), text(size: 11pt)[$q = 3$])
+          content((1, 5.8), text(size: 11pt)[$x, R$])
+          
+          line((0, 5.3), (0, 4.8), stroke: 2pt + black)
+          line((-0.1, 5), (0, 4.8), stroke: 2pt + black)
+          line((0.1, 5), (0, 4.8), stroke: 2pt + black)
+
+          // Livello 0: radice
+          rect((-1.2, 4.1), (1.2, 4.8), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((0, 4.45), text(size: 12pt, weight: "bold")[$W_(13)$ ?])
+
+          // Archi dal livello 0 al livello 1
+          line((-0.6, 4.1), (-3, 2.9), stroke: 2pt + black)
+          content((-2.2, 3.6), text(size: 11pt)[$0$])
+          
+          line((0.6, 4.1), (3, 2.9), stroke: 2pt + black)
+          content((2.2, 3.6), text(size: 11pt)[$1$])
+
+          // Livello 1: due nodi
+          rect((-4.2, 2.2), (-1.8, 2.9), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((-3, 2.55), text(size: 11pt, weight: "bold")[$W_(17)$ ?])
+
+          rect((1.8, 2.2), (4.2, 2.9), stroke: 2pt + black, fill: gray.lighten(90%))
+          content((3, 2.55), text(size: 11pt, weight: "bold")[$W_(42)$ ?])
+
+          // Archi dal livello 1 al livello 2 (sinistra)
+          line((-3.6, 2.2), (-4.5, 0.8), stroke: 2pt + black)
+          content((-4.2, 1.6), text(size: 10pt)[$0$])
+          
+          line((-2.4, 2.2), (-1.5, 0.8), stroke: 2pt + black)
+          content((-1.8, 1.6), text(size: 10pt)[$1$])
+
+          // Archi dal livello 1 al livello 2 (destra)
+          line((2.4, 2.2), (1.5, 0.8), stroke: 2pt + black)
+          content((1.8, 1.6), text(size: 10pt)[$0$])
+          
+          line((3.6, 2.2), (4.5, 0.8), stroke: 2pt + black)
+          content((4.2, 1.6), text(size: 10pt)[$1$])
+
+          // Livello 2 (foglie): quattro nodi
+          rect((-5.5, 0.1), (-3.5, 0.8), stroke: 2pt + black, fill: white)
+          content((-4.5, 0.45), text(size: 11pt)[$W_41$])
+
+          rect((-2.5, 0.1), (-0.5, 0.8), stroke: 2pt + black, fill: white)
+          content((-1.5, 0.45), text(size: 11pt)[$W_33$])
+
+          rect((0.5, 0.1), (2.5, 0.8), stroke: 2pt + black, fill: white)
+          content((1.5, 0.45), text(size: 11pt)[$W_12$])
+
+          rect((3.5, 0.1), (5.5, 0.8), stroke: 2pt + black, fill: white)
+
+          // Etichetta profondità sulla destra
+          line((6.2, 4.5), (6.2, 0.45), stroke: 2pt + black)
+          line((6.1, 4.4), (6.2, 4.5), stroke: 2pt + black)
+          line((6.3, 4.4), (6.2, 4.5), stroke: 2pt + black)
+          content((6.7, 2.5), text(size: 12pt)[$q$])
+
+          // Nota in basso
+          content((0, -0.7), text(size: 10pt)[
+            Ogni foglia $W_i$ rappresenta una posizione specifica dell'oracolo
+          ])
+          content((0, -1.2), text(size: 10pt)[
+            interrogata al termine del cammino di $q$ query
+          ])
+        }),
+        caption: [
+          Albero delle interrogazioni con $q=3$ query. Dato $(x,R)$ fissi, il verificatore interroga parallelamente $2^q$ posizioni.
+        ]
+      )
+      ]
+
+
+    ]
+  ]
+
+  
 
 
 
 
-- fissare due funzioni
-- un verificatore per un linguaggio
-  - prende in ingresos una stringa
-  - effettua q query all'oracolo
-  - estrae al massimo r bit random
 
-#teorema("Teorema")[
-  NP = PCP[O(log n), O(1)]
-]
 
-noi useremo un verificatore in forma normale:
-+ la funzione $r$ (bit random) dice che se ne estrae esattamente quel numero (e non al massimo quel numero)
-+ faccio esattamente quelle query (non al massimo)
-+ le query sono indipendenti tra loro
 
 == Inapprossimabilità di Max E 3 SAT mediante PCP
 
