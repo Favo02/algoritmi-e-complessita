@@ -294,7 +294,11 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
      )
    $
 
+#nota[
+  - *$"PCP"[0,0] = P$*. L'oracolo e la sorgente di bit random sono inutilizzabili. L'output dipende solo dall'input $V(x) = y$, se $x in L$ viene accettato dal verificatore. 
 
+  - *$"PCP"[0,"Poly"] = "NP"$*. Posso accedere all'oracolo solo un numero polinomiale di volte e non possono essere estratti bit random. 
+]
 
 
 
