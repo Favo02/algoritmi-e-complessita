@@ -336,10 +336,12 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
 
     Dopo 3 iterazioni rimangono esattamente 2 vertici: ${A B C D}$ e ${E}$, connessi da 2 lati multipli.
 
-    Il risultato finale è un taglio di dimensione $2$ (i due lati tra i super-vertici finali), che in questo caso *non* è il taglio minimo ottimale.
-    Il taglio minimo del grafo originale avrebbe dimensione $1$ (tagliando ad esempio solo il lato $E"-"A$, isolando $E$ dal resto del grafo).
-
-    Questo esempio dimostra che l'algoritmo di Karger non sempre trova il taglio minimo, ma lo trova con una certa probabilità.
+    Il risultato finale è un taglio di dimensione $2$ (i due lati tra i super-vertici finali).
+    In questo caso, il taglio trovato dall'algoritmo corrisponde al taglio minimo del grafo originale, che ha effettivamente dimensione $2$.
+    
+    Per esempio, per separare ${E}$ dal resto del grafo è necessario tagliare sia $A"-"E$ che $E"-"D$, per un totale di $2$ lati.
+    
+    Questo esempio mostra come l'algoritmo di Karger può trovare il taglio minimo, anche se non è garantito che lo trovi sempre.
   ]
 ]
 
