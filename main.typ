@@ -20,6 +20,8 @@
 #show: equate.equate.with(breakable: true, sub-numbering: true) // equations settings
 #show: gentle-clues.gentle-clues.with(breakable: true) // colored boxes
 #show: codly.codly-init.with() // code setup
+#show link: underline // undeline links
+#set figure(supplement: "Figura") // rename Figure to Figura
 
 // page break every chapter
 #show heading.where(level: 1): it => {
@@ -67,6 +69,6 @@
 #include "chapters/7-problema-set-cover.typ"
 #include "chapters/8-problema-vertex-cover.typ"
 #include "chapters/9-problema-congested-paths.typ"
-
+#include "chapters/10-problema-tsp-metrico.typ"
 
 #include "chapters/12-algoritmi-probabilistici.typ"
