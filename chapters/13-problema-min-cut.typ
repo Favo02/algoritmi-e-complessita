@@ -232,10 +232,9 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
       line((-5.5, 2), (-4, 2), stroke: (paint: red, thickness: 1.5pt)) // A-B (da contrarre)
       line((-4, 2), (-2.5, 2), stroke: black) // B-C
       line((-2.5, 2), (-2.5, 0.5), stroke: black) // C-D
-      line((-4, 2), (-4, 0.5), stroke: black) // B-D
+      line((-4, 2), (-2.5, 0.5), stroke: black) // B-D
       line((-5.5, 2), (-5.5, 0.5), stroke: black) // A-E
-      line((-5.5, 0.5), (-4, 0.5), stroke: black) // E-D
-      line((-4, 0.5), (-2.5, 0.5), stroke: black) // D-C
+      line((-5.5, 0.5), (-2.5, 0.5), stroke: black) // E-D
 
       // Vertici grafo originale
       circle((-5.5, 2), radius: 0.12, fill: white, stroke: black)
@@ -339,7 +338,7 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
     Il risultato finale è un taglio di dimensione $2$ (i due lati tra i super-vertici finali).
     In questo caso, il taglio trovato dall'algoritmo corrisponde al taglio minimo del grafo originale, che ha effettivamente dimensione $2$.
     
-    Per esempio, per separare ${E}$ dal resto del grafo è necessario tagliare sia $A"-"E$ che $E"-"D$, per un totale di $2$ lati.
+    Ad esempio, per separare ${E}$ dal resto del grafo è necessario tagliare sia $A"-"E$ che $E"-"D$, per un totale di $2$ lati.
     
     Questo esempio mostra come l'algoritmo di Karger può trovare il taglio minimo, anche se non è garantito che lo trovi sempre.
   ]
