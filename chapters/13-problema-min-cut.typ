@@ -257,7 +257,7 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
         content((-4, 0.5), text(size: 11pt, weight: "bold")[Iterazione 1: $mr(A"-"B)$ contratto])
 
         // Lati - evidenzio il prossimo lato da contrarre
-        line((-4.75, -1), (-3, -1), stroke: (paint: red, thickness: 1.5pt)) // AB-C (da contrarre)
+        line((-4.75, -1), (-3, -1), stroke: (paint: blue, thickness: 1.5pt)) // AB-C (da contrarre)
         line((-3, -1), (-3, -2.5), stroke: black) // C-D
         line((-4.75, -1), (-3, -2.5), stroke: black) // AB-D
         line((-4.75, -1), (-4.75, -2.5), stroke: black) // AB-E
@@ -277,10 +277,10 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
         content((-4.75, -2.9), text(size: 10pt)[$E$])
 
         // ===== ITERAZIONE 2: Dopo contrazione AB-C =====
-        content((-4, -4), text(size: 11pt, weight: "bold")[Iterazione 2: $mr(A B"-"C)$ contratto])
+        content((-4, -4), text(size: 11pt, weight: "bold")[Iterazione 2: $mb(A B"-"C)$ contratto])
 
         // Lati - evidenzio i prossimi lati da contrarre (due lati multipli ABC-D)
-        bezier((-5, -5.5), (-3, -5.5), (-4, -5.2), stroke: 1.5pt + red) // ABC-D lato 1 (da contrarre)
+        bezier((-5, -5.5), (-3, -5.5), (-4, -5.2), stroke: 1.5pt + green) // ABC-D lato 1 (da contrarre)
         bezier((-5, -5.5), (-3, -5.5), (-4, -5.8), stroke: black) // ABC-D lato 2
         line((-3, -5.5), (-3, -7), stroke: black) // D-E
         line((-3, -7), (-5, -5.5), stroke: black) // E-ABC
@@ -296,11 +296,11 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
         content((-3, -7.4), text(size: 10pt)[$E$])
 
         // ===== ITERAZIONE 3: Dopo contrazione ABC-D =====
-        content((-4, -8.5), text(size: 11pt, weight: "bold")[Iterazione 3: $mr(A B C"-"D)$ contratto])
+        content((-4, -8.5), text(size: 11pt, weight: "bold")[Iterazione 3: $mg(A B C"-"D)$ contratto])
 
         // Lati con multipli tra ABCD e E - evidenzio i lati da contrarre
         bezier((-5, -10), (-3, -10), (-4, -9.7), stroke: black) // ABCD-E lato 1
-        bezier((-5, -10), (-3, -10), (-4, -10.3), stroke: 1.5pt + red) // ABCD-E lato 2 (da contrarre)
+        bezier((-5, -10), (-3, -10), (-4, -10.3), stroke: black) // ABCD-E lato 2
 
         // Vertici
         circle((-5, -10), radius: 0.12, fill: white, stroke: black)
@@ -308,25 +308,11 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
 
         circle((-3, -10), radius: 0.12, fill: white, stroke: black)
         content((-2.6, -10), text(size: 10pt)[$E$])
-
-        // ===== RISULTATO FINALE =====
-        content((-4, -12), text(size: 11pt, weight: "bold")[Risultato finale (2 vertici)])
-
-        // Due lati multipli tra i due super-vertici
-        bezier((-5, -13.5), (-3, -13.5), (-4, -13.2)) // lato superiore
-        bezier((-5, -13.5), (-3, -13.5), (-4, -13.8)) // lato inferiore
-
-        // Vertici finali
-        circle((-5, -13.5), radius: 0.12, fill: white, stroke: black)
-        content((-5.8, -13.5), text(size: 10pt)[$A B C D$])
-
-        circle((-3, -13.5), radius: 0.12, fill: white, stroke: black)
-        content((-2.6, -13.5), text(size: 10pt)[$E$])
       },
       padding: (bottom: 2em),
     ),
     caption: [
-      Esecuzione dell'algoritmo di Karger. A ogni iterazione viene evidenziato in $mr("rosso")$ il lato casuale che verrà contratto.
+      Esecuzione dell'algoritmo di Karger. A ogni iterazione viene evidenziato il lato casuale che verrà contratto.
       Il taglio finale ha dimensione $2$, corrispondente ai due lati multipli tra i super-vertici finali.
       In questo caso, il taglio trovato è ottimo (non garantito).
     ],
