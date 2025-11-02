@@ -6,51 +6,50 @@
   Il problema consiste nel dividere i vertici di un grafo in due insiemi disgiunti(non vuoti). L'obbiettivo è minimizzare i lati da "tagliare" per ottenere la divisione.
 
   #esempio([
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-      // Vertici del grafo
-      circle((0, 1), radius: 0.15, fill: white, stroke: black)
-      content((-0.4, 1), text(size: 10pt)[$1$])
+        // Vertici del grafo
+        circle((0, 1), radius: 0.15, fill: white, stroke: black)
+        content((-0.4, 1), text(size: 10pt)[$1$])
 
-      circle((2, 1), radius: 0.15, fill: white, stroke: black)
-      content((2.4, 1), text(size: 10pt)[$2$])
+        circle((2, 1), radius: 0.15, fill: white, stroke: black)
+        content((2.4, 1), text(size: 10pt)[$2$])
 
-      circle((-1, -1), radius: 0.15, fill: white, stroke: black)
-      content((-1.4, -1), text(size: 10pt)[$3$])
+        circle((-1, -1), radius: 0.15, fill: white, stroke: black)
+        content((-1.4, -1), text(size: 10pt)[$3$])
 
-      circle((3, -1), radius: 0.15, fill: white, stroke: black)
-      content((3.4, -1), text(size: 10pt)[$4$])
+        circle((3, -1), radius: 0.15, fill: white, stroke: black)
+        content((3.4, -1), text(size: 10pt)[$4$])
 
-      circle((1, -2.5), radius: 0.15, fill: white, stroke: black)
-      content((1, -3), text(size: 10pt)[$5$])
+        circle((1, -2.5), radius: 0.15, fill: white, stroke: black)
+        content((1, -3), text(size: 10pt)[$5$])
 
-      // Archi normali (neri spessi)
-      line((0.1, 0.9), (1.9, 0.9), stroke: 2pt + black)         // 1-2
-      line((0.1, 0.85), (-0.9, -0.85), stroke: 2pt + red)     // 1-3
-      line((1.9, 0.85), (2.9, -0.85), stroke: 2pt + black)      // 2-4
-      line((-0.85, -1.1), (0.85, -2.4), stroke: 2pt + black)    // 3-5
-      line((2.85, -1.1), (1.15, -2.4), stroke: 2pt + red)     // 4-5
+        // Archi normali (neri spessi)
+        line((0.1, 0.9), (1.9, 0.9), stroke: 2pt + black) // 1-2
+        line((0.1, 0.85), (-0.9, -0.85), stroke: 2pt + red) // 1-3
+        line((1.9, 0.85), (2.9, -0.85), stroke: 2pt + black) // 2-4
+        line((-0.85, -1.1), (0.85, -2.4), stroke: 2pt + black) // 3-5
+        line((2.85, -1.1), (1.15, -2.4), stroke: 2pt + red) // 4-5
 
-      // Archi del taglio (attraversano la linea blu tratteggiata)
-      line((0.1, 0.8), (2.9, -0.8), stroke: 2pt + black)        // 1-4
-      line((1.9, 0.8), (-0.9, -0.8), stroke: 2pt + red)       // 2-3
-      // Linea tratteggiata blu per indicare il taglio (diagonale)
-      line((-1.5, 0.5), (3.5, -2), stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
-      
-    }),
-    caption: [
-      Esempio di taglio. La linea $mb("blu")$ separa i vertici in due insiemi, gli archi in $mr("rosso")$ costituiscono il taglio.
-    ]
+        // Archi del taglio (attraversano la linea blu tratteggiata)
+        line((0.1, 0.8), (2.9, -0.8), stroke: 2pt + black) // 1-4
+        line((1.9, 0.8), (-0.9, -0.8), stroke: 2pt + red) // 2-3
+        // Linea tratteggiata blu per indicare il taglio (diagonale)
+        line((-1.5, 0.5), (3.5, -2), stroke: (paint: blue, thickness: 2pt, dash: "dashed"))
+      }),
+      caption: [
+        Esempio di taglio. La linea $mb("blu")$ separa i vertici in due insiemi, gli archi in $mr("rosso")$ costituiscono il taglio.
+      ],
     )
   ])
 ]
 
-Formalizzazione del problema: 
-- *$I_Pi$*: $G = (V,E)$ grafo non orientato. Con *$n$* numero di vertici e *$m$* numero di lati. 
+Formalizzazione del problema:
+- *$I_Pi$*: $G = (V,E)$ grafo non orientato. Con *$n$* numero di vertici e *$m$* numero di lati.
 
-- *$"Amm"_Pi$*: insieme di vertici che non comprende tutti i vertici del grafo ed è diverso dall'insieme vuoto 
+- *$"Amm"_Pi$*: insieme di vertici che non comprende tutti i vertici del grafo ed è diverso dall'insieme vuoto
 $ S subset.eq V, quad emptyset != S != V $
 
 - *$C_Pi$*: il numero dei lati che rientrano nel taglio, ovvero i lati con un'estremità $in S$ e l'altra $in.not S$
@@ -62,43 +61,43 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
   Il taglio minimo ha dimensione $<=$ del vertice $v$ con grado $d$ minimo del grafo.
 
   #esempio([
-  Il taglio può anche essere più piccolo.  
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    Il taglio può anche essere più piccolo.
+    #figure(
+      cetz.canvas({
+        import cetz.draw: *
 
-      // Prima clique (sinistra) - sfondo ovale
-  
-      content((-2, 0), text(size: 12pt, weight: "bold")[Clique 1])
+        // Prima clique (sinistra) - sfondo ovale
 
-      // Vertici della prima clique
-      circle((-2.8, 0.3), radius: 0.08, fill: black, stroke: black)
-      circle((-2.8, -0.3), radius: 0.08, fill: black, stroke: black)
-      circle((-1.2, 0.3), radius: 0.08, fill: black, stroke: black)
-      circle((-1.2, -0.3), radius: 0.08, fill: black, stroke: black)
-      circle((-2, 0.5), radius: 0.08, fill: black, stroke: black)
-      circle((-2, -0.5), radius: 0.08, fill: black, stroke: black)
+        content((-2, 0), text(size: 12pt, weight: "bold")[Clique 1])
 
-      // Seconda clique (destra) - sfondo ovale
-      content((2, 0), text(size: 12pt, weight: "bold")[Clique 2])
+        // Vertici della prima clique
+        circle((-2.8, 0.3), radius: 0.08, fill: black, stroke: black)
+        circle((-2.8, -0.3), radius: 0.08, fill: black, stroke: black)
+        circle((-1.2, 0.3), radius: 0.08, fill: black, stroke: black)
+        circle((-1.2, -0.3), radius: 0.08, fill: black, stroke: black)
+        circle((-2, 0.5), radius: 0.08, fill: black, stroke: black)
+        circle((-2, -0.5), radius: 0.08, fill: black, stroke: black)
 
-      // Vertici della seconda clique
-      circle((2.8, 0.3), radius: 0.08, fill: black, stroke: black)
-      circle((2.8, -0.3), radius: 0.08, fill: black, stroke: black)
-      circle((1.2, 0.3), radius: 0.08, fill: black, stroke: black)
-      circle((1.2, -0.3), radius: 0.08, fill: black, stroke: black)
-      circle((2, 0.5), radius: 0.08, fill: black, stroke: black)
-      circle((2, -0.5), radius: 0.08, fill: black, stroke: black)
+        // Seconda clique (destra) - sfondo ovale
+        content((2, 0), text(size: 12pt, weight: "bold")[Clique 2])
 
-      // Bridge che collega le due clique (arco rosso spesso)
-      line((-0.8, 0), (0.8, 0), stroke: 3pt + red)
-      content((0, 0.4), text(size: 11pt, fill: red, weight: "bold")[Bridge])
-    }),
-    caption: [
-      il taglio minimo è rappresentato dal taglio del $mr("bridge")$
-    ]
-  )
-])
+        // Vertici della seconda clique
+        circle((2.8, 0.3), radius: 0.08, fill: black, stroke: black)
+        circle((2.8, -0.3), radius: 0.08, fill: black, stroke: black)
+        circle((1.2, 0.3), radius: 0.08, fill: black, stroke: black)
+        circle((1.2, -0.3), radius: 0.08, fill: black, stroke: black)
+        circle((2, 0.5), radius: 0.08, fill: black, stroke: black)
+        circle((2, -0.5), radius: 0.08, fill: black, stroke: black)
+
+        // Bridge che collega le due clique (arco rosso spesso)
+        line((-0.8, 0), (0.8, 0), stroke: 3pt + red)
+        content((0, 0.4), text(size: 11pt, fill: red, weight: "bold")[Bridge])
+      }),
+      caption: [
+        il taglio minimo è rappresentato dal taglio del $mr("bridge")$
+      ],
+    )
+  ])
   #dimostrazione[
     Basta tagliare tutti gli archi del vertice $v$ di grado $d$ minimo, isolando di conseguenza il vertice $v$.
   ]
@@ -115,7 +114,7 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
 
       // ===== GRAFO ORIGINALE (sinistra) =====
       content((-4, 3.0), text(size: 11pt, weight: "bold")[Grafo originale $G$])
-      
+
       // Vertici grafo originale
       circle((-6, 1), radius: 0.12, fill: white, stroke: black)
       content((-6.4, 1), text(size: 10pt)[$A$])
@@ -136,12 +135,12 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
       content((-1.5, -0.9), text(size: 10pt)[$C$])
 
       // Archi grafo originale
-      line((-5.88, 1), (-4.62, 1), stroke: 2pt + black)          // A-U
-      line((-4.38, 1), (-3.12, 1), stroke: 3pt + red)            // U-V (da contrarre)
-      line((-4.4, 1.1), (-3.85, 1.7), stroke: 2pt + black)       // U-D
-      line((-3.65, 1.7), (-3.1, 1.1), stroke: 2pt + black)       // D-V
-      line((-2.9, 0.9), (-2.3, 0.4), stroke: 2pt + black)        // V-B
-      line((-2.1, 0.2), (-1.6, -0.4), stroke: 2pt + black)       // B-C
+      line((-5.88, 1), (-4.62, 1), stroke: 2pt + black) // A-U
+      line((-4.38, 1), (-3.12, 1), stroke: 3pt + red) // U-V (da contrarre)
+      line((-4.4, 1.1), (-3.85, 1.7), stroke: 2pt + black) // U-D
+      line((-3.65, 1.7), (-3.1, 1.1), stroke: 2pt + black) // D-V
+      line((-2.9, 0.9), (-2.3, 0.4), stroke: 2pt + black) // V-B
+      line((-2.1, 0.2), (-1.6, -0.4), stroke: 2pt + black) // B-C
 
       content((-3.75, 0.5), text(size: 9pt, fill: red)[Lato da contrarre])
       content((-3.75, 0.1), text(size: 9pt, fill: red)[$e = (U,V)$])
@@ -172,17 +171,17 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
       content((6, -0.9), text(size: 10pt)[$C$])
 
       // Archi grafo contratto
-      line((2.12, 1), (3.63, 1), stroke: 2pt + black)            // A-(U∪V)
-      line((3.75, 1.68), (3.75, 1.12), stroke: 2pt + black)      // D-(U∪V)
-      line((3.85, 0.9), (5.2, 0.4), stroke: 2pt + black)         // (U∪V)-B
-      line((5.2, 0.2), (5.9, -0.4), stroke: 2pt + black)         // B-C
+      line((2.12, 1), (3.63, 1), stroke: 2pt + black) // A-(U∪V)
+      line((3.75, 1.68), (3.75, 1.12), stroke: 2pt + black) // D-(U∪V)
+      line((3.85, 0.9), (5.2, 0.4), stroke: 2pt + black) // (U∪V)-B
+      line((5.2, 0.2), (5.9, -0.4), stroke: 2pt + black) // B-C
 
       // Self-loop per archi multipli D-(U∪V)
-        line((3.75, 1.68), (3.5, 1.02), stroke: 2pt + black)     
+      line((3.75, 1.68), (3.5, 1.02), stroke: 2pt + black)
     }),
     caption: [
       Esempio di contrazione del lato $mr(e = {U,V})$. Nel grafo contratto, i vertici $U$ e $V$ vengono uniti in un unico vertice $U ∪ V$, preservando tutti i collegamenti. Il self-loop rappresenta gli archi multipli che si creano dalla contrazione.
-    ]
+    ],
   )
 ])
 
@@ -196,14 +195,14 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
   [*If* $G$ non è connesso],
   indent(
     [emetti una qualunque componente connessa],
-    [*Stop*]
+    [*Stop*],
   ),
   [*While* $|V|>2$],
   indent(
     [$e<- "lato random di" G$ #emph("// scelta non deterministica")],
-    [$G <- G arrow.b e$]
+    [$G <- G arrow.b e$],
   ),
-  [*Output* la classe di equivalenza di una delle due estremità]
+  [*Output* la classe di equivalenza di una delle due estremità],
 )
 
 #nota[
@@ -220,7 +219,7 @@ $ | E_S |, quad E_S = {e in E "t.c." e inter S != emptyset, quad e inter S^c != 
 Sia:
 - *$S^*$* la scelta di vertici che da luogo al taglio più piccolo possibile
 - *$k^*$* la dimensione del taglio minimo:
-  $ k^* = |E_(S^*)| "dove" E_(S^*) = {e | e inter S^* != emptyset, e inter S^*^C != emptyset }  $
+  $ k^* = |E_(S^*)| "dove" E_(S^*) = {e | e inter S^* != emptyset, e inter S^*^C != emptyset } $
 - *$G_i$* il grafo prima dell'$i-"esima"$ contrazione ($G_1, G_2, ...$)
 
 #teorema("Osservazione")[
@@ -236,12 +235,12 @@ Sia:
   Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ della stessa dimensione $==>$ grado minimo di $min d_{G_i}(v) >= k^*$
 
   #dimostrazione[
-    Sia $C_i$ il taglio minimo per $G_i$ e $d_{G_i}(v)$ il grado di un vertice. Per #link-teorema(<taglio-minimo-grado>): 
+    Sia $C_i$ il taglio minimo per $G_i$ e $d_{G_i}(v)$ il grado di un vertice. Per #link-teorema(<taglio-minimo-grado>):
     $ C_i <= min d_{G_i}(v) $
-    Siccome ogni taglio di $G_i$ è anche un taglio di $G$, i tagli minimi coincidono:  
-    $ 
-      C &<= min d_{G_i}(v) \
-      min d_{G_i}(v) &>= C = k^* quad qed
+    Siccome ogni taglio di $G_i$ è anche un taglio di $G$, i tagli minimi coincidono:
+    $
+                   C & <= min d_{G_i}(v) \
+      min d_{G_i}(v) & >= C = k^* quad qed
     $
   ]
 ]<min-cut-oss-2>
@@ -249,9 +248,9 @@ Sia:
 #teorema("Osservazione")[
   Sommiamo i gradi di $G_i$, per #link-teorema(<min-cut-oss-2>):
   $
-    mr(sum_(v in V_G_i) d_(G_i)(v)) >= k^* underbrace(n-i+1,"num nodi" G_i) \
-    underbrace(mr(2 m_G_i),"ogni lato lo conto"\ 2 "volte") >= k^* (n-i+1) \
-    underbrace(m_G_i,"lati di" G_i) >= (k^* (n-i+1))/2
+    mr(sum_(v in V_G_i) d_(G_i)(v)) >= k^* underbrace(n-i+1, "num nodi" G_i) \
+    underbrace(mr(2 m_G_i), "ogni lato lo conto"\ 2 "volte") >= k^* (n-i+1) \
+    underbrace(m_G_i, "lati di" G_i) >= (k^* (n-i+1))/2
   $
 ]<min-cut-oss-3>
 
@@ -276,14 +275,14 @@ Sia *$xi_i$* l'evento: $"all'"i"-esima iterazione non si è contratto un lato di
     - $mr(m_G_i)$: casi possibilii ($"#"$ archi $G_i$)
 
     $
-      1 - mb(k^*)/mr(m_G_i) & underbrace(>=,#link-teorema(<min-cut-oss-3>)) 1 - (k^* dot 2)/(k^* dot (n-i+1)) \
+      1 - mb(k^*)/mr(m_G_i) & underbrace(>=, #link-teorema(<min-cut-oss-3>)) 1 - (k^* dot 2)/(k^* dot (n-i+1)) \
                             & =1- 2/(n-i+1) \
                             & = (n-i+1-2)/(n-i+1) \
                             & = (n-i-1)/(n-i+1) space qed
     $
   ]
   #nota()[
-    Tale probabilità è sufficientemente piccola per affermare che l'algoritmo non tocca il taglio minimo. 
+    Tale probabilità è sufficientemente piccola per affermare che l'algoritmo non tocca il taglio minimo.
   ]
 ]<min-cut-lemma-p>
 
@@ -293,15 +292,12 @@ Sia *$xi_i$* l'evento: $"all'"i"-esima iterazione non si è contratto un lato di
   #dimostrazione[
     Vogliamo dimostrare che durante l'esecuzione dell'algoritmo *non* vengono toccati i vertici del taglio minimo:
     $ P[xi_1 inter x_2 inter ... inter xi_(n-2)] $
-    
-    Applicando la regola della catena: 
+
+    Applicando la regola della catena:
     $
       & = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] dots \
-
-      & underbrace(>=,#link-teorema(<min-cut-lemma-p>)) (n-2)/n dot (n-3)/(n-1) dot ... dot 1/3 \
-
-      & = (limits(product)_(i=1)^(n-2)i)/(limits(product)_(i=3)^n i) underbrace(=,"molti termini" \ "si semplificano") (n-2)! / (mr(n!)/(2)) \
-
+      & underbrace(>=, #link-teorema(<min-cut-lemma-p>)) (n-2)/n dot (n-3)/(n-1) dot ... dot 1/3 \
+      & = (limits(product)_(i=1)^(n-2)i)/(limits(product)_(i=3)^n i) underbrace(=, "molti termini" \ "si semplificano") (n-2)! / (mr(n!)/(2)) \
       & = (2 (n-2)!)/(mr((n-2)!(n-1)n)) = 2/(n(n-1)) =1/binom(n, 2) space qed
     $
   ]
@@ -322,16 +318,19 @@ Sia *$xi_i$* l'evento: $"all'"i"-esima iterazione non si è contratto un lato di
     $ <= 1 - 1/binom(n, 2) $
 
     Eseguendo l'algoritmo iterato per $binom(n, 2) ln n$ volte, la probabilità diventa:
-    $ <= underbrace((1 - 1/binom(n, 2))^(binom(n, 2) ln n),"probabilità di non trovare l'ottimo" \ "ad una qualunque esecuzione") $
+    $
+      <= underbrace((1 - 1/binom(n, 2))^(binom(n, 2) ln n), "probabilità di non trovare l'ottimo" \ "ad una qualunque esecuzione")
+    $
 
     Sfruttando la $mb("proprietà")$:
     $ forall x >= 1, quad 1/4 <= (1-1/x)^x <= 1/e $
 
-    Allora Sfruttando la $mb("proprietà")$ con $x = binom(n,2) $:
-    $ <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) <= (1/e)^(ln n) underbrace(<=,"prob di non trovare l'ottimo" \ "sup. limitata da") 1/n quad qed
+    Allora Sfruttando la $mb("proprietà")$ con $x = binom(n, 2)$:
+    $
+      <= (1 - 1/binom(n, 2))^(binom(n, 2) ln n) <= (1/e)^(ln n) underbrace(<=, "prob di non trovare l'ottimo" \ "sup. limitata da") 1/n quad qed
     $
 
-    Siccome abbiamo calcolato un limite superiore alla probabilità che l'algoritmo non trova l'ottimo, basta girare tale probabilità: 
+    Siccome abbiamo calcolato un limite superiore alla probabilità che l'algoritmo non trova l'ottimo, basta girare tale probabilità:
     $ >= 1-1/n $
   ]
 ]
