@@ -219,111 +219,113 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
 ]
 
 #esempio[
-  Esecuzione dell'algoritmo di Karger su un grafo semplice con 5 vertici.
+  Esecuzione dell'algoritmo di Karger su un grafo con 5 vertici:
 
   #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    cetz.canvas(
+      {
+        import cetz.draw: *
 
-      // ===== ITERAZIONE 0: Grafo originale =====
-      content((-4, 5), text(size: 11pt, weight: "bold")[Iterazione 0: Grafo originale])
+        // ===== ITERAZIONE 0: Grafo originale =====
+        content((-4, 5), text(size: 11pt, weight: "bold")[Iterazione 0: Grafo originale])
 
-      // Lati grafo originale - evidenzio il lato che verrà contratto
-      line((-5.5, 3.5), (-4, 3.5), stroke: (paint: red, thickness: 1.5pt)) // A-B (da contrarre)
-      line((-4, 3.5), (-2.5, 3.5), stroke: black) // B-C
-      line((-2.5, 3.5), (-2.5, 2), stroke: black) // C-D
-      line((-4, 3.5), (-2.5, 2), stroke: black) // B-D
-      line((-5.5, 3.5), (-5.5, 2), stroke: black) // A-E
-      line((-5.5, 2), (-2.5, 2), stroke: black) // E-D
+        // Lati grafo originale - evidenzio il lato che verrà contratto
+        line((-5.5, 3.5), (-4, 3.5), stroke: (paint: red, thickness: 1.5pt)) // A-B (da contrarre)
+        line((-4, 3.5), (-2.5, 3.5), stroke: black) // B-C
+        line((-2.5, 3.5), (-2.5, 2), stroke: black) // C-D
+        line((-4, 3.5), (-2.5, 2), stroke: black) // B-D
+        line((-5.5, 3.5), (-5.5, 2), stroke: black) // A-E
+        line((-5.5, 2), (-2.5, 2), stroke: black) // E-D
 
-      // Vertici grafo originale
-      circle((-5.5, 3.5), radius: 0.12, fill: white, stroke: black)
-      content((-5.5, 3.9), text(size: 10pt)[$A$])
+        // Vertici grafo originale
+        circle((-5.5, 3.5), radius: 0.12, fill: white, stroke: black)
+        content((-5.5, 3.9), text(size: 10pt)[$A$])
 
-      circle((-4, 3.5), radius: 0.12, fill: white, stroke: black)
-      content((-4, 3.9), text(size: 10pt)[$B$])
+        circle((-4, 3.5), radius: 0.12, fill: white, stroke: black)
+        content((-4, 3.9), text(size: 10pt)[$B$])
 
-      circle((-2.5, 3.5), radius: 0.12, fill: white, stroke: black)
-      content((-2.5, 3.9), text(size: 10pt)[$C$])
+        circle((-2.5, 3.5), radius: 0.12, fill: white, stroke: black)
+        content((-2.5, 3.9), text(size: 10pt)[$C$])
 
-      circle((-2.5, 2), radius: 0.12, fill: white, stroke: black)
-      content((-2.5, 1.6), text(size: 10pt)[$D$])
+        circle((-2.5, 2), radius: 0.12, fill: white, stroke: black)
+        content((-2.5, 1.6), text(size: 10pt)[$D$])
 
-      circle((-5.5, 2), radius: 0.12, fill: white, stroke: black)
-      content((-5.5, 1.6), text(size: 10pt)[$E$])
+        circle((-5.5, 2), radius: 0.12, fill: white, stroke: black)
+        content((-5.5, 1.6), text(size: 10pt)[$E$])
 
-      // ===== ITERAZIONE 1: Dopo contrazione A-B =====
-      content((-4, 0.5), text(size: 11pt, weight: "bold")[Iterazione 1: $mr(A"-"B)$ contratto])
+        // ===== ITERAZIONE 1: Dopo contrazione A-B =====
+        content((-4, 0.5), text(size: 11pt, weight: "bold")[Iterazione 1: $mr(A"-"B)$ contratto])
 
-      // Lati - evidenzio il prossimo lato da contrarre
-      line((-4.75, -1), (-3, -1), stroke: (paint: red, thickness: 1.5pt)) // AB-C (da contrarre)
-      line((-3, -1), (-3, -2.5), stroke: black) // C-D
-      line((-4.75, -1), (-3, -2.5), stroke: black) // AB-D
-      line((-4.75, -1), (-4.75, -2.5), stroke: black) // AB-E
-      line((-4.75, -2.5), (-3, -2.5), stroke: black) // E-D
+        // Lati - evidenzio il prossimo lato da contrarre
+        line((-4.75, -1), (-3, -1), stroke: (paint: red, thickness: 1.5pt)) // AB-C (da contrarre)
+        line((-3, -1), (-3, -2.5), stroke: black) // C-D
+        line((-4.75, -1), (-3, -2.5), stroke: black) // AB-D
+        line((-4.75, -1), (-4.75, -2.5), stroke: black) // AB-E
+        line((-4.75, -2.5), (-3, -2.5), stroke: black) // E-D
 
-      // Vertici
-      circle((-4.75, -1), radius: 0.12, fill: white, stroke: black)
-      content((-5.4, -1), text(size: 10pt)[$A B$])
+        // Vertici
+        circle((-4.75, -1), radius: 0.12, fill: white, stroke: black)
+        content((-5.4, -1), text(size: 10pt)[$A B$])
 
-      circle((-3, -1), radius: 0.12, fill: white, stroke: black)
-      content((-3, -0.6), text(size: 10pt)[$C$])
+        circle((-3, -1), radius: 0.12, fill: white, stroke: black)
+        content((-3, -0.6), text(size: 10pt)[$C$])
 
-      circle((-3, -2.5), radius: 0.12, fill: white, stroke: black)
-      content((-3, -2.9), text(size: 10pt)[$D$])
+        circle((-3, -2.5), radius: 0.12, fill: white, stroke: black)
+        content((-3, -2.9), text(size: 10pt)[$D$])
 
-      circle((-4.75, -2.5), radius: 0.12, fill: white, stroke: black)
-      content((-4.75, -2.9), text(size: 10pt)[$E$])
+        circle((-4.75, -2.5), radius: 0.12, fill: white, stroke: black)
+        content((-4.75, -2.9), text(size: 10pt)[$E$])
 
-      // ===== ITERAZIONE 2: Dopo contrazione AB-C =====
-      content((-4, -4), text(size: 11pt, weight: "bold")[Iterazione 2: $mr(A B"-"C)$ contratto])
+        // ===== ITERAZIONE 2: Dopo contrazione AB-C =====
+        content((-4, -4), text(size: 11pt, weight: "bold")[Iterazione 2: $mr(A B"-"C)$ contratto])
 
-      // Lati - evidenzio i prossimi lati da contrarre (due lati multipli ABC-D)
-      bezier((-5, -5.5), (-3, -5.5), (-4, -5.2), stroke: 1.5pt + red) // ABC-D lato 1 (da contrarre)
-      bezier((-5, -5.5), (-3, -5.5), (-4, -5.8), stroke: black) // ABC-D lato 2
-      line((-3, -5.5), (-3, -7), stroke: black) // D-E
-      line((-3, -7), (-5, -5.5), stroke: black) // E-ABC
+        // Lati - evidenzio i prossimi lati da contrarre (due lati multipli ABC-D)
+        bezier((-5, -5.5), (-3, -5.5), (-4, -5.2), stroke: 1.5pt + red) // ABC-D lato 1 (da contrarre)
+        bezier((-5, -5.5), (-3, -5.5), (-4, -5.8), stroke: black) // ABC-D lato 2
+        line((-3, -5.5), (-3, -7), stroke: black) // D-E
+        line((-3, -7), (-5, -5.5), stroke: black) // E-ABC
 
-      // Vertici
-      circle((-5, -5.5), radius: 0.12, fill: white, stroke: black)
-      content((-5.7, -5.5), text(size: 10pt)[$A B C$])
+        // Vertici
+        circle((-5, -5.5), radius: 0.12, fill: white, stroke: black)
+        content((-5.7, -5.5), text(size: 10pt)[$A B C$])
 
-      circle((-3, -5.5), radius: 0.12, fill: white, stroke: black)
-      content((-3, -5.1), text(size: 10pt)[$D$])
+        circle((-3, -5.5), radius: 0.12, fill: white, stroke: black)
+        content((-3, -5.1), text(size: 10pt)[$D$])
 
-      circle((-3, -7), radius: 0.12, fill: white, stroke: black)
-      content((-3, -7.4), text(size: 10pt)[$E$])
+        circle((-3, -7), radius: 0.12, fill: white, stroke: black)
+        content((-3, -7.4), text(size: 10pt)[$E$])
 
-      // ===== ITERAZIONE 3: Dopo contrazione ABC-D =====
-      content((-4, -8.5), text(size: 11pt, weight: "bold")[Iterazione 3: $mr(A B C"-"D)$ contratto])
+        // ===== ITERAZIONE 3: Dopo contrazione ABC-D =====
+        content((-4, -8.5), text(size: 11pt, weight: "bold")[Iterazione 3: $mr(A B C"-"D)$ contratto])
 
-      // Lati con multipli tra ABCD e E - evidenzio i lati da contrarre
-      bezier((-5, -10), (-3, -10), (-4, -9.7), stroke: black) // ABCD-E lato 1
-      bezier((-5, -10), (-3, -10), (-4, -10.3), stroke: 1.5pt + red) // ABCD-E lato 2 (da contrarre)
+        // Lati con multipli tra ABCD e E - evidenzio i lati da contrarre
+        bezier((-5, -10), (-3, -10), (-4, -9.7), stroke: black) // ABCD-E lato 1
+        bezier((-5, -10), (-3, -10), (-4, -10.3), stroke: 1.5pt + red) // ABCD-E lato 2 (da contrarre)
 
-      // Vertici
-      circle((-5, -10), radius: 0.12, fill: white, stroke: black)
-      content((-5.8, -10), text(size: 10pt)[$A B C D$])
+        // Vertici
+        circle((-5, -10), radius: 0.12, fill: white, stroke: black)
+        content((-5.8, -10), text(size: 10pt)[$A B C D$])
 
-      circle((-3, -10), radius: 0.12, fill: white, stroke: black)
-      content((-2.6, -10), text(size: 10pt)[$E$])
+        circle((-3, -10), radius: 0.12, fill: white, stroke: black)
+        content((-2.6, -10), text(size: 10pt)[$E$])
 
-      // ===== RISULTATO FINALE =====
-      content((-4, -12), text(size: 11pt, weight: "bold")[Risultato finale (2 vertici)])
+        // ===== RISULTATO FINALE =====
+        content((-4, -12), text(size: 11pt, weight: "bold")[Risultato finale (2 vertici)])
 
-      // Due lati multipli tra i due super-vertici
-      bezier((-5, -13.5), (-3, -13.5), (-4, -13.2)) // lato superiore
-      bezier((-5, -13.5), (-3, -13.5), (-4, -13.8)) // lato inferiore
+        // Due lati multipli tra i due super-vertici
+        bezier((-5, -13.5), (-3, -13.5), (-4, -13.2)) // lato superiore
+        bezier((-5, -13.5), (-3, -13.5), (-4, -13.8)) // lato inferiore
 
-      // Vertici finali
-      circle((-5, -13.5), radius: 0.12, fill: white, stroke: black)
-      content((-5.8, -13.5), text(size: 10pt)[$A B C D$])
+        // Vertici finali
+        circle((-5, -13.5), radius: 0.12, fill: white, stroke: black)
+        content((-5.8, -13.5), text(size: 10pt)[$A B C D$])
 
-      circle((-3, -13.5), radius: 0.12, fill: white, stroke: black)
-      content((-2.6, -13.5), text(size: 10pt)[$E$])
-    }),
+        circle((-3, -13.5), radius: 0.12, fill: white, stroke: black)
+        content((-2.6, -13.5), text(size: 10pt)[$E$])
+      },
+      padding: (bottom: 2em),
+    ),
     caption: [
-      #v(1em)
       Esecuzione dell'algoritmo di Karger. A ogni iterazione viene evidenziato in $mr("rosso")$ il lato casuale che verrà contratto.
       Il taglio finale ha dimensione $2$, corrispondente ai due lati multipli tra i super-vertici finali.
       In questo caso, il taglio trovato è ottimo (non garantito).
