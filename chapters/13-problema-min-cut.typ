@@ -229,7 +229,7 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
       content((-4, 3.5), text(size: 11pt, weight: "bold")[Iterazione 0: Grafo originale])
 
       // Lati grafo originale - evidenzio il lato che verrà contratto
-      line((-5.5, 2), (-4, 2), stroke: red + 1.5pt) // A-B (da contrarre)
+      line((-5.5, 2), (-4, 2), stroke: (paint: red, thickness: 1.5pt)) // A-B (da contrarre)
       line((-4, 2), (-2.5, 2), stroke: black) // B-C
       line((-2.5, 2), (-2.5, 0.5), stroke: black) // C-D
       line((-4, 2), (-4, 0.5), stroke: black) // B-D
@@ -257,15 +257,15 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
       content((1, 3.5), text(size: 11pt, weight: "bold")[Iterazione 1: $mr(A"-"B)$ contratto])
 
       // Lati - evidenzio il prossimo lato da contrarre
-      line((0.25, 2), (2, 2), stroke: red + 1.5pt) // AB-C (da contrarre)
+      line((0.5, 2), (2, 2), stroke: (paint: red, thickness: 1.5pt)) // AB-C (da contrarre)
       line((2, 2), (2, 0.5), stroke: black) // C-D
-      line((0.25, 2), (0.25, 0.5), stroke: black) // AB-D
-      line((0.25, 2), (0.25, 0.5), stroke: black) // AB-E
-      line((0.25, 0.5), (2, 0.5), stroke: black) // E-D
+      line((0.5, 2), (2, 0.5), stroke: black) // AB-D
+      line((0.5, 2), (-0.5, 0.5), stroke: black) // AB-E
+      line((-0.5, 0.5), (2, 0.5), stroke: black) // E-D
 
       // Vertici
-      circle((0.25, 2), radius: 0.12, fill: white, stroke: black)
-      content((-0.15, 2.4), text(size: 10pt)[$A B$])
+      circle((0.5, 2), radius: 0.12, fill: white, stroke: black)
+      content((0.5, 2.4), text(size: 10pt)[$A B$])
 
       circle((2, 2), radius: 0.12, fill: white, stroke: black)
       content((2, 2.4), text(size: 10pt)[$C$])
@@ -273,14 +273,14 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
       circle((2, 0.5), radius: 0.12, fill: white, stroke: black)
       content((2, 0.1), text(size: 10pt)[$D$])
 
-      circle((0.25, 0.5), radius: 0.12, fill: white, stroke: black)
-      content((0.25, 0.1), text(size: 10pt)[$E$])
+      circle((-0.5, 0.5), radius: 0.12, fill: white, stroke: black)
+      content((-0.5, 0.1), text(size: 10pt)[$E$])
 
       // ===== ITERAZIONE 2: Dopo contrazione AB-C =====
       content((-4, -0.5), text(size: 11pt, weight: "bold")[Iterazione 2: $mr(A B"-"C)$ contratto])
 
       // Lati - evidenzio il prossimo lato da contrarre
-      line((-5, -2), (-3, -2), stroke: red + 1.5pt) // ABC-D (da contrarre)
+      line((-5, -2), (-3, -2), stroke: (paint: red, thickness: 1.5pt)) // ABC-D (da contrarre)
       line((-3, -2), (-3, -3.5), stroke: black) // D-E
       line((-3, -3.5), (-5, -2), stroke: black) // E-ABC
 
@@ -298,8 +298,8 @@ Questi nuovi vertici diventano delle classi di equivalenza tra più vertici.
       content((1, -0.5), text(size: 11pt, weight: "bold")[Iterazione 3: $mr(A B C"-"D)$ contratto])
 
       // Lati con multipli tra ABCD e E - evidenzio i lati da contrarre
-      bezier((0.5, -2.5), (0.5, -4), (0.3, -3.25), (0.3, -3.25), stroke: red + 1.5pt) // ABCD-E lato 1 (da contrarre)
-      bezier((0.5, -2.5), (0.5, -4), (0.7, -3.25), (0.7, -3.25), stroke: red + 1.5pt) // ABCD-E lato 2 (da contrarre)
+      bezier((0.5, -2.5), (0.5, -4), (0.3, -3.25), (0.3, -3.25), stroke: (paint: red, thickness: 1.5pt)) // ABCD-E lato 1 (da contrarre)
+      bezier((0.5, -2.5), (0.5, -4), (0.7, -3.25), (0.7, -3.25), stroke: (paint: red, thickness: 1.5pt)) // ABCD-E lato 2 (da contrarre)
 
       // Vertici
       circle((0.5, -2.5), radius: 0.12, fill: white, stroke: black)
