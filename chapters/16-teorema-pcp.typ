@@ -849,7 +849,7 @@ Formalmente:
         $ 
         |S| > 2^(r(|x|)-1)
         $
-        Esiste un $w$ compatibile con tutte le configurazioni. Accetto con probabilità $> 1/2$, *impossibile*, $qed$.
+        Esiste un $w$ compatibile con tutte le configurazioni (per #link-teorema(<indipendent-sat-fatto-1>)). Accetto con probabilità $> 1/2$, *impossibile*, $qed$.
       ]
     ]<indipendent-sat-fatto-2>
 
