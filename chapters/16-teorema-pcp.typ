@@ -540,7 +540,9 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
     Stiamo dicendo che esiste una costante positiva $overline(epsilon)$ al di sotto della quale è impossibile approssimare  $"MaxCNFSat"$
   ]
   #dimostrazione()[
-    Sia $L$ un linguaggio, dove $L in "Npc"$ (quindi $L$ è uno dei problemi più difficili in $"NP"$). Di conseguenza $L in "NP" = "PCP"[r(n),1]$ per qualche $r(n) in log(n) "e" q in bb(N)$.\
+    Sia $L$ un linguaggio, dove $L in "Npc"$ (quindi $L$ è uno dei problemi più difficili in $"NP"$). Di conseguenza: 
+    $ L in "NP" = "PCP"[r(n),1] $ 
+    per qualche $r(n) in O(log(n))$ e $q in bb(N)$.\
     Sia $V$ un verificatore in forma normale per $L$. $V$ per il lemma #link-teorema(<verificatore-forma-normale>), può essere descritto come segue: 
     1. Fissato l'input $x in 2^*$
     2. Fissati i bit estratti $R in 2^(r(|x|))$
@@ -549,7 +551,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
     $
       phi(w_(i_1(x,R)),dots,w_(i_q (x,R)) ) in 2
     $
-    Siccome la stringa oracolica $w$ è una funzione booleana, per il lemma #link-teorema(<lemma-formula-booleana>), $phi$ è descrivibile come una formula $phi_(x,R)$ CNF nelle variabili $w_(i_1(x,R)),dots,w_(i_q (x,R))$ con $<=2^q$ clausole di $q$ letterali: 
+    Siccome la stringa oracolica $w$ è una funzione booleana, per il lemma #link-teorema(<lemma-formula-booleana>), $phi$ è descrivibile come una formula $phi_(x,R)$ CNF nelle variabili $w_(i_1(x,R)),dots,w_(i_q (x,R))$ con un numero di clausole $<=2^q$ di $q$ letterali:
     #esempio()[
       $ 
         "Per" q = 3\
@@ -572,10 +574,13 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
       Esiste quindi un polinomio *$P(|x|)$* per cui $Phi$ contiene esattamente $|P(x)|$ clausole.
 
       #informalmente()[
-        Ogni $phi_(x,R)$ rappresenta una "traccia di esecuzione" del verificatore con una specifica estrazione randomo $R$. La forma $Phi_x$ è soddisfacibile se e solo se esiste una stringa dell'oracolo $w$ che fa accettare il verificatore per ogni possibile estrazione random. 
+        Ogni $phi_(x,R)$ rappresenta una "traccia di esecuzione" del verificatore con una specifica estrazione random $R$. La forma $Phi_x$ è soddisfacibile se e solo se esiste una stringa dell'oracolo $w$ che fa accettare il verificatore per ogni possibile estrazione random. 
       ]
-      Possiamo ora collegarci con il linguaggio $L$:
-      - Se $mb(x in L)$ = $V$ deve essere tale per cui esiste una stringa oracolica $w$ che fa accettare con probabilità $1$. *Tutte* le $phi_(x,R)$ devono essere soddisfatte $=>$ *$Phi_x$ è soddisfacibile*. Esiste quindi un assegnamento che *soddisfa* tutte le *$P(|x|)$ clauosle* di $Phi_x$. Chiamo con *$t_x^*$* tale quantità, *$mb(t_x^* = P(|x|))$* 
+      Possiamo ora collegarci al linguaggio $L$:
+      - Se $mb(x in L)$ = $V$ deve essere tale per cui esiste una stringa oracolica $w$ che fa accettare con probabilità $1$. *Tutte* le $phi_(x,R)$ devono essere soddisfatte $=>$ *$Phi_x$ è soddisfacibile*. Esiste quindi un assegnamento che *soddisfa* tutte le *$P(|x|)$ clauosle* di $Phi_x$. Chiamo con *$t_x^*$* tale quantità: 
+      $
+        mb(t_x^* = P(|x|))
+      $ 
 
       - se $mr(x in.not L)$ =  $V$ deve essere tale per cui ogni stringa $w$ fa accettare $x$ con probabilità $< 1/2$. Ogni $w$ *non* soddisfa almeno metà delle $phi_(x,R)$ clauosole di $Phi_x$:
       $
@@ -598,7 +603,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
       $
     Riassumendo: 
     - $"Se" x in L$ = $mb(t_x^* = P(|x|))$
-    - $"Se" x in.not L$ = $mr(t_x^* >= P(|X|)(1-1/(2^q+1)))$
+    - $"Se" x in.not L$ = $mr(t_x^* <= P(|X|)(1-1/(2^q+1)))$
 
     Supponiamo per *assurdo* che ci sia un algoritmo di ottimizzazione $A$ che fornisce una $(1+overline(epsilon))$-approssimazione per $"MaxCNFSat"$. Chiamiamo con $overline(t)$ la soluzione prodotta da $A$ che approssima $t^*$. Di conseguenza: 
 
@@ -606,7 +611,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
 
     - $"Se" x in.not L => overline(t) <= t^* <= P(|x|)(1+overline(epsilon)) = mr(B_x) $
 
-    Vogliamo dimostrare che $mb(B_x)$ e $mr(A_x)$ *sono separati*, ci riusciamo per $mb(B_x) < mr(A_x)$ , in questo modo guardando la soluzione $overline(t)$ riesco a capire in che caso sono e risolvere il problema. Se valesse:
+    Vogliamo dimostrare che $mb(B_x)$ e $mr(A_x)$ *sono separati*, ci riusciamo per $mb(B_x) < mr(A_x)$ , in questo modo guardando la soluzione $overline(t)$ riusciamo a capire in che caso simao, risolvendo così il problema. Se valesse:
     $
       mb(B_x) >= mr(A_x)\
       P(|x|)(1-overline(epsilon)) >= P(|x|)/(1+overline(epsilon))\
