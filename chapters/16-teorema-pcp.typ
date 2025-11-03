@@ -631,91 +631,186 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
   ]
 ]
 
+#teorema("Crollario")[
+  Eiste un $overline(epsilon) > 0$ t.c $"Max"E_3"Sat"$ non è $(1+overline(epsilon))$-approssimabile in tempo polinomiale, a meno che $"P" = "NP"$.
 
+  #nota()[
+    Nella pratica sappiamo che esiste una $8/7+overline(epsilon)$-approssimazione.
+  ]
+]
 
-lemma...
-(vogliamo dire che non esiste una 1+$overline(epsilon)$ approssimabile)
-
-quel al più $k$ clausole si può trasformare in esattamente $k$ clausole (ripetendo alcune ckausole)
-
-dimostrazione:
-
-dimostriamo che non è approssimabile per qualche costante (non riusciamo a determinare la costante, ma dire che esista)
-
-...
-
-- Consideriamo una specifica srtinga $x$.
-- Interroghiamo $q$ specifiche posizioni dell'oracolo.
-- È possibile descrivere le interrogazioni come una funzione.
-- QUesta funzione è possibile scriverla come una formula CNF.
-- Un'altra CNF $Phi_x$ che mette in and tutte le singole CNF (che non ho capito perchè sono tante)
-- il numero di clausole in questa formula grande è un polinomio
-
-Sia $t^*_x$ il masasimo numero di clausole soddisfacibili in $Phi_x$
-
-/ Primo caso: se $x in L, exists w$ (stringa di bit) che fa accettare con probabilità $1$
-  i $w$ sono come degli assegnamenti di valori di verità delle clausole CNF, quinid è riscrivibile come $exists$ assegnamento che rende vere tutte le singole clausole, quindi rende vera la CNF $Phi_x$
-
-  $ t_x^* = P(|x|) $
-
-/ Secondo caso: se $x in.not L, forall w$ fa accettare con probabilità $< 1/2$
-  Cioè, $forall w$, non siddisfa $>= 2^r(|x|) / 2$ delle $phi_(x,r)$.
-  Queste $phi$ sono fatte da $2^q$ clausole
-
-  Qualunque sia $w$, allora non riesco a rendere vero almeno una delle clausole di almeno metà delle $phi$ CNF
-
-  $forall w$ non siddisfa $>=$ ...
-
-  Questo era il numero di clausole non soddisfacibili, quindi il contrario, ovvero quelle soddisfacibili è al massimo:
-  $ t_x^* <= P(|x|) - ... $
-
-
-Adesso dobbiamo chiudere la dimostraszione per assurdo con un $overline(epsilon)$
-
-$ overline(epsilon) = ... $
-
-SUpponiamo per assurdo che ci sia un algoritmo di ottimizazione $A$ che fornisce una $(1+overline(epsilon))$-approssimazione di MaxCNFSAT
-
-Questo algoritmo al posto di prendere in pasto il riconoscitore prende in pasto una CNF prodotta da questo riconoscitore e restituisce $overline(t)$, un'approssimazione di $t^*$
-
-- $A_x$: $x in L => t^* = P(|x|)$
-- $B_x$: $x in.not L => t^* <= P(|x|)(1 - 1/(2^...))$
-
-Vogliamo mostrare che i due casi sono disgiunti e nello specifico che $B_x < A_x$, quindi guardando l'approssimazione capire in che caso siamo. Per assurdo:
-
-se $B_x >= A_X$, allora
-$ P(|x|) ... $
-impossibile dato che $overline(epsilon)$ deve essere $= 0$, quindi otterremmo una $1$-approssimazione, ovvero l'ottimo, impossibile.
-
-Dato $x$ possiamo decidere in tempo polinomiale se $x$ sta in $L$, allora potremmo decidere $L$, sarebbe in $P$. Ma per ipotesi $L in "NPc"$, quindi assurdo, $qed$.
 
 == Inapprossimabilità di MaxIndependentSet
 
-Problema MaxIndependentSet:
-- input $G(V,E)$ non orientato
-- sol amm: il contrario di una clique: nessun lato del grafo che ha le due estremità dell'insieme $X$
-  $ X subset V "indipendenti", quad E inter binom(X, 2) = emptyset $
-- funz ob: $|X|$
-- tipo: max
+#informalmente()[
+  Dato un grafo non orientato, vogliamo trovare il più grande insieme di vertici $X$ tale che nessuno di questi vertici $v in X$ sia collegato tra loro da un lato.
+]
+
+#esempio([
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // ===== LIVELLO SUPERIORE =====
+      
+      // GRAFO ORIGINALE
+      content((-6, 3.8), text(size: 12pt, weight: "bold")[Grafo $G$])
+
+      // Vertici
+      circle((-7, 2.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-7.4, 2.5), text(size: 10pt)[$v_1$])
+
+      circle((-5, 3), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-5, 3.4), text(size: 10pt)[$v_2$])
+
+      circle((-6, 1.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-6.4, 1.5), text(size: 10pt)[$v_3$])
+
+      circle((-4, 2), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-3.6, 2), text(size: 10pt)[$v_4$])
+
+      circle((-5, 0.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-5, 0.1), text(size: 10pt)[$v_5$])
+
+      // Lati
+      line((-6.85, 2.5), (-5.15, 3), stroke: 2pt + black)      // v1-v2
+      line((-6.9, 2.4), (-6.1, 1.6), stroke: 2pt + black)      // v1-v3
+      line((-5.85, 1.5), (-4.15, 2), stroke: 2pt + black)      // v3-v4
+      line((-5.1, 2.9), (-4.1, 2.1), stroke: 2pt + black)      // v2-v4
+      line((-5.9, 1.4), (-5.1, 0.6), stroke: 2pt + black)      // v3-v5
+      line((-4.1, 1.9), (-5, 0.6), stroke: 2pt + black)        // v4-v5
+
+      // SOLUZIONE NON INDIPENDENTE
+      content((-1, 3.8), text(size: 12pt, weight: "bold")[Non Indipendente])
+      content((1.5, 3.4), text(size: 10pt, fill: red)[${v_1, v_2, v_3}$ ✗])
+
+      // Vertici
+      circle((-2, 2.5), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + red)
+      content((-2.4, 2.5), text(size: 10pt)[$v_1$])
+
+      circle((0, 3), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + red)
+      content((0, 3.4), text(size: 10pt)[$v_2$])
+
+      circle((-1, 1.5), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + black)
+      content((-1.4, 1.5), text(size: 10pt)[$v_3$])
+
+      circle((1, 2), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((1.4, 2), text(size: 10pt)[$v_4$])
+
+      circle((0, 0.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((0, 0.1), text(size: 10pt)[$v_5$])
+
+      // Lati
+      line((-1.85, 2.5), (-0.15, 3), stroke: 3pt + red)        // v1-v2 PROBLEMA!
+      line((-1.9, 2.4), (-1.1, 1.6), stroke: 2pt + black)      // v1-v3
+      line((-0.85, 1.5), (0.85, 2), stroke: 2pt + black)       // v3-v4
+      line((-0.1, 2.9), (0.9, 2.1), stroke: 2pt + black)       // v2-v4
+      line((-0.9, 1.4), (-0.1, 0.6), stroke: 2pt + black)      // v3-v5
+      line((0.9, 1.9), (0, 0.6), stroke: 2pt + black)          // v4-v5
+
+      content((-1.5, 0.8), text(size: 9pt, fill: red)[
+        $v_1$ e $v_2$ \ collegati!
+      ])
+
+      // ===== LIVELLO INFERIORE =====
+      
+      // INSIEME INDIPENDENTE
+      content((-6, -0.5), text(size: 12pt, weight: "bold")[Insieme Indipendente])
+      content((-6, -1.2), text(size: 10pt, fill: green)[${v_1, v_4}$ ✓])
+
+      // Vertici
+      circle((-7, -2), radius: 0.15, fill: green.lighten(70%), stroke: 2pt + green)
+      content((-7.4, -2), text(size: 10pt)[$v_1$])
+
+      circle((-5, -1.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-5, -1.1), text(size: 10pt)[$v_2$])
+
+      circle((-6, -3.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-6.4, -3.5), text(size: 10pt)[$v_3$])
+
+      circle((-4, -3), radius: 0.15, fill: green.lighten(70%), stroke: 2pt + green)
+      content((-3.6, -3), text(size: 10pt)[$v_4$])
+
+      circle((-5, -4.5), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-5, -4.9), text(size: 10pt)[$v_5$])
+
+      // Lati
+      line((-6.85, -2), (-5.15, -1.5), stroke: 2pt + black)    // v1-v2
+      line((-6.9, -2.1), (-6.1, -3.4), stroke: 2pt + black)    // v1-v3
+      line((-5.85, -3.5), (-4.15, -3), stroke: 2pt + black)    // v3-v4
+      line((-5.1, -1.6), (-4.1, -2.9), stroke: 2pt + black)    // v2-v4
+      line((-5.9, -3.6), (-5.1, -4.4), stroke: 2pt + black)    // v3-v5
+      line((-4.1, -3.1), (-5, -4.4), stroke: 2pt + black)      // v4-v5
+
+      content((-5.5, -5.3), text(size: 9pt, fill: green)[
+        Nessun lato tra $v_1$ e $v_4$!
+      ])
+
+      // SOLUZIONE OTTIMA
+      content((-1, -0.5), text(size: 12pt, weight: "bold")[Soluzione Ottima])
+      content((-1.2, -1.1), text(size: 10pt, fill: blue)[${v_2, v_3, v_5}$ ✓])
+
+      // Vertici
+      circle((-2, -2), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((-2.4, -2), text(size: 10pt)[$v_1$])
+
+      circle((0, -1.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
+      content((0, -1.1), text(size: 10pt)[$v_2$])
+
+      circle((-1, -3.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
+      content((-1.4, -3.5), text(size: 10pt)[$v_3$])
+
+      circle((1, -3), radius: 0.15, fill: white, stroke: 2pt + black)
+      content((1.4, -3), text(size: 10pt)[$v_4$])
+
+      circle((0, -4.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
+      content((0, -4.9), text(size: 10pt)[$v_5$])
+
+      // Lati
+      line((-1.85, -2), (-0.15, -1.5), stroke: 2pt + black)    // v1-v2
+      line((-1.9, -2.1), (-1.1, -3.4), stroke: 2pt + black)    // v1-v3
+      line((-0.85, -3.5), (0.85, -3), stroke: 2pt + black)     // v3-v4
+      line((-0.1, -1.6), (0.9, -2.9), stroke: 2pt + black)     // v2-v4
+      line((-0.9, -3.6), (-0.1, -4.4), stroke: 2pt + black)    // v3-v5
+      line((0.9, -3.1), (0, -4.4), stroke: 2pt + black)        // v4-v5
+
+      content((-0.5, -5.3), text(size: 9pt, fill: blue)[
+        Cardinalità massima: 3
+      ])
+    }),
+    caption: [
+      Esempio di MaxIndependentSet. Un insieme è indipendente se nessun vertice è collegato ad un altro. L'obiettivo è trovare l'insieme indipendente di cardinalità massima.
+    ]
+  )
+])
+
+Formalmente:
+- *$I_pi$* = $G(V,E)$ non orientato
+- *$"Amm"_pi$* = il contrario di una clique, un insieme di vertici $X$, dove nessun lato del grafo che ha le due estremità in esso. 
+  $ X subset.eq V "indipendenti", quad E inter binom(X, 2) = emptyset $
+- *$C_pi$* = $|X|$
+- *$t_pi$* = $max$
 
 #teorema("Teorema")[
-  Per ogni $epsilon > 0$, il problema MaxIndependentSet non è $(2-epsilon)$-approssimabile (in tempo polinomiale, se $"P" != "NP"$)
+  Per ogni $epsilon > 0$: 
+  $
+  "MaxIndependentSet non è" (2-epsilon)-"approssimabile"
+  $ 
+  (in tempo polinomiale, se $"P" != "NP"$)
 
   #dimostrazione[
-    Sia $L subset.eq 2^*$ un linguaggio NP-completo
-
-    $L in "PCP"[r(n), q]$ per una specifica funzione $r(n) in O(log n)$ e $q in bb(N)$.
-
-    Sia $V$ un verificatore per $L$.
-
-
-    Invece che costruire una formula, costruiamo un grafo $G_x$:
-    - vertici: $x$-configurazioni, ovvero una coppia:
+    Sia $L subset.eq 2^*$ un linguaggio NP-completo, allora :
+    $ 
+      L in "PCP"[r(n), q]
+    $ 
+    per una specifica funzione $r(n) in O(log n)$ e $q in bb(N)$.\
+    Sia $V$ un verificatore in forma normale per $L$. Invece che costruire una formula, costruiamo un grafo *$G_x$* *per ogni* input possibile *$x in 2^*$*:
+    - *Vertici*= $x$-configurazioni (ammissibili), ovvero una coppia:
       $ (R, {i_1 : b_1, ... i_q : b_q}) $
-      ovvero una specifica stringa estratta e le posizioni sulla specifica stringa interrogate all'oracolo e le rispettive risposte
-      - $R$ è la stringa estratta da $V$
-      - $i_1, ..., i_q$ sono le posizioni interrogate su input $x$ e stringa random $R$
-      - $b_q, ..., b_q$ sono le risposte dell'oracolo (ovvero i valori della stringa in quelle posizioni)
+      Dove:
+      - $R in 2^r(|x|)$ = è la stringa estratta da $V$
+      - ${i_1, ..., i_q} in bb(N)$ = sono le posizioni intere interrogate su input $x$ e stringa random $R$ fissati
+      - $b_q, ..., b_q} in 2 = {0,1}$ = sono le risposte dell'oracolo (ovvero i valori della stringa in quelle posizioni)
 
       Abbiamo esattamente questo numero di vertici:
       $ |V| <= 2^r(|x|) dot 2^q $
