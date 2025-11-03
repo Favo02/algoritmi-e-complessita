@@ -288,9 +288,8 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
 4. Sia $x in 2^*$, una stringa di bit: 
    $
      cases(
-      "Se" mb( x in L) "allora" exists w in 2^* "t.c" P[V(x,w)="YES"]=1 space \
+      "Se" mb( x in L) "allora" exists w in 2^* "t.c" P[V(x,w)="YES"]=1,
       "Se" mr(x in.not L) "allora" forall w in 2^* P[V(x,w)="YES"]<1/2 
-
      )
    $
 
