@@ -469,6 +469,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
           content((1.5, 0.45), text(size: 11pt)[$W_12$])
 
           rect((3.5, 0.1), (5.5, 0.8), stroke: 2pt + black, fill: white)
+          content((4.5, 0.45), text(size: 11pt)[$W_64$])
 
           // Etichetta profondità sulla destra
           line((6.2, 4.5), (6.2, 0.45), stroke: 2pt + black)
