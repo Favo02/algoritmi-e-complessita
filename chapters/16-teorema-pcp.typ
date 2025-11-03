@@ -809,49 +809,73 @@ Formalmente:
       $ (R, {i_1 : b_1, ... i_q : b_q}) $
       Dove:
       - $R in 2^r(|x|)$ = è la stringa estratta da $V$
-      - ${i_1, ..., i_q} in bb(N)$ = sono le posizioni intere interrogate su input $x$ e stringa random $R$ fissati
-      - $b_q, ..., b_q} in 2 = {0,1}$ = sono le risposte dell'oracolo (ovvero i valori della stringa in quelle posizioni)
+      - ${i_1, ..., i_q} in bb(N)$ = sono le posizioni interrogate con input $x$ e stringa random $R$ fissati
+      - ${b_1, ..., b_q} in 2 = {0,1}$ = sono le risposte dell'oracolo (ovvero i valori della stringa in quelle posizioni)
 
-      Abbiamo esattamente questo numero di vertici:
-      $ |V| <= 2^r(|x|) dot 2^q $
-    - lati: c'è un lato tra $(R, {...})$ e $(R', {...})$ se e solo se le configurazioni sono incompatibili, cioè
-      - $R = R'$
-      - oppure $exists k, k'$ tale che $i_k = i'_k'$ e $b_k != b'_k'$
+      Il numero di vertici è pari a:
+      $ mb(|V| <= 2^r(|x|) dot 2^q) $
+    - *Lati*= Dati due vertici $(R, {i_1=b_1,dots,i_q=b_q}) in V$ e $(R', {i_1=b_1,dots,i_q=b_q})in V$, esiste un *arco* se e solo se le *configurazioni* sono *incompatibili*, cioè
+      - $R eq.not R'$ //Todo verificare se != o =
+      - oppure $exists k, k'$ tale che $i_k = i'_k'$ e $b_k != b'_k'$. Insieme di interrogazione uguale ma risposte dell'oracolo diverse.
+
+      #esempio()[
+        configurazioni incompatibili:
+        $
+          (001,{3:0,mr(4:1),7:3})\
+          (010,{13:0,mr(4:0),17:1})
+        $
+      ]
+
+      #informalmente()[
+        configurazioni indipendenti significa che non ci può essere una stringa dell'oracolo compatibile con entrambe le stringhe, *non possono coesistere* nello stesso universo.
+      ]
 
     #teorema("Fatto")[
-      Se $x in L, G_x$ ha un insieme indipendente di cardinalità $>= 2^r(|x|)$
+      Se *$x in L, G_x$* ha un insieme indipendente di cardinalità *$>= 2^r(|x|)$*
 
       #dimostrazione[
         $exists w$ che fa accettare con probabilità $1$.
-        Prendiamo tutte le configurazioni accettanti compatibili con $w$.
+        Prendiamo *tutte* le *configurazioni* accettanti *compatibili* con *$w$*.
         Queste configurazioni non hanno lati che le collegano (dato che sono compatibili).
 
-        Quindi questo è un insieme indipendente, dato che devo accettare con probabilità $1$, la sua cardinalità deve essere $2^r(|x|)$
+        L'insieme di tali configurazioni è un insieme indipendente, dato che devo accettare con probabilità $1$, la sua cardinalità deve essere $2^r(|x|) space qed$
       ]
-    ]
+    ]<indipendent-sat-fatto-1>
 
     #teorema("Fatto")[
-      Se $x in.not L$, ogni insieme indipendente di $G_x$ ha cardinalità $<= 2^(r(|x|)-1)$
+      Se *$x in.not L$*, ogni insieme indipendente di $G_x$ ha cardinalità $<= 2^(r(|x|)-1)$
 
       #dimostrazione[
-        Per assurdo, sia $S subset.eq V_G_x$ un inieme indipendente con $|S| > 2^(r(|x|)-1)$.
-        Quindi esiste un $w$ compatibile con tutte le configurazioni.
-        Accetto con probabilità $> 1/2$, impossibile, $qed$.
+        Per *assurdo*, sia $S subset.eq V_G_x$ un inieme indipendente dove: 
+        $ 
+        |S| > 2^(r(|x|)-1)
+        $
+        Esiste un $w$ compatibile con tutte le configurazioni. Accetto con probabilità $> 1/2$, *impossibile*, $qed$.
       ]
-    ]
+    ]<indipendent-sat-fatto-2>
 
     #informalmente[
-      Quindi, se $x in L$, allora c'è un insieme indipendente grosso, altrimenti è piccolo (queste due cosi sono disgiunte).
+      Se $x in L$, allora c'è un insieme indipendente di taglia grande, altrimenti avrà uan dimensione ridotta (queste due casistiche sono disgiunte).
     ]
+    Sia *$t_x^*$* la cardinalità del MaxIndependentSet per $G_x$:
+    - se $mb(x in L) underbrace(=>,#link-teorema(<indipendent-sat-fatto-1>)) t^*_x >= 2^(r(|x|))$
 
-    Sia $t_x^*$ la cardinalità del MaxIndependentSet per $G_x$:
-    - se $x in L => t^*_x >= 2^(r(|x|))$
-    - se $x in.not L => t_x^* < 2^(r(|x|))/2$
+    - se $mr(x in.not L) underbrace(=>,#link-teorema(<indipendent-sat-fatto-2>)) t_x^* <= 2^(r(|x|)-1) = 2^(r(|x|))/2$
 
-    Adesso supposiamo che esista un algoritmo che restituisce un $overline(t)$ approssimato, con $overline(t) >= t^* / (2-epsilon)$.
+    Adesso supposiamo per *assurdo* che esista un algoritmo $A$ in grado di restituire una soluzione $overline(t)$ approssimata, con:
+    $ 
+      overline(t) >= t^* / (2-epsilon)
+    $
+    Guardiamo ora i due casi dinsgiunti:
+    - Se $mb(x in L)$: 
+      $
+        overline(t) >= overline(t^*) / (2-epsilon) underbrace(>=,#link-teorema(<indipendent-sat-fatto-1>)) 2^(r(|x|)) / (2-epsilon) > 2^(r(|x|)) / 2
+      $
 
-    Guardando i due casi dinsgiunti:
-    - $x in L => overline(t) >= t^* / (2-epsilon) >= ...$
-    - $x in.not L => overline(t) <= t^* / (2-epsilon) <= ...$
+    - Se $mr(x in L)$:
+      $
+        overline(t) <= t^* <= 2^(r(|x|)-1)/(2-epsilon) < 2^(r(|x|))/2
+      $
+      Tuttavia riusciremo a risolvere in tempo polinomaile il problema MaxIndependentSet guardando la soluzione $overline(t)$, questo è un *assurdo* in quanto *$L in "Npc"$*
   ]
 ]
