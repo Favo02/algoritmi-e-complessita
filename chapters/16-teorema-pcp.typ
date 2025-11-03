@@ -796,8 +796,7 @@ Formalmente:
   $
   "MaxIndependentSet non è" (2-epsilon)-"approssimabile"
   $ 
-  (in tempo polinomiale, se $"P" != "NP"$)
-
+  in tempo polinomiale, se $"P" != "NP"$
   #dimostrazione[
     Sia $L subset.eq 2^*$ un linguaggio NP-completo, allora :
     $ 
