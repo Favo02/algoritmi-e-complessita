@@ -44,82 +44,87 @@ Un dato ADT si può implementare in modi diversi, ognuno con diversi *tradeoff* 
 
 == Spazio occupato da un'implementazione: Information-Theoretical Lower Bound
 
-Per ogni taglia $n$ (ovvero quanti elementi contiene), l'ADT ha un certo numero di valori possibili $v_n$
+Chiamiamo con $n$ la "taglia" di un ADT, ovvero il numero di elementi della struttura. *Per ogni taglia $n$*, L'ADT avrà un certo numero di *valori possibili $v_n$*. 
 
 #esempio[
   Stack di $v_0$ contiene un solo elemnto, lo stack vuoto.
 
-  Le altre taglie dipendono dal tipo di dato generico soggiacente $T$, ad esmepio in uno stack di booleani, $v_1 = 2$, $v_5 = 2^5$
+  Le altre taglie dipendono dal tipo di dato associato al generico $T$, ad esmepio in uno stack di booleani, $v_1 = 2$, $v_5 = 2^5$
 ]
 
-Quanti elementi servono per rappresentare uno di quei valori?
+Vogliamo andare a stimare *quanti bit* servono per rappresentare uno di quei valori. 
+Nel caso dello stack, esso può avere vari stati possibili con una taglia $n$: 
+ - ${V_1, ... V_v_n}$
+- ${b_1, ..., b_v_n}$, ogni stato utilizza $b_i$ bit
 
-Lo stack può avere vari stati possibili quando è di taglia $n$: $V_1, ... V_v_n$, ognuno di questi utilizza $b_1, ..., b_v_n$ bit.
+=== Teorema di Shannon
 
 #teorema("Teorema")[
-  Teorema di Shannon:
-
-  $ (sum_(i = 1)^(v_n) b_i) / (v_n) >= underbrace(log_2(sqrt(n)), Z_n) $
+  Il teorema di Shannon fornisce un *lower bound* al numero medio di bit per rappresentare una struttura di taglia $n$ con $v_n$ valori possibili:
+  $ 
+  (sum_(i = 1)^(v_n) b_i) / (v_n) >= log_2(sqrt(n)) = mr(Z_n) 
+  $
 
   #esempio[
-    La struttura dati quando consideriamo valori di taglia $3$, ha $9$ stati possibili, quindi $v_3 = 9$.
+     Sia $n = 3$ la taglia della struttura dati:
+      - numero di stati possibili è $V_(v_n) = 9$ 
+      - i possibili valori sono $v_3 = 9$. Chiamiamo con $0, 1, ..., 8$ i possibili valori di $v_n$.\
+    Se per ognuno di questi valori utilizzassimo $b = 2$ bit per rappresentarli, potremo avere al massimo $2^2$ stati, altrimenti, per principio della piccionaia due stati avrebbero la stessa rappresentazione, impossibile.
 
-    Questi valori di taglia $n$ li chiamiamo $0, 1, ..., 8$.
-
-    Ma se ognuno di questi stati utilizza $b = 2$ bit, allora potremo al masasimo avere $2^2$ diversi stati, altrimenti per principio dei cassetti (della piccionaia) due stati hanno la stessa rappresentazione, impossibile.
-
-    Quindi per rappresentare $9$ diversi valori, allora servono almeno $2^4$ bit.
+    Per rappresentare $9$ valori diversi, allora servono almeno $4$ bit per rappresentare ogni elemento. In totale $2^4$ bit.
   ]
 
   #attenzione[
-    Questa cosa funzione anche per le dimensioni variabili, dato che la media deve essere superiore al logaritmo, se riusiamo a risparmiare su alcuni valori, allora dovremo per forza pagare di più su altri valori.
+    Il teorema funziona anche per strutture dati di *dimensione variabile*. Dato che la media dei bit necessari per ogni elemento deve essere superiore al logaritmo, se riusiamo a risparmiare su alcuni valori, allora dovremmo per forza pagare di più su altri valori.
 
     #esempio[
-      È impossibile inventare qualcosa che comprima e basta, esistono solo algoritmi che comprimono bene *qualcosa*, non tutto.
-      Qualche immagine viene compressa bene, ma quel risparmio si va a pagare su determinate immagini che pagheremo di più, è impossibile andare sotto al teorema di shannon.
+      È impossibile creare una struttura dati in grado di comprimere qualsiasi valore possibile nello spazio. Esistono solo algoritmi che comprimono bene *qualcosa*, non tutto.
+      
+      In un algoritmo di compressione per le immagini, ad esempio, qualche immagine viene compressa bene, ma il risparmio guadagnato dalla compressione ottima su determinate istanze, si perde con immagini su cui l'algoritmo non lavora bene.
     ]
   ]
 
   #nota[
-    Questa struttura dati super compressa $log_2(sqrt(n))$ ottina, esiste, ma non è detto quanto sia efficiente, magari è terribilmente inefficiente.
-    Quindi è solo un lower bound, ma noi vogliamo anche l'efficienza.
+    Per ogni tipologia di struttura dati esiste la rispettiva versione super compressa $log_2(sqrt(n))$ *ottima* in termini di spazio. Tuttavia non è detto che sia la versione più efficiente (parametro che terremo in considerazione). 
   ]
 ]
 
-Gli indici sono delle strutture che ci costruiamo per poter rispondere in maniera efficiente a delle query.
-
 == Strutture compresse
 
-Un'implementazione di un ADT occupa $D_n$ bit e necessariamente $D_n >= Z_n$
+Una *implementazione* di un ADT che occupa $D_n$ bit, si dice *compressa sse*: 
+$ 
+  D_n >= Z_n 
+$ 
 
-L'implementazione:
-- implicita se $D_n = Z_n + O(1)$, ovvero una costante oltre il lower bound teorico
-- succinta se $D_n = Z_n + o(Z_n)$, ovvero i bit extra devono crescere più lentamente di $Z_n$
-- compatta se $D_n = O(Z_n)$ cresce quanto $Z_n$
-a patto che la velocità di accesso sia paragonabile a una implementazione naive.
+In particolare, l'implementazione si dice:
+- *implicita* $=> D_n = Z_n + O(1)$. Ovvero una costante oltre il lower bound teorico
+
+- *succinta* $=> D_n = Z_n + o(Z_n)$. Ovvero i bit di spazio extra devono crescere più lentamente di $Z_n$
+
+- *compatta* $=> D_n = O(Z_n)$. Cresce quanto $Z_n$
+
+#attenzione()[
+  é molto facile creare delle strutture compatte andando a diminuire i tempi di accesso, tuttavia vogliamo che la velocità di accesso sia paragonabile a una implementazione NAIF.
+]
 
 #nota[
   Le implementazioni naive ("normali/comuni", quelle che ci sono in giro) delle strutture dati non rientrano in nessuna di queste categorie, occupano molto spazio (di solito non interessa).
 ]
 
-#nota[
-  È molto facile implementare strutture succinte/compatte semplicemente sacrificando i tempi di accesso.
-]
+Esistono due tipi di strutture dati:
+- *strutture statiche* = dopo la costruzione vengono utilizzate solamente in lettura (non possono essere modificate)
+- *strutture dinamiche* = possono essere modificate anche dopo la costruzione. Spesso sono trattate in maniera completamente diversa da quelle statiche.
 
-A cosa servono queste strutture?
+Le strutture compresse vengono principalmente utilizzate quando la mole di valori da contenere è molto grande (come l'intero genoma umano, l'intero grafo di amicizie di facebook). Le implementazione NAIF non starebbero nemmeno in memoria (spesso neanche sul disco), diventando super inefficienti.
 
-Quando iniziamo a rappresentare cose molto molto grosse (come l'intero genoma umano, l'intero grafo di amicizie di facebook) e non ci stanno in memoria (spesso nemmeno sul disco) e quindi diventa super inefficiente (anche con cache).
-
-Queste strutture efficienti sono fatte bottom-up, quindi partendo da qualcosa di semplice si vanno a costruire cose complesse
+Un'ulteriore obbiettivo delle strutture compresse è quello di sfruttare al meglio la cache. 
 
 #attenzione[
-  Strutture dati succinte e Metodi di compressione dei dati (zip, tar, codifiche audio/video) sono cose molto diverse.
-  Prima di tutto molte codifiche per audio/video sono lossy (ovvero possono perdere informazione), quindi possono non rispettare il teorema di Shannon.
+  Strutture dati succinte e Metodi di compressione dei dati (zip, tar, codifiche audio/video) sono tecniche *molto diverse*:
+  - Molte codifiche per audio/video sono *lossy* (ovvero possono perdere informazione), quindi possono non rispettare il teorema di Shannon.
 
-  Mentre per quelle lossless (tipo tar, zip) la chiara differenza è che la struttura dati viene usata così, mentre le compressioni prima di essere usati devono essere decompressi.
-  Per le strutture dati, non esiste questo concetto di decompressione.
+  - Per le codifiche *lossless* (tipo tar, zip) la differenza è che le strutture dati compresse vengono usata così come sono. Le compressioni prima di essere usate hanno bisogno di uno step aggiuntivo, la decompressione.
+  Per le strutture dati il concetto di decompressione non eiste.
 ]
 
-Esistono due tipi di strutture:
-- strutture statiche: vengono costruite e poi si usano solo in lettura (non possono essere modificate)
-- strutture dinamiche: possono essere modificate (e spesso sono trattate in maniera completamnete diverse da quelle statiche)
+
