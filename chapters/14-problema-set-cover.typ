@@ -9,18 +9,18 @@ Definiamo con $xi_i$ un evento
 / Chain Rule:
 $
   P[xi_1 inter xi_2 inter dots inter xi_n] = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_2 xi_1] dots
-$ 
+$
 <chain-rule>
 
-/ Union Bound: Permette di stimare la probabilità dell'unione di event: 
+/ Union Bound: Permette di stimare la probabilità dell'unione di event:
 $
-  P[union.big_i xi_i] underbrace(<=,"contiamo più volte la" \ "sovrapposizione degli insiemi") sum_i P[xi_i]
+  P[union.big_i xi_i] underbrace(<=, "contiamo più volte la" \ "sovrapposizione degli insiemi") sum_i P[xi_i]
 $
 <union-bound>
 
-/ Disuguaglianza di Markov: La Proprietà $forall$ v.a $X$ con media finita: 
+/ Disuguaglianza di Markov: La Proprietà $forall$ v.a $X$ con media finita:
 $
-  forall a > 0, P[X >= a] <= E[X] / a 
+  forall a > 0, P[X >= a] <= E[X] / a
 $
 Sfrutto la *Legge di concentrazione* = Vogliamo sapere di quanto una v.a $X$ si discosta da un certo valore $a$, possiamo sfruttare il valore atteso.
 <disuguaglianza-markov>
@@ -31,7 +31,7 @@ Sfrutto la *Legge di concentrazione* = Vogliamo sapere di quanto una v.a $X$ si 
   Problema già visto, avevamo trovato una soluzione approssimata basata sul pricing.
 ]
 
-Definizione formale: 
+Definizione formale:
 - *$I_Pi$*:
   - $S_1, S_2, ..., S_m subset.eq 2^Omega, quad limits(union.big)_(i=1)^m S_i = Omega, quad |Omega| = n$: insiemi delle aree che unite coprono tutto l'universo (possono anche sovrapporsi)
   - $w_1, w_2, ..., w_m in bb(Q)^+$: costi delle aree
@@ -65,7 +65,7 @@ Il problema è che la programmazione lineare intera (PLI) non si può risolvere 
   La probabilità con cui inseriamo un area nella soluzione dipende dalla soluzione della programmazione lineare.
 ]
 
-Sia $hat(V)$ la versione del problema di programmazione intera non rilassato. 
+Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
 
 #pseudocode(
   [*Input* $k in bb(N)^+$ #emph("// fattore di quanto pompiamo la probabilità calcolata dal solver LP")],
@@ -76,10 +76,10 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
   indent(
     [*For* $i = 1,dots,m$],
     indent(
-      [Inserisci $i in I$ con probabilità $hat(x_i)$ #emph("// i viene inserito con una probabilità "+$>= P(hat(x_i))$+" in quanto iteriamo "+$k+ln n$)] 
+      [Inserisci $i in I$ con probabilità $hat(x_i)$ #emph("// i viene inserito con una probabilità " + $>= P(hat(x_i))$ + " in quanto iteriamo " + $k+ln n$)],
     ),
   ),
-  [*Output* $I$]
+  [*Output* $I$],
 )
 
 #teorema("Teorema")[
@@ -101,43 +101,38 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
 
     $ P["sol ammissibile"] = 1 - P["almeno un punto non è coperto"] $
 
-    Chiamiamo *$xi_p$* l'evento: il punto *$p$* *non è coperto* nella soluzione, di conseguenza: 
+    Chiamiamo *$xi_p$* l'evento: il punto *$p$* *non è coperto* nella soluzione, di conseguenza:
     $ P["almeno un punto non è coperto"] = P[union.big_(p in Omega) xi_p] $
     Applichiamo ora l'union buond #link-teorema(<union-bound>) :
     $
       P["sol ammissibile"] & = 1 - P[union.big_(p in Omega) xi_p] \
-                           & >= 1- sum_(p in Omega) underbrace(P[xi_p],"probabilità che il punto" p \ "non sia coperto")
+                           & >= 1- sum_(p in Omega) underbrace(P[xi_p], "probabilità che il punto" p \ "non sia coperto")
     $
 
     Calcoliamo ora l'evento $xi_p$ per ogni singolo punto (siccome le iterazioni sono indipendenti possiamo moltiplicarle):
     $
-       &>= 1- sum_(p in Omega) P[xi_p] \ 
-       &= 1- sum_(p in Omega) product_(i "t.c."\ p in S_i) P[i in.not I] \
+      & >= 1- sum_(p in Omega) P[xi_p] \
+      & = 1- sum_(p in Omega) product_(i "t.c."\ p in S_i) P[i in.not I] \
     $
     Siccome un area viene aggiunta alla soluzione $I$ con $P(hat(x_i))$ e ci proviamo $k+ln n$ volte:
     $
-          &= 1 - sum_(p in Omega) product_(i "t.c." p in S_i) (1 - hat(x_i))^(k + ln n) \
-
-          & mb("Usando" 1-x <= e^(-x) "in quanto" x_i in [0,1]) \
-
-          &>= 1 sum_(p in Omega) product_(i "t.c." p in S_i) e^(-hat(x_i) ( k + ln n)) \
-
-          &mb("Per le proprietà degli esponenziali") mr(e^a dot e^b = e^(a+b))\
-
-          &>= 1 sum_(p in Omega) e^mr(limits(sum)_(i "t.c." p in S_i) -hat(x_i) (k + ln n)) \
-
-          &>= 1 sum_(p in Omega) e^(-(k + ln n) mr(limits(sum)_(i "t.c." p in S_i) hat(x_i)))
+      & = 1 - sum_(p in Omega) product_(i "t.c." p in S_i) (1 - hat(x_i))^(k + ln n) \
+      & mb("Usando" 1-x <= e^(-x) "in quanto" x_i in [0,1]) \
+      & >= 1 sum_(p in Omega) product_(i "t.c." p in S_i) e^(-hat(x_i) ( k + ln n)) \
+      & mb("Per le proprietà degli esponenziali") mr(e^a dot e^b = e^(a+b)) \
+      & >= 1 sum_(p in Omega) e^mr(limits(sum)_(i "t.c." p in S_i) -hat(x_i) (k + ln n)) \
+      & >= 1 sum_(p in Omega) e^(-(k + ln n) mr(limits(sum)_(i "t.c." p in S_i) hat(x_i)))
     $
     Per i vincoli del problema sappiamo che $forall p in Omega, mr(limits(sum)_(p in S_i) hat(x_i) >=1)$, possiamo quindi vederla come una costante:
     $
-      &>= 1-sum_(p in Omega) e^(-(k + ln n)) \
-      &mb("Per" e^(a+b) = e^a dot e^b) \
-      &= 1-sum_(p in Omega) e^(-k) dot e^(-ln n)\
-      &mb("Per" e^(-x) = 1/a^x) \
-      &= 1-sum_(p in Omega) e^(-k) dot 1/e^(ln n)\
-      &= 1-sum_(p in Omega) e^(-k) dot 1/n\
-      &= 1-e^(-k) underbrace(sum_(p in Omega)  dot 1/n,n "volte" 1/n)\
-      &= 1-e^(-k) quad qed\ 
+      & >= 1-sum_(p in Omega) e^(-(k + ln n)) \
+      & mb("Per" e^(a+b) = e^a dot e^b) \
+      & = 1-sum_(p in Omega) e^(-k) dot e^(-ln n) \
+      & mb("Per" e^(-x) = 1/a^x) \
+      & = 1-sum_(p in Omega) e^(-k) dot 1/e^(ln n) \
+      & = 1-sum_(p in Omega) e^(-k) dot 1/n \
+      & = 1-e^(-k) underbrace(sum_(p in Omega) dot 1/n, n "volte" 1/n) \
+      & = 1-e^(-k) quad qed \
     $
   ]
 
@@ -156,26 +151,26 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
   ]
 
   #dimostrazione[
-    Sappiamo che la probabilità che un insieme $i$ appartenga alla soluzione è: 
+    Sappiamo che la probabilità che un insieme $i$ appartenga alla soluzione è:
     $ P[i in I] <= (k + ln n) hat(x_i) $
     <oss-1-bound-prob>
 
-    Sia *$F_(t,i)$* l'evento: "l'elemento $i$ è inserito nella soluzione $I$ durante la $t$-esima iterazione". Dove: 
+    Sia *$F_(t,i)$* l'evento: "l'elemento $i$ è inserito nella soluzione $I$ durante la $t$-esima iterazione". Dove:
     $
       "Probabilità che l'evento" i "è nella soluzione" = P[union.big_(t=1)^(k+ln n)F_(t,i)]
     $
     Applicando l'union bound #link-teorema(<union-bound>), otteniamo:
 
     $
-      P[union.big_(t=1)^(k + ln n) xi_(t, i)] & <= sum_(t=1)^(k + ln n) underbrace(P[xi_(t, i)],hat(x_i) "sol LP") \
+      P[union.big_(t=1)^(k + ln n) xi_(t, i)] & <= sum_(t=1)^(k + ln n) underbrace(P[xi_(t, i)], hat(x_i) "sol LP") \
                                               & = (k + ln n) hat(x_i)
     $
 
     Il costo della soluzione finale $v$, equivale al suo valore atteso, ovvero la somma di tutti i costi delle singole aree pagate:
     $
-      E[mg(v)] = sum_i w_i P[i in I] &underbrace(<=,#link-teorema(<oss-1-bound-prob>)) sum_i w_i hat(x_i) (k + ln n) \
-           & = (k + ln n) mr(sum_i w_i hat(x_i)) \
-           & = (k + ln n) mr(hat(v)) underbrace(<=,hat(v) "è il problema" \ "rilassato") mb(v^*) (k + ln n)
+      E[mg(v)] = sum_i w_i P[i in I] &underbrace(<=, #link-teorema(<oss-1-bound-prob>)) sum_i w_i hat(x_i) (k + ln n) \
+      & = (k + ln n) mr(sum_i w_i hat(x_i)) \
+      & = (k + ln n) mr(hat(v)) underbrace(<=, hat(v) "è il problema" \ "rilassato") mb(v^*) (k + ln n)
     $
     Dove:
     - $mr(hat(v))$ = è la funzione obiettivo del problema rilassato.
@@ -192,8 +187,8 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
 
     Applichiamo la disuguaglianza di Markov #link-teorema(<disuguaglianza-markov>) (con $mr(a) = alpha(k+ln n)$, $mb(X) = mp(v)/mb(v^*)$ ): // TODO: link
     $
-      P[mb(X) >= mr(a)] <= E[mb(X)]/mr(a) \ 
-      = P[v/v^* >= alpha(k + ln n)] <= E[v/v^*] / (alpha (k + ln n)) underbrace(<=,#link-teorema(<min-cut-bound-valore-atteso>))& (k + ln n) / (alpha (k + ln n)) = 1/alpha quad  qed
+      P[mb(X) >= mr(a)] <= E[mb(X)]/mr(a) \
+      = P[v/v^* >= alpha(k + ln n)] <= E[v/v^*] / (alpha (k + ln n)) underbrace(<=, #link-teorema(<min-cut-bound-valore-atteso>))& (k + ln n) / (alpha (k + ln n)) = 1/alpha quad qed
     $
 
   ]
@@ -219,12 +214,12 @@ Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
     2. Sfruttando il teorema #link-teorema(<set-cover-approssimazione>) con $alpha = 2$:
     $
       P[xi_"non-ott"] & = P["fatt approx" > 6 + 2 ln n] \
-                      & <= 1/2 
+                      & <= 1/2
     $
 
     3. Per ottenere la probabilità di una soluzione ammissibile e entro un certo tasso di approssimazione, dobbiamo unire i due eventi:
     $
-      P[xi_"ok"] &= 1 - P[xi_"non-amm" union xi_"non-ott"] \
+      P[xi_"ok"] & = 1 - P[xi_"non-amm" union xi_"non-ott"] \
                  & underbrace(>=, #link-teorema(<union-bound>)) 1- (P[xi_"non-amm"] + P[xi_"non-ott"]) \
                  & >= 1 - (e^(-3) + 1/2) tilde.equiv 45% space qed
     $
