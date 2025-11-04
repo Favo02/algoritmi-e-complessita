@@ -2,7 +2,7 @@
 
 = Strutture dati
 
-La nozione di "struttura dati" può essere divisa in due categorie: 
+La nozione di "struttura dati" può essere divisa in due concetti: 
 - *ADT (abstract data type)* = Astrazione del tipo di dato, specifica le primitive per accedere alla struttura dati 
 - *Implementazione* = Implementazione di una struttura dati
 
@@ -16,7 +16,7 @@ La nozione di "struttura dati" può essere divisa in due categorie:
     T top() throws NoSuchElementException
     boolean isEmpty()
     ```
-    Tuttavia, in Java è possibile definire i costruttori nell'interfaccia. In altri linguaggi, gli ADT possono essere descritti con ulteriori vincoli.\
+    Tuttavia, in Java non è possibile definire i costruttori nell'interfaccia. In altri linguaggi, gli ADT possono essere descritti con ulteriori vincoli.\
     Ad esempio, si possono specificare degli assiomi che ne descrivono il comportamento (vincoli) $forall alpha in T$:
     ```java
     Stack<T> s;
@@ -38,7 +38,7 @@ Un dato ADT si può implementare in modi diversi, ognuno con diversi *tradeoff* 
   ]
 
 #attenzione[
-  Quando si parla di Struttura dati, si dovrebbe parlare solo di ADT, non dell'implementazione.
+  Quando si parla di struttura dati, si dovrebbe parlare solo di ADT, non dell'implementazione.
   Noi cercheremo di tenere separati i due concetti.
 ]
 
@@ -47,7 +47,7 @@ Un dato ADT si può implementare in modi diversi, ognuno con diversi *tradeoff* 
 Chiamiamo con $n$ la "taglia" di un ADT, ovvero il numero di elementi della struttura. *Per ogni taglia $n$*, L'ADT avrà un certo numero di *valori possibili $v_n$*. 
 
 #esempio[
-  Stack di $v_0$ contiene un solo elemnto, lo stack vuoto.
+  Stack di $v_0$ contiene un solo elemento, lo stack vuoto.
 
   Le altre taglie dipendono dal tipo di dato associato al generico $T$, ad esmepio in uno stack di booleani, $v_1 = 2$, $v_5 = 2^5$
 ]
