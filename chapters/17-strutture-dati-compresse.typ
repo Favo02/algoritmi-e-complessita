@@ -2,11 +2,13 @@
 
 = Strutture dati
 
-/ Abstract Data Type (ADT): astrazione del tipo di dato, specifica le primitive per accedere alla strutture dati
-  #esempio[
-    Le interfacce di Java.
-    In Java sono molto povere, si può definire solo la segnatura.
+La nozione di "struttura dati" può essere divisa in due categorie: 
+- *ADT (abstract data type)* = Astrazione del tipo di dato, specifica le primitive per accedere alla struttura dati 
+- *Implementazione* = Implementazione di una struttura dati
 
+== ADT (abstract data type)
+  #esempio[
+    Supponiamo di voler andare a definire una struttura stack per un tipo di dati $<T>$.
     ```java
     Stack<T>
     void push(T x)
@@ -14,13 +16,8 @@
     T top() throws NoSuchElementException
     boolean isEmpty()
     ```
-
-    In Java non si possono nemmeno definire i costruttori.
-
-
-    In altri linguaggi, gli ADT possono essere descritti con ulteriori vincoli.
-
-    Ad esempio, si possono specificare degli assiomi che ne descrivono il comportamento $forall alpha in T$:
+    Tuttavia, in Java è possibile definire i costruttori nell'interfaccia. In altri linguaggi, gli ADT possono essere descritti con ulteriori vincoli.\
+    Ad esempio, si possono specificare degli assiomi che ne descrivono il comportamento (vincoli) $forall alpha in T$:
     ```java
     Stack<T> s;
     ...
@@ -28,13 +25,14 @@
     assert s.top() == alpha;
     assert s.pop() == alpha;
     ```
-
-    Vantaggi:
-    - qualunque implementazione è sicuramente corretta, dato che gli assiomi funzionano da test
-    - all'estremo, non serve nemmeno un'implementazione, è possibile generarla dagli assiomi
+    *Vantaggi*:
+    - qualunque implementazione è sicuramente corretta. Gli assiomi funzionano da test
+    - possibilità di generare il codice relativo all'implementazione a partire dagli assiomi (ovviamente devono essere completi)
   ]
 
-/ Implementazioni dell'ADT: lo stesso ADT si può implementare in modi diversi, ognuno con diversi tradeoff (sia temporali che spaziali)
+== Implementazione
+
+Un dato ADT si può implementare in modi diversi, ognuno con diversi *tradeoff* (sia temporali che spaziali)
   #esempio[
     In Java non si documentano i metodi di un'implementazione (dato che si ereditano dall'interfaccia), ma è importante aggiungere commenti sull'efficienza di questa implementazione (e.g. arraylist vs linkedlist)
   ]
