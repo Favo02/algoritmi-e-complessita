@@ -72,4 +72,4 @@
 #include "chapters/10-problema-tsp-metrico.typ"
 
 
-#include "chapters/??-strutture-dati-compresse.typ"
+#include "chapters/17-strutture-dati-compresse.typ"
