@@ -5,6 +5,7 @@
 #import "@preview/cetz-venn:0.1.4" // venn diagrams
 #import "@preview/lovelace:0.3.0": indent, pseudocode // pseudocode
 #import "@preview/codly:1.3.0" // code
+#import "@preview/pinit:0.2.2" // relative positioned arrows
 
 // colored math text
 #let mg(body) = text(fill: green, $#body$)

@@ -119,7 +119,7 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   ]
 ] <teorema-corollario-cook>
 
-=== Pseudopolinomialità
+=== Pseudopolinomialità <pseudopolinomialita>
 
 #attenzione[
   Ha senso fare questo discorso solo per algoritmi che prendono in input numeri interi.
