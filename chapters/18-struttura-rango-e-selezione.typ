@@ -144,58 +144,141 @@ La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compat
 ]
 
 == Struttura di Jacobson per il Rango
+ 
+ Supponiamo che il vettore $underline(b)$ abbia dimensione $n$, con *$n$ potenza di $2$*. Partendo dal vettore $underline(b)$ esso viene diviso in:
+ - *$mb("Superblocchi")$* $(log(n))^2$ = Memorizza il numero di $1$ prima dell'inizio del superblocco
+ - *$mo("Blocchi")$* $1/2 log(n)$= Memorizzano il numero di $1$ dall'inizio del superblocco fino all'inizio del blocco (escluso) 
 
-Vettore $underline(b)$ di $n$ bit, lo dividiamo in:
-- superblocchi, ognuno di lunghezza $(log(n))^2$
-- ogni superblocco è diviso in blocchi di lunghezza $1/2 log n$
 
-Dati memorizzati per ogni superblocco:
-- numero di $1$ prima dell'inizio del superblocco
 
-Dati memorizzati per ogni blocco:
-- numero di $1$ dall'inizio del superblocco fino all'inizio del blocco escluso
 
-Con questi due dati possiamo (quasi) ricostruire il rank, manca solo il numero di $1$ dentro il blocco stesso, che vedremo dopo.
 
-Quanto spazio occupano queste due cose?
-- superblocchi: la tabella ha $n / (log_n)^2$ righe, oguna di $log n$, quindi:
-  $ n / (log_n)^2 log_n = n / (log n) = o(n) $
-- blocchi: la tabella ha $n / (1/2 log n)$ righe, però il numero di $1$ è limitato, quindi si possono usare meno bit per ogni riga: $log((log n)^2)$:
-  $ n / (1/2 log n) 2 log log n = o(n) $
+#esempio[
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
 
-Manca solo calcolare l'ultimo pezzo mancante, ovvero quanti uni ci sono dentro quel blocco.
-Ma i tipi diversi di blocco sono "abbastanza" pochi, ovvero $2^(1/2 log n)$.
+      // ===== VETTORE b completo =====
+      content((-6.5, 3.0), text(size: 11pt, weight: "bold")[$underline(b)$])
+      
+      let total_start = -6
+      let total_width = 12
+      
+      // Etichetta lunghezza totale
+      line((total_start, 4.2), (total_start + total_width, 4.2), stroke: 1.5pt + black)
+      line((total_start, 4.1), (total_start, 4.3), stroke: 1.5pt + black)
+      line((total_start + total_width, 4.1), (total_start + total_width, 4.3), stroke: 1.5pt + black)
+      content((0, 4.5), text(size: 10pt)[$n$])
 
-Costruiamo una tabella di rank esplicita per ogni tipo di blocco. Ogni tabella è fatta: quanti uni ci sono dall'inizio del blocco fino al ogni posizione, quinid hanno $1/2 log n$ righe, e ognuna deve tenere un intero lungo $log(1/2 log n)$.
+      // ===== SUPERBLOCCHI =====
+      let num_superblocks = 3
+      let superblock_width = total_width / num_superblocks
+      
+      for sb in range(num_superblocks) {
+        let sb_x = total_start + sb * superblock_width
+        
+        // Disegna il superblocco
+        rect((sb_x, 2.5), (sb_x + superblock_width, 3.5), 
+             stroke: 3pt + blue, fill: none)
+        
+        // ===== BLOCCHI dentro ogni superblocco =====
+        let num_blocks = 4
+        let block_width = superblock_width / num_blocks
+        
+        for b in range(num_blocks) {
+          let b_x = sb_x + b * block_width
+          
+          // Disegna il blocco
+          rect((b_x, 2.5), (b_x + block_width, 3.5), 
+               stroke: 1.5pt + black, fill: white)
+          
+          // Riempi con pattern il primo blocco del secondo superblocco
+          if sb == 1 and b == 0 {
+            for j in range(3) {
+              line((b_x + 0.1 + j * 0.25, 2.5), (b_x + 0.1 + j * 0.25, 3.5), 
+                   stroke: 1pt + gray)
+            }
+          }
+          
+          // Evidenzia un blocco specifico (secondo blocco del secondo superblocco)
+          if sb == 1 and b == 1 {
+            rect((b_x, 2.5), (b_x + block_width, 3.5),
+                 stroke: 3pt + orange, fill: yellow.lighten(80%))
+          }
+        }
+      }
+      
+      // Etichetta superblocco
+      content((total_start + superblock_width/2, 3.7), 
+              text(size: 9pt, fill: blue, weight: "bold")[Superblocco])
+      
+      // Freccia lunghezza superblocco
+      line((total_start, 2.2), (total_start + superblock_width, 2.2), 
+           stroke: 2pt + blue)
+      line((total_start, 2.1), (total_start, 2.3), stroke: 2pt + blue)
+      line((total_start + superblock_width, 2.1), 
+           (total_start + superblock_width, 2.3), stroke: 2pt + blue)
+      content((total_start + superblock_width/2, 1.9), 
+              text(size: 9pt, fill: blue)[$(log n)^2$])
 
-In totale per la parte di 4 russians trick:
-$
-  underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n log (1/2 log n), "singola tabella") \
-  = sqrt(n) 1/2 log n log log sqrt(n) \
-  = o(n)
-$
-
-Il vettore va tenuto proprio per poter usare questo trick, per poter isolare i blocchi.
-
-#nota[
-  Jacobson usa come grandezza $1/2 log n$.
-  Questo $1/2$ quando facciamo i conti diventa una radice ($n^(1/2)$).
-  Quindi si potrebbe usare un qualsiasi numero $< 1$ in modo da mantenere questa funzione un $o(n)$.
+      // Freccia verso blocco evidenziato
+      let highlighted_x = total_start + superblock_width + superblock_width/4
+      line((highlighted_x, 2.3), (highlighted_x, 1.5), stroke: 2pt + orange)
+      line((highlighted_x - 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
+      line((highlighted_x + 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
+      
+      content((highlighted_x, 1.2), 
+              text(size: 9pt, fill: orange, weight: "bold")[Blocco])
+      content((highlighted_x, 0.8), 
+              text(size: 9pt, fill: orange)[$1/2 log n$])
+    }),
+    caption: [
+      Struttura di Jacobson per Rank.
+    ]
+  )
+]
+#nota()[
+  Con le informazioni contenute nei $mb("superblocchi")$ e $mo("blocchi")$, siamo in grado di ricostruire quasi interamente il rank. Manca solamente un informazione: il numero di $1$ dentro il blocco stesso.
 ]
 
-Anche poter estrarre il blocco (quindi fare una sottosequenza del vettore originale), assumiamo si faccia in tempo costante, ma non è scontato.
+=== Spazio occupato
 
-#nota[
-  Si può tagliare l'implementazione e tenere solo superblocchi e blocchi.
+Quanto spazio occupano i $mb("superblocchi")$ e i $mo("blocchi")$.
+- *$mb("Superblocchi")$*= La tabella ha $n / (log_n)^2$ righe, ognuna riga richiede $log n$ bit (valori che stanno in $overline(b)$), quindi:
+  $ n / (log_n)^2 log_n = n / (log n) = mb(o(n)) $
+- *$mo("Blocchi")$*= La tabella ha $n / (1/2 log n)$ righe, tuttavia il numero di $1$ è limitato (solo valori che stanno in un superblocco). Possono essere usati meno bit per ogni riga, $log((log n)^2)$:
+  $ n / (1/2 log n) 2 log log n = mo(o(n)) $
 
-  A questo punto, senza fuor russians trick bisogna scorrere il blocco per contare gli $1$, rendendo l'accesso non più costante ma logaritmico.
+Per completare la rappresentazione manca calcolare il numero di $1$ dall'inizio del blocco fino a una certa posizione (*offset interno al blocco*).
+Tuttavia i *tipi* diversi di *blocco* sono *limitati*: 
+$
+  "Tipi di blocco" = 2^(1/2 log n)
+$
+Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esplicita *per ogni tipo* di blocco. Le righe di ogni tabella contengono il numero di $1$ che ci sono dall'inizio del blocco fino alla fine di ogni possibile posizione. La tabella avrà la seguente dimensione:
+- Numero di righe = $1/2 log n$ righe, 
+- Lunghezza delle righe = ogni riga necessita di $log(1/2 log n)$ bit per rappresentare il contenuto.
 
-  Quindi tradeoff sul tempo (comunque molto più efficiente di quella massimalista) ma molto più semplice.
+Questo tipo di tecnica prende il nome di *$mg("Four-Russian-Trick")$*. In totale lo spazio occupato dalla tecnica è:
+$
+  underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n dot log (1/2 log n), "singola tabella") \
+  = underbrace(sqrt(n),"termine che cresce" \ "maggiormente") 1/2 log n dot log (log sqrt(n)) \
+  = mg(o(n))
+$
+
+#attenzione()[
+  è necessario *conservare* anche il vettore *$underline(b)$* originale, per isolare i blocchi (Supponiamo si possa fare in tempo costante $->$ uso offset).
 ]
 
-Spazio totale utilizzato:
-$ D_n = n + o(n) = Z_n + o(Z_n) $
-quindi è una struttura statica succinta per il rango con accesso costante
+#nota[
+  Si potrebbe tagliare l'implementazione e tenere solo $mb("superblocchi")$ e $mo("blocchi")$.
+
+  Non usando $mg("fuor russians trick")$, è necessario scorrere il blocco per contare gli $1$, rendendo l'accesso non più costante ma logaritmico.\
+  Avremo quindi un *tradeoff* sul tempo (comunque molto più efficiente di quella massimalista) ma molto più semplice.
+]
+
+Spazio *totale* utilizzato:
+$ D_n = underbrace(n,"dim" underline(b(n))) + mg(o(n)) = Z_n + o(Z_n) $
+Si tratta dunque di una *struttura statica succinta per il rango* con accesso costante.
 
 == Generalizziamo
 
