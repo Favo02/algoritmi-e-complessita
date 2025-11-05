@@ -16,7 +16,7 @@ La nozione di "struttura dati" può essere divisa in due concetti:
     T top() throws NoSuchElementException
     boolean isEmpty()
     ```
-    Tuttavia, in Java non è possibile definire i costruttori nell'interfaccia. In altri linguaggi, gli ADT possono essere descritti con ulteriori vincoli.\
+    Tuttavia, in Java, non è possibile definire i costruttori nell'interfaccia. In altri linguaggi, gli ADT, possono essere descritti con ulteriori vincoli.\
     Ad esempio, si possono specificare degli assiomi che ne descrivono il comportamento (vincoli) $forall alpha in T$:
     ```java
     Stack<T> s;
@@ -52,7 +52,7 @@ Chiamiamo con $n$ la "taglia" di un ADT, ovvero il numero di elementi della stru
   Le altre taglie dipendono dal tipo di dato associato al generico $T$, ad esmepio in uno stack di booleani, $v_1 = 2$, $v_5 = 2^5$
 ]
 
-Vogliamo andare a stimare *quanti bit* servono per rappresentare uno di quei valori. 
+Vogliamo andare a stimare *quanti bit* servono per rappresentare uno dei valori $v_n$. 
 Nel caso dello stack, esso può avere vari stati possibili con una taglia $n$: 
  - ${V_1, ... V_v_n}$
 - ${b_1, ..., b_v_n}$, ogni stato utilizza $b_i$ bit
@@ -69,7 +69,7 @@ Nel caso dello stack, esso può avere vari stati possibili con una taglia $n$:
      Sia $n = 3$ la taglia della struttura dati:
       - numero di stati possibili è $V_(v_n) = 9$ 
       - i possibili valori sono $v_3 = 9$. Chiamiamo con $0, 1, ..., 8$ i possibili valori di $v_n$.\
-    Se per ognuno di questi valori utilizzassimo $b = 2$ bit per rappresentarli, potremo avere al massimo $2^2$ stati, altrimenti, per principio della piccionaia due stati avrebbero la stessa rappresentazione, impossibile.
+    Se per ognuno di questi valori utilizzassimo $b = 2$ bit per rappresentarli, potremo avere al massimo $2^2$ stati, altrimenti, per il principio della piccionaia due stati avrebbero la stessa rappresentazione, impossibile.
 
     Per rappresentare $9$ valori diversi, allora servono almeno $4$ bit per rappresentare ogni elemento. In totale $2^4$ bit.
   ]
@@ -78,7 +78,7 @@ Nel caso dello stack, esso può avere vari stati possibili con una taglia $n$:
     Il teorema funziona anche per strutture dati di *dimensione variabile*. Dato che la media dei bit necessari per ogni elemento deve essere superiore al logaritmo, se riusiamo a risparmiare su alcuni valori, allora dovremmo per forza pagare di più su altri valori.
 
     #esempio[
-      È impossibile creare una struttura dati in grado di comprimere qualsiasi valore possibile nello spazio. Esistono solo algoritmi che comprimono bene *qualcosa*, non tutto.
+      È impossibile creare una struttura dati in grado di comprimere in maniera ottima qualsiasi valore possibile nello spazio. Esistono solo algoritmi che comprimono bene *qualcosa*, non tutto.
       
       In un algoritmo di compressione per le immagini, ad esempio, qualche immagine viene compressa bene, ma il risparmio guadagnato dalla compressione ottima su determinate istanze, si perde con immagini su cui l'algoritmo non lavora bene.
     ]
