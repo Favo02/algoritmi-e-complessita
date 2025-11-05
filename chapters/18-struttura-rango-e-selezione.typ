@@ -35,13 +35,13 @@ Definizione formale
       content((-4.5, 3.2), text(size: 11pt, weight: "bold")[$underline(b)$])
       
       // Indici sopra
-      for i in range(8) {
+      for i in range(7) {
         content((-3.7 + i * 0.8, 3.8), text(size: 9pt)[#i])
       }
 
       // Celle del vettore
-      let values = (0, 1, 1, 0, 1, 0, 1, 1)
-      for i in range(8) {
+      let values = (0, 1, 1, 0, 1, 0, 1)
+      for i in range(7) {
         let x = -4 + i * 0.8
         rect((x, 3), (x + 0.7, 3.5), stroke: 2pt + black, fill: white)
         content((x + 0.35, 3.25), text(size: 11pt)[#values.at(i)])
