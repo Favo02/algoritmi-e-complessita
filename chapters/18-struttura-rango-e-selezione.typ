@@ -2,24 +2,113 @@
 
 = Struttura di Rango e Selezione (Statica)
 
+La struttura presentata è statica. Ovvero il suo contenuto dopo la costruzione non cambia mai (in Java diremo che è immutabile).
 == ADT
+Definizione formale
+- Input = Un vettore *$underline(b) in 2^n$*
+- Primitive = *$"rank"_underline(b), "select"_underline(b): bb(N) -> bb(N)$*. Dove: 
+
+  1. $forall p <= n, quad "rank"_underline(b)(p) =  |{i | i < p, b_i = 1}|$
+
+  2. $forall k <= "rank"_underline(b)(n), quad "select"_underline(b)(k) = max { p | "rank"_underline(b)(p) <= k } $
 
 #informalmente[
-  Rank: conta gli $1$ fino alla posizione che ci interessa (senza contare la posizione stessa).
+  La struttura presenta due primitive principali: 
+  - *$"Rank(k)"$*= conta gli $1$ fino alla posizione che ci interessa (senza contare la posizione stessa).
 
-  Select: posizione massima in cui il rank è uguale al numero che ci interessa (che coincidono con le posizioni degli uni).
+  - *$"Select"(k)$*= ci dice dov'è situato il $k$-esimo uno. Ovvero la posizione massima in cui il rank è uguale al numero $k$ che ci interessa (coincidono con le posizioni degli uni).
 ]
 
-Abbiamo un vettore $underline(b) in 2^n$
-
-$ "rank"_underline(b), "select"_underline(b): bb(N) -> bb(N) $
-
-$ forall p <= n, quad "rank"_underline(b)(p) ) |{i | i < p, b_i = 1}| $
-
-$ forall k <= "rank"_underline(b)(n), quad "select"_underline(b)(k) = max { p | "rank"_underline(b)(p) <= k } $
-
 #esempio[
-  ...
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // ===== VETTORE b =====
+      content((-4.5, 3.2), text(size: 11pt, weight: "bold")[$underline(b)$])
+      
+      // Indici sopra
+      for i in range(8) {
+        content((-3.7 + i * 0.8, 3.8), text(size: 9pt)[#i])
+      }
+
+      // Celle del vettore
+      let values = (0, 1, 1, 0, 1, 0, 1, 1)
+      for i in range(8) {
+        let x = -4 + i * 0.8
+        rect((x, 3), (x + 0.7, 3.5), stroke: 2pt + black, fill: white)
+        content((x + 0.35, 3.25), text(size: 11pt)[#values.at(i)])
+      }
+
+      content((3, 3.8), text(size: 11pt)[$m = 4$])
+    
+      // ===== TABELLA RANK =====
+      content((-5, 1.8), text(size: 11pt, weight: "bold")[$p$])
+      content((-3.5, 1.8), text(size: 11pt, weight: "bold")[$"rank"_underline(b)(p)$])
+
+      // Valori della tabella rank
+      let rank_values = ((0, 0), (1, 0), (2, 1), (3, 2), (4, 2), (5, 3), (6, 3), (7, 4))
+      
+      for i in range(8) {
+        let (p, rank_val) = rank_values.at(i)
+        let y = 1.3 - i * 0.4
+        
+        content((-5, y), text(size: 10pt)[#p])
+        content((-3.5, y), text(size: 10pt)[#rank_val])
+        
+        // Rettangolo rosso per p=7
+        if i == 7 {
+          rect((-5.3, y - 0.15), (-4.7, y + 0.15), stroke: 2pt + red, fill: none)
+          rect((-3.8, y - 0.15), (-3.2, y + 0.15), stroke: 2pt + red, fill: none)
+        }
+      }
+
+      // Freccia di esempio
+      line((-4.9, -1.5), (-3.9, -1.5), stroke: 2pt + red)
+      line((-4.1, -1.4), (-3.9, -1.5), stroke: 2pt + red)
+      line((-4.1, -1.6), (-3.9, -1.5), stroke: 2pt + red)
+
+      // ===== TABELLA SELECT =====
+      content((1, 1.8), text(size: 11pt, weight: "bold")[$k$])
+      content((2.5, 1.8), text(size: 11pt, weight: "bold")[$"select"_underline(b)(k)$])
+
+      // Valori della tabella select
+      let select_values = ((0, 1), (1, 2), (2, 4), (3, 6), (4, 7))
+      
+      for i in range(5) {
+        let (k, sel_val) = select_values.at(i)
+        let y = 1.3 - i * 0.4
+        
+        content((1, y), text(size: 10pt)[#k])
+        content((2.5, y), text(size: 10pt)[#sel_val])
+        
+        // Frecce per esempi
+      
+        
+        // Rettangolo rosso per k=4
+        if i == 4 {
+          rect((0.7, y - 0.15), (1.3, y + 0.15), stroke: 2pt + red, fill: none)
+          rect((2.2, y - 0.15), (2.8, y + 0.15), stroke: 2pt + red, fill: none)
+        }
+      }
+
+      // Freccia di esempio inversa
+      line((2.3, -0.3), (1.3, -0.3), stroke: 2pt + red)
+      line((1.5, -0.0), (1.3, -0.3), stroke: 2pt + red)
+      line((1.5, -0.6), (1.3, -0.3), stroke: 2pt + red)
+
+      // Note esplicative
+      content((0, -2), text(size: 10pt)[
+        $"rank"_underline(b)(7) = 4$. Pos immediatamente dopo la fine, conta tutti gli uni nel vettore. 
+      ])
+      content((0, -2.5), text(size: 10pt)[
+        $"select"_underline(b)(4) = 7$ #sym.arrow.r il 4° uno è in posizione 7
+      ])
+    }),
+    caption: [
+      Esempio di funzionamento delle primitive Rank e Select sul vettore $underline(b)$.
+    ]
+  )
 ]
 
 #attenzione[
