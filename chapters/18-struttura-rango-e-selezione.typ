@@ -2,7 +2,14 @@
 
 = Struttura di Rango e Selezione (Statica)
 
-La struttura presentata è statica. Ovvero il suo contenuto dopo la costruzione non cambia mai (in Java diremo che è immutabile).
+#attenzione[ 
+  La versione presentata della struttura è *statica*, ovvero non è modificabile dopo la costruzione (in Java sarebbe immutabile).\
+  È possibile solo interrogarla.
+
+  Esiste anche la versione dinamica, che permette di cambiare dei valori del vettore o cambiare la dimensione del vettore.
+  Non vedremo questa versione (che è completamente diversa).
+]
+
 == ADT
 Definizione formale
 - Input = Un vettore *$underline(b) in 2^n$*
@@ -111,22 +118,14 @@ Definizione formale
   )
 ]
 
-#attenzione[
-  Questa è una struttura statica, ovvero non è aggiornabile, è immutabile.
-  È possibile solo interrogarla.
-
-  Esiste anche la versione dinamica, che permette di cambiare dei valori del vettore o cambiare la dimensione del vettore.
-  Non vedremo questa versione (che è completamente diversa da questa).
-]
-
-Due approcci possibili:
-- minimalista: il costruttore mette da parte il vettore $underline(b)$ e basta, per rank e select si scorre l'intero vettore e si calcola al volo il risultato
+Esistono due approcci possibili:
+- *minimalista* = Il costruttore mette da parte il vettore $underline(b)$. Per rank e select si scorre l'intero vettore e si calcola al volo il risultato
   $ "spazio": n, "tempo": O(n) $
-- massimalista: il costruttore calcola le due tabelle di rank e select e butta via il vettore.
-  Le tabelle occupano $n$ righe e ogni riga ha un valore da $0$ a $n$, quindi ogni riga occupa $log n$ bit, in totale $n log n$ ciascuna
+
+- *massimalista* = Il costruttore calcola le due tabelle di rank e select e butta via il vettore. Le tabelle hanno $n$ righe, dove ogni riga ha un valore compreso tra $0$ e $n$. Lo spazio occupato da ogni riga è *$log n$ bit*, in totale $n log n$ ciascuna
   $ "spazio": 2 n log(n), "tempo": O(1) $
 
-Il lower bound teorico è $n$, quindi la struttura minimalista è l'ottimo, ma è molto lenta.
+Il *lower bound teorico* è *$n$*, quindi la struttura minimalista è l'ottimo, tuttavia è molto lenta.
 La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compatta.
 
 #teorema("Proprietà")[
@@ -138,6 +137,10 @@ La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compat
 
   In caso $b_p = 1$, allora è un uguale stretto:
   $ forall p, quad "select"("rank"(p)) = p $
+
+  #nota()[
+    Questa proprietà ci permette sempre di risalire al vettore originale
+  ]
 ]
 
 == Struttura di Jacobson per il Rango
