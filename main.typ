@@ -71,3 +71,4 @@
 #include "chapters/9-problema-congested-paths.typ"
 #include "chapters/10-problema-tsp-metrico.typ"
 #include "chapters/11-problema-knapsack.typ"
+#include "chapters/12-algoritmi-probabilistici.typ"
