@@ -277,7 +277,7 @@ $
 ]
 
 Spazio *totale* utilizzato:
-$ D_n = underbrace(n,"dim" underline(b)(n))) + mg(o(n)) = Z_n + o(Z_n) $
+$ D_n = underbrace(n,"dim" underline(b)(n)) + mg(o(n)) = Z_n + o(Z_n) $
 Si tratta dunque di una *struttura statica succinta per il rango* con accesso costante.
 
 == Generalizziamo
