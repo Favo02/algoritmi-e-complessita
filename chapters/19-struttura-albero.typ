@@ -4,8 +4,6 @@
 
 == Nomenclatura
 
-// TODO: spostare in primo capitolo?
-
 Nomenclatura in teoria dei grafi:
 
 / Albero: grafo non orientato, conesso ed aciclico
@@ -13,15 +11,18 @@ Nomenclatura in teoria dei grafi:
 
 Nomenclatura in informatica:
 
-/ Albero: struttura con una radice dove ogni nodo ha dei figli
+/ Albero: struttura radicata dove ogni nodo ha dei figli
 
   #nota[
-    Se prendiamo un albero di teoria dei grafi e scegliamo un qualsiasi nodo, allora otteniamo un albero radicato (quindi nel senso di informatica)
+    Se prendiamo un albero stando alla definizione di teoria dei grafi e scegliamo un qualsiasi nodo, allora otteniamo un albero radicato (quindi nel senso di informatica)
   ]
 
 / Albero ordinato: albero in cui i figli di un nodo hanno un certo ordine
 
-/ Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli
+/ Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli. Definizione ricorsiva: 
+- Passo base = un nodo è un albero
+- Passo ricorsivo = Siano $T_1$ e $T_2$ due alberi binari, allora anche 
+
 
   #teorema("Proprietà")[
     Il numero di nodi esterni $E$ (foglie) è il numero di nodi interni $I$ (nodi con figli) $+1$:
