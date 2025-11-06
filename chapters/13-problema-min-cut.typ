@@ -366,29 +366,29 @@ Sia:
   $
 ] <min-cut-oss-3>
 
-Sia *$xi_i$* l'evento: "$"all'"i"-esima iterazione non si è contratto un lato di" E_(S^*)$".
+Sia *$cal(E)_i$* l'evento: "$"all'"i"-esima iterazione non si è contratto un lato di" E_(S^*)$".
 
 #informalmente[
-  $xi_i$ rappresenta la casistica in cui *nessun lato* della *soluzione ottima* è stato contratto all'$i$-esima iterazione.
+  $cal(E)_i$ rappresenta la casistica in cui *nessun lato* della *soluzione ottima* è stato contratto all'$i$-esima iterazione.
   I lati della soluzione ottima vanno *preservati* per poter effettuare il taglio ottimo.
-  Di conseguenza, l'evento $xi_i$ rappresenta una scelta casuale _fortunata_.
+  Di conseguenza, l'evento $cal(E)_i$ rappresenta una scelta casuale _fortunata_.
 ]
 
 #teorema("Lemma")[
   La probabilità che all'$i$-esima iterazione nessun lato della soluzione ottima $E_(S^*)$ sia stato tagliato, condizionata al fatto che non sia successo prima, è:
-  $ P[xi_i | xi_1, ..., xi_(i-1)] >= (n-i-1)/(n-i+1) $
+  $ P[cal(E)_i | cal(E)_1, ..., cal(E)_(i-1)] >= (n-i-1)/(n-i+1) $
 
   #dimostrazione[
     Invertiamo l'evento usando il complementare:
     $
-      P[xi_i | xi_1, ..., xi_(i-1)] = 1 - P[not xi_i | xi_1, ..., xi_(i-1)]
+      P[cal(E)_i | cal(E)_1, ..., cal(E)_(i-1)] = 1 - P[not cal(E)_i | cal(E)_1, ..., cal(E)_(i-1)]
     $
 
     La probabilità di contrarre un lato del taglio minimo è data dal rapporto:
     - casi favorevoli (tagliare un lato ottimo): $mb(k^*)$ lati nel taglio minimo
     - casi totali: $mr(m_(G_i))$ lati del grafo all'$i$-esima iterazione
 
-    $ P[not xi_i | xi_1, ..., xi_(i-1)] = mb(k^*)/mr(m_(G_i)) $
+    $ P[not cal(E)_i | cal(E)_1, ..., cal(E)_(i-1)] = mb(k^*)/mr(m_(G_i)) $
 
     Per #link-teorema(<min-cut-oss-3>):
 
@@ -407,7 +407,7 @@ Sia *$xi_i$* l'evento: "$"all'"i"-esima iterazione non si è contratto un lato d
   #dimostrazione[
     Vogliamo dimostrare che durante l'esecuzione dell'algoritmo *non* vengano toccati i lati del taglio minimo:
     $
-      P[xi_1 inter xi_2 inter ... inter xi_(n-2)] & underbrace(=, #link(<chain-rule>)[chain rule]) P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] dots.c \
+      P[cal(E)_1 inter cal(E)_2 inter ... inter cal(E)_(n-2)] & underbrace(=, #link(<chain-rule>)[chain rule]) P[cal(E)_1] dot P[cal(E)_2 | cal(E)_1] dot P[cal(E)_3 | cal(E)_1, cal(E)_2] dots.c \
       & underbrace(>=, #link-teorema(<min-cut-lemma-p>)) (n-2)/n dot (n-3)/(n-1) dot ... dot 1/3 \
       & quad = quad (limits(product)_(i=1)^(n-2)i)/(limits(product)_(i=3)^n i) \
       & quad = quad (n-2)! / (mr(n!)/(2)) \

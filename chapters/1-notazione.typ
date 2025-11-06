@@ -132,14 +132,14 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 / Chain Rule:
   trasformare l'intersezione di eventi (non disgiunti) in probabilità condizionate: <chain-rule>
   $
-    P[xi_1 inter xi_2 inter xi_3] = P[xi_1] dot P[xi_2 | xi_1] dot P[xi_3 | xi_1, xi_2] \
-    P[xi_1 inter ... inter xi_n] = product_(k=1)^n P [xi_k | inter.big_(j=1)^(k-1) xi_j]
+    P[cal(E)_1 inter cal(E)_2 inter cal(E)_3] = P[cal(E)_1] dot P[cal(E)_2 | cal(E)_1] dot P[cal(E)_3 | cal(E)_1, cal(E)_2] \
+    P[cal(E)_1 inter ... inter cal(E)_n] = product_(k=1)^n P [cal(E)_k | inter.big_(j=1)^(k-1) cal(E)_j]
   $
 
 / Union Bound:
   limitare superiormente l'unione di eventi (non disgiunti).
   Ignoriamo le sovrapposizioni degli eventi, per questo motivo è $<=$ e non $=$: <union-bound>
-  $ P[union.big_i xi_i] <= sum_i P[xi_i] $
+  $ P[union.big_i cal(E)_i] <= sum_i P[cal(E)_i] $
 
 / Disuguaglianza di Markov:
   per ogni variabile aleatoria non negativa e con media finita e per ogni $alpha > 0$ <disuguaglianza-di-markov>
