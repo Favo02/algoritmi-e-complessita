@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Set Cover [NPOc]
+= Problema Set Cover [NPOc] <problema-set-cover>
 
 #informalmente[
   Esiste un universo di $n$ _punti_.
