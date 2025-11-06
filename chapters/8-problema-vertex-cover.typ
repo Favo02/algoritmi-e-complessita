@@ -86,12 +86,12 @@
 == Vertex Cover mediante Pricing [2-APX]
 
 In ogni istante è presente una *funzione di prezzatura* (pricing):
-$ angle.l P_e angle.r quad forall e in E $
+$ chevron.l P_e chevron.r quad forall e in E $
 
 #nota[
   Notazione:
   - $P_e$ indica il prezzo di un singolo lato $e$. È una _variabile duale_ associata al lato $e$
-  - $angle.l P_e angle.r$ indica l'insieme di tutti i prezzi dei lati $e$. Non è propriamente una _funzione_ (nonostante si comporti come tale) ma l'_intero vettore_ di _variabili duali_
+  - $chevron.l P_e chevron.r$ indica l'insieme di tutti i prezzi dei lati $e$. Non è propriamente una _funzione_ (nonostante si comporti come tale) ma l'_intero vettore_ di _variabili duali_
 ]
 
 #informalmente[
@@ -102,7 +102,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 / Prezzatura equa:
-  una prezzatura $angle.l P_e angle.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un'offerta minore o uguale al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
+  una prezzatura $chevron.l P_e chevron.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un'offerta minore o uguale al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
   $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 
   #nota[
@@ -146,7 +146,7 @@ $ angle.l P_e angle.r quad forall e in E $
   ]
 
 / Prezzatura stretta:
-  una prezzatura $angle.l P_e angle.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta proveniente dai lati incidenti è esattamente uguale al suo costo $w_i$:
+  una prezzatura $chevron.l P_e chevron.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta proveniente dai lati incidenti è esattamente uguale al suo costo $w_i$:
   $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
   #esempio[
@@ -205,7 +205,7 @@ $ angle.l P_e angle.r quad forall e in E $
         "// aumentiamo la prezzatura del lato, una delle due estremità diventa stretta",
       )],
   ),
-  [$X <- "insieme dei vertici su cui" angle.l P_e angle.r "è stretta"$],
+  [$X <- "insieme dei vertici su cui" chevron.l P_e chevron.r "è stretta"$],
   [*Output* $X$],
   [*End*],
 )
@@ -288,7 +288,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 #teorema("Lemma")[
-  Se $angle.l P_e angle.r$ è una *prezzatura equa*, allora la somma della prezzatura di ogni lato $P_e$ è minore o uguale al costo della soluzione ottima $w^*$:
+  Se $chevron.l P_e chevron.r$ è una *prezzatura equa*, allora la somma della prezzatura di ogni lato $P_e$ è minore o uguale al costo della soluzione ottima $w^*$:
   $ sum_(e in E) P_e <= w^* $
 
   #dimostrazione[
@@ -387,7 +387,7 @@ $ angle.l P_e angle.r quad forall e in E $
 
 Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul problema della programmazione lineare.
 
-=== Problema Programmazione Lineare (LP) [PO]
+=== Problema Programmazione Lineare (LP) [PO] <problema-programmazione-lineare>
 
 #informalmente[
   Abbiamo $n$ variabili, ovvero gli elementi del vettore $x$.
@@ -454,7 +454,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
 ]
 
 
-=== Programmazione Lineare Intera (ILP) [NPOc]
+=== Programmazione Lineare Intera (ILP) [NPOc] <problema-programmazione-lineare-intera>
 
 #informalmente[
   Stesso problema della LP, ma con solo interi come soluzioni ammissibili.
@@ -490,7 +490,7 @@ Possiamo trattare un'istanza di VertexCover come un'istanza di IntegerLinearProg
   [
     $I_"VertexCover"$:
     - grafo $G = (V,E)$
-    - pesi dei vertici $angle.l w_i angle.r_(i in V)$
+    - pesi dei vertici $chevron.l w_i chevron.r_(i in V)$
   ],
   [
     $I_"ILP"$:

@@ -39,7 +39,7 @@ Per l'algoritmo abbiamo bisogno di definire:
 
 / Costo di un cammino $pi$: somma dei costi degli archi su cui passa.
   $
-    pi = angle.l x_1,x_2,dots,x_i angle.r \
+    pi = chevron.l x_1,x_2,dots,x_i chevron.r \
   $
 
 / Funzione costo $ell$: funzione che associa ad ogni arco un costo. Se il parametro è un cammino, allora restituisce il costo del cammino.
