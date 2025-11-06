@@ -97,7 +97,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
 
 
 #teorema("Teorema")[
-  Il theoretical lower bound è $2n$, servono *almeno $2n-O(log n)$ bit* per rappresentare un *albero binario* con *$n$ foglie*.
+  Il theoretical lower bound è $2n$, servono *almeno $2n-O(log n)$ bit* per rappresentare un *albero binario* con *$n$ nodi interni*.
 ]
 #dimostrazione()[
 
@@ -137,22 +137,121 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
 
 ]
 
-
-
-
-
 === Rappresentazione succinta
 
-Numeriamo i nodi da $0$ come farebbe una BFS, questo è il nome del nodo
+Vogliamo rappresentare un albero binario, in questo caso rappresentermo solamente la sua struttura. Nel conto totale dello spazio non terremo conto dei dati che contiene (*dati ancillari*).
 
-#nota[
-  I figli sinistri saranno sempre indici dispari, i figli pari saranno sempre indici pari.
+L'idea è quella di numerari i nodi livello per livello da sinistra verso destra (*BFS*). Creiamo un vettore di $2n+1$ elementi, dove $n$ è il numero di nodi interi:
+- il vettore memorizza $1$ per i nodi interni e $0$ per le foglie. 
+- usiamo inoltre una struttura rank/select. 
+
+La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
+
+#esempio[
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      // ===== ALBERO =====
+      content((-5, 4), text(size: 11pt, weight: "bold")[$T$])
+
+      // Nodi (cerchi per interni, rettangoli per foglie)
+      // Nodo 0 (radice)
+      circle((-2, 3.5), radius: 0.25, fill: white, stroke: 2pt + red)
+      content((-2, 3.5), text(size: 9pt)[$0$])
+
+      // Nodo 1
+      circle((-3, 2.5), radius: 0.25, fill: white, stroke: 2pt + red)
+      content((-3, 2.5), text(size: 9pt)[$1$])
+
+      // Foglia 2
+      rect((-1.3, 2.3), (-0.7, 2.7), stroke: 2pt + black, fill: white)
+      content((-1, 2.5), text(size: 9pt)[$2$])
+
+      // Foglia 3
+      rect((-4.3, 1.3), (-3.7, 1.7), stroke: 2pt + black, fill: white)
+      content((-4, 1.5), text(size: 9pt)[$3$])
+
+      // Nodo 4
+      circle((-2, 1.5), radius: 0.25, fill: white, stroke: 2pt + red)
+      content((-2, 1.5), text(size: 9pt)[$4$])
+
+      // Nodo 5
+      circle((-3, 0.5), radius: 0.25, fill: white, stroke: 2pt + red)
+      content((-3, 0.5), text(size: 9pt)[$5$])
+
+      // Nodo 6
+      circle((-1, 0.5), radius: 0.25, fill: white, stroke: 2pt + red)
+      content((-1, 0.5), text(size: 9pt)[$6$])
+
+      // Foglia 7
+      rect((-3.8, -0.7), (-3.2, -0.3), stroke: 2pt + black, fill: white)
+      content((-3.5, -0.5), text(size: 9pt)[$7$])
+
+      // Foglia 8
+      rect((-2.5, -0.7), (-1.9, -0.3), stroke: 2pt + black, fill: white)
+      content((-2.2, -0.5), text(size: 9pt)[$8$])
+
+      // Foglia 9
+      rect((-1.5, -0.7), (-0.9, -0.3), stroke: 2pt + black, fill: white)
+      content((-1.2, -0.5), text(size: 9pt)[$9$])
+
+      // Foglia 10
+      rect((-0.3, -0.7), (0.3, -0.3), stroke: 2pt + black, fill: white)
+      content((0, -0.5), text(size: 9pt)[$10$])
+
+      // Archi
+      line((-2, 3.35), (-3, 2.65), stroke: 2pt + black)    // 0-1
+      line((-2, 3.35), (-1, 2.6), stroke: 2pt + black)     // 0-2
+      line((-3, 2.35), (-4, 1.7), stroke: 2pt + black)     // 1-3
+      line((-3, 2.35), (-2, 1.65), stroke: 2pt + black)    // 1-4
+      line((-2, 1.35), (-3, 0.65), stroke: 2pt + black)    // 4-5
+      line((-2, 1.35), (-1, 0.65), stroke: 2pt + black)    // 4-6
+      line((-3, 0.35), (-3.5, -0.3), stroke: 2pt + black)  // 5-7
+      line((-3, 0.35), (-2.2, -0.3), stroke: 2pt + black)  // 5-8
+      line((-1, 0.35), (-1.2, -0.3), stroke: 2pt + black)  // 6-9
+      line((-1, 0.35), (0, -0.3), stroke: 2pt + black)     // 6-10
+
+      // ===== VETTORE b E INFORMAZIONI =====
+      content((3, 4), text(size: 11pt)[$n = 5$])
+      content((3, 3.5), text(size: 10pt)[\#nodi = $2n+1 = 11$])
+
+      // Indici sopra il vettore
+      for i in range(11) {
+        content((1.22 + i * 0.5, 3), text(size: 8pt)[#i])
+      }
+
+      // Vettore b
+      content((0.5, 2.5), text(size: 11pt, weight: "bold")[$underline(b)$])
+      let b_values = (1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0)
+      for i in range(11) {
+        let x = 1 + i * 0.5
+        rect((x, 2.2), (x + 0.45, 2.7), stroke: 2pt + black, fill: white)
+        content((x + 0.225, 2.45), text(size: 10pt)[#b_values.at(i)])
+      }
+
+      content((3, 1.8), text(size: 10pt)[in aggiunta il costo perRANK/SELECT])
+
+      // Spazio totale
+      content((3, 1.2), text(size: 11pt)[
+        $2n+1 + o(2n+1)$
+      ])
+      content((3.5, 0.75), text(size: 11pt)[$= 2n + o(n)$])
+
+      content((3.5, 0.3), text(size: 10pt, fill: green.darken(20%))[Succinta!])
+    }),
+    caption: [
+      Rappresentazione succinta di un albero binario con $n=5$ nodi interni (quindi $n=11$ nodi totali).\ 
+      Il vettore $underline(b)$ memorizza $1$ per i nodi interni e $0$ per le foglie.\ 
+      Con una struttura rank/select, la rappresentazione richiede *$2n + o(n)$ bit
+      è succinta*.
+    ]
+  )
 ]
 
-Possiamo memorizzare l'albero memorizzando un vettore che memorizza se un nodo è interno o esterno, e una struttura di rank/select su questo vettore:
-$ underbrace(2n+1, "array") + underbrace(o(2n+1), "rank/select") = 2n + o(n) $
-
-quindi succinto
+#nota[
+  I figli sinistri saranno sempre di indice dispari, i figli destri saranno sempre di indice pari.
+]
 
 === Navigare l'albero
 
