@@ -19,7 +19,7 @@ Nomenclatura in informatica:
 
 / Albero ordinato: albero in cui i figli di un nodo hanno un certo ordine
 
-/ Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli. Definizione ricorsiva: 
+/ Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli. Definizione ricorsiva:
 - Passo base = un nodo è un albero
 - Passo ricorsivo = Siano $T_1$ e $T_2$ due alberi binari, allora anche $T$ è un albero:
 
@@ -52,7 +52,7 @@ Nomenclatura in informatica:
     content((1.7, -0.4), text(size: 8pt)[figlio dx])
   }),
 )
-Dove: 
+Dove:
 - *$mr("Nodi interni")$* = Sono i nodi dell'albero che hanno un figlio
 - *$mb("Nodi esterni")$* = Sono le foglie dell'albero.
 
@@ -61,24 +61,24 @@ Dove:
     $ |E| = |I| + 1 $
 
     #dimostrazione[
-      La dimostrazione è per *induzione strutturale*: 
-      - *Passo base* = Albero con un solo nodo $|E| = 1, |I| = 0 space  qed$
+      La dimostrazione è per *induzione strutturale*:
+      - *Passo base* = Albero con un solo nodo $|E| = 1, |I| = 0 space qed$
       - *Passo induttivo* = ALbero $T$ con due sottoalberi $T_1$ e $T_2$.
       $
         |E(T)| = |E(T_1)| + |E(T_2)|\
         mb("Siccome" |E(T_1)| < |E(T)| "uso ipotesi induttiva")\
-        |E(T)| = underbrace(|I(T_1)|+1+|I(T_2)|,I(T))+1\
-        |E(T)| = |I(T)| + underbrace(1,"radice di" T) space qed
+        |E(T)| = underbrace(|I(T_1)|+1+|I(T_2)|, I(T))+1\
+        |E(T)| = |I(T)| + underbrace(1, "radice di" T) space qed
       $
     ]
   ]
   #nota()[
-    In un albero il numero di nodi totale $n$ è dato da: 
+    In un albero il numero di nodi totale $n$ è dato da:
     $ n = |E|+|I| $
-    Possiamo scriverlo come: 
+    Possiamo scriverlo come:
     $
-      n &= |E| + |E| - 1 = 2|E|-1\
-      n &= |I|+1 + |I| = 2|I|+1 
+      n & = |E| + |E| - 1 = 2|E|-1 \
+      n & = |I|+1 + |I| = 2|I|+1
     $
   ]
 
@@ -86,12 +86,10 @@ Dove:
 
 === Theoretical Lower Bound
 
-Per poter affermare che una struttura è compressa, allora dobbiamo quantificare il theoretical lower bound (teorema di shannon). Vogliamo stabilire quanti sono i possibili tipi di alberi binari con *$n$ nodi interni* 
+Per poter affermare che una struttura è compressa, allora dobbiamo quantificare il theoretical lower bound (teorema di shannon). Vogliamo stabilire quanti sono i possibili tipi di alberi binari con *$n$ nodi interni*
 
 #teorema("Teorema")[
-  Il numero di alberi binari con $n$ nodi intenri è $ 
-    C_n = 1/(n+1) binom(2n, n) 
-  $
+  Il numero di alberi binari con $n$ nodi intenri è $ C_n = 1/(n+1) binom(2n, n) $
   chiamato il *numero di Catalano*
 ]
 
@@ -105,33 +103,32 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
     Proprietà utili:
     - Approssimazione di $mr("Stirling")$:
       $ x! approx sqrt(2 pi x) (x/e)^x $
-    - Definizione binomiale: 
-      $ binom(n,k) = n! / k!(n-k)! $
+    - Definizione binomiale:
+      $ binom(n, k) = n! / k!(n-k)! $
   ]<Proprietà-utili-alberi>
-  Quindi il theoretical lower bound è: 
-  $ 
-    C_n = 1/(n+1) binom(2n, n) underbrace(=,"def binomiale") 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!) 
+  Quindi il theoretical lower bound è:
+  $
+    C_n = 1/(n+1) binom(2n, n) underbrace(=, "def binomiale") 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!)
   $
   Usando Stirling #link-teorema(<Proprietà-utili-alberi>) con $mr(x = 2n)$ e $mr(x = n)$:
   $
-    C_n = 1/(n+1) dot (2n!) / ((n)!^2) &approx 1/(n+1) dot mr(sqrt(4 pi n) ((2n)/e)^(2n)) / mr((sqrt(2 pi n) (n/e)^n))^2\
-                                      &= 1/(n+1) dot (2 sqrt( pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n))\
-                                      &= 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n))\
-                                      &mb(a^x/b^x = (a/b)^x)\
-                                      &= 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n)\
-                                      &= 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n)\
-                                      &mb(a^x / a^y = a^(x-y))\
-                                      &= 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n)\
-                                      &= 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n)\
-                                      &= 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n)\
-                                      &approx 4^n / (sqrt(pi n^3))                
+    C_n = 1/(n+1) dot (2n!) / ((n)!^2) & approx 1/(n+1) dot mr(sqrt(4 pi n) ((2n)/e)^(2n)) / mr((sqrt(2 pi n) (n/e)^n))^2 \
+                                       & = 1/(n+1) dot (2 sqrt(pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n)) \
+                                       & = 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n)) \
+                                       & mb(a^x/b^x = (a/b)^x) \
+                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n) \
+                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n) \
+                                       & mb(a^x / a^y = a^(x-y)) \
+                                       & = 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n) \
+                                       & = 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n) \
+                                       & = 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n) \
+                                       & approx 4^n / (sqrt(pi n^3))
   $
-  Il numero di bit minimo per rappresentare un albero binario è pari a: 
+  Il numero di bit minimo per rappresentare un albero binario è pari a:
   $
-    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) &= log_2(2^2n)-log_2(1/sqrt(pi n^3))\
-                                            &= 2n dot 1 - log_2(1/sqrt(pi n^3))\
-                                            &approx 2n - O(log n) space qed
-                                          
+    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) & = log_2(2^2n)-log_2(1/sqrt(pi n^3)) \
+                                             & = 2n dot 1 - log_2(1/sqrt(pi n^3)) \
+                                             & approx 2n - O(log n) space qed
   $
 
 
@@ -142,8 +139,8 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
 Vogliamo rappresentare un albero binario, in questo caso rappresentermo solamente la sua struttura. Nel conto totale dello spazio non terremo conto dei dati che contiene (*dati ancillari*).
 
 L'idea è quella di numerari i nodi livello per livello da sinistra verso destra (*BFS*). Creiamo un vettore di $2n+1$ elementi, dove $n$ è il numero di nodi interi:
-- il vettore memorizza $1$ per i nodi interni e $0$ per le foglie. 
-- usiamo inoltre una struttura rank/select. 
+- il vettore memorizza $1$ per i nodi interni e $0$ per le foglie.
+- usiamo inoltre una struttura rank/select.
 
 La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
 
@@ -201,16 +198,16 @@ La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
       content((0, -0.5), text(size: 9pt)[$10$])
 
       // Archi
-      line((-2, 3.35), (-3, 2.65), stroke: 2pt + black)    // 0-1
-      line((-2, 3.35), (-1, 2.6), stroke: 2pt + black)     // 0-2
-      line((-3, 2.35), (-4, 1.7), stroke: 2pt + black)     // 1-3
-      line((-3, 2.35), (-2, 1.65), stroke: 2pt + black)    // 1-4
-      line((-2, 1.35), (-3, 0.65), stroke: 2pt + black)    // 4-5
-      line((-2, 1.35), (-1, 0.65), stroke: 2pt + black)    // 4-6
-      line((-3, 0.35), (-3.5, -0.3), stroke: 2pt + black)  // 5-7
-      line((-3, 0.35), (-2.2, -0.3), stroke: 2pt + black)  // 5-8
-      line((-1, 0.35), (-1.2, -0.3), stroke: 2pt + black)  // 6-9
-      line((-1, 0.35), (0, -0.3), stroke: 2pt + black)     // 6-10
+      line((-2, 3.35), (-3, 2.65), stroke: 2pt + black) // 0-1
+      line((-2, 3.35), (-1, 2.6), stroke: 2pt + black) // 0-2
+      line((-3, 2.35), (-4, 1.7), stroke: 2pt + black) // 1-3
+      line((-3, 2.35), (-2, 1.65), stroke: 2pt + black) // 1-4
+      line((-2, 1.35), (-3, 0.65), stroke: 2pt + black) // 4-5
+      line((-2, 1.35), (-1, 0.65), stroke: 2pt + black) // 4-6
+      line((-3, 0.35), (-3.5, -0.3), stroke: 2pt + black) // 5-7
+      line((-3, 0.35), (-2.2, -0.3), stroke: 2pt + black) // 5-8
+      line((-1, 0.35), (-1.2, -0.3), stroke: 2pt + black) // 6-9
+      line((-1, 0.35), (0, -0.3), stroke: 2pt + black) // 6-10
 
       // ===== VETTORE b E INFORMAZIONI =====
       content((3, 4), text(size: 11pt)[$n = 5$])
@@ -241,11 +238,11 @@ La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
       content((3.5, 0.3), text(size: 10pt, fill: green.darken(20%))[Succinta!])
     }),
     caption: [
-      Rappresentazione succinta di un albero binario con $n=5$ nodi interni (quindi $n=11$ nodi totali).\ 
-      Il vettore $underline(b)$ memorizza $1$ per i nodi interni e $0$ per le foglie.\ 
+      Rappresentazione succinta di un albero binario con $n=5$ nodi interni (quindi $n=11$ nodi totali).\
+      Il vettore $underline(b)$ memorizza $1$ per i nodi interni e $0$ per le foglie.\
       Con una struttura rank/select, la rappresentazione richiede *$2n + o(n)$ bit
       è succinta*.
-    ]
+    ],
   )
 ]
 
@@ -255,20 +252,80 @@ La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
 
 === Navigare l'albero
 
-Con questa struttura, dobbiamo poter navigare l'albero, quinid per ogni nodo:
+Con questa struttura, vogliamo poter navigare l'albero, per ogni nodo:
 + capire se è una foglia: facile, basta guardare il vettore di bit
 + se non è foglia, sapere chi sono i figli:
-  #informalmente[
-    // TODO: disegno
 
-    per capire i figli di $x$ in un albero $T$ iniziamo considerando il sottoalbero $T'$ che comprende tutti i nodi del livello stesso a sinistra e tutti i livelli precedenti.
+=== Primitiva child
 
-    Il numero di nodi interni di $T'$: nodi interni di $T$ con indici minori di $x$, quindi il numero di $1$ in $underline(b)$ di indici $<x = "rank"_underline(b)(x)$
+Dato un certo nodo $x$, vogliamo sapre qual'è il figlio destro o sinistro di $x$.
 
-    Quindi il numero di nodi di $T'$ è uguale a $2$ volte il numero di nodi interni di $T'$, quindi $2 "rank"_underline(b)(x) + 1$.
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-    Dato che i nodi sono contati da $0$, allor a l'indice dei figli di $x$ sono $2 "rank"_underline(b)(x) + 1$ e $2 "rank"_underline(b)(x) + 2$.
-  ]
+    // Triangolo grande (albero completo) - punta in alto
+    line((-3, -2), (3, -2), stroke: 2pt + black) // base
+    line((-3, -2), (0, 3), stroke: 2pt + black) // lato sx
+    line((3, -2), (0, 3), stroke: 2pt + black) // lato dx
+
+    // ===== ALBERO T' (parte sinistra evidenziata) =====
+    content((-1.0, 2.8), text(size: 11pt, weight: "bold")[$T'$])
+
+    // Linea verticale che separa T'
+    line((1.25, 1.0), (-1.25, 1.0), stroke: 2pt + red)
+
+    // Nodi interni in T' (cerchietti blu)
+    for i in range(3) {
+      let y = 2.5 - i * 0.6
+      let x = 0 + i * 0.25
+      circle((x, y), radius: 0.1, fill: blue, stroke: none)
+    }
+
+    // ===== NODO x E SUOI FIGLI =====
+
+    // Nodo x (evidenziato)
+    circle((0, 1.5), radius: 0.2, fill: white, stroke: 3pt + red)
+    content((0, 1.5), text(size: 9pt, fill: red)[$x$])
+
+    // Figlio sinistro (sotto)
+    circle((-1.0, 0.3), radius: 0.15, fill: black, stroke: 2pt + black)
+    line((-0.9, 0.5), (-0.2, 1.5), stroke: 2pt + black)
+    content((-0.7, -0.2), text(size: 9pt)[$2"rank"_underline(b)(x)+1$])
+
+    // Figlio destro (sotto)
+    circle((.9, 0.3), radius: 0.15, fill: black, stroke: 2pt + black)
+    line((0.2, 1.50), (0.9, 0.30), stroke: 2pt + black)
+    content((0.8, -0.5), text(size: 9pt)[$2"rank"_underline(b)(x)+2$])
+
+    // ===== ETICHETTE E SPIEGAZIONI =====
+
+    content((3.5, 1.5), text(size: 10pt, weight: "bold")[$T$])
+    content((3.5, 1), text(size: 9pt)[
+      Albero completo
+    ])
+  }),
+  caption: [
+    $T'$ contiene tutti i nodi con indice minore di $x$.
+  ],
+)
+
+Vogliamo stabilire i figli di $x$ in un albero $T$.
+Considerando il sottoalbero $mr(T')$ che comprende tutti i nodi dello stesso livello di $x$ e tutti i nodi dei livelli precedenti.
+
+Il numero di nodi interni di $mr(T')$:
+- nodi interni di $T$ con indici $< x$
+- equivale al numero di $1$ in $underline(b)$ di indici $<x$ = *$"rank"_underline(b)(x)$*
+
+Quindi il numero di nodi di $T'$ è uguale a $2$ volte il numero di nodi interni di $T'$:
+*$ 
+  2|T'(I)|+1 = 2"rank"_underline(b)(x) + 1 
+$*
+Dato che i nodi sono numerati a partire da $0$, allora l'indice dei figli di $x$ sono: 
+  - $2 "rank"_underline(b)(x) + 1$
+  - $2 "rank"_underline(b)(x) + 2$.
+
+=== Primitiva parent 
 + se non è la radice, sapere il genitore:
   #informalmente[
     il genitore di $x$ è un  nodo $p$ tale che $2 "rank"_underline(b)(x) + 1 = x$ oppure $2 "rank"_underline(b)(x) + 2 = x$
