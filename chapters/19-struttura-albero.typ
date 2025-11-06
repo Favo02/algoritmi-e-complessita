@@ -300,8 +300,8 @@ Dato un certo nodo $x$, vogliamo sapre qual'è il figlio destro o sinistro di $x
 
     // ===== ETICHETTE E SPIEGAZIONI =====
 
-    content((3.5, 1.5), text(size: 10pt, weight: "bold")[$T$])
-    content((3.5, 1), text(size: 9pt)[
+    content((2.5, 1.5), text(size: 10pt, weight: "bold")[$T$])
+    content((2.5, 1), text(size: 9pt)[
       Albero completo
     ])
   }),
