@@ -95,42 +95,51 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
   chiamato il *numero di Catalano*
 ]
 
-#nota[
-  Proprietà utili:
-  - Approssimazione di Stirling:
-    $ x! approx sqrt(2 pi x) (x/e)^x $
-  - Definizione binomiale: 
-    $ binom(n,k) = n! / k!(n-k)! $
-]<Proprietà-utili-alberi>
 
-Quindi il theoretical lower bound è: 
-$ 
-  C_n = 1/(n+1) binom(2n, n) = 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!) 
-$
-Usando Stirling #link-teorema(<Proprietà-utili-alberi>) con $x = 2n$ e $x = n$:
-$
-  C_n = 1/(n+1) dot (2n!) / ((n)!^2) &approx 1/(n+1) dot (sqrt(4 pi n) ((2n)/e)^(2n)) / (sqrt(2 pi n) (n/e)^n)^2\
-                                    &= 1/(n+1) dot (2 sqrt( pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n))\
-                                    &= 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n))\
-                                    &mb(a^x/b^x = (a/b)^x)\
-                                    &= 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n)\
-                                    &= 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n)\
-                                    &mb(a^x / a^y = a^(x-y))\
-                                    &= 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n)\
-                                    &= 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n)\
-                                    &= 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n)\
-                                    &approx 4^n / (sqrt(pi n^3))                
-$
-Il numero di bit minimo per rappresentare un albero binario è pari a: 
-$
-  log_2 C_n approx log_2(4^n/sqrt(pi n^3)) &= log_2(2^2n)-log_2(1/sqrt(pi n^3))\
-                                           &= 2n dot 1 - log_2(1/sqrt(pi n^3))\
-                                           &approx 2n - O(log n) space qed
-                                        
-$
-#nota()[
-  Il theoretical lower bound è $2n$, servono *almeno $2n$ bit* per rappresentare un *albero binario* con *$n$ foglie*.
+#teorema("Teorema")[
+  Il theoretical lower bound è $2n$, servono *almeno $2n-O(log n)$ bit* per rappresentare un *albero binario* con *$n$ foglie*.
 ]
+#dimostrazione()[
+
+  #nota[
+    Proprietà utili:
+    - Approssimazione di $mr("Stirling")$:
+      $ x! approx sqrt(2 pi x) (x/e)^x $
+    - Definizione binomiale: 
+      $ binom(n,k) = n! / k!(n-k)! $
+  ]<Proprietà-utili-alberi>
+  Quindi il theoretical lower bound è: 
+  $ 
+    C_n = 1/(n+1) binom(2n, n) underbrace(=,"def binomiale") 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!) 
+  $
+  Usando Stirling #link-teorema(<Proprietà-utili-alberi>) con $mr(x = 2n)$ e $mr(x = n)$:
+  $
+    C_n = 1/(n+1) dot (2n!) / ((n)!^2) &approx 1/(n+1) dot mr(sqrt(4 pi n) ((2n)/e)^(2n)) / mr((sqrt(2 pi n) (n/e)^n))^2\
+                                      &= 1/(n+1) dot (2 sqrt( pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n))\
+                                      &= 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n))\
+                                      &mb(a^x/b^x = (a/b)^x)\
+                                      &= 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n)\
+                                      &= 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n)\
+                                      &mb(a^x / a^y = a^(x-y))\
+                                      &= 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n)\
+                                      &= 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n)\
+                                      &= 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n)\
+                                      &approx 4^n / (sqrt(pi n^3))                
+  $
+  Il numero di bit minimo per rappresentare un albero binario è pari a: 
+  $
+    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) &= log_2(2^2n)-log_2(1/sqrt(pi n^3))\
+                                            &= 2n dot 1 - log_2(1/sqrt(pi n^3))\
+                                            &approx 2n - O(log n) space qed
+                                          
+  $
+
+
+]
+
+
+
+
 
 === Rappresentazione succinta
 
