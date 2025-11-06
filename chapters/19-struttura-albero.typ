@@ -21,44 +21,118 @@ Nomenclatura in informatica:
 
 / Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli. Definizione ricorsiva: 
 - Passo base = un nodo è un albero
-- Passo ricorsivo = Siano $T_1$ e $T_2$ due alberi binari, allora anche 
+- Passo ricorsivo = Siano $T_1$ e $T_2$ due alberi binari, allora anche $T$ è un albero:
 
+#figure(
+  cetz.canvas(length: 0.8cm, {
+    import cetz.draw: *
+
+    // Nodo radice
+    circle((0, 0), radius: 0.15, fill: white, stroke: 2pt + black)
+    content((0, 0), text(size: 9pt)[$r$])
+
+    // Triangolo T1 (sinistro)
+    line((-1.5, -0.8), (-0.8, -2), stroke: 2pt + black)
+    line((-0.8, -2), (-2.2, -2), stroke: 2pt + black)
+    line((-2.2, -2), (-1.5, -0.8), stroke: 2pt + black)
+    content((-1.5, -1.5), text(size: 11pt, weight: "bold")[$T_1$])
+
+    // Triangolo T2 (destro)
+    line((1.5, -0.8), (2.2, -2), stroke: 2pt + black)
+    line((2.2, -2), (0.8, -2), stroke: 2pt + black)
+    line((0.8, -2), (1.5, -0.8), stroke: 2pt + black)
+    content((1.5, -1.5), text(size: 11pt, weight: "bold")[$T_2$])
+
+    // Collegamenti dalla radice ai triangoli
+    line((0, -0.15), (-1.5, -0.8), stroke: 2pt + black)
+    line((0, -0.15), (1.5, -0.8), stroke: 2pt + black)
+
+    // Etichette
+    content((-1.7, -0.4), text(size: 8pt)[figlio sx])
+    content((1.7, -0.4), text(size: 8pt)[figlio dx])
+  }),
+)
+Dove: 
+- *$mr("Nodi interni")$* = Sono i nodi dell'albero che hanno un figlio
+- *$mb("Nodi esterni")$* = Sono le foglie dell'albero.
 
   #teorema("Proprietà")[
-    Il numero di nodi esterni $E$ (foglie) è il numero di nodi interni $I$ (nodi con figli) $+1$:
+    In un albero binario, Il numero di foglie $E$ è il numero di nodi interni $I$ (nodi con figli) $+1$:
     $ |E| = |I| + 1 $
 
     #dimostrazione[
-      Non lo dimostriamo, ma si può dimostrare facilmente per induzione strutturale:
-      - lo si dimostra sull'albero banale
-      - si fa un albero composto da albero banali
-      - così via
+      La dimostrazione è per *induzione strutturale*: 
+      - *Passo base* = Albero con un solo nodo $|E| = 1, |I| = 0 space  qed$
+      - *Passo induttivo* = ALbero $T$ con due sottoalberi $T_1$ e $T_2$.
+      $
+        |E(T)| = |E(T_1)| + |E(T_2)|\
+        mb("Siccome" |E(T_1)| < |E(T)| "uso ipotesi induttiva")\
+        |E(T)| = underbrace(|I(T_1)|+1+|I(T_2)|,I(T))+1\
+        |E(T)| = |I(T)| + underbrace(1,"radice di" T) space qed
+      $
     ]
+  ]
+  #nota()[
+    In un albero il numero di nodi totale $n$ è dato da: 
+    $ n = |E|+|I| $
+    Possiamo scriverlo come: 
+    $
+      n &= |E| + |E| - 1 = 2|E|-1\
+      n &= |I|+1 + |I| = 2|I|+1 
+    $
   ]
 
 == Struttura succinta per Albero Binario
 
 === Theoretical Lower Bound
 
-Per poter dire che una struttura è compressa, allora dobbiamo dire qunato è il theoretical lower bound (teorema di shannon), quindi dobbiamo sapere quanti sono i possibili tipi di alberi con $n$ nodi interni
+Per poter affermare che una struttura è compressa, allora dobbiamo quantificare il theoretical lower bound (teorema di shannon). Vogliamo stabilire quanti sono i possibili tipi di alberi binari con *$n$ nodi interni* 
 
 #teorema("Teorema")[
-  Il numero di alberi con $n$ nodi intenri è $ C_n = 1/(n+1) binom(2n, n) $
-  chiamato il numero di Catalano
+  Il numero di alberi binari con $n$ nodi intenri è $ 
+    C_n = 1/(n+1) binom(2n, n) 
+  $
+  chiamato il *numero di Catalano*
 ]
 
 #nota[
-  È utile ricordare l'approssimazione di Stirling:
-  $ x! approx sqrt(2 pi x) (x/e)^x $
+  Proprietà utili:
+  - Approssimazione di Stirling:
+    $ x! approx sqrt(2 pi x) (x/e)^x $
+  - Definizione binomiale: 
+    $ binom(n,k) = n! / k!(n-k)! $
+]<Proprietà-utili-alberi>
+
+Quindi il theoretical lower bound è: 
+$ 
+  C_n = 1/(n+1) binom(2n, n) = 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!) 
+$
+Usando Stirling #link-teorema(<Proprietà-utili-alberi>) con $x = 2n$ e $x = n$:
+$
+  C_n = 1/(n+1) dot (2n!) / ((n)!^2) &approx 1/(n+1) dot (sqrt(4 pi n) ((2n)/e)^(2n)) / (sqrt(2 pi n) (n/e)^n)^2\
+                                    &= 1/(n+1) dot (2 sqrt( pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n))\
+                                    &= 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n))\
+                                    &mb(a^x/b^x = (a/b)^x)\
+                                    &= 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n)\
+                                    &= 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n)\
+                                    &mb(a^x / a^y = a^(x-y))\
+                                    &= 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n)\
+                                    &= 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n)\
+                                    &= 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n)\
+                                    &approx 4^n / (sqrt(pi n^3))                
+$
+Il numero di bit minimo per rappresentare un albero binario è pari a: 
+$
+  log_2 C_n approx log_2(4^n/sqrt(pi n^3)) &= log_2(2^2n)-log_2(1/sqrt(pi n^3))\
+                                           &= 2n dot 1 - log_2(1/sqrt(pi n^3))\
+                                           &approx 2n - O(log n) space qed
+                                        
+$
+#nota()[
+  Il theoretical lower bound è $2n$, servono *almeno $2n$ bit* per rappresentare un *albero binario* con *$n$ foglie*.
 ]
 
-Quindi il theoretical lower bound è
-$ C_n approx ... = 1/(n+1) 1/(sqrt(pi n)) 2^(2n) approx 4^n / sqrt(pi n^3) $
-Ovvero
-
-$ log C_n approx 2n - O(log n) $
-
-=== Rappresentazione
+=== Rappresentazione succinta
 
 Numeriamo i nodi da $0$ come farebbe una BFS, questo è il nome del nodo
 
@@ -85,7 +159,7 @@ Con questa struttura, dobbiamo poter navigare l'albero, quinid per ogni nodo:
 
     Quindi il numero di nodi di $T'$ è uguale a $2$ volte il numero di nodi interni di $T'$, quindi $2 "rank"_underline(b)(x) + 1$.
 
-    Dato che i nodi sono contati da $0$, allora l'indice dei figli di $x$ sono $2 "rank"_underline(b)(x) + 1$ e $2 "rank"_underline(b)(x) + 2$.
+    Dato che i nodi sono contati da $0$, allor a l'indice dei figli di $x$ sono $2 "rank"_underline(b)(x) + 1$ e $2 "rank"_underline(b)(x) + 2$.
   ]
 + se non è la radice, sapere il genitore:
   #informalmente[
