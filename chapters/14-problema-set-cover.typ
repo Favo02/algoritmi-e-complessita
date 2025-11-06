@@ -29,14 +29,14 @@ Formalmente:
 Il problema si può vedere come un problema di programmazione lineare intera (#link-section(<problema-programmazione-lineare-intera>)).
 
 Formalizzando, i *vincoli* del problema Set Cover come ILP sono:
-- Ogni area $S_i$ può essere vista come una variabile booleana $x_j$ (può essere presa o meno):
-  - $x_j >= 0 quad forall j in {1,dots,m}$
-  - $x_j <= 1 quad forall j in {1,dots,m}$
-- Ogni punto $p in Omega$ dell'universo deve essere preso, quindi la somma delle variabili che lo contengono deve essere almeno $1$:
-  - $limits(sum)_(p in S_i) x_i >= 1 quad forall p in Omega$
+- Ogni area $S_i$ può essere vista come una variabile booleana $x_i$ (può essere presa o meno):
+  - $x_i >= 0 quad forall i in {1,dots,m}$
+  - $x_i <= 1 quad forall i in {1,dots,m}$
+- Ogni punto $p in Omega$ dell'universo deve essere coperto, quindi la somma delle variabili delle aree che lo contengono deve essere almeno $1$:
+  - $limits(sum)_(i "t.c." p in S_i) x_i >= 1 quad forall p in Omega$
 
-La soluzione (da minimizzare) è la somma dei costit delle aree prese:
-$ min x_1 w_1 + x_2 w_2 + ... x_n w_n $
+La soluzione (da minimizzare) è la somma dei costi delle aree prese:
+$ min x_1 w_1 + x_2 w_2 + ... + x_m w_m $
 
 #nota()[
   Il numero di vincoli è polinomiale rispetto a $n$ e $m$.
@@ -49,9 +49,9 @@ Questa istanza di ILP rappresenta esattamente un problema di Set Cover.
   Andiamo quindi a rilassare i vincoli, ottenendo un problema di programmazione lineare non intera (LP).
 ]
 
-=== Algoritmo Rilassato (LP non intera)
+== Algoritmo Rilassato (LP non intera)
 
-Sia $hat(V)$ la versione del problema di programmazione intera non rilassato.
+Sia $hat(V)$ la versione del problema rilassata.
 I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $1$.
 
 #attenzione[
@@ -70,7 +70,7 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
   [*Input* $k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
   [$hat(x)_i <-$ risolvi $hat(V)$ come $"LP"$ #emph("// non intera, " + $hat(x)_1 dots, hat(x)_m in [0,1]$)],
   [$I <- emptyset$],
-  [*For* $t=1, dots, ceil(k+ln m)$ *do*],
+  [*For* $t=1, dots, ceil(k+ln n)$ *do*],
   indent(
     [*For* $i = 1,dots,m$ *do*],
     indent(
@@ -129,14 +129,14 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
 
     Usando la proprietà $mp(1-x) <= e^(-x)$ in quanto $x_i in [0, 1]$:
     $
-      & >= quad 1 sum_(p in Omega) product_(i "t.c." \ p in S_i) mp(e^(-hat(x)_i)^mb(k + ln n)) \
-      & = quad 1 sum_(p in Omega) mr(product_(i "t.c." \ p in S_i)) mp(e^(-hat(x)_i dot mb((k + ln n))))
+      & >= quad 1 - sum_(p in Omega) product_(i "t.c." \ p in S_i) mp(e^(-hat(x)_i)^mb(k + ln n)) \
+      & = quad 1 - sum_(p in Omega) mr(product_(i "t.c." \ p in S_i)) mp(e^(-hat(x)_i dot mb((k + ln n))))
     $
 
-    Sfruttando la proprità degli esponenziali $x^a dot x^b = x^(a+b)$:
+    Sfruttando la proprietà degli esponenziali $x^a dot x^b = x^(a+b)$:
     $
-      & = quad 1 sum_(p in Omega) e^((mr(limits(sum)_(i "t.c." \ p in S_i)) -hat(x)_i (k + ln n))) \
-      & = quad 1 sum_(p in Omega) e^((-(k + ln n) mr(limits(sum)_(i "t.c." \ p in S_i) hat(x)_i)))
+      & = quad 1 - sum_(p in Omega) e^((mr(limits(sum)_(i "t.c." \ p in S_i)) -hat(x)_i (k + ln n))) \
+      & = quad 1 - sum_(p in Omega) e^((-(k + ln n) mr(limits(sum)_(i "t.c." \ p in S_i) hat(x)_i)))
     $
 
     Per i vincoli che abbiamo dato al problema di LP, $forall p in Omega, mr(limits(sum)_(p in S_i) hat(x)_i >=1)$, possiamo quindi vederla come una costante (di fatto, ignorando la sommatoria all'esponente):
@@ -190,7 +190,7 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
                & space = quad (k + ln n) mp(sum_i w_i hat(x)_i)
     $
     La somma dei pesi moltiplicati per $hat(x)_i$ non è altro che la soluzione del problema rilassato $mp(hat(v))$.
-    Dato il problema è di minimizzazione e che $hat(v)$ è rilassata, allora è più piccola dell'ottimo originale (ovvero del problema intero $mb(v^*)$):
+    Dato che il problema è di minimizzazione e che $hat(v)$ è rilassata, allora è più piccola dell'ottimo originale (ovvero del problema intero $mb(v^*)$):
     $
       & = quad (k + ln n) mp(hat(v)) \
       & <= quad (k + ln n) mb(v^*)
