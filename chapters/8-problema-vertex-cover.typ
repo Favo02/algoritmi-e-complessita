@@ -387,7 +387,7 @@ $ chevron.l P_e chevron.r quad forall e in E $
 
 Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul problema della programmazione lineare.
 
-=== Problema Programmazione Lineare (LP) [PO]
+=== Problema Programmazione Lineare (LP) [PO] <problema-programmazione-lineare>
 
 #informalmente[
   Abbiamo $n$ variabili, ovvero gli elementi del vettore $x$.
@@ -454,7 +454,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
 ]
 
 
-=== Programmazione Lineare Intera (ILP) [NPOc]
+=== Programmazione Lineare Intera (ILP) [NPOc] <problema-programmazione-lineare-intera>
 
 #informalmente[
   Stesso problema della LP, ma con solo interi come soluzioni ammissibili.

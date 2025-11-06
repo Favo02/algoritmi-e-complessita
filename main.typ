@@ -73,3 +73,4 @@
 #include "chapters/11-problema-knapsack.typ"
 #include "chapters/12-algoritmi-probabilistici.typ"
 #include "chapters/13-problema-min-cut.typ"
+#include "chapters/14-problema-set-cover.typ"
