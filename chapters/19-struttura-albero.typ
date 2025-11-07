@@ -329,29 +329,31 @@ Dato che i nodi sono numerati a partire da $0$, allora l'indice dei figli di $x$
 
 === Primitiva parent 
 
-Il padre di un nodo $k$ è quel nodo $x$ t.c: 
+Il padre di un nodo $x$ è quel nodo $p$ t.c: 
 $
-  "Parent"(k) = cases(
-    "left-child"(x) &= k,
-    "right-child(x)" &= k
+  "Parent"(x) = cases(
+    "left-child"(p) &= x,
+    "right-child"(p) &= x
   )
 $
 #informalmente()[
-  Il genitore del nodo $k$ è il nodo $x$ per cui $k$ è il filgio destro o il figlio sinistro.
+  Il genitore del nodo $x$ è il nodo $p$ per cui $x$ è il figlio destro o il figlio sinistro.
 ]
-
-
-+ se non è la radice, sapere il genitore:
-  #informalmente[
-    il genitore di $x$ è un  nodo $p$ tale che $2 "rank"_underline(b)(x) + 1 = x$ oppure $2 "rank"_underline(b)(x) + 2 = x$
-
-    Quindi $ "rank"_underline(b)(x) + 1/2 = x/2 \ "rank"_underline(b)(x) + 1 = x/2 $
-
-    $
-      "rank"_underline(b)(x) = floor(x/2 - 1/2) \ ... \
-      "select"...
-    $
-  ]
+Per trovare il nodo genitore $p$: 
+$
+  "Parent"(x) &= cases(
+    2"rank"(p)+1 &= x,
+    2"rank"(p)+2 &= x
+  )\
+              &= cases(
+                "rank"(p)+1/2 &= x/2,
+                "rank"(p)+1 &= x/2
+              )\
+              &= "rank"(p) = floor(x/2-1/2)\
+              &mb("Applichiamo select a entrambi i membri")\
+              &= "select"("rank"(p)) = "select"(floor(x/2-1/2))\
+              p&= "select"(floor(x/2-1/2))
+$
 
 === Dati ancillari
 
