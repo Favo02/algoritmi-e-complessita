@@ -270,10 +270,12 @@ Dato un certo nodo $x$, vogliamo sapre qual'è il figlio destro o sinistro di $x
     line((3, -2), (0, 3), stroke: 2pt + black) // lato dx
 
     // ===== ALBERO T' (parte sinistra evidenziata) =====
-    content((-1.0, 2.8), text(size: 11pt, weight: "bold")[$T'$])
+    content((-1.0, 2.8), text(size: 11pt, weight: "bold")[$mr(T')$])
 
     // Linea verticale che separa T'
-    line((1.25, 1.0), (-1.25, 1.0), stroke: 2pt + red)
+    line((-0.75, 1.0), (-1.25, 1.0), stroke: 2pt + red)
+    line((-0.75, 1.0), (-0.35, 1.8), stroke: 2pt + red)
+    line((0.80, 1.8), (-0.4, 1.8), stroke: 2pt + red)
 
     // Nodi interni in T' (cerchietti blu)
     for i in range(3) {
@@ -313,11 +315,11 @@ Dato un certo nodo $x$, vogliamo sapre qual'è il figlio destro o sinistro di $x
 Vogliamo stabilire i figli di $x$ in un albero $T$.
 Considerando il sottoalbero $mr(T')$ che comprende tutti i nodi dello stesso livello di $x$ e tutti i nodi dei livelli precedenti.
 
-Il numero di nodi interni di $mr(T')$:
+Il numero di *nodi interni* $I$ di $mr(T'(I))$:
 - nodi interni di $T$ con indici $< x$
 - equivale al numero di $1$ in $underline(b)$ di indici $<x$ = *$"rank"_underline(b)(x)$*
 
-Quindi il numero di nodi di $T'$ è uguale a $2$ volte il numero di nodi interni di $T'$:
+Quindi il *numero di nodi* di $mr(T')$ è uguale a $2$ volte il numero di nodi interni di $mr(T'(I))$:
 *$ 
   2|T'(I)|+1 = 2"rank"_underline(b)(x) + 1 
 $*
@@ -326,6 +328,19 @@ Dato che i nodi sono numerati a partire da $0$, allora l'indice dei figli di $x$
   - $2 "rank"_underline(b)(x) + 2$.
 
 === Primitiva parent 
+
+Il padre di un nodo $k$ è quel nodo $x$ t.c: 
+$
+  "Parent"(k) = cases(
+    "left-child"(x) &= k,
+    "right-child(x)" &= k
+  )
+$
+#informalmente()[
+  Il genitore del nodo $k$ è il nodo $x$ per cui $k$ è il filgio destro o il figlio sinistro.
+]
+
+
 + se non è la radice, sapere il genitore:
   #informalmente[
     il genitore di $x$ è un  nodo $p$ tale che $2 "rank"_underline(b)(x) + 1 = x$ oppure $2 "rank"_underline(b)(x) + 2 = x$
