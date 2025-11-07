@@ -199,20 +199,72 @@ $
 
 === Risposta alle query
 
-Ma come rispondiamo alla query (ovvero come ricostruiamo l'intero)?
+Per rispondere ad una query, ovvero ricostruire $x_i$ dato l'indice $i$, dobbiamo:
 
-quando facciamo $ "select"_underline(b)(i) = i-1 + u_0 + u_1 + ... u_(i-1) $
+1. Recuperare i bit $mr("più significativi")$ dalla rappresentazione unaria
+2. Recuperare i bit $mb("meno significativi")$ dalla loro posizione esplicita
+3. Combinare le due parti per ottenere il valore completo
 
-Quindi la parte più significativa del numero è: $"select"_underline(b)(i) - i + 1$, poi la parte meno significativa è memorizzata esplicicamente
+==== Trovare bit più significativi
+
+Trovare i bit $mr("più significativi")$.
+La sequenza unaria può essere vista come una stringa binaria dove:
+  - Gli $mr("zeri")$ rappresentano i valori $u_i$
+  - Gli $mr("uni")$ servono da separatori
+
+  Per trovare i bit più significativi di *$x_i$*:
+  $
+  "select"_underline(b)(i) = underbrace(i-1,"numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i-1),"somma degli zeri" \ "prima dell' "i"-esimo 1")
+  $
+
+#nota()[
+  La funzione $"select"_underline(b)(i)$ restituisce la *posizione* dell'$i$-esimo bit $1$ nella stringa unaria.
+  
+  Questa posizione codifica:
+  - Il numero di $1$ visti fino ad ora: $i-1$ (gli $1$ precedenti)
+  - Il numero di $0$ visti fino ad ora: $u_0 + u_1 + ... + u_(i-1)$
+]
+Espandendo la formula:
+$
+  "select"_underline(b)(i) &= i-1 + sum_(j=0)^(i-1) mb(u_j)\
+                           &= i-1+sum_(j=0)^(i-1) mb(floor(x_j/2^l) - floor((x_j-1)/2^l))\
+                           &= mb("Serie telescopica")\
+                           &= i-1+mb(floor(x_i/2^l))                    
+$
+Alla fine, i bit $mr("più significativi")$ sono ottenuti come: 
+$
+  floor(x_i/2^l) = "select"_underline(b)(i) - i+1                
+$
+
+==== Trovare bit meno significativi
+I bit $mb("meno significativi")$ di $x_i$ sono memorizzati esplicitamente nella posizione:
+$
+"posizione" = i dot l
+$
+Leggiamo $l$ bit consecutivi a partire dalla posizione $i dot l$ nell'array rappresentante i bit meno significativi.
+
+==== Ricostruzione completa
+
+Il valore finale è:
+$
+x_i = underbrace(("select"_underline(b)(i+1) - i), mr("MSB")) dot 2^l + underbrace(mb("LSB"[i dot l : (i+1) dot l]), mb("LSB"))
+$
+
+Dove $mb("LSB"[i dot l : (i+1) dot l])$ indica i bit dalla posizione $i dot l$ alla posizione $(i+1) dot l - 1$ nella stringa dei bit meno significativi.
+
+#nota()[
+  Grazie alla struttura dati rank/select sui bit, possiamo calcolare $"select"_underline(b)(i)$ in tempo $O(1)$, rendendo l'accesso a $x_i$ molto efficiente.
+]
 
 === È succinta?
+Per stabilire se la rappresentazione proposta è succinta ci serve stimare il theoretical lower bound.
 
-Ci serve conoscere il theoretical lower bound, per poter capire se è succinta o meno.
-
-Quinid, dati $n$ e $U$, dobbiamo sapere quante sono le sequenze monotone valide.
-
-Una sequenza ordinata si può vedere come un multiinsieme (insiem perchè l'ordine è fissato, multi perchè un intero ci può essere più volte).
-Quindi il numero di multiinsiemi di cardinalità $n$.
+Dati $n$ e $U$, vogliamo contare il *numero di sequenze monotone valide*: 
+$
+  0 <= x_0 <= x_1 <= dots <= x_(n-1) < U
+$
+Valgono inoltre le seguenti biiezioni: 
+1. Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine è fissato, multi perchè un intero ci può essere più volte). Vogliamo stabilire il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
 Un altro modo è trovare il numero di soluzioni intere non negative dell'equazione $c_0 + c_1 + ... + c_(u-1) = n$ (ovvero contare quante volte appare ogni elemento).
 
