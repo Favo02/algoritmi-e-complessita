@@ -357,13 +357,13 @@ $
 
 === Dati ancillari
 
-Di solito, insieme all'albero vogliamo dei dati memorizzati nei nodi di questo albero
+La struttura mostrata in precedenza, mostra un modo per memorizzare la struttura dell'albero. Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovveri i *dati ancillari*.
 
-/ Dati ancillari anche sulle foglie: teniamo un array della stessa lunghezza di $b$, con in ogni nodo il dato di quel nodo
+/ Dati ancillari solo su nodi interni: Teniamo un array lungo il numero di ndi interni dell'albero solo i nodi interni:
+  - Usare una *select* per sapere dato un nodo dove sarà il suo dato ancillare
+  - Usare una *rank* per sapere dato un dato a che nodo corrisponde
 
-/ Dati ancillari solo su nodi interni: terniamo un array lungo quanto solo i nodi interni:
-  - usare una select per sapere da un nodo dove sarà il suo dato ancillare
-  - usare una rank per sapere da un dato a che nodo corrisponde
+/ Dati ancillari anche sulle foglie: Teniamo un array della stessa lunghezza di $b$ (numero totale di nodi), ogni cella dell'array contiene il dato di quel nodo
 
 == Biiezioni fra Alberi Binari, Alberi Generali e Foreste
 
@@ -377,32 +377,188 @@ Di solito, insieme all'albero vogliamo dei dati memorizzati nei nodi di questo a
 ]
 
 #nota[
-  Cos'è una biiezione? Isomorfismo qualcosa doppio (?) // TODO
+  Una biiezione tra due insiemi $X$ e $Y$ è una relazione binaria tale che ad ogni elemento di $X$ corrisponde *uno ed uno solo* elemento di $Y$. *Vale* anche *nella direzione opposta*, ad ogni elemento di $Y$ corrisponde uno ed un solo elemento di $X$.
 ]
 
 === Lift
 
 $ phi : F_n -> T_(n+1) $
-trasformiamo la foresta ordinata in un albero solo banalmente aggiungendo un nodo che connette tutte le radici. Questa cosa si chiama lift.
-// TODO: disegno
+*Lift*. La foresta ordinata viene trasformata in un albero, aggiungendo un nodo che connette tutte le radici.
+
+#figure(
+  cetz.canvas(length: 0.6cm, {
+    import cetz.draw: *
+
+    // ===== FORESTA F_n (sinistra) =====
+    content((-6, 3.5), text(size: 10pt, weight: "bold")[Foresta $F_n$])
+
+    // Albero T1 (triangolo - punta in alto)
+    line((-6.5, 0.5), (-5.5, 0.5), stroke: 2pt + black)
+    line((-6.5, 0.5), (-6, 2), stroke: 2pt + black)
+    line((-5.5, 0.5), (-6, 2), stroke: 2pt + black)
+    content((-6, 1.2), text(size: 9pt, weight: "bold")[$T_1$])
+
+    // Albero T2 (triangolo - punta in alto)
+    line((-4.8, 0.5), (-3.8, 0.5), stroke: 2pt + black)
+    line((-4.8, 0.5), (-4.3, 2), stroke: 2pt + black)
+    line((-3.8, 0.5), (-4.3, 2), stroke: 2pt + black)
+    content((-4.3, 1.2), text(size: 9pt, weight: "bold")[$T_2$])
+
+    // Puntini di sospensione
+    content((-3, 1.2), text(size: 11pt)[...])
+
+    // Albero Tk (triangolo - punta in alto)
+    line((-2.5, 0.5), (-1.5, 0.5), stroke: 2pt + black)
+    line((-2.5, 0.5), (-2, 2), stroke: 2pt + black)
+    line((-1.5, 0.5), (-2, 2), stroke: 2pt + black)
+    content((-2, 1.2), text(size: 9pt, weight: "bold")[$T_k$])
+
+    // ===== FRECCIA LIFT =====
+    content((0, 2.5), text(size: 10pt, weight: "bold")[LIFT])
+    line((-0.6, 1.3), (0.6, 1.3), stroke: 2pt + black)
+    line((0.45, 1.45), (0.6, 1.3), stroke: 2pt + black)
+    line((0.45, 1.15), (0.6, 1.3), stroke: 2pt + black)
+
+    // ===== ALBERO T_(n+1) (destra) =====
+    content((4, 3.5), text(size: 10pt, weight: "bold")[Albero $T_(n+1)$])
+
+    // Nodo radice aggiunto
+    circle((4, 2.8), radius: 0.15, fill: black, stroke: 2pt + black)
+
+    // Collegamenti ai sottoalberi
+    line((4, 2.65), (2.5, 2), stroke: 2pt + black)
+    line((4, 2.65), (4, 2), stroke: 2pt + black)
+    line((4, 2.65), (5.5, 2), stroke: 2pt + black)
+
+    // Albero T1 (triangolo - punta in alto)
+    line((2, 0.5), (3, 0.5), stroke: 2pt + black)
+    line((2, 0.5), (2.5, 2), stroke: 2pt + black)
+    line((3, 0.5), (2.5, 2), stroke: 2pt + black)
+    content((2.5, 1.2), text(size: 9pt, weight: "bold")[$T_1$])
+
+    // Albero T2 (triangolo - punta in alto)
+    line((3.5, 0.5), (4.5, 0.5), stroke: 2pt + black)
+    line((3.5, 0.5), (4, 2), stroke: 2pt + black)
+    line((4.5, 0.5), (4, 2), stroke: 2pt + black)
+    content((4, 1.2), text(size: 9pt, weight: "bold")[$T_2$])
+
+    // Puntini di sospensione (tratteggiati)
+    line((4.8, 1.5), (5.2, 1.5), stroke: (dash: "dotted", thickness: 2pt))
+
+    // Albero Tk (triangolo - punta in alto)
+    line((5.5, 0.5), (6.5, 0.5), stroke: 2pt + black)
+    line((5.5, 0.5), (6, 2), stroke: 2pt + black)
+    line((6.5, 0.5), (6, 2), stroke: 2pt + black)
+    content((6, 1.2), text(size: 9pt, weight: "bold")[$T_k$])
+  }),
+  caption: [
+    Operazione di *Lift*
+  ]
+)
+
 
 === First child next sibling (FCNS)
 
+L'*FCNS* trasforma una foresta ordinata in un albero binario:
 $ psi : F_n -> B_n $
-$ psi(emptyset) = "singolo nodo" $
-// TODO: disegno
+Funzionamento: per ogni nodo $v$ nella foresta:
+- Il figlio sinistro di $v$ nell'albero binario corrisponde al *primo figlio* di $v$ nella foresta
+- Il figlio destro di $v$ nell'albero binario corrisponde al *prossimo fratello* (next sibling) di $v$ nella foresta
 
-$ |T_(n+1)| = |F_n| = |B_n| = C_n $
+#esempio[
+  #figure(
+    cetz.canvas(length: 0.7cm, {
+      import cetz.draw: *
 
+      let r = 0.35  // raggio nodi
+
+      // ===== ALBERO GENERALE (sinistra) =====
+      content((-4, 4), text(size: 10pt, weight: "bold")[Albero generale])
+
+      // Nodo radice r
+      circle((-4, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((-4, 2.5), text(size: 9pt)[$r$])
+
+      // Figli a, b, c
+      circle((-5.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((-5.5, 1), text(size: 9pt)[$a$])
+      
+      circle((-4, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((-4, 1), text(size: 9pt)[$b$])
+      
+      circle((-2.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((-2.5, 1), text(size: 9pt)[$c$])
+
+      // Collegamenti
+      line((-4, 2.3), (-5.5, 1.2), stroke: 2pt + black)
+      line((-4, 2.3), (-4, 1.2), stroke: 2pt + black)
+      line((-4, 2.3), (-2.5, 1.2), stroke: 2pt + black)
+
+      content((-4, 0.3), text(size: 9pt)[
+        $r$ ha 3 figli: $a, b, c$
+      ])
+
+      // ===== FRECCIA FCNS =====
+      content((0, 2.5), text(size: 10pt, weight: "bold")[FCNS])
+      line((-1.5, 2), (1.5, 2), stroke: 2pt + black)
+      line((1.35, 2.15), (1.5, 2), stroke: 2pt + black)
+      line((1.35, 1.85), (1.5, 2), stroke: 2pt + black)
+
+      // ===== ALBERO BINARIO (destra) =====
+      content((4, 4), text(size: 10pt, weight: "bold")[Albero binario])
+
+      // Nodo radice r
+      circle((4, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((4, 2.5), text(size: 9pt)[$r$])
+
+      // Nodo a (figlio sinistro di r)
+      circle((3, 1.5), radius: r, fill: white, stroke: 2pt + blue)
+      content((3, 1.5), text(size: 9pt)[$a$])
+      line((3.9, 2.35), (3.1, 1.65), stroke: 2pt + blue)
+      content((2.2, 1.5), text(size: 8pt, fill: blue)[sx])
+
+      // Nodo b (figlio destro di a)
+      circle((4.5, 0.5), radius: r, fill: white, stroke: 2pt + red)
+      content((4.5, 0.5), text(size: 9pt)[$b$])
+      line((3.15, 1.35), (4.35, 0.65), stroke: 2pt + red)
+      content((5.2, 0.5), text(size: 8pt, fill: red)[dx])
+
+      // Nodo c (figlio destro di b)
+      circle((6, -0.5), radius: r, fill: white, stroke: 2pt + red)
+      content((6, -0.5), text(size: 9pt)[$c$])
+      line((4.65, 0.35), (5.85, -0.35), stroke: 2pt + red)
+      content((6.7, -0.5), text(size: 8pt, fill: red)[dx])
+
+      // Annotazioni
+      content((4, -2.2), text(size: 9pt)[
+        #text(fill: blue)[$a$ = figlio sx di $r$] (primo figlio, $r$ non ha figli destri è radice)\
+        #text(fill: red)[$b$ = figlio dx di $a$] (fratello successivo)\
+        #text(fill: red)[$c$ = figlio dx di $b$] (fratello successivo)
+      ])
+    }),
+    caption: [
+      Esempio di trasformazione FCNS.\
+    ]
+  )
+]
+
+#nota()[
+  La trasformazione *preserva* la cardinalità:
+  $ |T_(n+1)| = |F_n| = |B_n| = C_n $
+  il numero di foreste ordinate con $n$ nodi è uguale al numero di alberi binari con $n$ nodi interni, entrambi sono pari al numero di catalano. 
+]
 === Parole di Dyck
 
-- $Sigma = {(,)}$
+Formalmente:
+- $Sigma = {( space,space )}$. Alfabeto
 - $s in Sigma^*$ è una parola di Dyck se:
   + il numero di parentesi aperte $\#_\($ è uguale al numero di parentesi chiuse $\#_\)$
   + $forall v$ prefisso di $w$, $\#_\( v >= \#_\) v$
 
 $ alpha : F_n -> D_n $
-// TODO disegno
+
+
+
 
 Traduciamo ricorsivamente ogni foresta ad una parola di Dyck
 
