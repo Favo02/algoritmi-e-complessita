@@ -553,16 +553,123 @@ Formalmente:
 - $Sigma = {( space,space )}$. Alfabeto
 - $s in Sigma^*$ è una parola di Dyck se:
   + il numero di parentesi aperte $\#_\($ è uguale al numero di parentesi chiuse $\#_\)$
-  + $forall v$ prefisso di $w$, $\#_\( v >= \#_\) v$
+  + $forall v$ prefisso di $w$, $\#_\( v >= \#_\) v$. Permette di evitare situazioni come $"))(("$
 
-$ alpha : F_n -> D_n $
+*$ alpha : F_n -> D_n $*
+La definizione della biiezione $alpha$ è ricorsiva:
+- *Caso base* = $alpha(emptyset) = epsilon$
+- *Passo ricorsivo* = Per una foresta $F$ composta da $T_1,dots,T_k$ alberi: 
+  $
+    alpha(F) = alpha(T_1) space dots space alpha(T_k)
+  $
+  Per ogni albero $T_i$ avente una radice e sottoalberi $A_1,dots,A_k$, inseriamo delle $mr("parentesi")$ che racchiudono l'albero. 
+  $ 
+    alpha(T_i) = mr("(")alpha(A_1,dots A_k)mr(")") 
+  $
 
+#esempio[
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
 
+      let r = 0.30  // raggio nodi
 
+      // ===== ALBERO GENERALE (alto) =====
+      content((-4, 6), text(size: 11pt, weight: "bold")[Foresta $F$])
 
-Traduciamo ricorsivamente ogni foresta ad una parola di Dyck
+      // Radice A
+      circle((0, 5.5), radius: r, fill: white, stroke: 2pt + black)
+      content((0, 5.5), text(size: 10pt)[$A$])
 
-$ |D_n| = |F_n| = C_n $
+      // Primo livello: B, C, D, E, F, G
+      let level1 = (
+        ((-4, 4), $B$),
+        ((-2.5, 4), $C$),
+        ((-1, 4), $D$),
+        ((1, 4), $E$),
+        ((2.5, 4), $F$),
+        ((4, 4), $G$),
+      )
+      
+      for (pos, label) in level1 {
+        circle(pos, radius: r, fill: white, stroke: 2pt + black)
+        content(pos, text(size: 10pt)[#label])
+        line((0, 5.3), (pos.at(0), pos.at(1) + 0.25), stroke: 2pt + black)
+      }
+
+      // Sottoalbero B: H, I, J
+      circle((-5, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((-5, 2.5), text(size: 10pt)[$H$])
+      line((-4.2, 3.8), (-5, 2.75), stroke: 2pt + black)
+
+      circle((-4, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((-4, 2.5), text(size: 10pt)[$I$])
+      line((-4, 3.75), (-4, 2.75), stroke: 2pt + black)
+
+      circle((-3, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((-3, 2.5), text(size: 10pt)[$J$])
+      line((-3.8, 3.8), (-3, 2.75), stroke: 2pt + black)
+
+      // Sottoalbero H: N, O
+      circle((-5.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((-5.5, 1), text(size: 10pt)[$N$])
+      line((-5.15, 2.3), (-5.5, 1.25), stroke: 2pt + black)
+
+      circle((-4.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((-4.5, 1), text(size: 10pt)[$O$])
+      line((-4.85, 2.3), (-4.5, 1.25), stroke: 2pt + black)
+
+      // Sottoalbero E: K, L
+      circle((0.5, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((0.5, 2.5), text(size: 10pt)[$K$])
+      line((0.85, 3.8), (0.5, 2.75), stroke: 2pt + black)
+
+      circle((1.5, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((1.5, 2.5), text(size: 10pt)[$L$])
+      line((1.15, 3.8), (1.5, 2.75), stroke: 2pt + black)
+
+      // Sottoalbero K: P
+      circle((0.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((0.5, 1), text(size: 10pt)[$P$])
+      line((0.5, 2.25), (0.5, 1.25), stroke: 2pt + black)
+
+      // Sottoalbero L: Q
+      circle((1.5, 1), radius: r, fill: white, stroke: 2pt + black)
+      content((1.5, 1), text(size: 10pt)[$Q$])
+      line((1.5, 2.25), (1.5, 1.25), stroke: 2pt + black)
+
+      // Sottoalbero G: M
+      circle((4, 2.5), radius: r, fill: white, stroke: 2pt + black)
+      content((4, 2.5), text(size: 10pt)[$M$])
+      line((4, 3.75), (4, 2.75), stroke: 2pt + black)
+
+      // ===== FRECCIA VERSO BASSO =====
+      line((0, 0.3), (0, -0.3), stroke: 2pt + black)
+      line((-0.1, -0.15), (0, -0.3), stroke: 2pt + black)
+      line((0.1, -0.15), (0, -0.3), stroke: 2pt + black)
+      content((0.7, 0), text(size: 10pt, weight: "bold")[$alpha$])
+
+      // ===== PAROLA DI DYCK (sotto) =====
+      content((0, -1), text(size: 11pt, weight: "bold")[Parola di Dyck $D_n$])
+
+      
+  
+      content((0.48, -1.8), text(size: 10pt, fill: black)[$
+        underbrace("(",A) space underbrace("(",B)"sottoalbero" B space underbrace(")",B) space underbrace("()",C) space underbrace("()",D) space underbrace("(",E) "sottoalbero" E space underbrace(")",E) space underbrace("()",F) space underbrace("(",G) "sottoalbero" G space underbrace(")",G) space underbrace(")",A)
+      $])
+      
+    }),
+    caption: [
+      Esempio di trasformazione $alpha : F_n -> D_n$. L'albero con radice $A$ viene convertito in una parola di Dyck dove ogni sottoalbero è racchiuso tra parentesi ricorsivamente.
+    ]
+  )
+]
+
+#nota()[
+  Traduciamo ricorsivamente ogni foresta ad una parola di Dyck:
+  *$ |D_n| = |F_n| = C_n $*
+]
+
 
 #attenzione[
   Questa struttura a parentesi rappresenta solo l'alberi, senza dati ancillari.
