@@ -40,10 +40,10 @@ Dove:
 
 Bit *$mr("più significativi")$*. $u_0,dots,u_(n-1)$, essi vengono rappresentati esplicitamente in unario:
 $ u_i = floor(x_i/ 2^l) - floor(x_(i-1)/2^l) $
-Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*.
+Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*. Tale differenza è al minimo zero (sequenza non decrescente).
 
 #nota()[
-  $floor(x_i/ 2^l)$, prende tutti i bit tranne gli $l$ meno significativi, *shit a destra di $l$* posizioni.  
+  $floor(x_i/ 2^l)$, prende tutti i bit tranne gli $l$ meno significativi, *shift a destra di $l$* posizioni.  
 ]
 
 #import "../imports.typ": *
@@ -154,12 +154,50 @@ Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saran
   )
 ]
 
-
 === Spazio occupato
-- lwoer bit: $ln$
-- upper bit: $<= sum_(i=0)^(n-1) (u_i + 1) = ... <= n + floor(U/2^l) <= n + U / 2^floor(log U/n) ... = 3n$
 
-In totale: $ D_n = ln + 3n = 3n + n floor(log U/n) $
+#nota()[
+  Serie telescopica: 
+  $
+    s_n = sum_(k=1)^n A_(k+1)-A_k = A_(n+1)-A_1
+  $
+]
+
+- bit $mb("meno significativi")$.
+  Per ogni numero della sequenza $x_i$ con $i in 0,dots,n-1$ memorizziamo $l$ bit cosi come sono, di conseguenza lo spazio occupato è: 
+  $
+    mb(n dot l "bit")
+  $
+
+- bit $mr("più significativi")$. Scriviamo gli MSB di ogni numero $x_i$ in unario, dove $u_i$ è il numero di zeri: 
+$
+  H &<= sum_(i=0)^(n-1)abs(u_i+1) \
+    &= sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l)+ mr(1))\
+    &= underbrace(mr(n),"i vari 1" \ "si sommano") + sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l))\
+    & mb("Serie telescopica")\
+    &= n + mb(floor(x_(n-1)/2^l)- underbrace((x_0-1)/2^l,=0))\
+    &= n + floor(x_(n-1)/2^l)\
+    & mb("Al massimo" x_n "ha valore" U)\
+    &<= n + floor(U/2^l)\
+    &<= n + U/2^mb("l") \
+    & mb("Ricordando che" l = floor(log(U/n)))\
+    &<= n + U/2^mb(floor(log(U/n)))\
+     &mb("Suppongo che" U/n "non sia potenza di 2")\
+    &<= n + U/2^mb(log(U/n)-1)\
+    &= n + U/(2^(log(U/n))/2)\
+    &= n + (2U)/2^(log(U/n))\
+    &= n + (2U)/(U/n)\
+    &= n + (2U dot n)/U\
+    &= mr(3n "bit")
+$
+Costo *totale*: 
+$
+  D_n &= mr(3n)+mb(n l)\
+      &= 3n + n floor(log(U/n))\
+      &= n dot (2+floor(log(U/n)))
+$
+
+=== Risposta alle query
 
 Ma come rispondiamo alla query (ovvero come ricostruiamo l'intero)?
 
