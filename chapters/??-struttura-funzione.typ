@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Struttura Funzione (dizionario, mappa, array associativo)
+= Struttura Funzione Statica (dizionario, mappa, array associativo)
 
 == Funzione di Hash
 
@@ -42,6 +42,13 @@ Quindi al posto di tenere l'intera tabella, allora tengo solo un array di pesi.
 L'insieme di funzioni ottenibili è molto ridotto: solo le funzioni ottenimbili come combinazione lineare di pesi.
 
 == ADT
+
+#informalmente[
+  Una funzione che associa delle chiavi a dei valori.
+  Non può essere cambiata.
+
+  L'unica operazione che esiste è, data una chiave, ottenere il suo valore (non il contrario e non elencare tutti i valori).
+]
 
 Dato un universo $U$ e un $r > 0$, ho una funzione $f : S -> 2^r$ con $S subset.eq U$.
 
@@ -86,17 +93,21 @@ Ma facendo crescere $m$ (non tantissimo), ci vuole poco tempo ad ottenere questa
 È possibile vedere $G$ come un insieme di $n$ equazioni con $m$ incognite, dove ogni equazione è:
 $ x_h_0("chiave") + x_h_1("chiave") mod 2^r = "valore" $
 
-$ cases(x_h_0(s) + x_h_1(s) mod 2^r = f(x) forall s in S) $
+$ cases(x_h_0(s) + x_h_1(s) mod 2^r = f(s) quad forall s in S) $
 
 Questo sistema di $n$ equzioni diofantee con $m$ incognite.
 Se il grafo è aciclico, il sistema ha sicuramente una soluzione.
 
-Una volta trovata la soluzione, viene memorizzata in un array.
+Una volta trovata la soluzione, viene memorizzata in un array di $m r$ bit.
 
 Come si usa? Si fa esattamente quanto, si calcola
 $ (x_h_0(s) + x_h_1(s)) mod 2^r = f(s) $
 
-Bisogna scegliere bene $m$, per poter ottenere in tempo decente le tre proprietà necessarie.
+=== Scelta di $m$
+
+Bisogna scegliere bene $m$, c'è da fare un tradeoff:
+- più piccolo è $m$, più la struttura è succinta (dato che il vettore occupa $m r$ bit)
+- ma se è tanto piccolo, allora è difficile ottenere un grafo che rispetta le tre proprietà
 
 #teorema("Teorema")[
   Se $m > 2.09n$ il grafo è quasi sempre aciclico.
@@ -105,13 +116,16 @@ Bisogna scegliere bene $m$, per poter ottenere in tempo decente le tre propriet�
 
 Quindi scegliamo $m = 2.09n$.
 
-Perchè l'aciclicità implica l'esistenza di una soluzione?
+SI può fare meglio di così? Si.
+Se scegliamo solo due funzioni di hash, allora otteniamo un grafo normale.
+Se scegliamo più di due funzioni di hash otteniamo un ipergrafo.
+Questa cosa ci permette di abbassare $m$.
 
 Generalizziamo, al posto di avere due funzioni di hash, ne abbiamo 3.
 Quindi otteniamo un ipergrafo dove ogni lato è un iperlato che connette 3 lati.
 Le prime due proprieà da rispettare rimangono ok, mentre l'aciclicità non è definita su un iperlato.
 
-=== Pelabilità di un Ipergrafo
+=== Pelabilità di un Ipergrafo (aciclicità)
 
 Un ipergrafo è pelabile se esiste un ordinamento dove compaiono tutti gli iperlati e per ogni iperlato viene scelto un suo vertice non ancora comparso in nessuna degli iperlati precedenti (questo vertice si chiama cardine/hinge).
 
@@ -132,9 +146,107 @@ Le sue equazioni sono fatte così allora (dato che un vertice non deve essere an
 $
   cases(
     mr(x_0) + x_1 + x_2 = 25 quad mod 100,
-    x_0 + mr(x_2) + x_4 = 37 quad mod 100, // TODO: qua x_2 non è libera, fixare
+    x_0 + x_2 + mr(x_4) = 37 quad mod 100,
     x_1 + x_2 + mr(x_3) = 12 quad mod 100
   )
+  \
+  = x_0 = 25, x_4 = 12, x_3 = 12
 $
 
 Dato che c'è sempre una variabile libera, allora è sempre possibile assegnare un valore a quella variabile in modo che rispetti le altre già assegnate.
+Questa cosa è vera per ogni ipergrafo di qualsiasi dimensione (dimensione intesa come grandezza di un iperlato, in questo caso $3$, non numero di nodi).
+
+=== Vantaggioso?
+
+È vantaggioso usarare un ipergrafo ($k > 2$) al posto di un grafo ($k = 2$)?
+
+#teorema("Teorema")[
+  Per ogni $k >= 2$, esiste un $gamma_k$ tale che $forall m >= gamma_k n$ la costruizione del $k$-ipergrafo è pelabile (ovvero aciclico) e soddisfa le altre due condizioni quasi certamente (bastano pochi tentativi).
+]
+
+Nello specifico:
+- $gamma_2 = 2.09$ (grafo normale)
+- $gamma_3 = 1.23$ (ipergrafo)
+- $gamma_(>= 4) > gamma_3$ (ipergrafi)
+
+#informalmente[
+  Quindi il miglior modo è scegliere $3$ funzioni di hash (cosa non scontata, poteva essere che aumentando la dimensione del grafo diminuiva).
+
+  Quando questa tecnica è stata introdotta, questa cosa non era stata dimostrata, era solo sperimentale (provando con vari ipergrafi di dimensioni diverse).
+
+  Più avanti è stata dimostrata, trovando una formula per $gamma_k$ e dimostrando che il minimo è in $3$.
+]
+
+=== Spazio occupato
+
+Theoretical lower bound di $f : S -> 2^r$
+
+Per $s$ fissato di cardinalità $n$, ci sono $(2^r)^n$ funzioni:
+$ Z_n = log 2^(r n) = r n $
+
+La nostra struttura (con $k = 3$) usa
+$ D_n = gamma_3 n r = 1.23 n r $
+quindi è compatta (un $O(n)$), non succinta.
+
+=== Compressione dell'array
+
+L'unica cosa che memorizziamo è la soluzione del sistema, ovvero un array $x$ di $m r$ bit.
+
+#nota[
+  In realtà abbiamo anche bisogno di memorizzare le due/tre funzioni di hash che usiamo.
+
+  Questa cosa la trascuriamo dato che diciamo che le funzioni di hash occupano "poco spazio".
+]
+
+Il sistema è fatto così:
+$
+  cases((x_n_0(s) + x_n_1(s) + x_n_2(s)) = f(s) mod 2^r quad forall s in S)
+$
+
+Ma per come risolviamo il sistema (ovvero con la pelatura), allora pariamo da un array tutto a $0$ e assegnaimo per ogne equazione una sola variabile (lo spigolo/hinge).
+
+Quindi nell'array ci sono $<= n$ variabili $x_i != 0$.
+
+Al posto di memorizzare tutto l'array $x$, memorizziamo solo gli $<= n$ elementi non nulli e un array di $m$ bit con le loro posizioni.
+
+Su questo array $m$ andremo ad usare una rank/select.
+Se c'è uno zero sappiamo che è zero, altrimenti usiamo la rank e select per sapere dov'è nell'array dei soli valori non $0$.
+
+Spazio utilizzato:
+
+$
+  underbrace(n r, "elementi non nulli") + underbrace(m, "array di bit") + underbrace(o(m), "rank/select su m") \
+  = n r + gamma_3 n + o(gamma_3 n) \
+  = n r + 1.23 n + o(n)
+$
+
+$ Z_n = n r $
+
+Non è sempre convenienete la compressione:
+- compressa: $n r + gamma_3 n + o(n)$
+- non compressa: $n gamma_3 r$
+
+Quando è conveniente?
+$
+  n r + gamma_3 n + cancel(o(n)) quad < quad n gamma_3 r \
+  ... \
+  r > 5
+$
+
+Conviene comprimere quando $r > 5$.
+
+=== Uso della struttura
+
+La struttura (compressa) contiene:
+- le $3$ funzioni di hash
+- $tilde(x)$ elementi non nulli
+- $underline(b)$ vettore dove sono gli elementi non nulli
+- rank/select su $underline(b)$
+
+Quando diamo in pasto una stringa $s$, lui calcola $h_0(s), h_1(s), h_2(2)$ e risolve $(x_h_0(s) + x_h_1(s), x_h_2(s)) mod 2^r$ e lo restituisce.
+
+Quindi la struttura non ha da nessuna parte dell'insieme $S$ (non lo memorizza da nessuna parte).
+
+Ma questo causa che se gli diamo in pasto un qualsiasi elemento $in U \ S$, allora la struttura non può riconoscere che non è "valido", ma costruisce una risposta e la restituisce.
+
+Se vogliamo essere certi che risponda solo per elementi $in S$?
