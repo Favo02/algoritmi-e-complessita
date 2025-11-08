@@ -9,13 +9,13 @@ $ 0 <= x_0 <= x_1 <= ... <= x_(n-1) < underbrace(U,"universo") $
 
 - *Primitiva di accesso*: c'è una sola primitiva d'accesso: dato $i$, vogliamo sapere $x_i$
 
-Rappresentazione naive: ogni intero viene scritto usando $log U$ bit.
+*Rappresentazione naive*: ogni intero viene scritto usando $log U$ bit.
 
 #informalmente[
   Le sequenze monotone sono utilizzate in diversi ambiti
 
   Webgraph: 
-  - Ogni nodo viene numerato da $o$ a $U$
+  - Ogni nodo viene numerato da $0$ a $U$
   - I vicini di un vertice possono essere memorizzati come una sequenza monotona strettamente crescente
   - Si possono scalare i valori per un fattore $k$, in modo tale da comprimere l'intervallo da $[0,d]$, dove $d$ è il grado del vertice
 
@@ -24,7 +24,7 @@ Rappresentazione naive: ogni intero viene scritto usando $log U$ bit.
 
 == Rappresentazione quasi-succinta di Elias-Fano
 
-La rappresentazione in binario di ogni intero $x_i$ della sequenza viene diviso in $mr("bit significativi")$ e $mb("meno significativi")$.
+La rappresentazione in binario di ogni intero $x_i$ della sequenza viene divisa in $mr("bit significativi")$ e $mb("meno significativi")$.
 
 Bit *$mb("meno significativi")$*. $l_0,dots,l_(n-1)$, essi vengono rappresentati esplcitamente : 
 $ l = max(0,floor(log U/n)) $
@@ -38,7 +38,7 @@ Dove:
   $x_i mod 2^l$, prende gli ultimi $l$ bit di $x_i$ (*maschera bit a bit*)
 ]
 
-Bit *$mr("più significativi")$*. $u_0,dots,u_(n-1)$, essi vengono rappresentati esplicitamente in unario:
+Bit *$mr("più significativi")$*. $u_0,dots,u_(n-1)$, essi vengono rappresentati in *unario*:
 $ u_i = floor(x_i/ 2^l) - floor(x_(i-1)/2^l) $
 Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*. Tale differenza è al minimo zero (sequenza non decrescente).
 
@@ -171,7 +171,7 @@ Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saran
 
 - bit $mr("più significativi")$. Scriviamo gli MSB di ogni numero $x_i$ in unario, dove $u_i$ è il numero di zeri: 
 $
-  H &<= sum_(i=0)^(n-1)abs(u_i+1) \
+  "MSB" &<= sum_(i=0)^(n-1)underbrace(abs(u_i+1), u "zeri" + "un "1) \
     &= sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l)+ mr(1))\
     &= underbrace(mr(n),"i vari 1" \ "si sommano") + sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l))\
     & mb("Serie telescopica")\
@@ -267,7 +267,7 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
   Valgono inoltre le seguenti biiezioni: 
   1. Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine è fissato, multi perchè un intero ci può essere più volte). Vogliamo stabilire il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
-  2. Un multiinsieme a sua volta può essere visto come un'*equazione* di *$U-1$ incognite*. Vogliamo quindi trovare le soluzioni non negative di un equazione (ovvero contare quante volte appare ogni elemento): 
+  2. Un multiinsieme a sua volta può essere visto come un'*equazione* di *$U-1$ incognite*. Vogliamo quindi trovare le soluzioni non negative di un equazione (ovvero contare quante volte appare ogni elemento della sequenza): 
   $ c_0 + c_1 + ... + c_(u-1) = n  $
 
   3. Sfruttando un particolare metodo di conteggio chiamato *$"star""&""bars"$*, possiamo andare a rappresentare l'equazione come una stringa composta da due caratteri $Sigma = ("*","|")$. Dove: 
@@ -300,6 +300,7 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
         &approx n log((U+n-1)/n)\
         &mb("Raccogliamo" U/n)\
         &= n log(mb(U/n) dot (1+n/U-1/U))\
+        &= n log(U/n))+n log(1+n/U-1/U)\
         & mb("Sfruttando "x approx log(1+x))\
         &approx n log U/n + n (mb(n/U - 1/U))\
         &approx n log U/n + mb((n^2)/U)\
