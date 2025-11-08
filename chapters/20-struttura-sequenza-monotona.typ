@@ -293,33 +293,31 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
   con $mr(A = U+n-1)$ e $mb(B = n)$, otteniamo: 
   $ 
     Z_n &approx mb(n) log (mr(U+n-1))/mb(n) + (mr(U+n-1)-mb(n)) log (mr(U+n-1))/(mr(U+n-1)-mb(n))\
-        &= n log((U+n-1)/n)
+        &= n log((U+n-1)/n) + (U-1) log((U+n-1)/(U-1))\
+        &mb("Assumiamo ora che " n << U ", ipotesi realistica")\
+        &= n log((U+n-1)/n) + (U-1) log(underbrace((U+n-1)/(U-1),mb(approx 1)))\
+        &approx n log((U+n-1)/n)+(U-1)underbrace(log(1),=0)\
+        &approx n log((U+n-1)/n)\
+        &mb("Raccogliamo" U/n)\
+        &= n log(mb(U/n) dot (1+n/U-1/U))\
+        & mb("Sfruttando "x approx log(1+x))\
+        &approx n log U/n + n (mb(n/U - 1/U))\
+        &approx n log U/n + mb((n^2)/U)\
+        &mb("Siccome " n^2 << U)\
+        & approx n log U/n + underbrace(mb(n^2/U),approx 1)\
+        & approx n log U/n
   $
-
-  Noi assumiamo che $n << U$, ovvero che il numero di elementi della sequenza sia molto più piccolo rispetto al limite dell'universo.
-  Questa cosa è ragionevole, ad esempio nel caso d'uso webgraph, il numero di link di una pagina sono molto molto molto meno rispetto al numero di pagine dell'intero web.
-
-  Raccogliendo $U/n$
-  $
-    approx n log (U+n-1)/n = n log (U/n (1 + n/U - 1/U)) \
-    = n log U/n + n log (1 + mr(n/U - 1/U))
-  $
-
-  Dato che $x approx log (1+mr(x))$
-  $ approx n log U/n + (n^2)/U $
-
-  Assumendo ancora che $n^2 << U$ (ancora ragionevole, i link di una pagina sono una decina, rispetto ai miliardi di pagine del web):
-  $ approx n log (U/n) $
-
+  #nota()[
+    L'assunzione che $n << U$ è realistica. Ad esempio consideriamo $n$ come le amicizie di un utente su Facebook e $U$ come il numero di utenti di Facebook.
+  ]
   Dato che la nostra struttura dati occupa:
   $ D_n approx 3n + n ceil(log U/n) $
-  allora abbiamo una struttura succinta.
+  allora abbiamo una *struttura succinta* $space qed$
+
+
+  #attenzione()[
+    Da un punto di vista teorico, abbiamo fatto i conti con delle assunzioni ($n << U$) e approssimazioni, non è sempre vero che la struttura è succinta.
+    Tuttavia nella pratica lo è, dato che molto raramente accade che $n -> U$.
+  ]
 ]
 
-Però abbiamo fatto i conti con delle assunzioni e approssimazioni, non è sempre vero che è succinta.
-Nella pratica però lo è (dato che molto raramente $n -> U$).
-
-#nota[
-  Per sapere se una struttura è succinta, ci serve il theoretical lower bound.
-  Ma spesso è questa la parte difficile di dimostrare, dato che è difficile trovarlo e calcolarlo.
-]
