@@ -259,44 +259,62 @@ Dove $mb("LSB"[i dot l : (i+1) dot l])$ indica i bit dalla posizione $i dot l$ a
 === È succinta?
 Per stabilire se la rappresentazione proposta è succinta ci serve stimare il theoretical lower bound.
 
-Dati $n$ e $U$, vogliamo contare il *numero di sequenze monotone valide*: 
-$
-  0 <= x_0 <= x_1 <= dots <= x_(n-1) < U
-$
-Valgono inoltre le seguenti biiezioni: 
-1. Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine è fissato, multi perchè un intero ci può essere più volte). Vogliamo stabilire il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
+#dimostrazione()[
+  Dati $n$ e $U$, vogliamo contare il *numero di sequenze monotone valide*: 
+  $
+    0 <= x_0 <= x_1 <= dots <= x_(n-1) < U
+  $
+  Valgono inoltre le seguenti biiezioni: 
+  1. Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine è fissato, multi perchè un intero ci può essere più volte). Vogliamo stabilire il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
-Un altro modo è trovare il numero di soluzioni intere non negative dell'equazione $c_0 + c_1 + ... + c_(u-1) = n$ (ovvero contare quante volte appare ogni elemento).
+  2. Un multiinsieme a sua volta può essere visto come un'*equazione* di *$U-1$ incognite*. Vogliamo quindi trovare le soluzioni non negative di un equazione (ovvero contare quante volte appare ogni elemento): 
+  $ c_0 + c_1 + ... + c_(u-1) = n  $
 
-Un altro modo è rappresentare con una stringa stars & bars `***|||***|**||***` con $n$ asterischi e $U-1$ barre (quindi dire la cardinalità di ogni elemento con asterischi, separanzo ongi elemento con delle barre).
-Tutte queste stringhe sono di lunghezza $U+n-1$, ma sappiamo anche quante sono le barre, quindi sappiamo in quanti modi possiamo costruire queste stringhe:
-- $binom(U-n-1, U-1) = (U-n-1)! / (n! (U-1)!)$ scegliendo dove mettere le barre
-- $binom(U-n-1, n)$ sceglieno dove mettere gli asterischi (i due risultati sono uguali!)
+  3. Sfruttando un particolare metodo di conteggio chiamato *$"star""&""bars"$*, possiamo andare a rappresentare l'equazione come una stringa composta da due caratteri $Sigma = ("*","|")$. Dove: 
+    - *$"*"$* = sono in totale $n$ e rappresentano $c_i$, ovvero la cardinalità con cui un certo numero compare nella sequenza. 
+    - *$"|"$* = $U-1$, numero di incognite
 
-Quindi $Z_n = log(binom(U+n-1, n))$
+    Le stringhe così create avranno una lunghezza pari a *$U+n-1$*. L'obbiettivo è andare a contare tutti i *possibili modi* in cui possiamo andare a disporre le barre negli asterischi:
+    $
+      binom(U+n-1, U-1) & underbrace(=,"def di"\ "fattoriale") (U+n-1)! / ((U-1)!((U+n-1) - (U-1))!)\
+      &= ((U+n-1)!) / ((U-1)! (n)!)\
+       binom(U+n-1, U-1) &= ((U+n-1)!) / ((U-1)! (n)!) = underbrace(binom(U+n-1,n),"disposizioni degli" \ "asterischi")
+    $
+    Dove: 
+    - $U+n-1$ = caratteri totali
+    - $U+1$ = numero di barre $"|"$
 
-Applicando la formula $log binom(A, B) approx B log (A/B) + (A-B) log (A / (A-B))$ con $A = U+n-1$ e $B = n$
+  In conclusione: 
+  $ Z_n = log(binom(U+n-1, n)) $
+  Applicando la seguente $mb("formula")$: 
+  $
+    mb(log binom(A, B) approx B log (A/B) + (A-B) log (A / (A-B)))
+  $ 
+  con $mr(A = U+n-1)$ e $mb(B = n)$, otteniamo: 
+  $ 
+    Z_n &approx mb(n) log (mr(U+n-1))/mb(n) + (mr(U+n-1)-mb(n)) log (mr(U+n-1))/(mr(U+n-1)-mb(n))\
+        &= n log((U+n-1)/n)
+  $
 
-$ Z_n approx n log (U+n-1)/n + (U-1) log underbrace((U+n-1)/(U-1), approx 1) $
+  Noi assumiamo che $n << U$, ovvero che il numero di elementi della sequenza sia molto più piccolo rispetto al limite dell'universo.
+  Questa cosa è ragionevole, ad esempio nel caso d'uso webgraph, il numero di link di una pagina sono molto molto molto meno rispetto al numero di pagine dell'intero web.
 
-Noi assumiamo che $n << U$, ovvero che il numero di elementi della sequenza sia molto più piccolo rispetto al limite dell'universo.
-Questa cosa è ragionevole, ad esempio nel caso d'uso webgraph, il numero di link di una pagina sono molto molto molto meno rispetto al numero di pagine dell'intero web.
+  Raccogliendo $U/n$
+  $
+    approx n log (U+n-1)/n = n log (U/n (1 + n/U - 1/U)) \
+    = n log U/n + n log (1 + mr(n/U - 1/U))
+  $
 
-Raccogliendo $U/n$
-$
-  approx n log (U+n-1)/n = n log (U/n (1 + n/U - 1/U)) \
-  = n log U/n + n log (1 + mr(n/U - 1/U))
-$
+  Dato che $x approx log (1+mr(x))$
+  $ approx n log U/n + (n^2)/U $
 
-Dato che $x approx log (1+mr(x))$
-$ approx n log U/n + (n^2)/U $
+  Assumendo ancora che $n^2 << U$ (ancora ragionevole, i link di una pagina sono una decina, rispetto ai miliardi di pagine del web):
+  $ approx n log (U/n) $
 
-Assumendo ancora che $n^2 << U$ (ancora ragionevole, i link di una pagina sono una decina, rispetto ai miliardi di pagine del web):
-$ approx n log (U/n) $
-
-Dato che la nostra struttura dati occupa:
-$ D_n approx 3n + n ceil(log U/n) $
-allora abbiamo una struttura succinta.
+  Dato che la nostra struttura dati occupa:
+  $ D_n approx 3n + n ceil(log U/n) $
+  allora abbiamo una struttura succinta.
+]
 
 Però abbiamo fatto i conti con delle assunzioni e approssimazioni, non è sempre vero che è succinta.
 Nella pratica però lo è (dato che molto raramente $n -> U$).
