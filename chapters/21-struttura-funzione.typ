@@ -13,92 +13,117 @@ Proprietà di una funzione hash:
 + la funzione occupi poco spazio
 + sia il più *iniettiva* possibile (dato che $|U| >> m$, è impossibile che sia al $100%$ iniettiva). Sarebbe auspicabile che tutti i *bucket* abbiano più o meno la *stessa cardinalità*, quindi che ci siano *poche collisioni*
 
-Ma nella maggior parte dei casi, però non interessa mettere tutto l'universo nei bucket, ma solo un piccolo sottoinsieme $S$:
-$ S subset.eq U, quad |S| << |U|, quad |S| = n, quad n <= m $
-Questa non è una proprietà esplicitata dato che $S$ non è noto a propri.
+Nella maggior parte dei casi, non ci interessa che la funzione di hash $h$ si comporti bene su tutto l'universo $U$, ma solamente su un piccolo sottoinsieme $S$:
+$ 
+  S subset.eq U, quad |S| << |U|, quad |S| = n, quad n <= m
+$
+Vogliamo dunque che gli elementi di $S$ cadano in bucket distinti. Questa *non* è una *proprietà esplicitata* dato che *$S$* *non* è *noto* a propri.
 
 #esempio[
-  Se la mia funzione di hash funziona perfettamente su tutti gli interi (divide in bucket tutti di dimensione simile), ma io voglio hashare solo i numeri da 0 a 100 e li mette tutti nello stesso bucket, allora nel mio caso fa schifo.
+  Sia $h$ una funzione di hash che funziona perfettamente su tutti gli interi $in bb(N)$ (suddivisione in bucket di dimensione simile). Tuttavia nella pratica, vorremmo hashare solamente i numeri da $0$ a $100$. La funzione $h$ li metterebbe tutti nello stesso bucket (non ottimale).
 ]
 
 === Full-Randomness Assumption
 
-Dato $U$ e $m$, si sceglie $h : U -> m$ uniformemente a caso.
-
-#attenzione[
-  Questa cosa è inattuabile nella realtà.
-  Facendo anche finta che ogni funzione di hash sia enumerabile, ma allora come facciamo a implementarle tutte?
-  Se memorizziamo le tabelle che fanno corrispondere il valore al bucket, allora occupiamo una marea di spazio.
-  Ma è anche lenta, dato che bisogna scorrere tutta la tabella linearmente per trovare l'elemento.
+#teorema("Definzione")[
+  Dati $U$ e $m$, si sceglie la funzione hash: 
+  $ h : U -> m $ 
+  *uniformemente a caso*. 
+  #informalmente()[
+    Cioè stiamo chedendo che una funzione hash mappi ogni input a un output in modo uniforme e indipendente, come se si trattasse di una mappatura realmente casuale.
+  ]
+  #attenzione[
+    Si tratta di un'*assunzione inpraticabile*. Supponendo che ogni funzione di hash sia enumerabile, rimane il problema di come implementarle tutte.\
+    Se memorizzassimo le tabelle che fanno corrispondere il valore(input) al bucket, lo spazio occupato sarebbe esponenziale:
+    *$
+      |U| log m
+    $*
+    Inoltre, la funzione di hash sarebbe anche lenta, dato che bisogna scorrere tutta la tabella linearmente per trovare l'elemento desiderato.
+  ]
 ]
 
-Quindi, di solito si studiano strutture assumendo la full Full-Randomness Assumption, ottenendo dei risultati e poi si rilassa e si vede quanto sono peggiorati i risultati.
+Nella pratica, vengono studiate alcune strutture assumendo la full Full-Randomness Assumption. I risultati ottenuti sotto l'assunzione vengono rilassati, misurandone il tasso di peggioramento.
 
-Ad esempio, se vogliamo hashare uno nome di massimo 18 caratteri e 14 bucket:
+#esempio()[
+  Supponiamo di voler hashare dei nomi di massimo $18$ caratteri e di avere a disposizione $14$ bucket:
+  $ 
+    U = {a, b, ..., z}^(<=18), quad m = 14
+  $
+  Solamente riempire e cercare la tabella che mappa ogni entry al suo bucket è impossibile, dato che ci sono $|U| = 26^18$ entry possibili.
 
-$U = {a, b, ..., z}^(<=18), quad m = 14$
+  Per risparmiare spazio, non viene tenuta in memoria l'intera tabella, ma un *array di pesi* $w_1, w_2, ..., w_18, forall w_i <= m$. Quando dobbiamo hashare un nome come "Claudio Bisio", ogni lettera del nome viene moltiplicata per il peso associato alla sua posizione. La funzione di hash diventa:
+  $
+    h("Claudio Bisio") = (sum_(i=1)^n w_i dot c_i) mod m
+  $
+  dove $c_i$ è il valore numerico della $i$-esima lettera e $n$ è la lunghezza del nome.
 
-Solo riempire e cercare la tabella che mappa ogni entry al suo bucket è impossibile, dato che sono $|U|$ entry.
-
-Quindi al posto di tenere l'intera tabella, allora tengo solo un array di pesi.
-L'insieme di funzioni ottenibili è molto ridotto: solo le funzioni ottenimbili come combinazione lineare di pesi.
+  L'*insieme di funzioni* ottenibili è *molto ridotto*: solamente le funzioni ottenibili come combinazione lineare dei pesi. Questo viola la Full-Randomness Assumption, ma permette di memorizzare la funzione hash in spazio $O(18)$ invece di $O(26^18)$.
+]
 
 == ADT
 
-#informalmente[
-  Una funzione che associa delle chiavi a dei valori.
-  Non può essere cambiata.
-
-  L'unica operazione che esiste è, data una chiave, ottenere il suo valore (non il contrario e non elencare tutti i valori).
-]
-
-Dato un universo $U$ e un $r > 0$, ho una funzione $f : S -> 2^r$ con $S subset.eq U$.
-
-Quelli che vogliamo rappresentare è $S$.
+L'obbiettivo è costruire una funzione $f$ cha associa ad una chiave $s in S$, una valore rappresentabile con $2^r$ bit.\
 
 #informalmente[
-  La struttura dati che vogliamo rappresentare è un insieme di chiavi valori, dove le chiavi memorizzate sono $S$ (in un certo istante non avremo tutto l'universo memorizzato) e i valori sono dei valori rappresentabili con $2^r$ bit.
+  La struttura dati che vogliamo rappresentare è un insieme di chiavi valori, dove le chiavi memorizzate sono $S$ (in un certo istante non avremo tutto l'universo $U$ memorizzato). Ogni chiave associa un valore rappresentabile con $2^r$ bit.
 ]
 
-L'unica primitiva su questa struttura è il richiede il valore associato ad una chiave.
+Dato un universo $U$ e un $r > 0$, ho una funzione: 
+$
+  f : S -> 2^r
+$
+con $S subset.eq U$. Si tratta di una struttura *statica* (non possono essere modificate chiavi e valori)
 
-#attenzione[
-  Non è possibile ottenere tutti i valori.
-]
+*Primitiva* di accesso:
+- Data una chiave, vogliamo ottenere il suo valore (non è possibile il contrario e non è possibile elencare tutti i valori)
 
 #esempio[
-  $U = Sigma^(<= 100), quad Sigma = "ASCII"$
-
-  Per ogni nome, memorizziamo il suo indirizzo.
-  La nostra funzione $f$ memorizza per ogni entry i 320 bit riservati per il suo indirizzo.
+  Dati: 
+  - $U = Sigma^(<= 100), quad Sigma = "ASCII"$
+  - $S = "insieme di nomi"$
+  La funzione $f$ associa ad ogni nome un indirizzo.
 ]
 
 == Struttura MWHC
 
-$S subset.eq U, quad |S| = n, quad f : S -> 2^r$
+Dati: 
+- $U$ = universo
+- $S subset.eq U$ insieme di chiavi, dove $|S| = n$
+- $f : S -> 2^r$, funzione che associa ad ogni chiave un valore
+- fissato $m in bb(N)$ e due funzioni hash random $h_0,h_1: U -> m$
+Andiamo a costruire un *grafo* dove:  
+ - *nodi* = $m$ nodi da $0,dots,m-1$.
+ - *archi* = $n = |S|$ archi. Per ogni elemento $s in S$ creo un lato tra $(h_0(s),h_1(s))$. 
 
-Fisso un $m in bb(N)$ e due funzioni $h_0, h_! : U -> m$
+#attenzione()[
+  Durante la costruzione del grafo devono *valere* le seguenti proprietà:  
+  1. $h_0(x) eq.not h_1(x)$. altrimenti collegherei un vertice $x in S$ a se stesso, creado un loop  
 
-A partire dalle funzioni, costruisco un grafo con $m$ nodi, da $0$ a $m-1$.
-Per ogni elemento $s in S$, metto un lato tra i valori delle due funzioni random $(h_0(s), h_1(s))$, ottenendo $n$ lati.
+  2. $forall x,y in S,x eq.not y space {h_0(x),h_1(x)} eq.not {h_0(y),h_1(y)} $. Stringhe (chiavi) diverse danno origine a lati diversi
 
-Cose che non vanno bene:
-+ il valore delle due funzioni corrisponde $h_0(x) = h_1(x)$
-+ due chiavi diversi danno luogo allo stesso lato ${h_0(x), h_1(x)} = {h_0(y), h_1(y)} forall x, y in S, x != y$
-+ c'è un ciclo
+  3. Il grafo $G$ deve essere aciclico
 
-Se succede qualcuna di queste, allora butto via le due funzioni di hash e le cambio.
+  Se una di queste proprietà smette di valere, scarto le due funzioni di hash e le riestraggo.
+]
 
-Il tempo necessario a fare questa cosa dipende da $m$, dato che con pochi nodi aumenta la probabilità che queste cose accadano.
-Ma facendo crescere $m$ (non tantissimo), ci vuole poco tempo ad ottenere questa cosa.
+#nota()[
+  Il tempo necessario per la *costruzione* di *$G$* *dipende* dal numero di *nodi $m$*. Più $m$ è grande più tentativi servono per non trovare una collisione. 
+]
+È possibile vedere $G$ come un insieme di $n = |S|$ equazioni con $m = "# nodi"$ incognite, dove ogni equazione è:
+$ 
+  underbrace(x_(h_0("chiave")) + x_(h_1("chiave")),"estremità del lato della chiave") mod 2^r = f("chiave") = "valore" 
+$
+Possiamo creare così un sistema di $n$ *equazioni diofantee* con $m$ incognite ($x_0,dots,x_(m-1)$).
+$ 
+  cases(
+    x_(h_0(s)) + x_(h_1(s)) mod 2^r = f(s),
+    dots,
+    forall s in S
+  ) 
+$
+Se il *grafo* è *aciclico* $=>$ il *sistema* è *risolubile*.
 
-È possibile vedere $G$ come un insieme di $n$ equazioni con $m$ incognite, dove ogni equazione è:
-$ x_h_0("chiave") + x_h_1("chiave") mod 2^r = "valore" $
 
-$ cases(x_h_0(s) + x_h_1(s) mod 2^r = f(s) quad forall s in S) $
-
-Questo sistema di $n$ equzioni diofantee con $m$ incognite.
-Se il grafo è aciclico, il sistema ha sicuramente una soluzione.
 
 Una volta trovata la soluzione, viene memorizzata in un array di $m r$ bit.
 
