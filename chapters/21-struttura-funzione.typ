@@ -121,36 +121,88 @@ $
     forall s in S
   ) 
 $
-Se il *grafo* è *aciclico* $=>$ il *sistema* è *risolubile*.
-
-
-
-Una volta trovata la soluzione, viene memorizzata in un array di $m r$ bit.
-
-Come si usa? Si fa esattamente quanto, si calcola
+Se il *grafo* è *aciclico* $=>$ il *sistema* è *risolubile*. La soluzione del sistema è un array di dimensione $m$ con valori compresi fra ${0,dots,r}$. Totale *$mr$ bit*\
+Per ottenere il valore associato alla chaive $s in S$:
 $ (x_h_0(s) + x_h_1(s)) mod 2^r = f(s) $
 
 === Scelta di $m$
 
-Bisogna scegliere bene $m$, c'è da fare un tradeoff:
-- più piccolo è $m$, più la struttura è succinta (dato che il vettore occupa $m r$ bit)
-- ma se è tanto piccolo, allora è difficile ottenere un grafo che rispetta le tre proprietà
+Un parametro fondamentale è la grandezza di $m$, c'è da fare un *tradeoff*:
+- $mb("più" m "è piccolo")$, più la struttura è succinta (dato che il vettore occupa $m r$ bit)
+- ma se $m$ è tanto piccolo, allora è difficile ottenere un grafo che rispetta le tre proprietà in tempi ragionevoli
 
 #teorema("Teorema")[
-  Se $m > 2.09n$ il grafo è quasi sempre aciclico.
-  Il numero atteso di tentativi per ottenere un grafo aciclico è $2$.
+  Se *$m > 2.09n$* (dove $n = |S|$) il grafo $G$ è quasi sempre aciclico.\
+  Il numero atteso di tentativi per ottenere un grafo $G$ aciclico è $2$.\
+  Bastano $2.09 m r "bit"$
 ]
 
-Quindi scegliamo $m = 2.09n$.
+==== Generalizzazione
 
-SI può fare meglio di così? Si.
-Se scegliamo solo due funzioni di hash, allora otteniamo un grafo normale.
-Se scegliamo più di due funzioni di hash otteniamo un ipergrafo.
-Questa cosa ci permette di abbassare $m$.
+Nella definizione precendente abbiamo scelto solamente due funzioni di hash random $h_0 " e " h_1$ ottenendo un grafo normale.\
+Se scegliessimo *più di due funzioni di hash* otterremmo un *ipergrafo*, permettendoci di abbassare il parametro $m$.\
 
-Generalizziamo, al posto di avere due funzioni di hash, ne abbiamo 3.
-Quindi otteniamo un ipergrafo dove ogni lato è un iperlato che connette 3 lati.
-Le prime due proprieà da rispettare rimangono ok, mentre l'aciclicità non è definita su un iperlato.
+#nota()[
+  Un *ipergrafo* $H$ è un grafo in cui un arco può essere collegato a un qualunque numero di vertici. Formalmente, $H(X,E)$ dove: 
+  - $X$= insieme di nodi
+  - $E subset.eq P(X)backslash{emptyset}$ = insisme formato da sottoinsiemi non vuoti di $X$ chiamati iperarchi 
+
+  #figure(
+  cetz.canvas({
+    import cetz.draw: *
+    
+    // Definiamo i nodi (vertici)
+    let nodes = (
+      (name: "v1", pos: (1, 3.5), label: $v_1$),
+      (name: "v2", pos: (3.2, 4), label: $v_2$),
+      (name: "v3", pos: (5.5, 3.8), label: $v_3$),
+      (name: "v4", pos: (1.3, 0.8), label: $v_4$),
+      (name: "v5", pos: (3.5, 1.5), label: $v_5$),
+      (name: "v6", pos: (5, 1.3), label: $v_6$),
+      (name: "v7", pos: (3.2, 0.2), label: $v_7$),
+    )
+    
+    // e₁ = {v₁, v₂, v₃} - ovale giallo grande
+    circle((3.5, 3.7), radius: (3.5, 1.8), 
+           fill: yellow.lighten(50%), stroke: black + 1.5pt)
+    
+    // e₃ = {v₃, v₅, v₆} - ovale verde (semi-trasparente per vedere sovrapposizioni)
+    circle((5, 2.2), radius: (2.3, 2.2), 
+           fill: green.lighten(20%).transparentize(40%), stroke: black + 1.5pt)
+    
+    // e₂ = {v₂, v₃} - ovale rosa (semi-trasparente per vedere sovrapposizioni)
+    circle((4.5, 3.9), radius: (2, 1.1), 
+           fill: red.lighten(30%).transparentize(40%), stroke: black + 1.5pt)
+    
+    // e₄ = {v₄} - cerchio viola piccolo
+    circle((1, 0.8), radius: 1.0, 
+           fill: purple.lighten(60%), stroke: black + 1.5pt)
+    
+    // Disegniamo i nodi sopra gli iperlati
+    for node in nodes {
+      circle(node.pos, radius: 0.15, fill: black)
+      content((node.pos.at(0) - 0.35, node.pos.at(1) - 0.1), node.label)
+    }
+    
+    // Aggiungiamo le etichette degli iperlati
+    content((1.5, 4.3), text(size: 12pt, $e_1$))
+    content((4.4, 4.7), text(size: 12pt, $e_2$))
+    content((6.5, 1.6), text(size: 12pt, $e_3$))
+    content((0.4, 0.5), text(size: 12pt, $e_4$))
+  }),
+  caption: [
+    Un esempio di ipergrafo con:\ 
+    $X = {v_1, v_2, v_3, v_4, v_5, v_6, v_7}$ \
+    $E = {e_1, e_2, e_3, e_4} = {{v_1, v_2, v_3}, {v_2, v_3}, {v_3, v_5, v_6}, {v_4}}$
+  ]
+)
+
+
+]
+
+Con $3$ funzioni hash otteniamo un ipergrafo, dove: 
+ - ogni lato è un iperlato che connette 3 lati.
+ - Le prime due proprieà da rispettare rimangono fattibili - la prorità di aciclicità non è definita su un iperlato.
 
 === Pelabilità di un Ipergrafo (aciclicità)
 
