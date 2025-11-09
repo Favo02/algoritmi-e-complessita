@@ -442,6 +442,66 @@ La struttura (compressa) contiene:
 - $underline(b)$ vettore dove sono gli elementi non nulli
 - rank/select su $underline(b)$
 
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
+    
+    // Box principale della struttura
+    rect((0, 0), (6, 4), stroke: black + 1.5pt, radius: 0.3)
+    
+    // Titolo: h₀, h₁, h₂
+    content((3, 3.5), text(size: 11pt, $h_0, h_1, h_2$))
+    
+    // Array x̃ (elementi non nulli)
+    let x-start = 1.5
+    let cell-width = 0.6
+    let y-array = 2.5
+    
+    content((1, y-array), text(size: 10pt, $tilde(x)$))
+    for i in range(5) {
+      rect((x-start + i * cell-width, y-array - 0.3), 
+           (x-start + (i + 1) * cell-width, y-array + 0.3), 
+           stroke: black + 1pt)
+    }
+    
+    // Array b (bit vector)
+    let y-b = 1.5
+    content((1, y-b), text(size: 10pt, $underline(b)$))
+    
+    // Celle con valori 0, 1
+    let b-values = (0, 0, 1, 0, 1)
+    for (i, val) in b-values.enumerate() {
+      let fill-color = if val == 1 { gray.lighten(50%) } else { white }
+      rect((x-start + i * cell-width, y-b - 0.3), 
+           (x-start + (i + 1) * cell-width, y-b + 0.3), 
+           stroke: black + 1pt, fill: fill-color)
+      content((x-start + i * cell-width + cell-width/2, y-b), 
+              text(size: 9pt, str(val)))
+    }
+    
+    // RS(b) - Rank/Select
+    content((3, 0.6), text(size: 10pt, $"RS"(underline(b))$))
+    
+    // Freccia input: s ∈ U
+    line((-1.5, 2), (0, 2), mark: (end: ">"), stroke: black + 1.2pt)
+    content((-2.5, 2), text(size: 11pt, $s in U$))
+    
+    // Freccia output: f(s)
+    line((6, 2), (7.5, 2), mark: (end: ">"), stroke: black + 1.2pt)
+    content((8.2, 2), text(size: 11pt, $f(s)$))
+    
+    // Formule sotto
+    content((3, -0.8), text(size: 10pt, $h_0(s), h_1(s), h_2(s)$))
+    content((3, -1.5), text(size: 10pt, 
+      $(x_(h_0(s)) + x_(h_1(s)) + x_(h_2(s))) mod 2^r$))
+  }),
+  caption: [
+    Schema di utilizzo della struttura MWHC: data una chiave $s in U$, \
+    si calcolano gli hash $h_0(s), h_1(s), h_2(s)$ e si sommano i corrispondenti \
+    valori dall'array $tilde(x)$ (usando $underline(b)$ con rank/select) per ottenere $f(s)$
+  ]
+)
+
 Quando diamo in pasto una stringa $s$, lui calcola $h_0(s), h_1(s), h_2(2)$ e risolve $(x_h_0(s) + x_h_1(s), x_h_2(s)) mod 2^r$ e lo restituisce.
 
 Quindi la struttura non ha da nessuna parte dell'insieme $S$ (non lo memorizza da nessuna parte).
