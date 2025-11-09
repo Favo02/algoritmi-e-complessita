@@ -4,12 +4,14 @@
 
 == Funzione di Hash
 
-$ h : underbrace(U, "universo") -> underbrace(m, "bucket") $
-
-Proprietà che ci si aspetta siano vere:
-+ $h$ sia facile da calcolare (si calcoli al massimo in tempo $O(log(U))$, meglio se in $O(1)$)
+Una funzione di Hash e una funzione $h$ t.c: 
+$ 
+  h : underbrace(U, "universo") -> underbrace(m, "bucket")
+$
+Proprietà di una funzione hash:
++ $h$ deve essere *facile da calcolare* (massimo in tempo $O(log(U))$, meglio se in $O(1)$)
 + la funzione occupi poco spazio
-+ il più iniettiva possibile (dato che $|U| >> m$, è impossibile sia iniettiva, quindi ci piacerebbe che tutti i bucket abbiano più o meno stessa cardinalità), quindi che ci siano poche collisioni
++ sia il più *iniettiva* possibile (dato che $|U| >> m$, è impossibile che sia al $100%$ iniettiva). Sarebbe auspicabile che tutti i *bucket* abbiano più o meno la *stessa cardinalità*, quindi che ci siano *poche collisioni*
 
 Ma nella maggior parte dei casi, però non interessa mettere tutto l'universo nei bucket, ma solo un piccolo sottoinsieme $S$:
 $ S subset.eq U, quad |S| << |U|, quad |S| = n, quad n <= m $
