@@ -104,7 +104,7 @@ Andiamo a costruire un *grafo* dove:
   3. Il grafo $G$ deve essere aciclico
 
   Se una di queste proprietà smette di valere, scarto le due funzioni di hash e le riestraggo.
-]
+]<condizioni-grafo-aciclico>
 
 #nota()[
   Il tempo necessario per la *costruzione* di *$G$* *dipende* dal numero di *nodi $m$*. Più $m$ è grande più tentativi servono per non trovare una collisione. 
@@ -327,11 +327,9 @@ $
     }),
     caption: [Spluzione finale del sistema]
   )
-
-
-
-
+  Lo *spazio* occupato dall'array che rappresenta la soluzione è *$m r$ bit*
 ]
+
 #nota()[
   Le proprietà descritte in precedenza sono vere per un ipergrafo di qualsiasi dimensione (dimensione intesa come grandezza di un iperlato, in questo caso $3$, non numero di nodi).
 ]
@@ -340,82 +338,101 @@ $
 
 === Ipergrafo vantaggioso?
 
-È vantaggioso usarare un ipergrafo ($k > 2$) al posto di un grafo ($k = 2$)?
+Possiamo chiederci se sia vantaggioso usarare un ipergrafo con dimensione $k > 2$, al posto di un grafo "standard" ($k = 2$).
 
 #teorema("Teorema")[
-  Per ogni $k >= 2$, esiste un $gamma_k$ tale che $forall m >= gamma_k n$ la costruizione del $k$-ipergrafo è pelabile (ovvero aciclico) e soddisfa le altre due condizioni quasi certamente (bastano pochi tentativi).
+  Per ogni $k >= 2$, esiste un $gamma_k$ t.c: 
+  $
+    forall underbrace(m,"numero nodi") >= gamma_k underbrace(n,|S|) "la costruizione del" k"-ipergrafo è pelabile"
+    
+  $
+  Il grafo così costruito soddisfa anche le altre due condizioni (bastano pochi tentativi).
 ]
-
 Nello specifico:
 - $gamma_2 = 2.09$ (grafo normale)
 - $gamma_3 = 1.23$ (ipergrafo)
 - $gamma_(>= 4) > gamma_3$ (ipergrafi)
 
 #informalmente[
-  Quindi il miglior modo è scegliere $3$ funzioni di hash (cosa non scontata, poteva essere che aumentando la dimensione del grafo diminuiva).
+  La *migliore* costruzione prevede di scegliere *$3$ funzioni di hash* (non scontato, potevano diminuire).
 
-  Quando questa tecnica è stata introdotta, questa cosa non era stata dimostrata, era solo sperimentale (provando con vari ipergrafi di dimensioni diverse).
+  Quando questa tecnica è stata introdotta, il numero minimo di funzione hash necessarie non era stato dimostrato, era solamente un risultato sperimentale (provando con vari ipergrafi di dimensioni diverse).
 
-  Più avanti è stata dimostrata, trovando una formula per $gamma_k$ e dimostrando che il minimo è in $3$.
+  Negli anni si è trovata una formula per $gamma_k$, dimostrando che il minimo è in $3$.
 ]
 
 === Spazio occupato
 
-Theoretical lower bound di $f : S -> 2^r$
+Per stabilire se la nostra rappresentazione sia succinta, dobbiamo andare a stimare il *theoretical lower bound* per una funzione dizionario: 
+$ f : S -> 2^r $
 
-Per $s$ fissato di cardinalità $n$, ci sono $(2^r)^n$ funzioni:
-$ Z_n = log 2^(r n) = r n $
-
-La nostra struttura (con $k = 3$) usa
-$ D_n = gamma_3 n r = 1.23 n r $
-quindi è compatta (un $O(n)$), non succinta.
+#dimostrazione()[
+  Dato l'insieme delle chiavi $S = |n|$, ci sono $(2^r)^n$ funzioni: 
+  $
+    Z_n &= log (2^r)^n\
+        &= log (2^(r n))\
+        &= r n
+  $
+  La struttura proposta (fissato $k=3$) utilizza: 
+  $ D_n = gamma_3 n r = 1.23 n r $
+  Si tratta di una *struttura compatta*, in quanto $D_n$ è un $O$ grande di $Z_n$
+]
 
 === Compressione dell'array
 
-L'unica cosa che memorizziamo è la soluzione del sistema, ovvero un array $x$ di $m r$ bit.
+L'unica cosa che memorizzia la rappresentazione utilizzata è l'array della soluzione del sistema, ovvero un array $x$ di *$m r$ bit*.
 
 #nota[
-  In realtà abbiamo anche bisogno di memorizzare le due/tre funzioni di hash che usiamo.
+  In realtà avremmo anche bisogno di memorizzare le due/tre funzioni di hash utilizate.
 
-  Questa cosa la trascuriamo dato che diciamo che le funzioni di hash occupano "poco spazio".
+  Nel calcolo dello spazio utilizzato andiamo a trascurare la loro dimensione, supponiamo che le funzioni di hash occupino "poco spazio".
+]
+Il sistema è costruito nel seguente modo:
+$
+  cases(
+    (x_(h_0(s)) + x_(h_1(s)) + x_(h_2(s))) = f(s) mod 2^r,
+    dots,
+    forall s in S
+  )
+$
+Tuttavia, per come risolviamo il sistema (tramite la pelatura), partiamo da un array inizializzato a $0$ e man mano assegnaimo per ogni equazione una sola variabile (cardine/hinge).\
+Nell'array ci sono *$<= n$ variabili* *$x_i != 0$* (un hinge per ognuna delle $n$ equazioni).
+
+Sfruttando questa osservazione, al posto di memorizzare tutto l'array $x$, potremmo memorizzare solo gli *$<= n$ elementi non nulli* e un *array $underline(b)$* di *$m$ bit* con le loro posizioni.
+
+Sull'array $underline(b)$ andremo ad usare una *rank/select*: 
+ - Se $underline(b)[i] = 0$, allora incognta del sistema $x_i = 0$ zero, 
+ - Se $underline(b)[i] = 1$, usiamo rank e select per risalire al valore di $x_i$ nell'array $x$ della soluzione.
+
+#dimostrazione()[
+  Spazio utilizzato: 
+  $
+    underbrace(n r, "elementi non nulli") + underbrace(m, "array di bit") + underbrace(o(m), "rank/select su m") \
+    = n r + gamma_3 n + o(gamma_3 n) \
+    = n r + 1.23 n + o(n)
+  $
+
+  $ Z_n = n r $
 ]
 
-Il sistema è fatto così:
-$
-  cases((x_n_0(s) + x_n_1(s) + x_n_2(s)) = f(s) mod 2^r quad forall s in S)
-$
+#attenzione()[
+  La *compressione non* è *sempre conveniente*
+  - *soluzione compressa* = $n r + gamma_3 n + o(n)$
+  - *soluzione non compressa* = $n gamma_3 r$
 
-Ma per come risolviamo il sistema (ovvero con la pelatura), allora pariamo da un array tutto a $0$ e assegnaimo per ogne equazione una sola variabile (lo spigolo/hinge).
-
-Quindi nell'array ci sono $<= n$ variabili $x_i != 0$.
-
-Al posto di memorizzare tutto l'array $x$, memorizziamo solo gli $<= n$ elementi non nulli e un array di $m$ bit con le loro posizioni.
-
-Su questo array $m$ andremo ad usare una rank/select.
-Se c'è uno zero sappiamo che è zero, altrimenti usiamo la rank e select per sapere dov'è nell'array dei soli valori non $0$.
-
-Spazio utilizzato:
-
-$
-  underbrace(n r, "elementi non nulli") + underbrace(m, "array di bit") + underbrace(o(m), "rank/select su m") \
-  = n r + gamma_3 n + o(gamma_3 n) \
-  = n r + 1.23 n + o(n)
-$
-
-$ Z_n = n r $
-
-Non è sempre convenienete la compressione:
-- compressa: $n r + gamma_3 n + o(n)$
-- non compressa: $n gamma_3 r$
-
-Quando è conveniente?
-$
-  n r + gamma_3 n + cancel(o(n)) quad < quad n gamma_3 r \
-  ... \
-  r > 5
-$
-
-Conviene comprimere quando $r > 5$.
+  Quando conviene?
+  $
+    n r + gamma n + cancel(o(n)) quad &< quad n gamma r \
+                        n r + gamma n &< n gamma r \
+                        &mb("Divido per n")\
+                        (n r + gamma n)/mb(n) &< (n gamma r)/mb(n)\
+                        r + gamma &< gamma r\
+                        gamma &< gamma r - r\
+                        gamma &< r(gamma - 1)\
+                        r &> gamma/(gamma - 1) approx 1.23/0.23 approx 5.35
+  $
+  Conviene *comprimere* quando *$r > 5$*.
+]
 
 === Uso della struttura
 
