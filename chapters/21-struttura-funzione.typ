@@ -201,8 +201,9 @@ Se scegliessimo *più di due funzioni di hash* otterremmo un *ipergrafo*, permet
 ]
 
 Con $3$ funzioni hash otteniamo un ipergrafo, dove: 
- - ogni lato è un iperlato che connette 3 lati.
- - Le prime due proprieà da rispettare rimangono fattibili - la prorità di aciclicità non è definita su un iperlato.
+ - ogni lato è un iperlato che connette 3 lati
+ - Le prime due proprieà da rispettare rimangono fattibili
+ - la prorità di aciclicità non è definita su un iperlato
 
 === Pelabilità di un Ipergrafo (aciclicità)
 
