@@ -207,36 +207,138 @@ Con $3$ funzioni hash otteniamo un ipergrafo, dove:
 
 === Pelabilità di un Ipergrafo (aciclicità)
 
-Un ipergrafo è pelabile se esiste un ordinamento dove compaiono tutti gli iperlati e per ogni iperlato viene scelto un suo vertice non ancora comparso in nessuna degli iperlati precedenti (questo vertice si chiama cardine/hinge).
+Un ipergrafo si dice *pelabile* se esiste un ordinamento dove compaiono tutti gli iperlati, dove per ogni iperlato viene scelto un suo vertice non ancora comparso in *nessuno* degli iperlati precedenti (questo vertice si chiama *cardine/hinge*). Deve esistere un ordinamento: 
+$
+  (e_0, x_0),(e_1,x_1),(e_(k-1),x_(k-1))\
+  "Dove" e_i ="iperalti", space x_i="vertici"\
+  "t.c" x_i in.not e_0 union dots union e_i-1
+                                          
+$
 
 #informalmente[
-  Modo di ordinale i suoi iperlati e scegliere un suo vertice che compare in quell'iperlato in modo che quel vertice non compaia mai in nessun iperlato precedente.
+  Si tratta di un modo di ordinale gli iperlati. Viene scelto un vertice che compare in un certo iperlato. In questo modo, tale vertice non potrà mai comparire in nessun iperlato precedente.
 ]
-
-La pelatura di un ipergrafo coincide esattamente con l'aciclicità di grafo.
-Questa cosa ci permette di definire aciclicità su un ipergrafo.
 
 === Risolubilità
 
-Se è aciclico/pelabile allora è risolubile.
+#nota()[
+  La *pelatura* di un ipergrafo *coincide* esattamente con *l'aciclicità di un grafo*.
+  Questa proprietà ci permette di definire l'aciclicità su un ipergrafo.
+]
 
-Ad esempio su un ipergrafo di dimensione $3$.
-
-Le sue equazioni sono fatte così allora (dato che un vertice non deve essere ancora apparso):
-$
-  cases(
-    mr(x_0) + x_1 + x_2 = 25 quad mod 100,
-    x_0 + x_2 + mr(x_4) = 37 quad mod 100,
-    x_1 + x_2 + mr(x_3) = 12 quad mod 100
+#esempio()[
+  #figure(
+    grid(
+      columns: 2,
+      column-gutter: 2em,
+      row-gutter: 1em,
+      // Ipergrafo
+      cetz.canvas({
+        import cetz.draw: *
+        
+        // Definiamo i nodi (vertici)
+        let nodes = (
+          (name: "0", pos: (1.5, 0), label: $0$),
+          (name: "1", pos: (3, 2.5), label: $1$),
+          (name: "2", pos: (2, 3), label: $2$),
+          (name: "3", pos: (4, 3.5), label: $3$),
+          (name: "4", pos: (0.3, 2), label: $4$),
+        )
+        
+        // Disegniamo i nodi
+        for node in nodes {
+          circle(node.pos, radius: 0.15, fill: black)
+          content((node.pos.at(0) + 0.35, node.pos.at(1) + 0.2), node.label)
+        }
+        
+        // Iperlato A = {0, 1, 2} - frecce
+        line((1.5, 0) ,(3, 2.5), stroke: blue + 1.2pt)
+        line((3, 2.5),(2.4, 2.3),(2, 3), stroke: blue + 1.2pt)
+        line((2, 3), (1.5, 0), stroke: blue + 1.2pt)
+        content((2.2, 1.8), text(size: 11pt, $A$), fill: white, padding: 0.1)
+        
+        // Iperlato B = {1, 2, 3} - frecce
+        line((3, 2.5), (2, 3), stroke: red + 1.2pt)
+        line((2, 3), (4, 3.5), stroke: red + 1.2pt)
+        line((4, 3.5), (3, 2.5), stroke: red + 1.2pt)
+        content((3, 3.0), text(size: 11pt, $B$), fill: white, padding: 0.1)
+        
+        // Iperlato C = {0, 2, 4} - frecce
+        line((1.5, 0),(1.4, 1.8),(2, 3), stroke: green.darken(20%) + 1.2pt)
+        line((2, 3), (0.5, 2), stroke: green.darken(20%) + 1.2pt)
+        line((0.5, 2), (1.5, 0), stroke: green.darken(20%) + 1.2pt)
+        content((1.0, 1.7), text(size: 11pt, $C$), fill: white, padding: 0.1)
+      }),
+      
+      // Tabella di pelatura
+      align(horizon)[
+        #table(
+          columns: 3,
+          align: center,
+          [*Iperlato*], [*Cardine*], [*Ordine*],
+          $A$, $0$, $1$,
+          $C$, $4$, $2$,
+          $B$, $3$, $3$,
+        )
+      ]
+    ),
+    caption: [
+      Esempio di ipergrafo pelabile con la sua sequenza di pelatura. \
+      Gli iperlati sono: $A = {0, 1, 2}$, $B = {1, 2, 3}$, $C = {0, 2, 4}$
+    ]
   )
-  \
-  = x_0 = 25, x_4 = 12, x_3 = 12
-$
+  Scrivendo le equazioni di ogni iperlato e sequendo l'ordine di pelatura, otteniamo un sistema con $n = |S|$ equazioni e $m = #"nodi"$ incognite: 
+  $
+    cases(
+      A &= mr(x_0) &+ x_1 &+ x_2 &+ " - " &+ " - " = 25 quad mod 100,
+      C &= x_0 &+ " - " &+ x_2 &+ " - " &+ mr(x_4) = 37 quad mod 100,
+      B &= " - " &+ x_1 &+ x_2 &+ mr(x_3) &+ " - " = 12 quad mod 100
+    )
+    \
+  $
+  Dove in rosso, sono marcati i $mr("cardini")$. il cardine $i$-esimo mi dice la variabile libera che possa assegnare all'equazione $i$-esima. Risolvendo il sitema, partendo da $i=0$:
+  - $x_0 = 25$
+  - $x_4 = 12.$ In quanto $underbrace(25,x_0) + 12  = 37$
+  - $x_3$ = 12
 
-Dato che c'è sempre una variabile libera, allora è sempre possibile assegnare un valore a quella variabile in modo che rispetti le altre già assegnate.
-Questa cosa è vera per ogni ipergrafo di qualsiasi dimensione (dimensione intesa come grandezza di un iperlato, in questo caso $3$, non numero di nodi).
+  Dato che *c'è sempre una variabile libera*, allora è sempre possibile assegnare un valore a quella variabile in modo che rispetti le altre già assegnate.
+    #figure(
+    cetz.canvas({
+      import cetz.draw: *
+      
+      // Array principale
+      let values = (25, 0, 0, 12, 12)
+      let x-start = 0
+      let cell-width = 1
+      let cell-height = 0.6
+      
+      // Disegna le celle dell'array
+      for (i, val) in values.enumerate() {
+        let x = x-start + i * cell-width
+        rect((x, 0), (x + cell-width, cell-height), stroke: black + 1pt)
+        content((x + cell-width/2, cell-height/2), text(size: 11pt, str(val)))
+      }
+      
+      // Etichette sotto l'array
+      for i in range(5) {
+        let x = x-start + i * cell-width
+        content((x + cell-width/2, -0.4), text(size: 10pt, $x_#i$))
+      }
+    }),
+    caption: [Spluzione finale del sistema]
+  )
 
-=== Vantaggioso?
+
+
+
+]
+#nota()[
+  Le proprietà descritte in precedenza sono vere per un ipergrafo di qualsiasi dimensione (dimensione intesa come grandezza di un iperlato, in questo caso $3$, non numero di nodi).
+]
+
+
+
+=== Ipergrafo vantaggioso?
 
 È vantaggioso usarare un ipergrafo ($k > 2$) al posto di un grafo ($k = 2$)?
 
