@@ -38,7 +38,7 @@ Formalizzando, i *vincoli* del problema Set Cover come ILP sono:
 La soluzione (da minimizzare) è la somma dei costi delle aree prese:
 $ min x_1 w_1 + x_2 w_2 + ... + x_m w_m $
 
-#nota()[
+#nota[
   Il numero di vincoli è polinomiale rispetto a $n$ e $m$.
 ]
 
@@ -213,7 +213,7 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
   ]
 ] <set-cover-approssimazione>
 
-#nota()[
+#nota[
   Usare bene il teorema per l'ammisibilità (#link-teorema(<set-cover-probabilistico-ammissibile>)) e per l'approssimazione (#link-teorema(<set-cover-approssimazione>)) significa trovare un valore di *$k$ bilanciato*:
   - Nel primo caso vorremo un $k$ alto, per aumentare l'ammissibilità
   - Nel secondo caso vorremmo un $k$ basso, per avere una soluzione più vicina all'ottimo

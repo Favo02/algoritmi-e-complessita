@@ -30,7 +30,7 @@ Formalmente:
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
 
-  #dimostrazione()[
+  #dimostrazione[
     Data un'istanza di $"VertexCover"$:
     $ x' = (underbrace(G=(V,E), "grafo"), underbrace((w_i)_(i in V), "costi"), underbrace(overline(w), "budget")) $
 

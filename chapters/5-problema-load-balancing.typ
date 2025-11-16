@@ -155,7 +155,7 @@ Formalmente:
     Di conseguenza, dividendo per $L^*$ otteniamo il rapporto di approsimazione:
     *$ L/L^* <= 2 space qed $*
 
-    #informalmente()[
+    #informalmente[
       La dimostrazione utilizza i seguenti concetti:
       - Utilizza proprietà dell'ottimo (non dell'algoritmo), ma senza sapere come questo ottimo viene costruito. Le osservazioni fatte valgono per una qualunque soluzione, al posto di $L^*$ si poteva usare $forall L$.
       - Ragionando sull'algoritmo:

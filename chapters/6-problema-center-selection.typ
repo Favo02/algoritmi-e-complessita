@@ -337,7 +337,7 @@ Possiamo ora definire il problema *Center Selection*:
 
       In altre parole, quando viene selezionato un *qualsiasi* punto che si rivolge allo stesso centro ottimo $mg(hat(c)^*)$, vengono cancellati almeno tutti i punti che appartenevano alla stessa cella di Voronoi di $mg(hat(c)^*)$.
 
-      #dimostrazione()[
+      #dimostrazione[
         Usando la disuguaglianza triangolare:
         $
           d(mb(s'), mr(overline(s))) <= underbrace(d(mb(s'), mg(hat(c)^*)), <= rho^*) + underbrace(d(mr(overline(s)), mg(hat(c)^*)), <=rho^*) <= 2rho^*
@@ -430,7 +430,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   [*Output* $C$],
 )
 
-#nota()[
+#nota[
   L'algoritmo appena presentato è *molto simile* a $"CenterSelectionPlus"$.
 
   La differenza principale è che $"Plus"$ cancella i punti nel raggio, $"Greedy"$ no.
@@ -444,7 +444,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 #teorema("Proprietà")[
   L'esecuzione di $"GreedyCenterSelection"$ è una delle *possibili esecuzioni* di $"CenterSelectionPlus"$, quando $r = rho^*$.
 
-  #dimostrazione()[
+  #dimostrazione[
     Supponiamo di modificare $"CenterSelectionPlus"$ nel seguente modo:
     #grid(
       columns: (1fr, 1fr),
