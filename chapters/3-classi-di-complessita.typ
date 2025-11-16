@@ -401,7 +401,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   #informalmente[
     Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, spesso è utile ricondursi a proprietà applicabili/non applicabili rispetto ai problemi di decisione.
   ]
-]
+] <problema-max-sat>
 
 === Problema di Decisione Associato ad un Problema di Ottimizzazione <problema-decisione-associato>
 
