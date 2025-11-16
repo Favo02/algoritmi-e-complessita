@@ -74,3 +74,6 @@
 #include "chapters/12-algoritmi-probabilistici.typ"
 #include "chapters/13-problema-min-cut.typ"
 #include "chapters/14-problema-set-cover.typ"
+#include "chapters/15-problema-max-ek-sat.typ"
+
+#include "chapters/17-strutture-dati-compresse.typ"
