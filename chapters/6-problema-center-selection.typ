@@ -31,12 +31,12 @@ Possiamo ora definire il problema *Center Selection*:
   - $S subset.eq Omega$: insieme dei punti sullo spazio metrico
   - $k in bb(N)^+$: budget da rispettare
 - *$"Amm"_(Pi)$*: $C subset.eq S "t.c." |C| <= k$: sottoinsieme di punti (i centri) che rispettano il budget.
-- *Funzione obiettivo*: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
+- *$C_Pi$*: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
   - definita la distanza tra un punto e il centro più vicino:
   $ rho(x, C) = min_(c in C) d(x,c), quad forall x in S $
   - fissiamo la funzione obiettivo come il massimo di queste distanze:
   $ rho(C) = max_(x in S) rho(x, C) = "raggio di copertura di" C $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #figure(
   cetz.canvas(length: 1cm, {
@@ -175,9 +175,9 @@ Possiamo ora definire il problema *Center Selection*:
 ]
 
 #pseudocode(
-  [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R)^+$],
+  [input $<- S subset.eq Omega$, $k in bb(N)^+, r in bb(R)^+$],
   [$C <- emptyset$],
-  [*While* $S eq.not emptyset$],
+  [*While* $S eq.not emptyset$ *do*],
   indent(
     [$hat(s) <-$ take any $in S$ #emph("// selezionare punto a caso")],
     [$C <- C union {hat(s)}$ #emph("// diventa un centro")],
@@ -187,7 +187,6 @@ Possiamo ora definire il problema *Center Selection*:
   indent([*Output* "impossibile"]),
   [*Else*],
   indent([*Output* $C$]),
-  [*End*],
 )
 
 #nota[
@@ -338,7 +337,7 @@ Possiamo ora definire il problema *Center Selection*:
 
       In altre parole, quando viene selezionato un *qualsiasi* punto che si rivolge allo stesso centro ottimo $mg(hat(c)^*)$, vengono cancellati almeno tutti i punti che appartenevano alla stessa cella di Voronoi di $mg(hat(c)^*)$.
 
-      #dimostrazione()[
+      #dimostrazione[
         Usando la disuguaglianza triangolare:
         $
           d(mb(s'), mr(overline(s))) <= underbrace(d(mb(s'), mg(hat(c)^*)), <= rho^*) + underbrace(d(mr(overline(s)), mg(hat(c)^*)), <=rho^*) <= 2rho^*
@@ -412,10 +411,10 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   Se $r$ scende ulteriormente sotto $rho^* / 2$, allora è impossibile che emetta soluzione.
 ]
 
-== Algoritmo GreedyCenterSelection [2-APX]
+== Algoritmo GreedyCenterSelection [$2$-APX]
 
 #pseudocode(
-  [Input: $S subset.eq Omega, k in bb(N)^+$],
+  [input $<- S subset.eq Omega, k in bb(N)^+$],
   [*If* $|S| <= k$ *then* #emph("// budget abbastanza grande da rendere ogni punto un centro, " + $rho = 0$)],
   indent(
     [*Output* $S$],
@@ -423,16 +422,15 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   ),
   [$overline(s) <-$ choose any $in S$ #emph("// scelta arbitraria")],
   [$C <- union {overline(s)}$],
-  [*While* $|C| < k$],
+  [*While* $|C| < k$ *do*],
   indent(
     [select $overline(s)$ maximizing $d(s,C)$ #emph("// scegliere il punto " + $overline(s)$ + " più distante da tutti i centri")],
     [$C <- union {overline(s)}$ #emph("// farlo diventare centro")],
   ),
   [*Output* $C$],
-  [*End*],
 )
 
-#nota()[
+#nota[
   L'algoritmo appena presentato è *molto simile* a $"CenterSelectionPlus"$.
 
   La differenza principale è che $"Plus"$ cancella i punti nel raggio, $"Greedy"$ no.
@@ -446,7 +444,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 #teorema("Proprietà")[
   L'esecuzione di $"GreedyCenterSelection"$ è una delle *possibili esecuzioni* di $"CenterSelectionPlus"$, quando $r = rho^*$.
 
-  #dimostrazione()[
+  #dimostrazione[
     Supponiamo di modificare $"CenterSelectionPlus"$ nel seguente modo:
     #grid(
       columns: (1fr, 1fr),
@@ -454,9 +452,9 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
       [
         #align(center)[*CenterSelectionPlus V1*]
         #pseudocode(
-          [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
+          [input $<- S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
           [$C <- emptyset$],
-          [*While* $S eq.not emptyset$],
+          [*While* $S eq.not emptyset$ *do*],
           indent(
             [$overline(s) <-$ take any $in S$ ],
             [$C <- C union {overline(s)}$],
@@ -471,9 +469,9 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
       [
         #align(center)[*CenterSelectionPlus V2*]
         #pseudocode(
-          [Input: $S subset.eq Omega, k in bb(N)^+, mr(r = rho^*)$],
+          [input $<- S subset.eq Omega, k in bb(N)^+, mr(r = rho^*)$],
           [$C <- emptyset$],
-          [*While* $mr(exists s quad d(s,C) > 2r)$],
+          [*While* $mr(exists s quad d(s,C) > 2r)$ *do*],
           indent(
             [$mr(overline(s)) <-$ take any $mr(in S)$ that $mr(limits(max)_(s in S) d(overline(s),C))$],
             [$C <- C union {overline(s)}$],
@@ -558,10 +556,11 @@ Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus
   Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V,E)$: grafo non orientato
   - $k in bb(N)^+$: budget
-- *$"Sol"_Pi$* = $exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
+- *$"Sol"_Pi$*: $exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
 $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d in D) $
 
 #figure(

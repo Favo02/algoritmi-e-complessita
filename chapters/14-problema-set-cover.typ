@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Set Cover (basato sul Probabilistic Rounding)
+= Problema Set Cover (basato sul Probabilistic Rounding) [NPOc]
 
 #informalmente[
   Esiste un universo di $n$ _punti_.
@@ -22,7 +22,7 @@ Formalmente:
 - *$"Amm"_Pi$* $= I subset.eq {1, ..., m}, quad limits(union.big)_(i in I) S_i = Omega$: un insieme di indici di aree che coprono tutti i punti
 - *$C_Pi$*= somma dei costi delle aree selezionate
   $ w = sum_(i in I) w_i $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 == Set Cover come Programmazione Lineare
 
@@ -38,7 +38,7 @@ Formalizzando, i *vincoli* del problema Set Cover come ILP sono:
 La soluzione (da minimizzare) è la somma dei costi delle aree prese:
 $ min x_1 w_1 + x_2 w_2 + ... + x_m w_m $
 
-#nota()[
+#nota[
   Il numero di vincoli è polinomiale rispetto a $n$ e $m$.
 ]
 
@@ -65,9 +65,8 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
   Questa probabilità dipende dal numero reale soluzione della programmazione lineare.
 ]
 
-
 #pseudocode(
-  [*Input* $k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
+  [input $<- k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
   [$hat(x)_i <-$ risolvi $hat(V)$ come $"LP"$ #emph("// non intera, " + $hat(x)_1 dots, hat(x)_m in [0,1]$)],
   [$I <- emptyset$],
   [*For* $t=1, dots, ceil(k+ln n)$ *do*],
@@ -213,7 +212,7 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
   ]
 ] <set-cover-approssimazione>
 
-#nota()[
+#nota[
   Usare bene il teorema per l'ammisibilità (#link-teorema(<set-cover-probabilistico-ammissibile>)) e per l'approssimazione (#link-teorema(<set-cover-approssimazione>)) significa trovare un valore di *$k$ bilanciato*:
   - Nel primo caso vorremo un $k$ alto, per aumentare l'ammissibilità
   - Nel secondo caso vorremmo un $k$ basso, per avere una soluzione più vicina all'ottimo
@@ -234,8 +233,6 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
         P[cal(E)_"non-ott"] & = P["fatt approx" > 6 + 2 ln n] \
                             & <= 1/2
       $
-
-
 
     - $cal(E)_"ok"$ l'evento "la soluzione è ammissibile e ha tasso di approssimazione $<= 6 + 2 ln n$", quindi una soluzione _buona_:
       $

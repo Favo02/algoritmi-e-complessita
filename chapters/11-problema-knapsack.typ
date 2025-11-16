@@ -16,7 +16,7 @@ Formalmente:
   $ I subset.eq n, quad sum_(i in I) w_i <= W $
 - *$C_Pi$*: somma dei valori degli oggetti selezionati
   $ v = sum_(i in I) v_i $
-- *$t_Pi$*: $max$
+- *$t_Pi$*$= max$
 
 #teorema("Teorema")[
   *$ "Knapsack" in "NPOc" $*
@@ -126,7 +126,6 @@ Per questo motivo si ricorre alla programmazione dinamica.
     #pinit-arrow("2,5", "1,5", start-dy: -3pt, end-dy: 6pt, end-dx: 11pt, fill: red.transparentize(50%))
   ]
 
-
   Ad esempio, la cella $v[2, 3]$ è calcolata come il massimo tra $mg(0+4)$ (prendere l'oggetto 2) e $mr(3)$ (non prendere l'oggetto 2). Mentre la cella $v[2, 5]$ come $max(mg(3+4), mr(3))$.
 
   La soluzione ottima è $v[3,5] = 7$, ottenuta prendendo gli oggetti 1 e 2.
@@ -151,7 +150,7 @@ Algoritmo:
       ),
     ),
   ),
-  [*End*],
+  [*Output* $v[n,W]$],
 )
 
 #attenzione[

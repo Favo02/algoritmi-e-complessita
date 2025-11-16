@@ -1,13 +1,13 @@
 #import "../imports.typ": *
 
-= Problema MaxEkSat
+= Problema MaxEkSat [NPOc]
 
 #informalmente[
   Versione ristretta di #link(<problema-max-sat>)[$"MaxSat"$], in cui ogni clausola ha esattamente $k$ letterali.
 ]
 
 Formalmente:
-- *$I_pi$*: formula CNF, in cui ogni clausola contiene esattamente $k$ letterali (su variabili distinte)
+- *$I_Pi$*: formula CNF, in cui ogni clausola contiene esattamente $k$ letterali (su variabili distinte)
   #nota[
     Una formula booleana in forma normale congiunta (CNF) è composta da:
     - tante clausole, messe in _AND_ tra di loro
@@ -18,8 +18,8 @@ Formalmente:
     $underbrace((x_1 or not x_2 or x_4), "clausola") and (x_3 or not x_4 or not x_1) and (x_1 or x_2 or x_3)$
   ]
 - *$"Amm"_Pi$*: assegnamenti di valori di verità delle variabili
-- *$C_pi$*: numero di clausole soddisfatte
-- *$t_pi$*: $max$
+- *$C_Pi$*: numero di clausole soddisfatte
+- *$t_Pi$*$= max$
 
 #nota[
   Se riuscissi a risolvere questa versione del problema in tempo polinomiale riuscirei anche a risolvere il problema $"SAT"$.
@@ -66,7 +66,7 @@ Formalmente:
     Sfruttiamo la #link("https://en.wikipedia.org/wiki/Law_of_total_expectation")[legge del valore atteso totale]: date due variabili aleatorie $X$ e $Y$ definite sullo stesso spazio di probabilità, allora:
     $ E[E[X|Y]]=E[X] $
 
-    #informalmente()[
+    #informalmente[
       Anziché calcolare $E[T]$ direttamente lo calcoliamo condizionato su tutti i possibili assegnamenti delle variabili moltiplicati per la loro probabilità $E[T | X = b] dot P[X = b]$.
       Dato che provare ogni valore di una variabile significa provare $0$ e $1$, allora possiamo trasformarlo in una sommatoria: $limits(sum)_(b in 2) E[T | X = b] dot P[X = b]$.
     ]
@@ -230,9 +230,7 @@ Formalmente:
       [$X[i]<- 1$],
       [$D <- D union Delta_(D_1)$],
     ),
-    [*End*],
   ),
-  [*End*],
 )
 
 #informalmente[
@@ -284,7 +282,7 @@ Sia $h$ il numero di variabili da $X_i$ *in poi* ($X_i$ inclusa). All'istante $i
 #teorema("Teorema")[
   L'algoritmo deterministico è una $(2^k/(2^k-1))$-approssimazione per $"Max"E_k"Sat"$.
 
-  #dimostrazione()[
+  #dimostrazione[
     Sia $t$ il numero di clausole, $overline(t)$ il numero di clausole soddisfatte dall'algoritmo e $t^*$ l'ottimo.
     Calcoliamo il rapporto di approssimazione:
     $
@@ -301,7 +299,7 @@ Sia $h$ il numero di variabili da $X_i$ *in poi* ($X_i$ inclusa). All'istante $i
   ]
 ]
 
-#nota()[
+#nota[
   Durante il processo di derandomizzazione abbiamo usato la proprietà di *internalità della media*: l'intervallo di valori che una variabile aleatoria può assumere contiene per forza la sua media.
 
   Di conseguenza se, in media, una variabile aleatoria vale $A$, calcolando tutti i suoi valori almeno uno deve valere $>= A$.

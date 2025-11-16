@@ -8,19 +8,20 @@
   Vogliamo dunque distribuire il carico il meglio possibile, evitando di avere macchine in uno stato di idle prolungato.
 ]
 
-- $I_Pi =$
+Formalmente:
+- *$I_Pi =$*
   - $m in bb(N)^+$: numero di macchine
   - $n in bb(N)^+$: numero di task
   - $t_0, t_1, ..., t_(n-1) in bb(N)^+$: durata dei task, $t_i$ è la durata dell'$i$-esimo task
-- $"Amm"_Pi$: partizione degli indici dei task nelle macchine, ovvero i task che ogni macchina svolge
+- *$"Amm"_Pi$*: partizione degli indici dei task nelle macchine, ovvero i task che ogni macchina svolge
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
-- $C_(Pi) = L$: span della soluzione ($L$), ovvero il carico della macchina con più lavoro
+- *$C_Pi$*$= L$: span della soluzione ($L$), ovvero il carico della macchina con più lavoro
   $
     L = max_(i in m)(L_i), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
   $
-- $t_Pi = min$
+- *$t_Pi$*$= min$
 
 #nota[
   La soluzione *ideale* assegnerebbe ad ogni macchina lo stesso carico, ovvero la *media* dei task:
@@ -46,7 +47,7 @@
   *$ "LoadBalancing" in "NPOc" $*
 ]
 
-== Greedy LoadBalancing _(online)_ [2-APX]
+== Greedy LoadBalancing _(online)_ [$2$-APX]
 
 #nota[
   Questo algoritmo è *online*, ovvero i task da assegnare alle varie macchine possono arrivare man mano.
@@ -56,13 +57,13 @@
 #pseudocode(
   [$A_i <- emptyset quad forall i in m$],
   [$L_i <- 0 quad forall i in m$ #emph("// carico totale di ogni macchina")],
-  [*For* $j = 0, 1, dots, n-1$ #emph("// per ogni task")],
+  [*For* $j = 0, 1, dots, n-1$ *do* #emph("// per ogni task")],
   indent(
     [$hat(i) <- limits(arg min)_(i in m) space L_i$ #emph("// macchina più scarica in questo momento: " + $hat(i)$)],
     [$A_hat(i) <- A_hat(i) union {j}$],
     [$L_hat(i) <- L_hat(i)+t_j$],
   ),
-  [*End*],
+  [*Output* A],
 )
 
 #esempio[
@@ -154,7 +155,7 @@
     Di conseguenza, dividendo per $L^*$ otteniamo il rapporto di approsimazione:
     *$ L/L^* <= 2 space qed $*
 
-    #informalmente()[
+    #informalmente[
       La dimostrazione utilizza i seguenti concetti:
       - Utilizza proprietà dell'ottimo (non dell'algoritmo), ma senza sapere come questo ottimo viene costruito. Le osservazioni fatte valgono per una qualunque soluzione, al posto di $L^*$ si poteva usare $forall L$.
       - Ragionando sull'algoritmo:
@@ -220,8 +221,8 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 #pseudocode(
   [$I_Pi <- I_("GreedyLoadBalancing")$],
   [Sort($t$) #emph("// ordinare i task (decrescente)")],
-  [GreedyLoadBalancing($n$, $m$, $t$) #emph("// viene eseguito l'algoritmo greedy")],
-  [*End*],
+  [$A <-$ GreedyLoadBalancing($n$, $m$, $t$) #emph("// viene eseguito l'algoritmo greedy")],
+  [*Output* $A$],
 )
 
 #attenzione[
@@ -307,7 +308,7 @@ Formalmente:
 - *$I_Pi$*:
   - $t_0, ..., t_(n-1) in bb(N)^+$: durata dei task
   - $epsilon > 0 in bb(Q)^+$: tasso di approssimazione desiderato, otterremo una $(1+epsilon)$-approssimazione
-- *$"Amm"_(Pi)$*:
+- *$"Amm"_Pi$*:
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
@@ -315,18 +316,18 @@ Formalmente:
   $
     L = max(L_1, L_2), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
   $
-- *$t_Pi$* = $"min"$
+- *$t_Pi$*$= min$
 
 Algoritmo:
 
 #pseudocode(
-  [*Input*: $t_0,dots,t_(n-1), quad epsilon > 0$],
+  [input $<- t_0,dots,t_(n-1), quad epsilon > 0$],
   [*If* $epsilon >= 1$ *then*],
   indent(
     [Assegna tutti i task a una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
     [*Stop*],
   ),
-  [Ordinare i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
+  [Sort $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
   [*Fase $1$*],
   indent(
     [$k <- ceil(1/epsilon-1)$],

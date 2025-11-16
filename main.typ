@@ -2,8 +2,21 @@
 
 // metadata
 #let title = "Algoritmi e Complessità"
-#let subtitle = "Università degli Studi di Milano - Informatica"
+#let subtitle = "Università degli Studi di Milano - Informatica Magistrale"
 #let authors = (("Luca Favini", "Favo02"), ("Luca Corradini", "LucaCorra02"), ("Matteo Zagheno", "Tsagae"))
+#let introduction = [
+  #show link: underline
+  = Dispensa di Algoritmi e Complessità
+
+  Appunti del corso di #link("https://boldi.di.unimi.it/Corsi/AlgComp2025/")[_Algoritmi e Complessità_] (a.a. 2024/25), tenuto dal Prof. _Paolo Boldi_, Corso di Laurea in Informatica Magistrale, Università degli Studi di Milano.
+
+  Realizzati da #(authors.map(author => [#link("https://github.com/" + author.at(1))[#text(author.at(0))]]).join([, ])), con il contributo di #link("https://github.com/Favo02/algoritmi-e-complessita/graphs/contributors")[altri collaboratori].
+
+  Questi appunti sono open source: #link("https://github.com/Favo02/algoritmi-e-complessita")[github.com/Favo02/algoritmi-e-complessita] con licenza #link("https://creativecommons.org/licenses/by/4.0/")[CC-BY-4.0].
+  Le contribuzioni e correzioni sono ben accette attraverso Issues o Pull Requests.
+
+  Ultima modifica: #datetime.today().display("[day]/[month]/[year]").
+]
 
 #set document(
   title: title,
@@ -11,7 +24,7 @@
 )
 
 // first page and outline
-#frontmatter(title, subtitle, authors)
+#frontmatter(title, subtitle, authors, introduction)
 
 // various settings
 #set terms(separator: [: ]) // terms list
@@ -60,9 +73,13 @@
 )
 
 // content
+
+#part("Fondamenti")
 #include "chapters/1-notazione.typ"
 #include "chapters/2-problemi-e-algoritmi.typ"
 #include "chapters/3-classi-di-complessita.typ"
+
+#part("Algoritmi di Approssimazione")
 #include "chapters/4-problema-max-bimatching.typ"
 #include "chapters/5-problema-load-balancing.typ"
 #include "chapters/6-problema-center-selection.typ"
@@ -71,9 +88,15 @@
 #include "chapters/9-problema-congested-paths.typ"
 #include "chapters/10-problema-tsp-metrico.typ"
 #include "chapters/11-problema-knapsack.typ"
+
+#part("Algoritmi Probabilistici")
 #include "chapters/12-algoritmi-probabilistici.typ"
 #include "chapters/13-problema-min-cut.typ"
 #include "chapters/14-problema-set-cover.typ"
 #include "chapters/15-problema-max-ek-sat.typ"
 
+#part("Teoria della Complessità di Approssimazione")
+#todo
+
+#part("Strutture Dati Compresse")
 #include "chapters/17-strutture-dati-compresse.typ"
