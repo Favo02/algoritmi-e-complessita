@@ -119,7 +119,7 @@ Un problema $Pi$ di decisione appartiene a NPc se appartiene alla classe NP ed *
   ]
 ] <teorema-corollario-cook>
 
-=== Pseudopolinomialità
+=== Pseudopolinomialità <pseudopolinomialita>
 
 #attenzione[
   Ha senso fare questo discorso solo per algoritmi che prendono in input numeri interi.
@@ -401,7 +401,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   #informalmente[
     Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, spesso è utile ricondursi a proprietà applicabili/non applicabili rispetto ai problemi di decisione.
   ]
-]
+] <problema-max-sat>
 
 === Problema di Decisione Associato ad un Problema di Ottimizzazione <problema-decisione-associato>
 
