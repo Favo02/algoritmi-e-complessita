@@ -14,11 +14,11 @@
   ]
 ]
 
-Formalmente, possiamo definire il problema Max Matching come segue:
-- $I_Pi = G(V, E)$: grafo non orientato
-- $"Amm"_Pi = M subset.eq E$: un *matching*, ovvero un sottoinsieme di lati tale che ogni vertice è collegato ad al massimo un lato del matching _(ovvero un insieme di coppie sposate)_: $ forall x in V, "al massimo un lato di" M "è incidente su" x $
-- $C_Pi = |M|$: numero di coppie
-- $t_Pi = max$
+Formalmente:
+- *$I_Pi$*$= G(V, E)$: grafo non orientato
+- *$"Amm"_Pi$*$= M subset.eq E$: un *matching*, ovvero un sottoinsieme di lati tale che ogni vertice è collegato ad al massimo un lato del matching _(ovvero un insieme di coppie sposate)_: $ forall x in V, "al massimo un lato di" M "è incidente su" x $
+- *$C_Pi$*$= |M|$: numero di coppie
+- *$t_Pi$*$= max$
 
 Inoltre saranno utili le seguenti definizioni:
 - Lato *libero*: non fa parte del Matching

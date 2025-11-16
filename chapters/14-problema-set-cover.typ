@@ -22,7 +22,7 @@ Formalmente:
 - *$"Amm"_Pi$* $= I subset.eq {1, ..., m}, quad limits(union.big)_(i in I) S_i = Omega$: un insieme di indici di aree che coprono tutti i punti
 - *$C_Pi$*= somma dei costi delle aree selezionate
   $ w = sum_(i in I) w_i $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 == Set Cover come Programmazione Lineare
 

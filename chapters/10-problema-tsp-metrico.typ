@@ -8,13 +8,14 @@
 
 == Problema TSP [NPOc]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
   - $chevron.l delta_e chevron.r_(e in E) in bb(Q)^+$: pesi dei lati
 - *$"Amm"_Pi$*: circuito Hamiltoniano $pi in G$ (tocca esattamente una volta ogni vertice del grafo), oppure $bot$ (se non esiste)
 - *$C_Pi$*: peso del circuito Hamiltoniano:
   $ delta = sum_(e in pi) delta_e $
-- *$t_Pi$* = $min$
+- *$t_Pi$*$= min$
 
 #teorema("Teorema")[
   *$ "TSP" in "NPOc" $*

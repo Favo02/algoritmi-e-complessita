@@ -7,7 +7,7 @@
 ]
 
 Formalmente:
-- *$I_pi$*: formula CNF, in cui ogni clausola contiene esattamente $k$ letterali (su variabili distinte)
+- *$I_Pi$*: formula CNF, in cui ogni clausola contiene esattamente $k$ letterali (su variabili distinte)
   #nota[
     Una formula booleana in forma normale congiunta (CNF) è composta da:
     - tante clausole, messe in _AND_ tra di loro
@@ -18,8 +18,8 @@ Formalmente:
     $underbrace((x_1 or not x_2 or x_4), "clausola") and (x_3 or not x_4 or not x_1) and (x_1 or x_2 or x_3)$
   ]
 - *$"Amm"_Pi$*: assegnamenti di valori di verità delle variabili
-- *$C_pi$*: numero di clausole soddisfatte
-- *$t_pi$*: $max$
+- *$C_Pi$*: numero di clausole soddisfatte
+- *$t_Pi$*$= max$
 
 #nota[
   Se riuscissi a risolvere questa versione del problema in tempo polinomiale riuscirei anche a risolvere il problema $"SAT"$.

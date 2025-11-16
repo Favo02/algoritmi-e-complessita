@@ -14,19 +14,20 @@
   Obiettivo: massimizzare le coppie collegate (rispettando il vincolo $c$).
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G = (N,A)$: grafo orientato
   - $s_0, ..., s_(k-1) in bb(N)$: lista di sorgenti
   - $t_0, ..., t_(k-1) in bb(N)$: lista di destinazioni
   - $c in bb(N^+)$: tasso di congestione
-- *$"Amm"_(Pi)$*: insieme delle coppie collegate
+- *$"Amm"_Pi$*: insieme delle coppie collegate
   $
     I subset.eq k, quad
     forall i in I, quad exists "un cammino" pi_i: s_i ~> t_i \
     "t.c." forall a in A, quad "non ci sono più di" c "cammini" pi_i "che passano per" a
   $
 - *$C_Pi$* = $|I|$: numero di coppie collegate
-- *$t_Pi = max$*
+- *$t_Pi$*$= max$
 
 #nota[
   È possibile specificare la stessa sorgente o destinazione più volte, basta inserirla più volte nella lista di sorgenti/destinazioni.

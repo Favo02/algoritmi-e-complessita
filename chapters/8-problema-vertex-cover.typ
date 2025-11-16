@@ -8,6 +8,7 @@
   Ogni lato del grafo deve essere coperto da almeno un vertice.
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
   - $w_i in bb(Q)^+, space forall i in V$: costo di ogni vertice
@@ -15,7 +16,7 @@
   $ X subset.eq V, quad forall e in E, quad e inter X != emptyset $
 - *$C_Pi$*: costo totale dei vertici selezionati
   $ sum_(i in X)w_i $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #nota[
   La notazione $e inter X$ è valida perché un lato $e$ non è altro che un _insieme_ di due vertici.
@@ -398,6 +399,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$).
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - matrice $A in bb(Q)^(m times n)$: vincoli a cui sono sottoposte le variabili, ogni riga rappresenta gli scalari che moltiplicano le variabili
   - vettore $underline(b) in bb(Q)^m$: limiti o lati destri di ogni vincolo, ovvero il valore a destra della disequazione
@@ -406,7 +408,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   $ A underline(x) >= underline(b) $
 - *$C_Pi$*: il valore pesato del vettore $underline(x)$, dove $T$ all'esponente indica la trasposizione
   $ underline(c)^T underline(x) $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #nota[
   I vincoli possono essere sia di $>=$ che $<=$ (basta cambiare i segni della riga)
@@ -461,13 +463,14 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   Nonostante l'insieme delle soluzioni sia un sottoinsieme rispetto a LP, il problema è più difficile.
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - matrice $A in bb(Q)^(m times n)$: vincoli
   - vettore $underline(b) in bb(Q)^m$: limiti destri
   - vettore $underline(c) in bb(Q)^n$: costi
 - *$"Amm"_Pi$*: vettore $underline(x) in mr(bb(Z)^n)$, dove ogni riga rispetta i vincoli: $A underline(x) >= underline(b)$
 - *$C_Pi$*: il valore pesato della soluzione, $underline(c)^T underline(x)$
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #teorema("Teorema")[
   *$ "IntegerLinearProgramming" in "NPOc" $*

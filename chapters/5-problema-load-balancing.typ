@@ -8,19 +8,20 @@
   Vogliamo dunque distribuire il carico il meglio possibile, evitando di avere macchine in uno stato di idle prolungato.
 ]
 
-- $I_Pi =$
+Formalmente:
+- *$I_Pi =$*
   - $m in bb(N)^+$: numero di macchine
   - $n in bb(N)^+$: numero di task
   - $t_0, t_1, ..., t_(n-1) in bb(N)^+$: durata dei task, $t_i$ è la durata dell'$i$-esimo task
-- $"Amm"_Pi$: partizione degli indici dei task nelle macchine, ovvero i task che ogni macchina svolge
+- *$"Amm"_Pi$*: partizione degli indici dei task nelle macchine, ovvero i task che ogni macchina svolge
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
-- $C_(Pi) = L$: span della soluzione ($L$), ovvero il carico della macchina con più lavoro
+- *$C_Pi$*$= L$: span della soluzione ($L$), ovvero il carico della macchina con più lavoro
   $
     L = max_(i in m)(L_i), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
   $
-- $t_Pi = min$
+- *$t_Pi$*$= min$
 
 #nota[
   La soluzione *ideale* assegnerebbe ad ogni macchina lo stesso carico, ovvero la *media* dei task:
@@ -307,7 +308,7 @@ Formalmente:
 - *$I_Pi$*:
   - $t_0, ..., t_(n-1) in bb(N)^+$: durata dei task
   - $epsilon > 0 in bb(Q)^+$: tasso di approssimazione desiderato, otterremo una $(1+epsilon)$-approssimazione
-- *$"Amm"_(Pi)$*:
+- *$"Amm"_Pi$*:
   $
     "Amm"_Pi = underbrace((A_0, A_1, ..., A_(m-1)), "partizione (insiemi disgiunti)") subset.eq underbrace(n, {0, dots, n-1})
   $
@@ -315,7 +316,7 @@ Formalmente:
   $
     L = max(L_1, L_2), quad underbrace(L_i = sum_(j in A_i) t_j, "Carico della macchina" i)
   $
-- *$t_Pi$* = $"min"$
+- *$t_Pi$*$= min$
 
 Algoritmo:
 

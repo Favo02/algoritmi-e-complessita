@@ -16,7 +16,7 @@ Formalmente:
   $ I subset.eq n, quad sum_(i in I) w_i <= W $
 - *$C_Pi$*: somma dei valori degli oggetti selezionati
   $ v = sum_(i in I) v_i $
-- *$t_Pi$*: $max$
+- *$t_Pi$*$= max$
 
 #teorema("Teorema")[
   *$ "Knapsack" in "NPOc" $*

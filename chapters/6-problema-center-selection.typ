@@ -31,12 +31,12 @@ Possiamo ora definire il problema *Center Selection*:
   - $S subset.eq Omega$: insieme dei punti sullo spazio metrico
   - $k in bb(N)^+$: budget da rispettare
 - *$"Amm"_(Pi)$*: $C subset.eq S "t.c." |C| <= k$: sottoinsieme di punti (i centri) che rispettano il budget.
-- *Funzione obiettivo*: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
+- *$C_Pi$*: la distanza massima tra un punto e il proprio *centro di riferimento* (il centro più vicino). Formalmente:
   - definita la distanza tra un punto e il centro più vicino:
   $ rho(x, C) = min_(c in C) d(x,c), quad forall x in S $
   - fissiamo la funzione obiettivo come il massimo di queste distanze:
   $ rho(C) = max_(x in S) rho(x, C) = "raggio di copertura di" C $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #figure(
   cetz.canvas(length: 1cm, {
@@ -556,10 +556,11 @@ Questo è il caso della dimostrazione precedente, dove $"Greedy" subset.eq "Plus
   Se riusciamo a dominare il grafo selezionando un numero di vertici $<= k$ (budget), allora il problema risponde "si".
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V,E)$: grafo non orientato
   - $k in bb(N)^+$: budget
-- *$"Sol"_Pi$* = $exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
+- *$"Sol"_Pi$*: $exists space D subset.eq V "t.c." |D| <= k$: esiste un insieme di al massimo $k$ vertici che rispetta la seguente proprietà: per ogni vertice, esso #text(fill: red)[è dominante], oppure è #text(fill: blue)[connesso ad un vertice dominante]:
 $ quad forall x in V, space mr(x in D) space or space mb(exists (x, d) in E\, d in D) $
 
 #figure(

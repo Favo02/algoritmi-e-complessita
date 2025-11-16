@@ -52,7 +52,7 @@ Formalmente:
   $ S subset.eq V, quad S != emptyset, quad S != V $
 - *$C_Pi$*: numero dei lati che rientrano nel taglio, ovvero i lati con un'estremità $in S$ e l'altra $in S^c$:
   $ |E_S|, quad E_S = {e in E quad "t.c." quad e inter S != emptyset, quad e inter S^c != emptyset } $
-- *$t_Pi$* = $min$
+- *$t_Pi$*$= min$
 
 #teorema("Proprietà")[
   Il taglio minimo ha dimensione $<=$ del grado del vertice con grado minimo del grafo.
