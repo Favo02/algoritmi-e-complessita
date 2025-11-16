@@ -3,7 +3,7 @@
 = Problema MaxEkSat
 
 #informalmente[
-  Versione ristretta di #link(<problema-max-sat>)[$"MaxSat"$], in cui ogni clausaola ha esattamente $k$ letterali.
+  Versione ristretta di #link(<problema-max-sat>)[$"MaxSat"$], in cui ogni clausola ha esattamente $k$ letterali.
 ]
 
 Formalmente:
@@ -31,10 +31,10 @@ Formalmente:
 
 #teorema("Teorema")[
   Un assegnamento *casuale* delle variabili rende in media vere $(2^k-1)/2^k$ delle clausole totali $t$.
-  $ E[T] = (2^k - 1) / 2^k $
+  $ E[T] = (2^k - 1) / 2^k t $
 
   #attenzione[
-    Il teorema "preciso" enuncia un _uguaglianza stretta_ $=$, ma spesso viene riportato come un _almeno_ $>=$ (utile in problemi SAT dove ogni clausola ha almeno $k$ variabili e non esattamente $k$ variabili).
+    Il teorema "preciso" enuncia un'_uguaglianza stretta_ $=$, ma spesso viene riportato come un _almeno_ $>=$ (utile in problemi SAT dove ogni clausola ha almeno $k$ variabili e non esattamente $k$ variabili).
 
     Entrambe le versioni sono corrette dato che ovviamente $>=$ include anche $=$.
   ]
@@ -60,15 +60,15 @@ Formalmente:
       )
     $
 
-    Sia $t$ il numero di clausole totali e $T$ il numero di clasuole soddisfatte.
+    Sia $t$ il numero di clausole totali e $T$ il numero di clausole soddisfatte.
     Siamo interessati a stimare il numero di clausole soddisfatte in media, ovvero: $E[T]$.
 
-    Sfruttiamo la #link("https://en.wikipedia.org/wiki/Law_of_total_expectation")[legge del valore atteso totale]: date due variabili aleatore $X$ e $Y$ definite sullo stesso spazio di probabilità, allora:
+    Sfruttiamo la #link("https://en.wikipedia.org/wiki/Law_of_total_expectation")[legge del valore atteso totale]: date due variabili aleatorie $X$ e $Y$ definite sullo stesso spazio di probabilità, allora:
     $ E[E[X|Y]]=E[X] $
 
     #informalmente()[
-      Anzichè calcolare $E[T]$ direttamente lo calcoliamo condizionato su tutti i possibili assegnamenti delle variabili moltiplicati per la loro probabilità $E[T | X = b] dot P[X = b]$.
-      Dato che provare ogni valore di una variabile significa provare $0$ e $1$, allora possiamo trasformalo in una sommatoria: $limits(sum)_(b in 2) E[T | X = b] dot P[X = b]$.
+      Anziché calcolare $E[T]$ direttamente lo calcoliamo condizionato su tutti i possibili assegnamenti delle variabili moltiplicati per la loro probabilità $E[T | X = b] dot P[X = b]$.
+      Dato che provare ogni valore di una variabile significa provare $0$ e $1$, allora possiamo trasformarlo in una sommatoria: $limits(sum)_(b in 2) E[T | X = b] dot P[X = b]$.
     ]
 
     Applicando la legge a tutte le $n$ variabili, otteniamo:
@@ -83,7 +83,7 @@ Formalmente:
     $
 
     Sappiamo che il numero di clausole soddisfatte $T$ è la somma del valore delle singole clausole (dato che valgono $0$ o $1$ per definizione di $C_j$): $T = C_1 + dots + C_t$.
-    Sfruttando la linerità del valore atteso: $mb(E[T] = E[C_1 + dots + C_t] = E[C_1] + dots + E[C_t])$:
+    Sfruttando la linearità del valore atteso: $mb(E[T] = E[C_1 + dots + C_t] = E[C_1] + dots + E[C_t])$:
     $
       = 1/2^n sum_(b_1 in 2) dots sum_(b_n in 2) mb(sum_(j=1)^t) E[mb(C_j)|X_1=b_1,dots,X_n = b_n]
     $ <maxeksat-lower-bound-eq>
@@ -128,13 +128,13 @@ Formalmente:
   Per #link-teorema(<maxeksat-clausole-soddisfatte>):
   $ E[C] = (2^k-1)/2^k t $
 
-  Calcoliamo il rapporto di approssimazione:
-  $ C^* / C = t / E[C] <= t / ((2^k-1)/2^k t) = 2^k / (2^k-1) $
+  Calcoliamo il rapporto di approssimazione atteso:
+  $ E[C^* / C] <= t / E[C] <= t / ((2^k-1)/2^k t) = 2^k / (2^k-1) $
 ]
 
 #teorema("Lemma")[
   #informalmente[
-    Esiste un modo di scegliere l'assegnamento delle prime $j$ variabili per manterenere un numero medio di clauosole soddisfatte: $E[T] >= (2^k-1)/2^k$.
+    Esiste un modo di scegliere l'assegnamento delle prime $j$ variabili per mantenere un numero medio di clausole soddisfatte: $E[T] >= (2^k-1)/2^k$.
 
     Questa cosa è molto utile per *costruire* un assegnamento che mantenga questa approssimazione:
     - il teorema #link-teorema(<maxeksat-clausole-soddisfatte>) ci diceva semplicemente che esiste un assegnamento con buona approssimazione
@@ -155,7 +155,7 @@ Formalmente:
       $ (2^k-1)/2^k t <= E[T|X_1=b_1,dots,X_(j-1)=b_(j-1)] $
 
       Per calcolare il valore atteso includendo la variabile $X_j$, dobbiamo sommare tutti i casi possibili, pesati per la loro probabilità.
-      Dati che i due assegnamenti possibili sono $0$ e $1$, entrambi con probabilità $1/2$:
+      Dato che i due assegnamenti possibili sono $0$ e $1$, entrambi con probabilità $1/2$:
       $
         underbrace(E[T|X_1=b_1, dots ,X_(j-1)=b_(j-1), mb(X_j=0)], mp(e_0)) dot P[mb(X_j=0)]\
         + \
@@ -164,7 +164,7 @@ Formalmente:
       $
 
       Vogliamo dimostrare che continua a valere l'ipotesi induttiva:
-      $ (2^k-1)/2^k <= mp(e_0)1/2 + mg(e_1)1/2 $ <maxeksat-induzione-ipotesi>
+      $ (2^k-1)/2^k t <= mp(e_0)1/2 + mg(e_1)1/2 $ <maxeksat-induzione-ipotesi>
 
       Supponiamo per *assurdo* che nessuno dei due assegnamenti $e_0$, $e_1$ sia _buono_, quindi:
       $ e_0 < (2^k-1)/2^k t quad and quad e_1 < (2^k-1)/2^k t $ <maxeksat-induzione-assurdo>
@@ -199,7 +199,7 @@ Formalmente:
       indent(
         [*Continue*],
       ),
-      [*If* $X_i$ non compare nelle clausola $j$-esima *then*],
+      [*If* $X_i$ non compare nella clausola $j$-esima *then*],
       indent(
         [*Continue*],
       ),
@@ -258,13 +258,16 @@ Sia $h$ il numero di variabili da $X_i$ *in poi* ($X_i$ inclusa). All'istante $i
 - Supponiamo che $X_i in C_j$ e $mb(X_i = 0)$: abbiamo una variabile in meno che può rendere vera la clausola $C_j$, quindi diventano $h-1$:
   $
     Delta &= underbrace((2^(h-1) -1)/2^(h-1), E[C_j] "dopo l'assegnamento"\ "di" X_i) - underbrace((2^h-1)/2^h, E[C_j] "prima dell'assegnamento" \ "di" X_i) \
-    &= (2^h-2-2^h+1)/2^h \
+    &= (2 dot 2^(h-1) - 2 - 2^h + 1) / 2^h \
+    &= (2^h - 2 - 2^h + 1) / 2^h \
     &= -1/2^h
   $
 
 - Supponiamo che $X_i in C_j$ e $mr(X_i = 1)$: abbiamo deciso la clausola $C_j$:
   $
-    Delta &= underbrace(1, C_j "è stata resa vera dopo" \ "assegnamento di " X_i) - underbrace((2^h-1)/2^h, E[C_j] "dopo l'assegnamento" \ "di" X_i) \
+    Delta &= underbrace(1, C_j "è stata resa vera dopo" \ "assegnamento di " X_i) - underbrace((2^h-1)/2^h, E[C_j] "prima dell'assegnamento" \ "di" X_i) \
+    &= 1 - (2^h - 1)/2^h \
+    &= (2^h - 2^h + 1)/2^h \
     &= + 1/2^h
   $
 
@@ -283,7 +286,7 @@ Sia $h$ il numero di variabili da $X_i$ *in poi* ($X_i$ inclusa). All'istante $i
 
   #dimostrazione()[
     Sia $t$ il numero di clausole, $overline(t)$ il numero di clausole soddisfatte dall'algoritmo e $t^*$ l'ottimo.
-    Calcoliamo il rapporto di approsimazione:
+    Calcoliamo il rapporto di approssimazione:
     $
       (t^*)/overline(t) underbrace(<=, "al massimo " t^*\ "soddisfa" t "clausole") t/overline(t)
     $
@@ -301,6 +304,6 @@ Sia $h$ il numero di variabili da $X_i$ *in poi* ($X_i$ inclusa). All'istante $i
 #nota()[
   Durante il processo di derandomizzazione abbiamo usato la proprietà di *internalità della media*: l'intervallo di valori che una variabile aleatoria può assumere contiene per forza la sua media.
 
-  Di conseguenza se, in media, una variabile aleatoria vale $A$, calcolando tutti i suoi valori almeno uno deve valere più di $>= A$.
-  Noi abbiamo sfruttato questa proprità calcolando entrambi i valori che le variabili potevano assumere, almeno uno dei due deve essere "buono".
+  Di conseguenza se, in media, una variabile aleatoria vale $A$, calcolando tutti i suoi valori almeno uno deve valere $>= A$.
+  Noi abbiamo sfruttato questa proprietà calcolando entrambi i valori che le variabili potevano assumere, almeno uno dei due deve essere "buono".
 ]
