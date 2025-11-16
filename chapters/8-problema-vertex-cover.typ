@@ -207,7 +207,6 @@ $ chevron.l P_e chevron.r quad forall e in E $
   ),
   [$X <- "insieme dei vertici su cui" chevron.l P_e chevron.r "è stretta"$],
   [*Output* $X$],
-  [*End*],
 )
 
 #esempio[

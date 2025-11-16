@@ -54,11 +54,11 @@ Per l'algoritmo abbiamo bisogno di definire:
 Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anche un parametro $beta in bb(Q) > 1$ _(di cui vedremo come calcolare il valore)_.
 
 #pseudocode(
-  [*Input* $G=(N, A), space S, space T, space c, space beta >1$],
+  [input $<- G=(N, A), space S, space T, space c, space beta >1$],
   [$I <- emptyset$ #emph("// indici delle coppie collegate")],
   [$P <- emptyset$ #emph("// insieme dei cammini trovati")],
   [$ell(a)=1, quad forall a in A$ #emph("// tutti gli archi costano inizialmente 1")],
-  [*Forever*],
+  [*While* true *do*],
   indent(
     [$pi_i <-$ find the shortest path connecting $(s_i,t_i)$ for some $i in.not I$ #emph("// cammino più corto tra tutti quelli esistenti tra una coppia sorgente-destinazione")],
     [*If* such path $exists.not$ *then*],
@@ -72,7 +72,7 @@ Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anch
       [$ell(a) <- ell(a) dot beta$ #emph("// penalizziamo gli archi usati, aumentando il loro costo")],
       [*If* $ell(a) = beta^c$ *then* #emph("// usato " + $c$ + " volte")],
       indent(
-        [*Delete* $a$ #emph("// quindi non si può più usare, lo eliminiamo")],
+        [delete $a$ #emph("// quindi non si può più usare, lo eliminiamo")],
       ),
     ),
   ),

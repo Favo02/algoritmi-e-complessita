@@ -206,7 +206,7 @@ Inoltre saranno utili le seguenti definizioni:
 #pseudocode(
   [input $<- G=(V_1 union V_2, E)$],
   [$M <- emptyset$ #emph("// Matching vuoto")],
-  [*While* true],
+  [*While* true *do*],
   indent(
     [$pi <- "FindAugmenting"(M)$ #emph("// Funzione che cerca un cammino aumentante")],
     [*If* $pi = "null"$ *then* #emph("// Non ci sono più cammini aumentanti, M è massimo")],
@@ -219,7 +219,6 @@ Inoltre saranno utili le seguenti definizioni:
       [$M <- "Switch"(M, pi)$ #emph("// Guadagno un matching in più")],
     ),
   ),
-  [*End*],
 )
 
 / Funzione FindAugmenting: dato un certo matching $M$, la funzione cerca di trovare un cammino aumentante, utilizzando una *BFS modificata*:

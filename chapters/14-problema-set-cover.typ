@@ -67,7 +67,7 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
 
 
 #pseudocode(
-  [*Input* $k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
+  [input $<- k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
   [$hat(x)_i <-$ risolvi $hat(V)$ come $"LP"$ #emph("// non intera, " + $hat(x)_1 dots, hat(x)_m in [0,1]$)],
   [$I <- emptyset$],
   [*For* $t=1, dots, ceil(k+ln n)$ *do*],

@@ -82,12 +82,13 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
 == Algoritmo di Christofides per TSP metrico [$3/2$-APX]
 
 #pseudocode(
-  [*Input*: $G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
+  [input $<- G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
   [$T <-$ #link(<tsp-minimum-spanning-tree>)[Minimum spanning tree#super[1]] su $G$],
   [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// " + $|D|$ + " è pari per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]])],
   [$M <-$ #link(<tsp-minimum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
   [$tilde(pi) <-$ Circuito Euleriano su $M union T$ #emph("// la sua esistenza è garantita da " + link(<tsp-esistenza-circuito-euleriano>)[esistenza circuito Euleriano#super[4]])],
-  [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]] ],
+  [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]]],
+  [*Output* $pi$],
 )
 
 L'algoritmo sfrutta le seguenti componenti:

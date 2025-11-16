@@ -146,13 +146,15 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
 #esempio[
   Trovare se un numero è primo, algoritmo naive:
   #pseudocode(
-    [*Input:* $n > 2 in bb(N)$],
-    [*For* $i = 2, dots, n-1$ #emph("// controlla tutti i possibili divisori")],
+    [input $<- n > 2 in bb(N)$],
+    [*For* $i = 2, dots, n-1$ *do* #emph("// controlla tutti i possibili divisori")],
     indent(
-      [*If* $n mod i = 0$ *then* *output* $"False"$],
+      [*If* $n mod i = 0$ *then*],
+      indent(
+        [*Output* $"False"$],
+      ),
     ),
-    [*End*],
-    [*output* $"True"$],
+    [*Output* $"True"$],
   )
 
   Questo algoritmo *NON è polinomiale*, ma *pseudopolinomiale* dato che dipende dal valore di $n$ e non dalla lunghezza di $n$:

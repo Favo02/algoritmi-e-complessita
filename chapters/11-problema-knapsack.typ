@@ -151,7 +151,7 @@ Algoritmo:
       ),
     ),
   ),
-  [*End*],
+  [*Output* $v[n,W]$],
 )
 
 #attenzione[

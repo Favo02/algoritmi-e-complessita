@@ -56,13 +56,13 @@
 #pseudocode(
   [$A_i <- emptyset quad forall i in m$],
   [$L_i <- 0 quad forall i in m$ #emph("// carico totale di ogni macchina")],
-  [*For* $j = 0, 1, dots, n-1$ #emph("// per ogni task")],
+  [*For* $j = 0, 1, dots, n-1$ *do* #emph("// per ogni task")],
   indent(
     [$hat(i) <- limits(arg min)_(i in m) space L_i$ #emph("// macchina più scarica in questo momento: " + $hat(i)$)],
     [$A_hat(i) <- A_hat(i) union {j}$],
     [$L_hat(i) <- L_hat(i)+t_j$],
   ),
-  [*End*],
+  [*Output* A],
 )
 
 #esempio[
@@ -220,8 +220,8 @@ Un modo per cercare di risolvere i problemi descritti in precedenza è *ordinare
 #pseudocode(
   [$I_Pi <- I_("GreedyLoadBalancing")$],
   [Sort($t$) #emph("// ordinare i task (decrescente)")],
-  [GreedyLoadBalancing($n$, $m$, $t$) #emph("// viene eseguito l'algoritmo greedy")],
-  [*End*],
+  [$A <-$ GreedyLoadBalancing($n$, $m$, $t$) #emph("// viene eseguito l'algoritmo greedy")],
+  [*Output* $A$],
 )
 
 #attenzione[
@@ -320,13 +320,13 @@ Formalmente:
 Algoritmo:
 
 #pseudocode(
-  [*Input*: $t_0,dots,t_(n-1), quad epsilon > 0$],
+  [input $<- t_0,dots,t_(n-1), quad epsilon > 0$],
   [*If* $epsilon >= 1$ *then*],
   indent(
     [Assegna tutti i task a una macchina sola #emph("// approsimazione pessima ma " + $<= 2$)],
     [*Stop*],
   ),
-  [Ordinare i $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
+  [Sort $t_i$ in ordine non crescente $t_0 >= t_1 >= dots >= t_(n-1)$],
   [*Fase $1$*],
   indent(
     [$k <- ceil(1/epsilon-1)$],

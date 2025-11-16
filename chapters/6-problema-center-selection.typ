@@ -175,9 +175,9 @@ Possiamo ora definire il problema *Center Selection*:
 ]
 
 #pseudocode(
-  [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R)^+$],
+  [input $<- S subset.eq Omega$, $k in bb(N)^+, r in bb(R)^+$],
   [$C <- emptyset$],
-  [*While* $S eq.not emptyset$],
+  [*While* $S eq.not emptyset$ *do*],
   indent(
     [$hat(s) <-$ take any $in S$ #emph("// selezionare punto a caso")],
     [$C <- C union {hat(s)}$ #emph("// diventa un centro")],
@@ -187,7 +187,6 @@ Possiamo ora definire il problema *Center Selection*:
   indent([*Output* "impossibile"]),
   [*Else*],
   indent([*Output* $C$]),
-  [*End*],
 )
 
 #nota[
@@ -415,7 +414,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
 == Algoritmo GreedyCenterSelection [2-APX]
 
 #pseudocode(
-  [Input: $S subset.eq Omega, k in bb(N)^+$],
+  [input $<- S subset.eq Omega, k in bb(N)^+$],
   [*If* $|S| <= k$ *then* #emph("// budget abbastanza grande da rendere ogni punto un centro, " + $rho = 0$)],
   indent(
     [*Output* $S$],
@@ -423,13 +422,12 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   ),
   [$overline(s) <-$ choose any $in S$ #emph("// scelta arbitraria")],
   [$C <- union {overline(s)}$],
-  [*While* $|C| < k$],
+  [*While* $|C| < k$ *do*],
   indent(
     [select $overline(s)$ maximizing $d(s,C)$ #emph("// scegliere il punto " + $overline(s)$ + " più distante da tutti i centri")],
     [$C <- union {overline(s)}$ #emph("// farlo diventare centro")],
   ),
   [*Output* $C$],
-  [*End*],
 )
 
 #nota()[
@@ -454,9 +452,9 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
       [
         #align(center)[*CenterSelectionPlus V1*]
         #pseudocode(
-          [Input: $S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
+          [input $<- S subset.eq Omega$, $k in bb(N)^+, r in bb(R^+)$],
           [$C <- emptyset$],
-          [*While* $S eq.not emptyset$],
+          [*While* $S eq.not emptyset$ *do*],
           indent(
             [$overline(s) <-$ take any $in S$ ],
             [$C <- C union {overline(s)}$],
@@ -471,9 +469,9 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
       [
         #align(center)[*CenterSelectionPlus V2*]
         #pseudocode(
-          [Input: $S subset.eq Omega, k in bb(N)^+, mr(r = rho^*)$],
+          [input $<- S subset.eq Omega, k in bb(N)^+, mr(r = rho^*)$],
           [$C <- emptyset$],
-          [*While* $mr(exists s quad d(s,C) > 2r)$],
+          [*While* $mr(exists s quad d(s,C) > 2r)$ *do*],
           indent(
             [$mr(overline(s)) <-$ take any $mr(in S)$ that $mr(limits(max)_(s in S) d(overline(s),C))$],
             [$C <- C union {overline(s)}$],

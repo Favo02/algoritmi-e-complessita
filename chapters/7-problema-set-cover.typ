@@ -206,14 +206,13 @@ $ H(n) = sum_(i=1)^n 1/i $
 #pseudocode(
   [$R <- Omega$ #emph("// punti ancora da coprire")],
   [$I <- emptyset$ #emph("// aree selezionate")],
-  [*While* $R != emptyset$],
+  [*While* $R != emptyset$ *do*],
   indent(
     [$i <-$ choose $in {1, ..., m} \\ I$ minimizing $w_i / (|S_i inter R|)$ #emph("// seleziona area che minimizza il prezzo")],
     [$I <- I union {i}$],
     [$R <- R \\ S_i$],
   ),
   [*Output* $I$],
-  [*End*],
 )
 
 Durante l'esecuzione abbiamo utilizzato un *prezzo* (_pricing_).

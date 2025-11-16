@@ -230,9 +230,7 @@ Formalmente:
       [$X[i]<- 1$],
       [$D <- D union Delta_(D_1)$],
     ),
-    [*End*],
   ),
-  [*End*],
 )
 
 #informalmente[
