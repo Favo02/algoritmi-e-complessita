@@ -73,9 +73,13 @@
 )
 
 // content
+
+#part("Fondamenti")
 #include "chapters/1-notazione.typ"
 #include "chapters/2-problemi-e-algoritmi.typ"
 #include "chapters/3-classi-di-complessita.typ"
+
+#part("Algoritmi di Approssimazione")
 #include "chapters/4-problema-max-bimatching.typ"
 #include "chapters/5-problema-load-balancing.typ"
 #include "chapters/6-problema-center-selection.typ"
@@ -84,9 +88,15 @@
 #include "chapters/9-problema-congested-paths.typ"
 #include "chapters/10-problema-tsp-metrico.typ"
 #include "chapters/11-problema-knapsack.typ"
+
+#part("Algoritmi Probabilistici")
 #include "chapters/12-algoritmi-probabilistici.typ"
 #include "chapters/13-problema-min-cut.typ"
 #include "chapters/14-problema-set-cover.typ"
 #include "chapters/15-problema-max-ek-sat.typ"
 
+#part("Teoria della Complessità di Approssimazione")
+#todo
+
+#part("Strutture Dati Compresse")
 #include "chapters/17-strutture-dati-compresse.typ"
