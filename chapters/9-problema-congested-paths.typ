@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Congested Paths
+= Problema Congested Paths [NPOc]
 
 #attenzione[
   Questo problema è noto in letteratura come "Disjoint Paths".
@@ -33,7 +33,7 @@
   L'algoritmo, lavorando sugli indici, le considererà coppie distinte.
 ]
 
-== Algoritmo PricingCongestedPaths
+== Algoritmo PricingCongestedPaths [$(2 c m^(1/(c+1))+1)$-APX]
 
 Per l'algoritmo abbiamo bisogno di definire:
 

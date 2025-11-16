@@ -201,7 +201,7 @@ $ H(n) = sum_(i=1)^n 1/i $
   $ ln(n+1) <= H(n) <= 1+ln(n) $
 ]
 
-== Algoritmo PricingSetCover
+== Algoritmo PricingSetCover [$H(M)$-APX]
 
 #pseudocode(
   [$R <- Omega$ #emph("// punti ancora da coprire")],

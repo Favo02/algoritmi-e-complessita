@@ -23,7 +23,7 @@
   In una soluzione ammissibile, almeno un'estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
-== Riduzione di VertexCover a SetCover [H(D)-APX]
+== Riduzione di VertexCover a SetCover [$H(D)$-APX]
 
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
@@ -83,7 +83,7 @@
   ]
 ]
 
-== Vertex Cover mediante Pricing [2-APX]
+== Vertex Cover mediante Pricing [$2$-APX]
 
 In ogni istante è presente una *funzione di prezzatura* (pricing):
 $ chevron.l P_e chevron.r quad forall e in E $
@@ -382,7 +382,7 @@ $ chevron.l P_e chevron.r quad forall e in E $
   ]
 ]
 
-== Vertex Cover tramite Programmazione Lineare [2-APX]
+== Vertex Cover tramite Programmazione Lineare [$2$-APX]
 
 Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul problema della programmazione lineare.
 

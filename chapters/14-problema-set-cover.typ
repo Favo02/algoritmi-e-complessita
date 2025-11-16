@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Set Cover (basato sul Probabilistic Rounding)
+= Problema Set Cover (basato sul Probabilistic Rounding) [NPOc]
 
 #informalmente[
   Esiste un universo di $n$ _punti_.

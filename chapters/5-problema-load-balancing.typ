@@ -46,7 +46,7 @@
   *$ "LoadBalancing" in "NPOc" $*
 ]
 
-== Greedy LoadBalancing _(online)_ [2-APX]
+== Greedy LoadBalancing _(online)_ [$2$-APX]
 
 #nota[
   Questo algoritmo è *online*, ovvero i task da assegnare alle varie macchine possono arrivare man mano.

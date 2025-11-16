@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema MaxEkSat
+= Problema MaxEkSat [NPOc]
 
 #informalmente[
   Versione ristretta di #link(<problema-max-sat>)[$"MaxSat"$], in cui ogni clausola ha esattamente $k$ letterali.

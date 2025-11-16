@@ -411,7 +411,7 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
   Se $r$ scende ulteriormente sotto $rho^* / 2$, allora è impossibile che emetta soluzione.
 ]
 
-== Algoritmo GreedyCenterSelection [2-APX]
+== Algoritmo GreedyCenterSelection [$2$-APX]
 
 #pseudocode(
   [input $<- S subset.eq Omega, k in bb(N)^+$],
