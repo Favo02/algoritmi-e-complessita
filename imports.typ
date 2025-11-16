@@ -50,27 +50,22 @@
 #let link-equation(label) = underline(ref(label))
 
 // first page and outline
-#let frontmatter(title, subtitle, authors) = {
-  align(left + horizon, block(width: 90%)[
+#let frontmatter(title, subtitle, authors, introduction) = {
+  align(center + horizon, block(width: 90%)[
 
-    #text(3em)[*#title*]\
-    #text(1.5em)[#subtitle]
-
-    #(
-      authors
-        .map(author => [
-          #link("https://github.com/" + author.at(1))[
-            #text(1.5em, author.at(0))
-          ]
-        ])
-        .join([ -- ])
-    )\
-
-    #text("Ultima modifica:")
-    #datetime.today().display("[day]/[month]/[year]")
+    #text(3em)[*#title*]
+    #block(above: 1.5em)[#text(1.3em)[#subtitle]]
+    #block(below: 0.8em)[#(
+      authors.map(author => [#link("https://github.com/" + author.at(1))[#author.at(0)]]).join([, ])
+    )]
+    #text(0.8em)[Ultima modifica: #datetime.today().display("[day]/[month]/[year]")]
   ])
 
   pagebreak()
+
+  // Info section
+  set heading(numbering: none, bookmarked: false, outlined: false)
+  [#introduction]
 
   outline(
     title: "Indice",
