@@ -23,7 +23,7 @@ Specificazione astratta di un tipo di dati, in termini di comportamento esterno:
 ]
 
 #esempio[
-  Supponiamo di voler andare a definire una struttura stack per un tipo di dati `T`.
+  Supponiamo di voler definire una struttura stack per un tipo di dati `T`.
 
   ```java
   Stack<T>
@@ -40,7 +40,7 @@ Specificazione astratta di un tipo di dati, in termini di comportamento esterno:
     In altri linguaggi, gli ADT, possono essere descritti con ulteriori vincoli.
   ]
 
-  Supponendo di essere in un Java speciale, si possono specificare gli assiomi che ne descrivono il comportamento (vincoli) $forall alpha in T$ (e fungono da test delle implementazioni):
+  Supponendo di essere in un linguaggio Java esteso, si possono specificare gli assiomi che ne descrivono il comportamento (vincoli) $forall alpha in T$ (che fungono da test delle implementazioni):
   ```java
   Stack<T> s;
   s.push(alpha);
@@ -74,7 +74,7 @@ Per ogni taglia $n$, L'ADT avrà un certo numero di *valori possibili* $v_n$ di 
   Le altre taglie dipendono dal tipo di dato associato al generico $T$, ad esempio in uno stack di booleani, $v_1 = 2$, $v_5 = 2^5$.
 ]
 
-Vogliamo andare a misurare *quanti bit* servono per rappresentare uno dei valori di taglia $n$.
+Vogliamo misurare *quanti bit* servono per rappresentare uno dei valori di taglia $n$.
 Indichiamo con $b_i$ il numero di bit occupati da un valore $V_i$.
 - ${V_1, ..., V_v_n}$: valori di taglia $n$
 - ${b_1, ..., b_v_n}$: bit utilizzati da ogni valore
@@ -83,24 +83,24 @@ Indichiamo con $b_i$ il numero di bit occupati da un valore $V_i$.
 
 #teorema("Teorema")[
   Il teorema di Shannon fornisce un *lower bound* al numero medio di bit per rappresentare una struttura di taglia $n$ con $v_n$ valori possibili:
-  $ Z_n quad = quad (limits(sum)_(i = 1)^(v_n) b_i) / (v_n) >= log_2(sqrt(n)) $
+  $ Z_n quad = quad (limits(sum)_(i = 1)^(v_n) b_i) / (v_n) >= log_2(v_n) $
 
   #informalmente[
-    Per rappresentare tutti i possibili valori, dobbiamo avere delle rappresenzationi *distinte* per ognuno di loro, altrimenti più valori si sovrapporrebbero nella stessa.
+    Per poter rappresentare tutti i valori distinti, ciascun valore deve avere una codifica unica.
+    Se due valori condividessero la stessa rappresentazione, risulterebbero indistinguibili.
   ]
 
   #esempio[
     Sia $n = 3$ la taglia della struttura dati:
-    - numero di stati possibili è $V_(v_n) = 9$
-    - i possibili valori sono $v_3 = 9$
-    Se per ognuno di questi valori utilizzassimo $b = 2$ bit per rappresentarli, potremo avere al massimo $2^2$ stati, altrimenti, per il principio della piccionaia due stati avrebbero la stessa rappresentazione, impossibile.
+    - numero di stati possibili è $v_3 = 9$
+    Se per ognuno di questi valori utilizzassimo $b = 2$ bit per rappresentarli, potremmo avere al massimo $2^2 = 4$ stati distinti. Altrimenti, per il principio della piccionaia, due stati avrebbero la stessa rappresentazione.
 
-    Per rappresentare $9$ valori diversi, allora servono almeno $4$ bit per rappresentare ogni elemento. In totale $2^4$ bit.
+    Per rappresentare $9$ valori diversi, servono almeno $log_2(9) approx 3.17$, quindi almeno $4$ bit per ogni elemento.
   ]
 
   #attenzione[
     Il teorema funziona anche per strutture dati di *dimensione variabile*.
-    Questo significa che se la media dei bit necessari per ogni elemento deve essere superiore al logaritmo, allora se riusiamo a risparmiare su alcuni valori, dovremmo per forza pagare di più su altri valori.
+    Questo significa che se la media dei bit necessari per ogni elemento deve essere superiore al logaritmo, allora se riusciamo a risparmiare su alcuni valori, dovremmo per forza pagare di più su altri valori.
 
     #esempio[
       È impossibile creare una struttura dati in grado di comprimere in maniera ottima qualsiasi valore dell'universo dei valori.
@@ -111,27 +111,21 @@ Indichiamo con $b_i$ il numero di bit occupati da un valore $V_i$.
   ]
 
   #nota[
-    Per ogni tipologia di struttura dati esiste la rispettiva versione super compressa $log_2(sqrt(n))$ *ottima* in termini di spazio.
-    Tuttavia non è detto che questa versione sia abbastanza *efficiente* per essere pratica (parametro che terremo in considerazione).
+    Per ogni tipologia di struttura dati esiste la rispettiva versione compressa che occupa $log_2(v_n)$ bit, *ottima* in termini di spazio.
+    Tuttavia non è detto che questa versione sia abbastanza *efficiente* dal punto di vista computazionale per essere utilizzabile in pratica.
   ]
 ]
 
 == Strutture compresse
 
-Una *implementazione* di un ADT che occupa $D_n$ bit, si dice *compressa* se e solo se:
-$
-  D_n >= Z_n
-$
+Una *implementazione* di un ADT che occupa $D_n$ bit, si dice *compressa* se e solo se $D_n$ è vicino al lower bound teorico $Z_n$.
 
 In particolare, l'implementazione si dice:
+- *implicita* se $D_n = Z_n + O(1)$: occupa solo una costante di bit oltre il lower bound teorico
+- *succinta* se $D_n = Z_n + o(Z_n)$: lo spazio extra cresce più lentamente di $Z_n$
+- *compatta* se $D_n = O(Z_n)$: cresce proporzionalmente al bound teorico $Z_n$
 
-- *implicita* $D_n = Z_n + O(1)$: una costante oltre il lower bound teorico
-
-- *succinta* $D_n = Z_n + o(Z_n)$: i bit di spazio extra devono crescere più lentamente di $Z_n$
-
-- *compatta* $D_n = O(Z_n)$: cresce quanto il bound teorico $Z_n$
-
-Pur rimanendo *efficiente* quanto l'implementazione naive.
+Pur rimanendo *efficiente* quanto l'implementazione naive in termini di tempo di accesso.
 
 #attenzione[
   È semplice ottenere implementazioni molto compatte a scapito dei tempi di accesso.
@@ -147,15 +141,16 @@ Esistono due tipi di strutture dati:
 - *strutture dinamiche*: possono essere modificate anche dopo la costruzione, sono spesso trattate in maniera completamente diversa da quelle statiche.
 
 Le strutture compresse vengono principalmente utilizzate quando la mole di valori da contenere è molto grande (ad esempio l'intero genoma umano o l'intero grafo di amicizie di Facebook).
-Le implementazione naive non starebbero nemmeno in memoria (spesso neanche sul disco), diventando impraticabili.
+Le implementazioni naive non starebbero nemmeno in memoria (spesso neanche sul disco), diventando impraticabili.
 
-Un'ulteriore obbiettivo delle strutture compresse è quello di sfruttare al meglio la cache, dato che occupando meno spazio è possibile cachare più cose.
+Un ulteriore obiettivo delle strutture compresse è quello di sfruttare al meglio la cache, dato che occupando meno spazio è possibile cachare più cose.
 
 #attenzione[
   _Strutture dati compresse_ e _Metodi di compressione dei dati_ (zip, tar, codifiche audio/video) sono tecniche *molto diverse*:
   - Molte codifiche per audio/video sono *lossy* (ovvero possono perdere informazione), quindi possono non rispettare il teorema di Shannon.
 
-  - Per le codifiche *lossless* (tipo tar, zip) la differenza è che le strutture dati compresse vengono usata così come sono. Le compressioni prima di essere usate hanno bisogno di uno step aggiuntivo, la decompressione.
+  - Per le codifiche *lossless* (tipo tar, zip) la differenza è che le strutture dati compresse vengono usate direttamente così come sono.
+    I dati compressi, invece, richiedono uno step aggiuntivo di decompressione prima di poter essere utilizzati.
 
   Per le strutture dati il concetto di decompressione non esiste, sono sempre in uno "stato utilizzabile".
 ]
