@@ -65,7 +65,6 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
   Questa probabilità dipende dal numero reale soluzione della programmazione lineare.
 ]
 
-
 #pseudocode(
   [input $<- k in bb(N)^+$ #emph("// fattore di quanto \"pompiamo\" la probabilità calcolata dal solver LP")],
   [$hat(x)_i <-$ risolvi $hat(V)$ come $"LP"$ #emph("// non intera, " + $hat(x)_1 dots, hat(x)_m in [0,1]$)],
@@ -234,8 +233,6 @@ I vincoli di $hat(V)$ diventano numeri reali $in [0,1]$, non più interi $0$ o $
         P[cal(E)_"non-ott"] & = P["fatt approx" > 6 + 2 ln n] \
                             & <= 1/2
       $
-
-
 
     - $cal(E)_"ok"$ l'evento "la soluzione è ammissibile e ha tasso di approssimazione $<= 6 + 2 ln n$", quindi una soluzione _buona_:
       $

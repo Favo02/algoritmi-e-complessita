@@ -456,7 +456,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
     Possiamo usare l'algoritmo $A$ per decidere $hat(Pi)$ in tempo polinomiale:
     - usiamo $A$ per calcolare la soluzione ottima $y^*$
     - calcoliamo la funzione obiettivo $C_(Pi)(x,y^*)$
-    - $
+      $
         C_(Pi)(x,y^*) space cases(
           >= k "output Yes",
           < k "output No",

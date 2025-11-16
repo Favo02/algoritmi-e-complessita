@@ -554,12 +554,12 @@ Eseguiamo ora l'algoritmo di Christofides su $G$:
   - costo di $mm(M = (1+epsilon) (n-2)/2 + 1)$
 
 - Unendo $mo(T) union mm(M)$ otteniamo un circuito Hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo:
-$
-  delta & = mm((1+epsilon)(n-2)/2 + 1) + mo((n-1)) \
-  delta & = (n-2)/2 + epsilon(n-2)/2 + 1 + n - 1 \
-  delta & = 3/2 n - 1 + epsilon(n-2)/2 \
-  delta & = 3/2 n + epsilon n/2 - (1 + epsilon)
-$
+  $
+    delta & = mm((1+epsilon)(n-2)/2 + 1) + mo((n-1)) \
+    delta & = (n-2)/2 + epsilon(n-2)/2 + 1 + n - 1 \
+    delta & = 3/2 n - 1 + epsilon(n-2)/2 \
+    delta & = 3/2 n + epsilon n/2 - (1 + epsilon)
+  $
 
 #figure(
   cetz.canvas({
@@ -673,7 +673,6 @@ $
 $
 
 Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
-
 
 #teorema("Teorema")[
   *$3/2$* è il miglior tasso di approssimazione noto per *TSP metrico*.

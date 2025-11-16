@@ -163,7 +163,6 @@ $
     + *Passo Base*. All'inizio il peso di tutti gli archi è inizializzato a $1$:
       $ sum_(a in A) underbrace(ell(a), =1) = m $
 
-
     + *Passo induttivo*. Quando aggiungo un nuovo cammino $pi$, il peso di tutti gli archi $a in A$ viene aggiornato, modificando la funzione $ell -> ell^'$:
       $
         ell'(a) = cases(

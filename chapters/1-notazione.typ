@@ -57,7 +57,6 @@ Possiamo quindi scrivere:
 - $1 = {0}$ (insieme che contiene un qualsiasi singolo elemento)
 - $2 = {0,1}$ alfabeto binario
 
-
 #esempio[
   Sia $A$ un insieme, possiamo scrivere:
   - $A^2 = {(a, b) | a, b in A} subset.eq A times A$: "normalmente" è l'insieme delle coppie di $A$

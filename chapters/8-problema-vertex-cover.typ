@@ -454,7 +454,6 @@ Formalmente:
   ]
 ]
 
-
 === Programmazione Lineare Intera (ILP) [NPOc] <problema-programmazione-lineare-intera>
 
 #informalmente[
