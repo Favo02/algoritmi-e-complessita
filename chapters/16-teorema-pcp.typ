@@ -217,7 +217,7 @@ Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabi
       line((-1.5, 2.8), (-0.8, 2.2), stroke: 2pt + purple)
       line((-0.9, 2.3), (-0.8, 2.2), stroke: 2pt + purple)
       line((-0.95, 2.1), (-0.8, 2.2), stroke: 2pt + purple)
-      content((-2.2, 3.1), text(size: 11pt, fill: purple)[$r <= 2^*$ bit random])
+      content((-2.2, 3.1), text(size: 11pt, fill: purple)[$r in 2^*$ bit random])
 
       // Macchina V (rettangolo principale)
       rect((-1.2, 0.3), (1.2, 2.5), stroke: 3pt + black, fill: gray.lighten(90%))
@@ -270,7 +270,7 @@ Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabi
     ]
   )
   Funzionamento: 
-  - Il verificatore $V$ riceve input $x$, ed estrae $r <= 2^*$ bit random.
+  - Il verificatore $V$ riceve input $x$, ed estrae $r in 2^*$ bit random.
   - Intteroga l'oracolo in *$q$* posizioni (r_i), e restituisce YES o NO. 
   - La probabilità di accettazione di $x$, dipende da *tutte* le estrazioni random che portano a YES:
   $ P[v(x,w) = "YES"] = ({r | V(x,w,r) = "yes"}) $
