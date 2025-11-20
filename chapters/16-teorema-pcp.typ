@@ -589,6 +589,8 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
         Voglio ora stimare il numero di clausole totali non soddisfatte: 
       $
         forall w "soddisfa" &< underbrace(P(|x|),2^q dot 2^r(|x|) "clausole")- 2^r(|x|)/2 "clausole"\
+                            & mb(2^(r(|x|)) = P(|x|)/2^q) \
+                            &= P(|x|) - (mb(P(|x|)/2^q) / 2)\
                             &= P(|x|) - P(|x|)/(2^q dot 2)\
                             &= P(|x|) - P(|x|)/2^(q+1)
                   
@@ -599,17 +601,17 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
         mb("Raccogliamo" P(|x|))\
         t_x^* <= P(|x|)(1-1/2^(q+1))\
         mb("Scegliendo il tasso di approx." overline(epsilon) = 1/2^(q+1))\
-        mr(t_x^* <= P(|X|)(1-overline(epsilon)))
+        mr(t_x^* <= P(|x|)(1-overline(epsilon)))
       $
     Riassumendo: 
     - $"Se" x in L$ = $mb(t_x^* = P(|x|))$
-    - $"Se" x in.not L$ = $mr(t_x^* <= P(|X|)(1-1/(2^q+1)))$
+    - $"Se" x in.not L$ = $mr(t_x^* <= P(|x|)(1-1/(2^q+1)))$
 
     Supponiamo per *assurdo* che ci sia un algoritmo di ottimizzazione $A$ che fornisce una $(1+overline(epsilon))$-approssimazione per $"MaxCNFSat"$. Chiamiamo con $overline(t)$ la soluzione prodotta da $A$ che approssima $t^*$. Di conseguenza: 
 
-    - $"Se" x in L =>$ $overline(t)>= t^* /(1+overline(epsilon)) = P(|x|)/(1+overline(epsilon)) = mb(A_x)$ 
+    - $"Se" x in L =>$ $overline(t)>= t^* /(1+overline(epsilon)) = P(|x|)/(1+overline(epsilon)) = mr(A_x)$ 
 
-    - $"Se" x in.not L => overline(t) <= t^* <= P(|x|)(1+overline(epsilon)) = mr(B_x) $
+    - $"Se" x in.not L => overline(t) <= t^* <= P(|x|)(1+overline(epsilon)) = mb(B_x) $
 
     Vogliamo dimostrare che $mb(B_x)$ e $mr(A_x)$ *sono separati*, ci riusciamo per $mb(B_x) < mr(A_x)$ , in questo modo guardando la soluzione $overline(t)$ riusciamo a capire in che caso simao, risolvendo così il problema. Se valesse:
     $
