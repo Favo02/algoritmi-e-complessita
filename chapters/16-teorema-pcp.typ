@@ -607,11 +607,18 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
     - $"Se" x in L$ = $mb(t_x^* = P(|x|))$
     - $"Se" x in.not L$ = $mr(t_x^* <= P(|x|)(1-1/(2^q+1)))$
 
-    Supponiamo per *assurdo* che ci sia un algoritmo di ottimizzazione $A$ che fornisce una $(1+overline(epsilon))$-approssimazione per $"MaxCNFSat"$. Chiamiamo con $overline(t)$ la soluzione prodotta da $A$ che approssima $t^*$. Di conseguenza: 
+    Supponiamo per *assurdo* che ci sia un algoritmo di ottimizzazione $A$ che fornisce una $(1+overline(epsilon))$-approssimazione per $"MaxCNFSat"$. Chiamiamo con $overline(t)$ la soluzione prodotta da $A$ che approssima $t^*$. L'algoritmo $A$ fornisce una approssimazione pari a: 
+    $
+      ((t^*))/(overline(t)) &<= 1 + overline(epsilon) \
+      overline(t) &>= t^* / (1+overline(epsilon))
+    $
+    Di conseguenza: 
+    - $"Se" mr(x in L)$, la formula è completamente soddisfacibile $t^*=P(|x|)$: 
+      $ overline(t)>= t^* /(1+overline(epsilon)) = P(|x|)/(1+overline(epsilon)) = mr(A_x) $ 
 
-    - $"Se" x in L =>$ $overline(t)>= t^* /(1+overline(epsilon)) = P(|x|)/(1+overline(epsilon)) = mr(A_x)$ 
-
-    - $"Se" x in.not L => overline(t) <= t^* <= P(|x|)(1+overline(epsilon)) = mb(B_x) $
+    - $"Se" mb(x in.not L)$, non è possibile soddisfare tutte le clausole, ne fallisce una frazione fissa $overline(epsilon)$:
+     $ overline(t) &<= t^*\ 
+                   &<= P(|x|)(1+overline(epsilon)) = mb(B_x) $
 
     Vogliamo dimostrare che $mb(B_x)$ e $mr(A_x)$ *sono separati*, ci riusciamo per $mb(B_x) < mr(A_x)$ , in questo modo guardando la soluzione $overline(t)$ riusciamo a capire in che caso simao, risolvendo così il problema. Se valesse:
     $
