@@ -618,7 +618,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
 
     - $"Se" mb(x in.not L)$, non è possibile soddisfare tutte le clausole, ne fallisce una frazione fissa $overline(epsilon)$:
      $ overline(t) &<= t^*\ 
-                   &<= P(|x|)(1+overline(epsilon)) = mb(B_x) $
+                   &<= P(|x|)(1-overline(epsilon)) = mb(B_x) $
 
     Vogliamo dimostrare che $mb(B_x)$ e $mr(A_x)$ *sono separati*, ci riusciamo per $mb(B_x) < mr(A_x)$ , in questo modo guardando la soluzione $overline(t)$ riusciamo a capire in che caso simao, risolvendo così il problema. Se valesse:
     $
