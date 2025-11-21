@@ -261,7 +261,7 @@ Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esp
 Questo tipo di tecnica prende il nome di *$mg("Four-Russian-Trick")$*. In totale lo spazio occupato dalla tecnica è:
 $
   underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n dot log (1/2 log n), "singola tabella") \
-  = underbrace(sqrt(n),"termine che cresce" \ "maggiormente") 1/2 log n dot log (log sqrt(n)) \
+  = underbrace(sqrt(n),"termine che cresce" \ "maggiormente") dot log(sqrt(n)) dot log (log sqrt(n)) \
   = mg(o(n))
 $
 
@@ -280,24 +280,22 @@ Spazio *totale* utilizzato:
 $ D_n = underbrace(n,"dim" underline(b)(n)) + mg(o(n)) = Z_n + o(Z_n) $
 Si tratta dunque di una *struttura statica succinta per il rango* con accesso costante.
 
-== Generalizziamo
-
-Abbiamo usato due cose:
-- lavorare a livelli:
-  tabella di poche righe di valori grandi (superblocchi), poi tabelle con valori più picocli (blocchi). per poi arrivare ad un livello molto piccolo e si può usare il four russians trick
-
-- four russians trick:
-  Questa cosa di ridurre il porblema talmente tanto da poter memorizzare tutte le possibili casi.
-
-  Questo trick si usa molto spesso nelle strutture succinte, si chiama Trucco dei quattro russi (Four Russians Trick).
+#nota()[
+  L'approccio di Jacob *lavora a livelli*. Le tabelle intermedie create contengono poche righe ma i valori contenuti sono grandi. Man mano che scendiamo di "livello" (da $mb("superblocchi")$ a $mo("blocchi"))$, la grandezza dei valori decresce.\ 
+  Nell'ultimo "livello", andremo ad utilizzare il *four russians trick*:
+  - il problema originale è stato ridotto talmente tanto da poter memorizzare tutte le possibili casistiche (tipi di blocchi).
+]
 
 == Struttura di Clark per la Select
 
-Se memorizzassimo la tabella intera, occuperebbe $n log n$ bit, quindi troppi.
+Anche per questa primitiva vogliamo ottenere una *struttura statica succinta per l'operazione di select* con accesso costante.
 
-Andiamo a memorizzare la tabella a livelli:
-
-- I livello $P_1, ..., P_t$: memorizzo solo gli $1$ in posizioni multiple di $log n log log n$, quindi occupa (dove $t$ è il numero di $1$ nella tabella) $t / (log n log log n)$ righe, ognuna grande $log n$, quindi:
+*L'implementazione Naif* consiste nel memorizzare l'intera tabella di select; spazio occupato: 
+$
+  underbrace(n,"numero righe") dot underbrace(log n,"taglia valori")
+$  
+Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
+- $mr("I livello")$ $P_1, ..., P_t$: memorizzo solo gli $1$ in posizioni multiple di $log n log log n$, quindi occupa (dove $t$ è il numero di $1$ nella tabella) $t / (log n log log n)$ righe, ognuna grande $log n$, quindi:
   $
     t / (log n log log n) log n \
     underbrace(<=, t <= n) n / (log n log log n) log n \
