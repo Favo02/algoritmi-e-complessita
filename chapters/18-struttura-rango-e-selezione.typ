@@ -295,40 +295,50 @@ $
   underbrace(n,"numero righe") dot underbrace(log n,"taglia valori")
 $  
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
-- $mr("I livello")$ $P_1, ..., P_t$: memorizzo solo gli $1$ in posizioni multiple di $log n log log n$, quindi occupa (dove $t$ è il numero di $1$ nella tabella) $t / (log n log log n)$ righe, ognuna grande $log n$, quindi:
+- $mr("I livello")$ $P_1, ..., P_t$: memorizza solamente gli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
   $
-    t / (log n log log n) log n \
-    underbrace(<=, t <= n) n / (log n log log n) log n \
-    = n / (log log n) \
+    underbrace(t / (log(n) log (log n)),"# righe") dot underbrace(log n,"bit") \
+    underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
+    = n / (log(log n)) \
     = o(n)
   $
 
-- II livello: chiamiamo $r_i = P_(i+1) - P_i$, ovvero da differenza tra due elementi memorizzati nel primo livello.
-  Per come funziona il livello I, allora: $r_i >= log n log log n$
-
-  - Caso II A: gli $1$ tra le due posizioni sono molto sparsi:
-    $ r_i >= (log n log log n)^2 $
-    quindi memorizziamo esplicitamente le posizioni degli $log n log log n$ uni intermedi, come offset da $P_i$.
-    Spazio occupato: questi uni intermedi sono $log n log log n$ ed ognuno è al massimo grande come $r_i$ (quindi occupa $log r_i$ bit):
+- $mb("II livello")$: andiamo a salvare delel posizioni $p_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
+  $ r_i = p_(i+1) - p_i $
+  Per come funziona il livello I, la successione è crescente e non può essere più bassa del multiplo: 
+  $ r_i >= log (n) log(log n) $
+  *$r_i = p_(i+1)-p_i$* rappresenta la *densità* degli $1$. Devo considerare due sottocasi:
+  - $mb("Caso II A")$: gli $1$ tra le due posizioni sono distribuiti in modo *sparso*:
+    $ r_i >= (log(n) log(log n))^2 $
+    Andiamo a *memorizziare esplicitamente la tabella di select*. Spazio occupato: 
+    - Righe = gli $1$ da memorizzare sono quelli intermedi offset da $P_i$: $log(n) log(log(n))$ 
+    - Valori = la posizione di ogni riga occupa al massimo: $log(r_i)$ bit.
+    Spazio totale:
     $
-      (log n log log n) log r_i \
-      = ((log n log log n)^2 log r_i) / (log n log log n) \
-      <= (r_i log r_i) / (log n log log n) \
-      <= (r_i log n) / (log n log log n) \
-      ...
-    $
-
-  - Caso II B: gli uni sono densi, $ r_i < (log n log log n)^2 $
-    quindi memorizziamo solo le posizioni multiple di $log r_i log log n$ (analogamente al primo livello), chiamate $S_i^0, s_i^1, ...$
-    Se memorizzassimo tutto sarebbe $log n log log n$, ma dato che ne memorizziamo meno, allora abbiamo $(log n log log n) / (log r_i log log n)$ righe della tabella.
-    Ognuna, dato che memorizziamo l'offset, allora ognuno è tra $0$ e $r_i$, quindi:
-    $
-      (log n log log n) / (log r_i log log n) log r_i \
-      <= r_i / (log log n)
+      (log(n) log(log n)) log r_i
+      &= (mb((log(n) log(log n))^2) log r_i) / (log(n) log(log n)) \
+      &mb("Usando" r_i >= (log(n) log(log n))^2) \
+      &<= (mb(r_i) log r_i) / (log(n) log(log n)) \
+      & mr("Usando" r_i <= n)\
+      &<= (r_i log mr(n)) / (log (n) log( log n)) \
+      &<= (r_i) / (log(log n)) \
     $
 
-  - Spazio occupato II livello (senza terzo livello caso II B):
-    Mancano ancora degli uni intermedi, ma iniziamo a calcolare lo spazio totale: in entrambi i sottocasi, occupiamo la stessa quantità:
+  - $mb("Caso II B")$: gli uni sono *densi*: 
+    $ r_i < (log(n) log(log n))^2 $
+    *memorizziamo* solamente le *posizioni multiple* di $log(r_i) log(log n)$(analogamente al primo livello). Spazio utilizzato: 
+    - Righe = se memorizzassimo tutte le posizioni sarebbe $log(n) log(log n)$, ma dato che ne memorizziamo meno, allora abbiamo $(log(n) log(log n)) / (log(r_i) log(log n))$ righe.
+    - Valori = i valori di ogni riga occpuano $log(r_i)$ bit.
+    $
+      (log(n) log(log n)) / (log(r_i) log( log n)) log r_i \
+      (log(n) log(log n)) / (log(log n)) \
+      
+      mb("Usando" r_i <= log(n) log(log n))\
+      <= r_i / (log (log n))
+
+
+    $
+  Calcoliamo ora lo spazio totale occupato dal $mb("II livello")$ (non contando le posizioni di alcuni uni intermedi). In entrambi i sottocasi, occupiamo la stessa quantità:
     $ sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log log n) $
     dato che è una sommatoria telescopica, allora
     $ = (P_(t/(log n log log n)) - P_0) / (log log n) $
@@ -374,3 +384,5 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     Quindi abbiamo $ underbrace(2^overline(r_i^j), "numero tabelle") underbrace(overline(r_i^j), "righe") underbrace(log overline(r_i^j), "bit per tabella") \
     <= ...
     = o(n) $
+
+
