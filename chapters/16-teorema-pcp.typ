@@ -848,7 +848,7 @@ Formalmente:
     Guardiamo ora i due casi dinsgiunti:
     - Se $mb(x in L)$: 
       $
-        overline(t) >= overline(t^*) / (2-epsilon) underbrace(>=,#link-teorema(<indipendent-sat-fatto-1>)) 2^(r(|x|)) / (2-epsilon) > 2^(r(|x|)) / 2
+        overline(t) >= t^* / (2-epsilon) underbrace(>=,#link-teorema(<indipendent-sat-fatto-1>)) 2^(r(|x|)) / (2-epsilon) > 2^(r(|x|)) / 2
       $
 
     - Se $mr(x in L)$:
