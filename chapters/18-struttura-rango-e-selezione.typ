@@ -294,13 +294,22 @@ Anche per questa primitiva vogliamo ottenere una *struttura statica succinta per
 $
   underbrace(n,"numero righe") dot underbrace(log n,"taglia valori")
 $  
+
+
+
+
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
-- $mr("I livello")$ $P_1, ..., P_t$: memorizza solamente gli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
+
+- $mr("I livello")$: memorizzo solamente le posizioni $p_1, ..., p_t$, ovvero le posizioni degli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
   $
     underbrace(t / (log(n) log (log n)),"# righe") dot underbrace(log n,"bit") \
     underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
     = n / (log(log n)) \
     = o(n)
+
+    #esempio()[
+      Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
+    ]
   $
 
 - $mb("II livello")$: andiamo a salvare delel posizioni $p_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
@@ -384,5 +393,24 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     Quindi abbiamo $ underbrace(2^overline(r_i^j), "numero tabelle") underbrace(overline(r_i^j), "righe") underbrace(log overline(r_i^j), "bit per tabella") \
     <= ...
     = o(n) $
+
+
+#informalmente[
+  La struttura di Clark per Select usa un approccio a **tre livelli gerarchici** per memorizzare efficientemente le posizioni degli `1`:
+
+  *Livello I* ($mr("rosso")$): Memorizziamo solo le posizioni degli `1` multipli di $log n dot log log n$. Questo crea dei "checkpoint" sparsi che occupano poco spazio: $o(n)$.
+
+  *Livello II* ($mb("blu")$): Tra due checkpoint consecutivi $P_i$ e $P_(i+1)$ ci sono esattamente $log n dot log log n$ bit a `1`. Calcoliamo la distanza fisica $r_i = P_(i+1) - P_i$ e distinguiamo:
+  - *Caso II A* (zona sparsa): Se $r_i >= (log n dot log log n)^2$, gli `1` sono così distanti che conviene memorizzare esplicitamente tutte le loro posizioni.
+  - *Caso II B* (zona densa): Se $r_i < (log n dot log log n)^2$, gli `1` sono troppo vicini. Usiamo di nuovo la tecnica del Livello I su scala ridotta: memorizziamo solo le posizioni multiple di $log r_i dot log log n$.
+  
+  In entrambi i sottocasi, lo spazio totale è $o(n)$ grazie alla sommatoria telescopica.
+
+  *Livello III* ($mg("verde")$, solo per caso II B): Tra due posizioni $S_i^j$ e $S_i^(j+1)$ del Livello II, calcoliamo di nuovo la distanza $overline(r_i^j)$ e distinguiamo:
+  - *Caso III A* (sparso): Se $overline(r_i^j) >= log overline(r_i^j) dot log r_i dot (log log n)^2$, memorizziamo esplicitamente le posizioni intermedie.
+  - *Caso III B* (denso): Se $overline(r_i^j) < log overline(r_i^j) dot log r_i dot (log log n)^2$, usiamo il *Four Russians Trick*: costruiamo tabelle pre-calcolate per tutti i possibili pattern di bit in questo intervallo ridotto.
+
+  L'idea chiave è **adattarsi alla densità locale**: zone sparse → memorizzazione esplicita, zone dense → sotto-campionamento ricorsivo o tabelle pre-calcolate.
+]
 
 
