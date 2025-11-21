@@ -306,11 +306,11 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
     = n / (log(log n)) \
     = o(n)
-
-    #esempio()[
-      Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
-    ]
   $
+
+  #esempio()[
+    Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
+  ]
 
 - $mb("II livello")$: andiamo a salvare delel posizioni $p_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
   $ r_i = p_(i+1) - p_i $
@@ -348,11 +348,14 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
 
     $
   Calcoliamo ora lo spazio totale occupato dal $mb("II livello")$ (non contando le posizioni di alcuni uni intermedi). In entrambi i sottocasi, occupiamo la stessa quantità:
-    $ sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log log n) $
-    dato che è una sommatoria telescopica, allora
-    $ = (P_(t/(log n log log n)) - P_0) / (log log n) $
-    il numeratore è la differenza tra l'ultimo uno e il primo uno, quidi:
-    $ <= n / (log log n) = o(n) $
+    $
+      &<= r_i/(log(log n)) = (P_(i+1)-P_i)/(log(log n))\
+      &<= sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log (log n))\
+      & mb("Serie telescopica")\
+      &= (P_(t/(log n log log n)) - P_0) / (log (log n))\ 
+      & mb("Il numeratore è tutto l'offset")\
+      &<= mb(n) / (log (log n)) = o(n)\
+    $
 
 - III livello (solo per il caso II B):
   $ r_i < (log n log log n)^2 $
