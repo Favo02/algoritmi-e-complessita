@@ -21,7 +21,7 @@ Definizione formale
 
 #informalmente[
   La struttura presenta due primitive principali: 
-  - *$"Rank(k)"$*= conta gli $1$ fino alla posizione che ci interessa (senza contare la posizione stessa).
+  - *$"Rank(k)"$*= conta il numero di $1$ fino alla posizione che ci interessa (senza contare la posizione stessa).
 
   - *$"Select"(k)$*= ci dice dov'è situato il $k$-esimo uno. Ovvero la posizione massima in cui il rank è uguale al numero $k$ che ci interessa (coincidono con le posizioni degli uni).
 ]
