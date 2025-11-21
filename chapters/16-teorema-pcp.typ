@@ -303,7 +303,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
     *$"NP" = "PCP"["O"(log n), O(1)]$*.\
     Per la definizione di PCP, dato un qualunque linguaggio $L in "NP"$: 
     $
-      exists underbrace(q in bb(N),"costante"), exists underbrace((n) in O(log n),"funzione logaritmica") "t.c" L in "PCP"[r(n),q]
+      exists underbrace(q in bb(N),"costante"), exists underbrace(r(n) in O(log n),"funzione logaritmica") "t.c" L in "PCP"[r(n),q]
     $
     Il linguaggio $L$ è accettato da un classificatore $V$ che usa $q$ interrogazioni all'oracolo e un numero logaritmico di bit random (è una sorta di *trade-off*). 
 
@@ -326,7 +326,7 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
 
   #nota()[
     Faremo le seguenti *assunzioni*:
-    1. Assumiamo che il verificatore $V$ legga *essattamente* $q$ bit dall'oracolo $w$ e estrae *esattamente* $2^n$ bit random. Si tratta di un assunzione *wrost-case* (passo da $<=$ ad $=$)
+    1. Assumiamo che il verificatore $V$ legga *essattamente* $q$ bit dall'oracolo $w$ e estrae *esattamente* $2^r(n)$ bit random. Si tratta di un assunzione *wrost-case* (passo da $<=$ ad $=$)
 
     2. Posso assumere che tutti i bit randomo vengano estratti all'inizio. Dopo aver letto l'input il verificatore $V$ estraee $R in 2^(r(n))$
 
@@ -755,37 +755,8 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
         Nessun lato tra $v_1$ e $v_4$!
       ])
 
-      // SOLUZIONE OTTIMA
-      content((-1, -0.5), text(size: 12pt, weight: "bold")[Soluzione Ottima])
-      content((-1.2, -1.1), text(size: 10pt, fill: blue)[${v_2, v_3, v_5}$ ✓])
-
-      // Vertici
-      circle((-2, -2), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-2.4, -2), text(size: 10pt)[$v_1$])
-
-      circle((0, -1.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
-      content((0, -1.1), text(size: 10pt)[$v_2$])
-
-      circle((-1, -3.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
-      content((-1.4, -3.5), text(size: 10pt)[$v_3$])
-
-      circle((1, -3), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((1.4, -3), text(size: 10pt)[$v_4$])
-
-      circle((0, -4.5), radius: 0.15, fill: blue.lighten(70%), stroke: 2pt + blue)
-      content((0, -4.9), text(size: 10pt)[$v_5$])
-
-      // Lati
-      line((-1.85, -2), (-0.15, -1.5), stroke: 2pt + black)    // v1-v2
-      line((-1.9, -2.1), (-1.1, -3.4), stroke: 2pt + black)    // v1-v3
-      line((-0.85, -3.5), (0.85, -3), stroke: 2pt + black)     // v3-v4
-      line((-0.1, -1.6), (0.9, -2.9), stroke: 2pt + black)     // v2-v4
-      line((-0.9, -3.6), (-0.1, -4.4), stroke: 2pt + black)    // v3-v5
-      line((0.9, -3.1), (0, -4.4), stroke: 2pt + black)        // v4-v5
-
-      content((-0.5, -5.3), text(size: 9pt, fill: blue)[
-        Cardinalità massima: 3
-      ])
+      
+    
     }),
     caption: [
       Esempio di MaxIndependentSet. Un insieme è indipendente se nessun vertice è collegato ad un altro. L'obiettivo è trovare l'insieme indipendente di cardinalità massima.
