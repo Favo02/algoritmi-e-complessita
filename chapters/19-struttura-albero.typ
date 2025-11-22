@@ -96,7 +96,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
 
 #teorema("Teorema")[
   Il theoretical lower bound è $2n$, servono *almeno $2n-O(log n)$ bit* per rappresentare un *albero binario* con *$n$ nodi interni*.
-]
+
 #dimostrazione()[
 
   #nota[
@@ -132,6 +132,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
   $
 
 
+]
 ]
 
 === Rappresentazione succinta
