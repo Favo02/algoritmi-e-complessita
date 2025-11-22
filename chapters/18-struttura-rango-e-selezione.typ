@@ -300,7 +300,7 @@ $
 
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
 
-- $mr("I livello")$: memorizzo solamente le posizioni $p_1, ..., p_t$, ovvero le posizioni degli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
+- $mr("I livello")$: memorizzo solamente le posizioni $S_1, ..., S_t$, ovvero le posizioni degli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
   $
     underbrace(t / (log(n) log (log n)),"# righe") dot underbrace(log n,"bit") \
     underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
@@ -312,11 +312,11 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
   ]
 
-- $mb("II livello")$: andiamo a salvare delel posizioni $p_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
-  $ r_i = p_(i+1) - p_i $
+- $mb("II livello")$: andiamo a salvare delle posizioni $P_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
+  $ r_i = P_(i+1) - P_i $
   Per come funziona il livello I, la successione è crescente e non può essere più bassa del multiplo: 
   $ r_i >= log (n) log(log n) $
-  *$r_i = p_(i+1)-p_i$* rappresenta la *densità* degli $1$. Devo considerare due sottocasi:
+  *$r_i = P_(i+1)-P_i$* rappresenta la *densità* degli $1$. Devo considerare due sottocasi:
   - $mb("Caso II A")$: gli $1$ tra le due posizioni sono distribuiti in modo *sparso*:
     $ r_i >= (log(n) log(log n))^2 $
     Andiamo a *memorizziare esplicitamente la tabella di select*. Spazio occupato: 
