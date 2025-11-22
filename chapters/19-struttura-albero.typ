@@ -116,7 +116,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
                                        & = 1/(n+1) dot (2 sqrt(pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n)) \
                                        & = 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n)) \
                                        & mb(a^x/b^x = (a/b)^x) \
-                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot mb((2n)/e dot e/n)^(2n) \
+                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot (mb((2n)/e dot e/n))^(2n) \
                                        & = 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n) \
                                        & mb(a^x / a^y = a^(x-y)) \
                                        & = 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n) \
@@ -126,7 +126,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
   $
   Il numero di bit minimo per rappresentare un albero binario è pari a:
   $
-    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) & = log_2(2^2n)-log_2(1/sqrt(pi n^3)) \
+    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) & = log_2(2^(2n))-log_2(1/sqrt(pi n^3)) \
                                              & = 2n dot 1 - log_2(1/sqrt(pi n^3)) \
                                              & approx 2n - O(log n) space qed
   $
@@ -360,7 +360,7 @@ $
 
 La struttura mostrata in precedenza, mostra un modo per memorizzare la struttura dell'albero. Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovveri i *dati ancillari*.
 
-/ Dati ancillari solo su nodi interni: Teniamo un array lungo il numero di ndi interni dell'albero solo i nodi interni:
+/ Dati ancillari solo su nodi interni: Teniamo un array lungo il numero di nodi interni dell'albero:
   - Usare una *select* per sapere dato un nodo dove sarà il suo dato ancillare
   - Usare una *rank* per sapere dato un dato a che nodo corrisponde
 
