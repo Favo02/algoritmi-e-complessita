@@ -104,7 +104,7 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
     - Approssimazione di $mr("Stirling")$:
       $ x! approx sqrt(2 pi x) (x/e)^x $
     - Definizione binomiale:
-      $ binom(n, k) = n! / k!(n-k)! $
+      $ binom(n, k) = n! / (k!(n-k)!) $
   ]<Proprietà-utili-alberi>
   Quindi il theoretical lower bound è:
   $
