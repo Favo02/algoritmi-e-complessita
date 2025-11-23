@@ -139,7 +139,10 @@ Un parametro fondamentale è la grandezza di $m$, c'è da fare un *tradeoff*:
 #teorema("Teorema")[
   Se *$m > 2.09n$* (dove $n = |S|$) il grafo $G$ è quasi sempre aciclico.\
   Il numero atteso di tentativi per ottenere un grafo $G$ aciclico è $2$.\
-  Bastano $2.09 m r "bit"$
+  Bastano 
+  *$
+    2.09 n r "bit"
+  $*
 ]
 
 ==== Generalizzazione
@@ -206,7 +209,7 @@ Se scegliessimo *più di due funzioni di hash* otterremmo un *ipergrafo*, permet
 ]
 
 Con $3$ funzioni hash otteniamo un ipergrafo, dove: 
- - ogni lato è un iperlato che connette 3 lati
+ - ogni lato è un iperlato che connette 3 vertici
  - Le prime due proprieà da rispettare rimangono fattibili
  - la prorità di aciclicità non è definita su un iperlato
 
@@ -379,7 +382,7 @@ $ f : S -> 2^r $
         &= r n
   $
   La struttura proposta (fissato $k=3$) utilizza: 
-  $ D_n = gamma_3 n r = 1.23 n r $
+  $ D_n = underbrace(gamma_3 n,>=m) r = 1.23 n r $
   Si tratta di una *struttura compatta*, in quanto $D_n$ è un $O$ grande di $Z_n$
 ]
 
@@ -442,11 +445,12 @@ Sull'array $underline(b)$ andremo ad usare una *rank/select*:
 === Uso della struttura
 
 La struttura (compressa) contiene:
-- le $3$ funzioni di hash
-- $tilde(x)$ elementi non nulli
-- $underline(b)$ vettore dove sono gli elementi non nulli
-- rank/select su $underline(b)$
+- le $3$ funzioni di *hash*
+- *$tilde(x)$* elementi non nulli
+- *$underline(b)$* vettore dove sono gli elementi non nulli
+- *rank/select* su $underline(b)$
 
+#esempio()[
 #figure(
   cetz.canvas({
     import cetz.draw: *
@@ -506,11 +510,13 @@ La struttura (compressa) contiene:
     valori dall'array $tilde(x)$ (usando $underline(b)$ con rank/select) per ottenere $f(s)$
   ]
 )
+]
+Funzionamento: 
+- Quando diamo in pasto una stringa $s in S$, vengono calcolate: 
+ $ h_0(s), h_1(s), h_2(2) $
+ succsivamente si risolve l'equazione:
+$ f(s) = (x_(h_0(s)) + x_(h_1(s)), x_(h_2(s))) mod 2^r $
 
-Quando diamo in pasto una stringa $s$, lui calcola $h_0(s), h_1(s), h_2(2)$ e risolve $(x_h_0(s) + x_h_1(s), x_h_2(s)) mod 2^r$ e lo restituisce.
-
-Quindi la struttura non ha da nessuna parte dell'insieme $S$ (non lo memorizza da nessuna parte).
-
-Ma questo causa che se gli diamo in pasto un qualsiasi elemento $in U \ S$, allora la struttura non può riconoscere che non è "valido", ma costruisce una risposta e la restituisce.
-
-Se vogliamo essere certi che risponda solo per elementi $in S$?
+#nota()[
+  La struttura *non memorizza* l'insieme *$S$*. Di conseguenza, se alla struttura diamo in pasto un qualsiasi elemento $in U \ S$, non può riconoscere che è un input non è "valido", andando a costruire una riposta.
+]
