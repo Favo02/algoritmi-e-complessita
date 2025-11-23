@@ -26,8 +26,14 @@ $ 0 <= x_0 <= x_1 <= ... <= x_(n-1) < underbrace(U,"universo") $
 
 La rappresentazione in binario di ogni intero $x_i$ della sequenza viene divisa in $mr("bit significativi")$ e $mb("meno significativi")$.
 
+L'obbiettivo di Elias-Fano è bilanciare la dimensione delle due parti $mb(L)$ e $mr(H)$ per avvicinarsi all'ottimo teorico, di conseguenza vengono usati: 
+- $mb("bit meno significativi")$: $l = max(0,floor(log U/n))$ bit 
+- $mr("bit più significiativi")$: $ceil(log_2(U))-l "bit"$.
+
 Bit *$mb("meno significativi")$*. $l_0,dots,l_(n-1)$, essi vengono rappresentati esplcitamente : 
 $ l = max(0,floor(log U/n)) $
+$l$ rappresenta il numero di bit dedicati alla parte meno significativa di $x_i$.
+
 Dove:
 - $l_0 = x_0 mod 2^l$
 - $l_1 = x_1 mod 2^l$
@@ -40,7 +46,8 @@ Dove:
 
 Bit *$mr("più significativi")$*. $u_0,dots,u_(n-1)$, essi vengono rappresentati in *unario*:
 $ u_i = floor(x_i/ 2^l) - floor(x_(i-1)/2^l) $
-Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*. Tale differenza è al minimo zero (sequenza non decrescente).
+
+$u_i$ rappresentano i *gap* (differenze) tra le parti più significative consecutive, in quanto tendono a essere in media più piccole (saranno ancora una sequenza monotona crescente). Inoltre, *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*. Tale differenza è al minimo zero (sequenza non decrescente).
 
 #nota()[
   $floor(x_i/ 2^l)$, prende tutti i bit tranne gli $l$ meno significativi, *shift a destra di $l$* posizioni.  
@@ -171,11 +178,11 @@ Dove *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saran
 
 - bit $mr("più significativi")$. Scriviamo gli MSB di ogni numero $x_i$ in unario, dove $u_i$ è il numero di zeri: 
 $
-  "MSB" &<= sum_(i=0)^(n-1)underbrace(abs(u_i+1), u "zeri" + "un "1) \
-    &= sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l)+ mr(1))\
-    &= underbrace(mr(n),"i vari 1" \ "si sommano") + sum_(i=0)^(n-1) abs(floor(x_i/2^l)-floor((x_i-1)/2^l))\
+  "MSB" &<= sum_(i=0)^(n-1)underbrace((u_i+1), u "zeri" + "un "1) \
+    &= sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l)+ mr(1))\
+    &= underbrace(mr(n),"i vari 1" \ "si sommano") + sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l))\
     & mb("Serie telescopica")\
-    &= n + mb(floor(x_(n-1)/2^l)- underbrace((x_0-1)/2^l,=0))\
+    &= n + mb(floor(x_(n-1)/2^l)- underbrace((x_(0-1))/2^l,=0" inizia da 1"))\
     &= n + floor(x_(n-1)/2^l)\
     & mb("Al massimo" x_n "ha valore" U)\
     &<= n + floor(U/2^l)\
@@ -227,7 +234,7 @@ La sequenza unaria può essere vista come una stringa binaria dove:
 Espandendo la formula:
 $
   "select"_underline(b)(i) &= i-1 + sum_(j=0)^(i-1) mb(u_j)\
-                           &= i-1+sum_(j=0)^(i-1) mb(floor(x_j/2^l) - floor((x_j-1)/2^l))\
+                           &= i-1+sum_(j=0)^(i-1) mb(floor(x_j/2^l) - floor((x_(j-1))/2^l))\
                            &= mb("Serie telescopica")\
                            &= i-1+mb(floor(x_i/2^l))                    
 $
