@@ -107,7 +107,7 @@ Andiamo a costruire un *grafo* dove:
 ]<condizioni-grafo-aciclico>
 
 #nota()[
-  Il tempo necessario per la *costruzione* di *$G$* *dipende* dal numero di *nodi $m$*. Più $m$ è grande più tentativi servono per non trovare una collisione. 
+  Il tempo necessario per la *costruzione* di *$G$* *dipende* dal numero di *nodi $m$*. Più $m$ è grande meno tentativi servono per non trovare una collisione. 
 ]
 È possibile vedere $G$ come un insieme di *$n = |S|$ equazioni* con *$m = "# nodi"$ incognite*, dove ogni equazione è:
 $ 
