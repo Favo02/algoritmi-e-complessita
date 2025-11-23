@@ -254,7 +254,7 @@ Leggiamo $l$ bit consecutivi a partire dalla posizione $i dot l$ nell'array rapp
 
 Il valore finale è:
 $
-x_i = underbrace(("select"_underline(b)(i+1) - i), mr("MSB")) dot 2^l + underbrace(mb("LSB"[i dot l : (i+1) dot l]), mb("LSB"))
+x_i = underbrace(("select"_underline(b)(i) - i+1), mr("MSB")) dot 2^l + underbrace(mb("LSB"[i dot l : (i+1) dot l]), mb("LSB"))
 $
 
 Dove $mb("LSB"[i dot l : (i+1) dot l])$ indica i bit dalla posizione $i dot l$ alla posizione $(i+1) dot l - 1$ nella stringa dei bit meno significativi.
@@ -307,7 +307,7 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
         &approx n log((U+n-1)/n)\
         &mb("Raccogliamo" U/n)\
         &= n log(mb(U/n) dot (1+n/U-1/U))\
-        &= n log(U/n))+n log(1+n/U-1/U)\
+        &= n log(U/n)+n log(1+n/U-1/U)\
         & mb("Sfruttando "x approx log(1+x))\
         &approx n log U/n + n (mb(n/U - 1/U))\
         &approx n log U/n + mb((n^2)/U)\
@@ -318,6 +318,12 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
   #nota()[
     L'assunzione che $n << U$ è realistica. Ad esempio consideriamo $n$ come le amicizie di un utente su Facebook e $U$ come il numero di utenti di Facebook.
   ]
+
+  In conclusione: 
+  $
+    Z_n approx n log (U/n)
+  $
+
   Dato che la nostra struttura dati occupa:
   $ D_n approx 3n + n ceil(log U/n) $
   allora abbiamo una *struttura succinta* $space qed$
