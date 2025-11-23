@@ -201,7 +201,7 @@ Costo *totale*:
 $
   D_n &= mr(3n)+mb(n l)\
       &= 3n + n floor(log(U/n))\
-      &= n dot (2+floor(log(U/n)))
+      &= 2n + n dot ceil(log(U/n))
 $
 
 === Risposta alle query
