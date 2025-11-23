@@ -295,9 +295,6 @@ $
   underbrace(n,"numero righe") dot underbrace(log n,"taglia valori")
 $  
 
-
-
-
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
 
 - $mr("I livello")$: memorizzo solamente le posizioni $P_1, ..., P_t$, ovvero le *posizioni degli $1$* in posizioni *multiple* di *$log(n) log(log n)$*, quindi occupa $mr(t) / (log n log log n)$ righe (dove *$mr(t)$* è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
@@ -320,8 +317,8 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
   - $mb("Caso II A")$: gli $1$ tra le due posizioni sono distribuiti in modo *sparso*:
     $ r_i >= (log(n) log(log n))^2 $
     Andiamo a *memorizziare esplicitamente la tabella di select*. Spazio occupato: 
-    - Righe = gli $1$ da memorizzare sono quelli intermedi offset da $P_i$: $log(n) log(log(n))$ 
-    - Valori = la posizione di ogni riga occupa al massimo: $log(r_i)$ bit.
+    - *Righe* = gli $1$ da memorizzare sono quelli intermedi offset da $P_i$: $log(n) log(log(n))$ 
+    - *Valori* = la posizione di ogni riga è un offset relativo a $P_i$: $log(r_i)$ bit.
     Spazio totale:
     $
       &=(log(n) log(log n)) log r_i\
@@ -336,9 +333,13 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
 
   - $mb("Caso II B")$: gli uni sono *densi*: 
     $ r_i < (log(n) log(log n))^2 $
-    *memorizziamo* solamente le *posizioni multiple* di $log(r_i) log(log n)$(analogamente al primo livello). Spazio utilizzato: 
-    - Righe = se memorizzassimo tutte le posizioni sarebbe $log(n) log(log n)$, ma dato che ne memorizziamo meno, allora abbiamo $(log(n) log(log n)) / (log(r_i) log(log n))$ righe.
-    - Valori = i valori di ogni riga occpuano $log(r_i)$ bit.
+    *memorizziamo* solamente le *posizioni multiple* di $log(r_i) log(log n)$(analogamente al primo livello). Si memorizzano le *posizioni* *$S_i^j$* di ogni $L' = log r_i dot log log n"-esimo uno"$ all'interno dell'intervallo $[P_i, P_(i+1))$.
+    
+    
+    
+    Spazio utilizzato: 
+    - *Righe* = se memorizzassimo tutte le posizioni sarebbe $log(n) log(log n)$, ma dato che ne memorizziamo meno, allora abbiamo $(log(n) log(log n)) / (log(r_i) log(log n))$ righe.
+    - *Valori* = i valori di ogni riga occpuano $log(r_i)$ bit.
     $
       (log(n) log(log n)) / (log(r_i) log( log n)) log r_i \
       (log(n) log(log n)) / (log(log n)) \
@@ -366,7 +367,7 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
   $
     S_i^0, S_i^1, ..., S_i^((log(n) log(log n))/(log(r_i) log(log n))) "multiple di" log(r_i) log( log n)
   $ 
-  
+  Abbiamo dunque un intervallo $[S_i^j, S_i^(j+1))$ che contiene $L' = log r_i dot log log n$.\
   Calcoliamo la *differenza* tra due posizioni $S$:
   $ overline(r_i^j) = S_i^(j+1) - S_i^j $
   La differenza:
@@ -397,7 +398,7 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
   $
   usiamo il *four russians trick*. Spazio occupato:
     #teorema("Oss1")[
-      Dato che siamo nel $mr("sottocaso IIA")$, allora vale $overline(r_i^j) <= r_i < (log n log log n)^2$. Di conseguenza vale anche: 
+      Dato che siamo nel $mr("sottocaso IIB")$, allora vale $overline(r_i^j) <= r_i < (log n log log n)^2$. Di conseguenza vale anche: 
       $
         log(overline(r_i^j)) <= log(r_i) &<= log(log n (log log n)^2)\
                   &= 2 log log n + 2 log log log n \
