@@ -300,7 +300,7 @@ $
 
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
 
-- $mr("I livello")$: memorizzo solamente le posizioni $S_1, ..., S_t$, ovvero le posizioni degli $1$ in posizioni multiple di *$log(n) log(log n)$*, quindi occupa $t / (log n log log n)$ righe (dove $t$ è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
+- $mr("I livello")$: memorizzo solamente le posizioni $P_1, ..., P_t$, ovvero le *posizioni degli $1$* in posizioni *multiple* di *$log(n) log(log n)$*, quindi occupa $mr(t) / (log n log log n)$ righe (dove *$mr(t)$* è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
   $
     underbrace(t / (log(n) log (log n)),"# righe") dot underbrace(log n,"bit") \
     underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
@@ -312,10 +312,10 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
   ]
 
-- $mb("II livello")$: andiamo a salvare delle posizioni $P_i$, ognuna delle quali indica la posizione dell'$[i log(n)log(log(n))]-"esimo"$ bit a $1$ del vettore $underline(b)$. Consideriamo ora la *differenza* tra due elementi memorizzati nel primo livello:
+- $mb("II livello")$: Consideriamo ora la *differenza* tra due elementi consecutivi nel primo livello:
   $ r_i = P_(i+1) - P_i $
   Per come funziona il livello I, la successione è crescente e non può essere più bassa del multiplo: 
-  $ r_i >= log (n) log(log n) $
+  $ r_i = P_(i+1) - P_i >= log (n) log(log n) $
   *$r_i = P_(i+1)-P_i$* rappresenta la *densità* degli $1$. Devo considerare due sottocasi:
   - $mb("Caso II A")$: gli $1$ tra le due posizioni sono distribuiti in modo *sparso*:
     $ r_i >= (log(n) log(log n))^2 $
@@ -324,8 +324,9 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     - Valori = la posizione di ogni riga occupa al massimo: $log(r_i)$ bit.
     Spazio totale:
     $
-      (log(n) log(log n)) log r_i
-      &= (mb((log(n) log(log n))^2) log r_i) / (log(n) log(log n)) \
+      &=(log(n) log(log n)) log r_i\
+      & mb("Moltiplico e divido per" log(n) log(log(n)))\
+      &= (mb((log(n) log(log n))^2) log r_i) / mb(log(n) log(log n)) \
       &mb("Usando" r_i >= (log(n) log(log n))^2) \
       &<= (mb(r_i) log r_i) / (log(n) log(log n)) \
       & mr("Usando" r_i <= n)\
@@ -342,7 +343,7 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
       (log(n) log(log n)) / (log(r_i) log( log n)) log r_i \
       (log(n) log(log n)) / (log(log n)) \
       
-      mb("Usando" r_i <= log(n) log(log n))\
+      mb("Usando" r_i >= log(n) log(log n))\
       <= r_i / (log (log n))
 
 
@@ -357,45 +358,75 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
       &<= mb(n) / (log (log n)) = o(n)\
     $
 
-- III livello (solo per il caso II B):
+- $mo("III livello")$ (solo per il caso II B):
+  Dal secondo livello sappiamo che gli uni sono densi: 
   $ r_i < (log n log log n)^2 $
-  Se siamo tra $P_i$ e $P_(i+1)$ ma $r_i < (log n log log n)^2$, abbiamo memorizzato in modo esplciito solo le posisizioni $S_i^0, S_i^1, ..., S_i^((log n log log n)/(log r_i log log n))$ multiple di $log r_i log log n$
-
-  Calcoliamo la differenza tra due posizioni $S$:
-  $ overline(r_i^j) = s_i^(j+1) - s_i^j $
-
-  + non può essere più piccola di $overline(r_i^j) >= log r_i log log n$
-  + dato che siamo nel caso II B, $overline(r_i^j) <= r_i < (log n log log n)^2$
+  Nel secondo livello abbiamo memorizzato le posisizioni degli uni tra tra $P_i$ e $P_(i+1)  $.\
+  Siccome $r_i < (log n log log n)^2$, abbiamo *memorizzato* in modo esplciito *solo* le posisizioni: 
+  $
+    S_i^0, S_i^1, ..., S_i^((log(n) log(log n))/(log(r_i) log(log n))) "multiple di" log(r_i) log( log n)
+  $ 
+  
+  Calcoliamo la *differenza* tra due posizioni $S$:
+  $ overline(r_i^j) = S_i^(j+1) - S_i^j $
+  La differenza:
+  + $overline(r_i^j) >= log r_i log log n$
+  + dato che siamo nel caso $mr("II B")$, $ space overline(r_i^j) <= r_i < (log n log log n)^2$
 
   Anche in questo livello abbiamo bisogno di distinguere in due casi:
 
-  - Caso III A: gli uni sono sparsi: $overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2$
-    quindi memorizziamo esplicitamente le posizioni intermedie come offset da $S_i$
-    Spazio occupato: dobbiamo memorizzare $log r_i log log n$ righe, oguna offset, quindi $log overline(r_i^j)$:
+  - $mo("Caso III A")$: Gli *uni* sono *sparsi*: 
     $
-      (log r_i log log n) log overline(r_i^j) \
-      = (log r_i (log log n)^2 log overline(r_i^j)) / (log log n) \
-      <= overline(r_i^j) / (log log n)
+      overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2
     $
-
-  - Caso III B: $overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2$
-    usiamo il four russians trick.
-    Spazio occupato:
-
-    Oss1:
+    *memorizziamo esplicitamente* le posizioni intermedie come offset da $S_i$. Spazio occupato: 
+    - righe: $log r_i log log n$
+    - colonne: offset $log overline(r_i^j)$ 
+    In totale:
     $
-      log overline(r_i^j) <= log r_i \
-      <= log (log n (log log n)^2) \
-      = 2 log log n + 2 log log log \
-      <= 4 log log n
+      &= (log r_i log log n) log overline(r_i^j) \
+      & mb("Moltiplico e divido per" log log n) \
+      &= (log r_i mb((log log n)^2) log overline(r_i^j)) / mb(log log n) \
+      & mb("Usando " overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2)\
+      &<= overline(r_i^j) / (log log n)
     $
 
-    Oss2:
-    $ overline(r_i^j) < log overline(i^j) ... $
+  - $mo("Caso III B")$: Gli *uni* sono *densi*:
+   $
+    overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
+  $
+  usiamo il *four russians trick*. Spazio occupato:
+    #teorema("Oss1")[
+      Dato che siamo nel $mr("sottocaso IIA")$, allora vale $overline(r_i^j) <= r_i < (log n log log n)^2$. Di conseguenza vale anche: 
+      $
+        log(overline(r_i^j)) <= log(r_i) &<= log(log n (log log n)^2)\
+                  &= 2 log log n + 2 log log log n \
+                  &<= 4 log log n
+      $
+    ]<clark-oss1>
 
-    Quindi abbiamo $ underbrace(2^overline(r_i^j), "numero tabelle") underbrace(overline(r_i^j), "righe") underbrace(log overline(r_i^j), "bit per tabella") \
-    <= ...
-    = o(n) $
+    #teorema("Oss2")[
+      Siccome siamo nel caso $mo("III B")$, allora vale:
+      $
+        overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
+      $
+      Di conseguenza usando #link-teorema(<clark-oss1>): 
+      $
+        overline(r_i^j) &< underbrace(log overline(r_i^j),<= 4 log log n) dot underbrace(log r_i,<=4 log log n) dot (log log n)^2\
+        &<= 16(log log n)^2 (log log n)^2\
+        &= 16(log log n)^4
+      $
+    ]<clark-oss2>
+    Usando il four russians trick, il numero di *bit* *utilizzati* è pari a: 
+    $
+      &<= underbrace(2^overline(r_i^j), "numero tabelle") dot underbrace(overline(r_i^j), "righe") dot underbrace(log overline(r_i^j), "bit per tabella") \
+      &underbrace(<=, #link-teorema(<clark-oss2>)) 2^mb(16(log log n)^4) dot mb(16(log log n)^4) dot log mb(16(log log n)^4)\
+      &= o(n)
+    $
+
+
+
+
 
 
 #informalmente[
