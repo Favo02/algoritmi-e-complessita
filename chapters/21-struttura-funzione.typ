@@ -109,11 +109,11 @@ Andiamo a costruire un *grafo* dove:
 #nota()[
   Il tempo necessario per la *costruzione* di *$G$* *dipende* dal numero di *nodi $m$*. Più $m$ è grande più tentativi servono per non trovare una collisione. 
 ]
-È possibile vedere $G$ come un insieme di $n = |S|$ equazioni con $m = "# nodi"$ incognite, dove ogni equazione è:
+È possibile vedere $G$ come un insieme di *$n = |S|$ equazioni* con *$m = "# nodi"$ incognite*, dove ogni equazione è:
 $ 
   underbrace(x_(h_0("chiave")) + x_(h_1("chiave")),"estremità del lato della chiave") mod 2^r = f("chiave") = "valore" 
 $
-Possiamo creare così un sistema di $n$ *equazioni diofantee* con $m$ incognite ($x_0,dots,x_(m-1)$).
+Possiamo creare così un sistema di $n$ *equazioni diofantee* con $m$ incognite ($x_0,dots,x_(m-1)$):
 $ 
   cases(
     x_(h_0(s)) + x_(h_1(s)) mod 2^r = f(s),
@@ -121,6 +121,11 @@ $
     forall s in S
   ) 
 $
+
+#nota()[
+  Un'equazione diofantea è un'equazione in una o più incognite, i cui coefficienti sono numeri interi, e di cui si ricercano esclusivamente le soluzioni intere.
+]
+
 Se il *grafo* è *aciclico* $=>$ il *sistema* è *risolubile*. La soluzione del sistema è un array di dimensione $m$ con valori compresi fra ${0,dots,r}$. Totale *$mr$ bit*\
 Per ottenere il valore associato alla chaive $s in S$:
 $ (x_h_0(s) + x_h_1(s)) mod 2^r = f(s) $
