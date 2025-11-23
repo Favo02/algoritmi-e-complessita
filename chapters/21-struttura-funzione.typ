@@ -518,5 +518,5 @@ Funzionamento:
 $ f(s) = (x_(h_0(s)) + x_(h_1(s)), x_(h_2(s))) mod 2^r $
 
 #nota()[
-  La struttura *non memorizza* l'insieme *$S$*. Di conseguenza, se alla struttura diamo in pasto un qualsiasi elemento $in U \ S$, non può riconoscere che è un input non è "valido", andando a costruire una riposta.
+  La struttura *non memorizza* l'insieme *$S$*. Di conseguenza, se alla struttura diamo in pasto un qualsiasi elemento $in U in.not S$, non può riconoscere che è un input non è "valido", andando a costruire una riposta.
 ]
