@@ -219,7 +219,7 @@ Un ipergrafo si dice *pelabile* se esiste un ordinamento dove compaiono tutti gl
 $
   (e_0, x_0),(e_1,x_1),(e_(k-1),x_(k-1))\
   "Dove" e_i ="iperalti", space x_i="vertici"\
-  "t.c" x_i in.not e_0 union dots union e_i-1
+  "t.c" x_i in.not e_0 union dots union e_(i-1)
                                           
 $
 
