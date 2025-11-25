@@ -2,8 +2,8 @@
 
 = Struttura di Rango e Selezione (Statica)
 
-#attenzione[ 
-  La versione presentata della struttura è *statica*, ovvero non è modificabile dopo la costruzione (in Java sarebbe immutabile).\
+#attenzione[
+  La versione presentata della struttura è *statica*, ovvero non è modificabile dopo la costruzione (immutabile).
   È possibile solo interrogarla.
 
   Esiste anche la versione dinamica, che permette di cambiare dei valori del vettore o cambiare la dimensione del vettore.
@@ -11,20 +11,22 @@
 ]
 
 == ADT
-Definizione formale
-- Input = Un vettore *$underline(b) in 2^n$*
-- Primitive = *$"rank"_underline(b), "select"_underline(b): bb(N) -> bb(N)$*. Dove: 
 
-  1. $forall p <= n, quad "rank"_underline(b)(p) =  |{i | i < p, b_i = 1}|$
+Definizione formale:
+- Input: vettore binario $underline(b) in 2^n$ (di lunghezza $n$)
+- Primitive:
+  - $"rank"_underline(b): bb(N) -> bb(N)$
+  - $"select"_underline(b): bb(N) -> bb(N)$
 
-  2. $forall k <= "rank"_underline(b)(n), quad "select"_underline(b)(k) = max { p | "rank"_underline(b)(p) <= k } $
+  1. $forall p <= n, quad "rank"_underline(b)(p) = |{i space | space i < p and b_i = 1}|$
 
-#informalmente[
-  La struttura presenta due primitive principali: 
-  - *$"Rank(k)"$*= conta il numero di $1$ fino alla posizione che ci interessa (senza contare la posizione stessa).
+  2. $forall k <= "rank"_underline(b)(n), quad "select"_underline(b)(k) = max { p space | space "rank"_underline(b)(p) <= k }$
 
-  - *$"Select"(k)$*= ci dice dov'è situato il $k$-esimo uno. Ovvero la posizione massima in cui il rank è uguale al numero $k$ che ci interessa (coincidono con le posizioni degli uni).
-]
+  #informalmente[
+    - $"rank(k)"$ conta il numero di $1$ fino alla posizione che ci interessa (*non* inclusa).
+    - $"select"(k)$ posizione del $k$-esimo uno, ovvero la posizione massima in cui il rank è uguale a $k$.
+      Enumerando i risultati della select, otteniamo le posizioni di tutti gli uni.
+  ]
 
 #esempio[
   #figure(
@@ -33,7 +35,7 @@ Definizione formale
 
       // ===== VETTORE b =====
       content((-4.5, 3.2), text(size: 11pt, weight: "bold")[$underline(b)$])
-      
+
       // Indici sopra
       for i in range(7) {
         content((-3.7 + i * 0.8, 3.8), text(size: 9pt)[#i])
@@ -43,37 +45,26 @@ Definizione formale
       let values = (0, 1, 1, 0, 1, 0, 1)
       for i in range(7) {
         let x = -4 + i * 0.8
-        rect((x, 3), (x + 0.7, 3.5), stroke: 2pt + black, fill: white)
+        rect((x, 3), (x + 0.7, 3.5), stroke: black, fill: white)
         content((x + 0.35, 3.25), text(size: 11pt)[#values.at(i)])
       }
 
       content((3, 3.8), text(size: 11pt)[$m = 4$])
-    
+
       // ===== TABELLA RANK =====
       content((-5, 1.8), text(size: 11pt, weight: "bold")[$p$])
       content((-3.5, 1.8), text(size: 11pt, weight: "bold")[$"rank"_underline(b)(p)$])
 
       // Valori della tabella rank
       let rank_values = ((0, 0), (1, 0), (2, 1), (3, 2), (4, 2), (5, 3), (6, 3), (7, 4))
-      
+
       for i in range(8) {
         let (p, rank_val) = rank_values.at(i)
         let y = 1.3 - i * 0.4
-        
+
         content((-5, y), text(size: 10pt)[#p])
         content((-3.5, y), text(size: 10pt)[#rank_val])
-        
-        // Rettangolo rosso per p=7
-        if i == 7 {
-          rect((-5.3, y - 0.15), (-4.7, y + 0.15), stroke: 2pt + red, fill: none)
-          rect((-3.8, y - 0.15), (-3.2, y + 0.15), stroke: 2pt + red, fill: none)
-        }
       }
-
-      // Freccia di esempio
-      line((-4.9, -1.5), (-3.9, -1.5), stroke: 2pt + red)
-      line((-4.1, -1.4), (-3.9, -1.5), stroke: 2pt + red)
-      line((-4.1, -1.6), (-3.9, -1.5), stroke: 2pt + red)
 
       // ===== TABELLA SELECT =====
       content((1, 1.8), text(size: 11pt, weight: "bold")[$k$])
@@ -81,40 +72,18 @@ Definizione formale
 
       // Valori della tabella select
       let select_values = ((0, 1), (1, 2), (2, 4), (3, 6), (4, 7))
-      
+
       for i in range(5) {
         let (k, sel_val) = select_values.at(i)
         let y = 1.3 - i * 0.4
-        
+
         content((1, y), text(size: 10pt)[#k])
         content((2.5, y), text(size: 10pt)[#sel_val])
-        
-        // Frecce per esempi
-      
-        
-        // Rettangolo rosso per k=4
-        if i == 4 {
-          rect((0.7, y - 0.15), (1.3, y + 0.15), stroke: 2pt + red, fill: none)
-          rect((2.2, y - 0.15), (2.8, y + 0.15), stroke: 2pt + red, fill: none)
-        }
       }
-
-      // Freccia di esempio inversa
-      line((2.3, -0.3), (1.3, -0.3), stroke: 2pt + red)
-      line((1.5, -0.0), (1.3, -0.3), stroke: 2pt + red)
-      line((1.5, -0.6), (1.3, -0.3), stroke: 2pt + red)
-
-      // Note esplicative
-      content((0, -2), text(size: 10pt)[
-        $"rank"_underline(b)(7) = 4$. Pos immediatamente dopo la fine, conta tutti gli uni nel vettore. 
-      ])
-      content((0, -2.5), text(size: 10pt)[
-        $"select"_underline(b)(4) = 7$ #sym.arrow.r il 4° uno è in posizione 7
-      ])
     }),
     caption: [
       Esempio di funzionamento delle primitive Rank e Select sul vettore $underline(b)$.
-    ]
+    ],
   )
 ]
 
@@ -144,10 +113,10 @@ La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compat
 ]
 
 == Struttura di Jacobson per il Rango
- 
- Supponiamo che il vettore $underline(b)$ abbia dimensione $n$, con *$n$ potenza di $2$*. Partendo dal vettore $underline(b)$ esso viene diviso in:
- - *$mb("Superblocchi")$* $(log(n))^2$ = Memorizza il numero di $1$ prima dell'inizio del superblocco
- - *$mo("Blocchi")$* $1/2 log(n)$= Memorizzano il numero di $1$ dall'inizio del superblocco fino all'inizio del blocco (escluso) 
+
+Supponiamo che il vettore $underline(b)$ abbia dimensione $n$, con *$n$ potenza di $2$*. Partendo dal vettore $underline(b)$ esso viene diviso in:
+- *$mb("Superblocchi")$* $(log(n))^2$ = Memorizza il numero di $1$ prima dell'inizio del superblocco
+- *$mo("Blocchi")$* $1/2 log(n)$= Memorizzano il numero di $1$ dall'inizio del superblocco fino all'inizio del blocco (escluso)
 
 
 
@@ -160,10 +129,10 @@ La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compat
 
       // ===== VETTORE b completo =====
       content((-6.5, 3.0), text(size: 11pt, weight: "bold")[$underline(b)$])
-      
+
       let total_start = -6
       let total_width = 12
-      
+
       // Etichetta lunghezza totale
       line((total_start, 4.2), (total_start + total_width, 4.2), stroke: 1.5pt + black)
       line((total_start, 4.1), (total_start, 4.3), stroke: 1.5pt + black)
@@ -173,68 +142,58 @@ La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compat
       // ===== SUPERBLOCCHI =====
       let num_superblocks = 3
       let superblock_width = total_width / num_superblocks
-      
+
       for sb in range(num_superblocks) {
         let sb_x = total_start + sb * superblock_width
-        
+
         // Disegna il superblocco
-        rect((sb_x, 2.5), (sb_x + superblock_width, 3.5), 
-             stroke: 3pt + blue, fill: none)
-        
+        rect((sb_x, 2.5), (sb_x + superblock_width, 3.5), stroke: 3pt + blue, fill: none)
+
         // ===== BLOCCHI dentro ogni superblocco =====
         let num_blocks = 4
         let block_width = superblock_width / num_blocks
-        
+
         for b in range(num_blocks) {
           let b_x = sb_x + b * block_width
-          
+
           // Disegna il blocco
-          rect((b_x, 2.5), (b_x + block_width, 3.5), 
-               stroke: 1.5pt + black, fill: white)
-          
+          rect((b_x, 2.5), (b_x + block_width, 3.5), stroke: 1.5pt + black, fill: white)
+
           // Riempi con pattern il primo blocco del secondo superblocco
           if sb == 1 and b == 0 {
             for j in range(3) {
-              line((b_x + 0.1 + j * 0.25, 2.5), (b_x + 0.1 + j * 0.25, 3.5), 
-                   stroke: 1pt + gray)
+              line((b_x + 0.1 + j * 0.25, 2.5), (b_x + 0.1 + j * 0.25, 3.5), stroke: 1pt + gray)
             }
           }
-          
+
           // Evidenzia un blocco specifico (secondo blocco del secondo superblocco)
           if sb == 1 and b == 1 {
-            rect((b_x, 2.5), (b_x + block_width, 3.5),
-                 stroke: 3pt + orange, fill: yellow.lighten(80%))
+            rect((b_x, 2.5), (b_x + block_width, 3.5), stroke: 3pt + orange, fill: yellow.lighten(80%))
           }
         }
       }
-      
+
       // Etichetta superblocco
-      content((total_start + superblock_width/2, 3.7), 
-              text(size: 9pt, fill: blue, weight: "bold")[Superblocco])
-      
+      content((total_start + superblock_width / 2, 3.7), text(size: 9pt, fill: blue, weight: "bold")[Superblocco])
+
       // Freccia lunghezza superblocco
-      line((total_start, 2.2), (total_start + superblock_width, 2.2), 
-           stroke: 2pt + blue)
+      line((total_start, 2.2), (total_start + superblock_width, 2.2), stroke: 2pt + blue)
       line((total_start, 2.1), (total_start, 2.3), stroke: 2pt + blue)
-      line((total_start + superblock_width, 2.1), 
-           (total_start + superblock_width, 2.3), stroke: 2pt + blue)
-      content((total_start + superblock_width/2, 1.9), 
-              text(size: 9pt, fill: blue)[$(log n)^2$])
+      line((total_start + superblock_width, 2.1), (total_start + superblock_width, 2.3), stroke: 2pt + blue)
+      content((total_start + superblock_width / 2, 1.9), text(size: 9pt, fill: blue)[$(log n)^2$])
 
       // Freccia verso blocco evidenziato
-      let highlighted_x = total_start + superblock_width + superblock_width/4
+      let highlighted_x = total_start + superblock_width + superblock_width / 4
       line((highlighted_x, 2.3), (highlighted_x, 1.5), stroke: 2pt + orange)
       line((highlighted_x - 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
       line((highlighted_x + 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
-      
-      content((highlighted_x, 1.2), 
-              text(size: 9pt, fill: orange, weight: "bold")[Blocco])
-      content((highlighted_x, 0.8), 
-              text(size: 9pt, fill: orange)[$1/2 log n$])
+
+      content((highlighted_x, 1.2), text(size: 9pt, fill: orange, weight: "bold")[Blocco])
+      content((highlighted_x, 0.8), text(size: 9pt, fill: orange)[$1/2 log n$])
     }),
     caption: [
       Struttura di Jacobson per Rank.
-    ]
+    ],
   )
 ]
 #nota()[
@@ -250,18 +209,18 @@ Quanto spazio occupano i $mb("superblocchi")$ e i $mo("blocchi")$.
   $ n / (1/2 log n) 2 log log n = mo(o(n)) $
 
 Per completare la rappresentazione manca calcolare il numero di $1$ dall'inizio del blocco fino a una certa posizione (*offset interno al blocco*).
-Tuttavia i *tipi* diversi di *blocco* sono *limitati*: 
+Tuttavia i *tipi* diversi di *blocco* sono *limitati*:
 $
   "Tipi di blocco" = 2^(1/2 log n)
 $
 Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esplicita *per ogni tipo* di blocco. Le righe di ogni tabella contengono il numero di $1$ che ci sono dall'inizio del blocco fino alla fine di ogni possibile posizione. La tabella avrà la seguente dimensione:
-- Numero di righe = $1/2 log n$ righe, 
+- Numero di righe = $1/2 log n$ righe,
 - Lunghezza delle righe = ogni riga necessita di $log(1/2 log n)$ bit per rappresentare il contenuto.
 
 Questo tipo di tecnica prende il nome di *$mg("Four-Russian-Trick")$*. In totale lo spazio occupato dalla tecnica è:
 $
   underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n dot log (1/2 log n), "singola tabella") \
-  = underbrace(sqrt(n),"termine che cresce" \ "maggiormente") dot log(sqrt(n)) dot log (log sqrt(n)) \
+  = underbrace(sqrt(n), "termine che cresce" \ "maggiormente") dot log(sqrt(n)) dot log (log sqrt(n)) \
   = mg(o(n))
 $
 
@@ -277,11 +236,11 @@ $
 ]
 
 Spazio *totale* utilizzato:
-$ D_n = underbrace(n,"dim" underline(b)(n)) + mg(o(n)) = Z_n + o(Z_n) $
+$ D_n = underbrace(n, "dim" underline(b)(n)) + mg(o(n)) = Z_n + o(Z_n) $
 Si tratta dunque di una *struttura statica succinta per il rango* con accesso costante.
 
 #nota()[
-  L'approccio di Jacob *lavora a livelli*. Le tabelle intermedie create contengono poche righe ma i valori contenuti sono grandi. Man mano che scendiamo di "livello" (da $mb("superblocchi")$ a $mo("blocchi"))$, la grandezza dei valori decresce.\ 
+  L'approccio di Jacob *lavora a livelli*. Le tabelle intermedie create contengono poche righe ma i valori contenuti sono grandi. Man mano che scendiamo di "livello" (da $mb("superblocchi")$ a $mo("blocchi"))$, la grandezza dei valori decresce.\
   Nell'ultimo "livello", andremo ad utilizzare il *four russians trick*:
   - il problema originale è stato ridotto talmente tanto da poter memorizzare tutte le possibili casistiche (tipi di blocchi).
 ]
@@ -290,140 +249,137 @@ Si tratta dunque di una *struttura statica succinta per il rango* con accesso co
 
 Anche per questa primitiva vogliamo ottenere una *struttura statica succinta per l'operazione di select* con accesso costante.
 
-*L'implementazione Naif* consiste nel memorizzare l'intera tabella di select; spazio occupato: 
+*L'implementazione Naif* consiste nel memorizzare l'intera tabella di select; spazio occupato:
 $
-  underbrace(n,"numero righe") dot underbrace(log n,"taglia valori")
-$  
+  underbrace(n, "numero righe") dot underbrace(log n, "taglia valori")
+$
 
 Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *lavora per livelli*:
 
 - $mr("I livello")$: memorizzo solamente le posizioni $P_1, ..., P_t$, ovvero le *posizioni degli $1$* in posizioni *multiple* di *$log(n) log(log n)$*, quindi occupa $mr(t) / (log n log log n)$ righe (dove *$mr(t)$* è il numero di $1$ nella tabella). Ogni riga contiene valori che occupano $log n$ bit. Totale:
   $
-    underbrace(t / (log(n) log (log n)),"# righe") dot underbrace(log n,"bit") \
+    underbrace(t / (log(n) log (log n)), "# righe") dot underbrace(log n, "bit") \
     underbrace(<=, mb(t <= n)) mb(n) / (log(n) log (log n)) log n \
     = n / (log(log n)) \
     = o(n)
   $
 
   #esempio()[
-    Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $ log(1024) dot log(log(1024)) = 30-"esimo uno"$
+    Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $log(1024) dot log(log(1024)) = 30-"esimo uno"$
   ]
 
 - $mb("II livello")$: Consideriamo ora la *differenza* tra due elementi consecutivi nel primo livello:
   $ r_i = P_(i+1) - P_i $
-  Per come funziona il livello I, la successione è crescente e non può essere più bassa del multiplo: 
+  Per come funziona il livello I, la successione è crescente e non può essere più bassa del multiplo:
   $ r_i = P_(i+1) - P_i >= log (n) log(log n) $
   *$r_i = P_(i+1)-P_i$* rappresenta la *densità* degli $1$. Devo considerare due sottocasi:
   - $mb("Caso II A")$: gli $1$ tra le due posizioni sono distribuiti in modo *sparso*:
     $ r_i >= (log(n) log(log n))^2 $
-    Andiamo a *memorizziare esplicitamente la tabella di select*. Spazio occupato: 
-    - *Righe* = gli $1$ da memorizzare sono quelli intermedi offset da $P_i$: $log(n) log(log(n))$ 
+    Andiamo a *memorizziare esplicitamente la tabella di select*. Spazio occupato:
+    - *Righe* = gli $1$ da memorizzare sono quelli intermedi offset da $P_i$: $log(n) log(log(n))$
     - *Valori* = la posizione di ogni riga è un offset relativo a $P_i$: $log(r_i)$ bit.
     Spazio totale:
     $
-      &=(log(n) log(log n)) log r_i\
-      & mb("Moltiplico e divido per" log(n) log(log(n)))\
-      &= (mb((log(n) log(log n))^2) log r_i) / mb(log(n) log(log n)) \
-      &mb("Usando" r_i >= (log(n) log(log n))^2) \
-      &<= (mb(r_i) log r_i) / (log(n) log(log n)) \
-      & mr("Usando" r_i <= n)\
-      &<= (r_i log mr(n)) / (log (n) log( log n)) \
-      &<= (r_i) / (log(log n)) \
+      & =(log(n) log(log n)) log r_i \
+      & mb("Moltiplico e divido per" log(n) log(log(n))) \
+      & = (mb((log(n) log(log n))^2) log r_i) / mb(log(n) log(log n)) \
+      & mb("Usando" r_i >= (log(n) log(log n))^2) \
+      & <= (mb(r_i) log r_i) / (log(n) log(log n)) \
+      & mr("Usando" r_i <= n) \
+      & <= (r_i log mr(n)) / (log (n) log(log n)) \
+      & <= (r_i) / (log(log n)) \
     $
 
-  - $mb("Caso II B")$: gli uni sono *densi*: 
+  - $mb("Caso II B")$: gli uni sono *densi*:
     $ r_i < (log(n) log(log n))^2 $
     *memorizziamo* solamente le *posizioni multiple* di $log(r_i) log(log n)$(analogamente al primo livello). Si memorizzano le *posizioni* *$S_i^j$* di ogni $L' = log r_i dot log log n"-esimo uno"$ all'interno dell'intervallo $[P_i, P_(i+1))$.
-    
-    
-    
-    Spazio utilizzato: 
+
+
+
+    Spazio utilizzato:
     - *Righe* = se memorizzassimo tutte le posizioni sarebbe $log(n) log(log n)$, ma dato che ne memorizziamo meno, allora abbiamo $(log(n) log(log n)) / (log(r_i) log(log n))$ righe.
     - *Valori* = i valori di ogni riga occpuano $log(r_i)$ bit.
     $
-      (log(n) log(log n)) / (log(r_i) log( log n)) log r_i \
+      (log(n) log(log n)) / (log(r_i) log(log n)) log r_i \
       (log(n) log(log n)) / (log(log n)) \
-      
       mb("Usando" r_i >= log(n) log(log n))\
       <= r_i / (log (log n))
-
-
     $
   Calcoliamo ora lo spazio totale occupato dal $mb("II livello")$ (non contando le posizioni di alcuni uni intermedi). In entrambi i sottocasi, occupiamo la stessa quantità:
-    $
-      &<= r_i/(log(log n)) = (P_(i+1)-P_i)/(log(log n))\
-      &<= sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log (log n))\
-      & mb("Serie telescopica")\
-      &= (P_(t/(log n log log n)) - P_0) / (log (log n))\ 
-      & mb("Il numeratore è tutto l'offset")\
-      &<= mb(n) / (log (log n)) = o(n)\
-    $
+  $
+    & <= r_i/(log(log n)) = (P_(i+1)-P_i)/(log(log n)) \
+    & <= sum_(i=0)^(t/(log n log log n) - 1) (P_(i+1) - P_i) / (log (log n)) \
+    & mb("Serie telescopica") \
+    & = (P_(t/(log n log log n)) - P_0) / (log (log n)) \
+    & mb("Il numeratore è tutto l'offset") \
+    & <= mb(n) / (log (log n)) = o(n) \
+  $
 
 - $mo("III livello")$ (solo per il caso II B):
-  Dal secondo livello sappiamo che gli uni sono densi: 
+  Dal secondo livello sappiamo che gli uni sono densi:
   $ r_i < (log n log log n)^2 $
-  Nel secondo livello abbiamo memorizzato le posisizioni degli uni tra tra $P_i$ e $P_(i+1)  $.\
-  Siccome $r_i < (log n log log n)^2$, abbiamo *memorizzato* in modo esplciito *solo* le posisizioni: 
+  Nel secondo livello abbiamo memorizzato le posisizioni degli uni tra tra $P_i$ e $P_(i+1)$.\
+  Siccome $r_i < (log n log log n)^2$, abbiamo *memorizzato* in modo esplciito *solo* le posisizioni:
   $
-    S_i^0, S_i^1, ..., S_i^((log(n) log(log n))/(log(r_i) log(log n))) "multiple di" log(r_i) log( log n)
-  $ 
+    S_i^0, S_i^1, ..., S_i^((log(n) log(log n))/(log(r_i) log(log n))) "multiple di" log(r_i) log(log n)
+  $
   Abbiamo dunque un intervallo $[S_i^j, S_i^(j+1))$ che contiene $L' = log r_i dot log log n$.\
   Calcoliamo la *differenza* tra due posizioni $S$:
   $ overline(r_i^j) = S_i^(j+1) - S_i^j $
   La differenza:
   + $overline(r_i^j) >= log r_i log log n$
-  + dato che siamo nel caso $mr("II B")$, $ space overline(r_i^j) <= r_i < (log n log log n)^2$
+  + dato che siamo nel caso $mr("II B")$, $space overline(r_i^j) <= r_i < (log n log log n)^2$
 
   Anche in questo livello abbiamo bisogno di distinguere in due casi:
 
-  - $mo("Caso III A")$: Gli *uni* sono *sparsi*: 
+  - $mo("Caso III A")$: Gli *uni* sono *sparsi*:
     $
       overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2
     $
-    *memorizziamo esplicitamente* le posizioni intermedie come offset da $S_i$. Spazio occupato: 
+    *memorizziamo esplicitamente* le posizioni intermedie come offset da $S_i$. Spazio occupato:
     - righe: $log r_i log log n$
-    - colonne: offset $log overline(r_i^j)$ 
+    - colonne: offset $log overline(r_i^j)$
     In totale:
     $
-      &= (log r_i log log n) log overline(r_i^j) \
+      & = (log r_i log log n) log overline(r_i^j) \
       & mb("Moltiplico e divido per" log log n) \
-      &= (log r_i mb((log log n)^2) log overline(r_i^j)) / mb(log log n) \
-      & mb("Usando " overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2)\
-      &<= overline(r_i^j) / (log log n)
+      & = (log r_i mb((log log n)^2) log overline(r_i^j)) / mb(log log n) \
+      & mb("Usando " overline(r_i^j) >= log overline(r_i^j) log r_i (log log n)^2) \
+      & <= overline(r_i^j) / (log log n)
     $
 
   - $mo("Caso III B")$: Gli *uni* sono *densi*:
-   $
-    overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
-  $
+    $
+      overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
+    $
   usiamo il *four russians trick*. Spazio occupato:
-    #teorema("Oss1")[
-      Dato che siamo nel $mr("sottocaso IIB")$, allora vale $overline(r_i^j) <= r_i < (log n log log n)^2$. Di conseguenza vale anche: 
-      $
-        log(overline(r_i^j)) <= log(r_i) &<= log(log n (log log n)^2)\
-                  &= 2 log log n + 2 log log log n \
-                  &<= 4 log log n
-      $
-    ]<clark-oss1>
+  #teorema("Oss1")[
+    Dato che siamo nel $mr("sottocaso IIB")$, allora vale $overline(r_i^j) <= r_i < (log n log log n)^2$. Di conseguenza vale anche:
+    $
+      log(overline(r_i^j)) <= log(r_i) & <= log(log n (log log n)^2) \
+                                       & = 2 log log n + 2 log log log n \
+                                       & <= 4 log log n
+    $
+  ]<clark-oss1>
 
-    #teorema("Oss2")[
-      Siccome siamo nel caso $mo("III B")$, allora vale:
-      $
-        overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
-      $
-      Di conseguenza usando #link-teorema(<clark-oss1>): 
-      $
-        overline(r_i^j) &< underbrace(log overline(r_i^j),<= 4 log log n) dot underbrace(log r_i,<=4 log log n) dot (log log n)^2\
-        &<= 16(log log n)^2 (log log n)^2\
-        &= 16(log log n)^4
-      $
-    ]<clark-oss2>
-    Usando il four russians trick, il numero di *bit* *utilizzati* è pari a: 
+  #teorema("Oss2")[
+    Siccome siamo nel caso $mo("III B")$, allora vale:
     $
-      &<= underbrace(2^overline(r_i^j), "numero tabelle") dot underbrace(overline(r_i^j), "righe") dot underbrace(log overline(r_i^j), "bit per tabella") \
-      &underbrace(<=, #link-teorema(<clark-oss2>)) 2^mb(16(log log n)^4) dot mb(16(log log n)^4) dot log mb(16(log log n)^4)\
-      &= o(n)
+      overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
     $
+    Di conseguenza usando #link-teorema(<clark-oss1>):
+    $
+      overline(r_i^j) &< underbrace(log overline(r_i^j), <= 4 log log n) dot underbrace(log r_i, <=4 log log n) dot (log log n)^2\
+      &<= 16(log log n)^2 (log log n)^2\
+      &= 16(log log n)^4
+    $
+  ]<clark-oss2>
+  Usando il four russians trick, il numero di *bit* *utilizzati* è pari a:
+  $
+    &<= underbrace(2^overline(r_i^j), "numero tabelle") dot underbrace(overline(r_i^j), "righe") dot underbrace(log overline(r_i^j), "bit per tabella") \
+    &underbrace(<=, #link-teorema(<clark-oss2>)) 2^mb(16(log log n)^4) dot mb(16(log log n)^4) dot log mb(16(log log n)^4)\
+    &= o(n)
+  $
 
 
 
@@ -431,21 +387,21 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
 
 
 #informalmente[
-  La struttura di Clark per Select usa un approccio a **tre livelli gerarchici** per memorizzare efficientemente le posizioni degli `1`:
+  La struttura di Clark per Select usa un approccio a *tre livelli gerarchici* per memorizzare efficientemente le posizioni degli `1`:
 
   *Livello I* ($mr("rosso")$): Memorizziamo solo le posizioni degli `1` multipli di $log n dot log log n$. Questo crea dei "checkpoint" sparsi che occupano poco spazio: $o(n)$.
 
   *Livello II* ($mb("blu")$): Tra due checkpoint consecutivi $P_i$ e $P_(i+1)$ ci sono esattamente $log n dot log log n$ bit a `1`. Calcoliamo la distanza fisica $r_i = P_(i+1) - P_i$ e distinguiamo:
   - *Caso II A* (zona sparsa): Se $r_i >= (log n dot log log n)^2$, gli `1` sono così distanti che conviene memorizzare esplicitamente tutte le loro posizioni.
   - *Caso II B* (zona densa): Se $r_i < (log n dot log log n)^2$, gli `1` sono troppo vicini. Usiamo di nuovo la tecnica del Livello I su scala ridotta: memorizziamo solo le posizioni multiple di $log r_i dot log log n$.
-  
+
   In entrambi i sottocasi, lo spazio totale è $o(n)$ grazie alla sommatoria telescopica.
 
   *Livello III* ($mg("verde")$, solo per caso II B): Tra due posizioni $S_i^j$ e $S_i^(j+1)$ del Livello II, calcoliamo di nuovo la distanza $overline(r_i^j)$ e distinguiamo:
   - *Caso III A* (sparso): Se $overline(r_i^j) >= log overline(r_i^j) dot log r_i dot (log log n)^2$, memorizziamo esplicitamente le posizioni intermedie.
   - *Caso III B* (denso): Se $overline(r_i^j) < log overline(r_i^j) dot log r_i dot (log log n)^2$, usiamo il *Four Russians Trick*: costruiamo tabelle pre-calcolate per tutti i possibili pattern di bit in questo intervallo ridotto.
 
-  L'idea chiave è **adattarsi alla densità locale**: zone sparse → memorizzazione esplicita, zone dense → sotto-campionamento ricorsivo o tabelle pre-calcolate.
+  L'idea chiave è adattarsi alla densità locale: zone sparse → memorizzazione esplicita, zone dense → sotto-campionamento ricorsivo o tabelle pre-calcolate.
 ]
 
 
