@@ -12,8 +12,8 @@
 
 == ADT
 
-Definizione formale:
-- Input: vettore binario $underline(b) in 2^n$ (di lunghezza $n$)
+Formalmente:
+- Input: vettore binario $underline(b) in 2^n$ (di lunghezza $n$ e contenente $m$ uni)
 - Primitive:
   - $"rank"_underline(b): bb(N) -> bb(N)$
   - $"select"_underline(b): bb(N) -> bb(N)$
@@ -23,226 +23,259 @@ Definizione formale:
   2. $forall k <= "rank"_underline(b)(n), quad "select"_underline(b)(k) = max { p space | space "rank"_underline(b)(p) <= k }$
 
   #informalmente[
-    - $"rank(k)"$ conta il numero di $1$ fino alla posizione che ci interessa (*non* inclusa).
-    - $"select"(k)$ posizione del $k$-esimo uno, ovvero la posizione massima in cui il rank è uguale a $k$.
-      Enumerando i risultati della select, otteniamo le posizioni di tutti gli uni.
+    - $"rank"(p)$ conta il numero di $1$ fino alla posizione $p$ (*non* inclusa).
+    - $"select"(k)$ posizione massima il cui rank è uguale a $k$, ovvero l'indice del $(k+1)$-esimo uno.
   ]
 
-#esempio[
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+  #attenzione[
+    Entrambe le primitive hanno una entry _fittizia_:
+    - $"rank"(n)$: rank dell'indice oltre la fine del vettore, restituisce il numero totale di $1$ ($= m$)
+    - $"select"("rank"(n))$: equivalente a $"select"(m)$, indice del $(m+1)$-esimo uno, ma non esistendo abbastanza uni, viene restituita la fine del vettore, ovvero $n$.
+  ]
 
-      // ===== VETTORE b =====
-      content((-4.5, 3.2), text(size: 11pt, weight: "bold")[$underline(b)$])
+#figure(
+  grid(
+    columns: (auto, auto),
+    row-gutter: 1em,
+    column-gutter: 3em,
+    align: center + horizon,
 
-      // Indici sopra
-      for i in range(7) {
-        content((-3.7 + i * 0.8, 3.8), text(size: 9pt)[#i])
-      }
+    // Vettore centrale
+    grid.cell(
+      colspan: 2,
+      stack(
+        dir: ttb,
+        spacing: 0.5em,
+        table(
+          columns: 8,
+          align: center,
+          stroke: (x, y) => if y == 0 or x == 0 { none } else { 0.5pt + black },
+          [],
+          [#text(size: 8pt, fill: gray)[0]],
+          [#text(size: 8pt, fill: gray)[1]],
+          [#text(size: 8pt, fill: gray)[2]],
+          [#text(size: 8pt, fill: gray)[3]],
+          [#text(size: 8pt, fill: gray)[4]],
+          [#text(size: 8pt, fill: gray)[5]],
 
-      // Celle del vettore
-      let values = (0, 1, 1, 0, 1, 0, 1)
-      for i in range(7) {
-        let x = -4 + i * 0.8
-        rect((x, 3), (x + 0.7, 3.5), stroke: black, fill: white)
-        content((x + 0.35, 3.25), text(size: 11pt)[#values.at(i)])
-      }
+          [#text(size: 8pt, fill: gray)[6]],
 
-      content((3, 3.8), text(size: 11pt)[$m = 4$])
+          [$underline(b)$], [0], [1], [1], [0], [1], [0], [1],
+        ),
+        text(size: 11pt)[$n = 7, m = 4$],
+      ),
+    ),
 
-      // ===== TABELLA RANK =====
-      content((-5, 1.8), text(size: 11pt, weight: "bold")[$p$])
-      content((-3.5, 1.8), text(size: 11pt, weight: "bold")[$"rank"_underline(b)(p)$])
+    // Tabella Rank (sinistra)
+    table(
+      columns: 2,
+      align: center,
+      stroke: 0.5pt + black,
+      [*$p$*], [*$"rank"_underline(b)(p)$*],
+      [0], [0],
+      [1], [0],
+      [2], [1],
+      [3], [2],
+      [4], [2],
+      [5], [3],
+      [6], [3],
+      [7], [4],
+    ),
 
-      // Valori della tabella rank
-      let rank_values = ((0, 0), (1, 0), (2, 1), (3, 2), (4, 2), (5, 3), (6, 3), (7, 4))
-
-      for i in range(8) {
-        let (p, rank_val) = rank_values.at(i)
-        let y = 1.3 - i * 0.4
-
-        content((-5, y), text(size: 10pt)[#p])
-        content((-3.5, y), text(size: 10pt)[#rank_val])
-      }
-
-      // ===== TABELLA SELECT =====
-      content((1, 1.8), text(size: 11pt, weight: "bold")[$k$])
-      content((2.5, 1.8), text(size: 11pt, weight: "bold")[$"select"_underline(b)(k)$])
-
-      // Valori della tabella select
-      let select_values = ((0, 1), (1, 2), (2, 4), (3, 6), (4, 7))
-
-      for i in range(5) {
-        let (k, sel_val) = select_values.at(i)
-        let y = 1.3 - i * 0.4
-
-        content((1, y), text(size: 10pt)[#k])
-        content((2.5, y), text(size: 10pt)[#sel_val])
-      }
-    }),
-    caption: [
-      Esempio di funzionamento delle primitive Rank e Select sul vettore $underline(b)$.
-    ],
-  )
-]
-
-Esistono due approcci possibili:
-- *minimalista* = Il costruttore mette da parte il vettore $underline(b)$. Per rank e select si scorre l'intero vettore e si calcola al volo il risultato
-  $ "spazio": n, "tempo": O(n) $
-
-- *massimalista* = Il costruttore calcola le due tabelle di rank e select e butta via il vettore. Le tabelle hanno $n$ righe, dove ogni riga ha un valore compreso tra $0$ e $n$. Lo spazio occupato da ogni riga è *$log n$ bit*, in totale $n log n$ ciascuna
-  $ "spazio": 2 n log(n), "tempo": O(1) $
-
-Il *lower bound teorico* è *$n$*, quindi la struttura minimalista è l'ottimo, tuttavia è molto lenta.
-La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compatta.
+    // Tabella Select (destra)
+    table(
+      columns: 2,
+      align: center,
+      stroke: 0.5pt + black,
+      [*$k$*], [*$"select"_underline(b)(k)$*],
+      [0], [1],
+      [1], [2],
+      [2], [4],
+      [3], [6],
+      [4], [7],
+    ),
+  ),
+  caption: [
+    Esempio di funzionamento delle primitive Rank e Select sul vettore $underline(b)$.
+  ],
+)
 
 #teorema("Proprietà")[
+  Il numero di uni (rank), prima dell'indice del $(k+1)$-esimo uno (select) è, ovviamente, $k$:
   $ forall k, quad "rank"("select"(k)) = k $
 ]
 
 #teorema("Proprietà")[
+  L'indice del $("numero di uni prima di" p +1)$-esimo uno (ovvero il prossimo uno) è almeno grande quanto $p$:
   $ forall p, quad "select"("rank"(p)) >= p $
 
-  In caso $b_p = 1$, allora è un uguale stretto:
+  In caso $b_p = 1$, allora il xc$("numero di uni prima di" p +1)$-esimo uno è esattamente $p$, dato che il prossimo uno è lui stesso (rank non conta la posizione stessa):
   $ forall p, quad "select"("rank"(p)) = p $
 
-  #nota()[
+  #nota[
     Questa proprietà ci permette sempre di risalire al vettore originale
   ]
 ]
 
-== Struttura di Jacobson per il Rango
+Esistono due approcci possibili naive:
 
-Supponiamo che il vettore $underline(b)$ abbia dimensione $n$, con *$n$ potenza di $2$*. Partendo dal vettore $underline(b)$ esso viene diviso in:
-- *$mb("Superblocchi")$* $(log(n))^2$ = Memorizza il numero di $1$ prima dell'inizio del superblocco
-- *$mo("Blocchi")$* $1/2 log(n)$= Memorizzano il numero di $1$ dall'inizio del superblocco fino all'inizio del blocco (escluso)
+- *minimalista*: il costruttore mette da parte il vettore $underline(b)$.
+  Per rank e select si scorre l'intero vettore e si calcola al volo il risultato:
+  $ "spazio" = n, quad "tempo" = O(n) $
 
+- *massimalista*: il costruttore calcola le due tabelle di rank e select e butta via il vettore.
+  Le tabelle hanno $n$ righe, dove ogni riga ha un valore compreso tra $0$ e $n$.
+  Lo spazio occupato da ogni riga è $log n$ bit, quindi ognui tabella occupa $n log n$
+  $ "spazio" = 2 n log(n), quad "tempo" = O(1) $
 
+Il *lower bound teorico* è $n$, quindi la struttura minimalista è l'ottimo, tuttavia è molto lenta.
+La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compatta.
 
+== Struttura di Jacobson per il Rank
 
+#attenzione[
+  La struttura di Jacobson è utilizzabile solo per il rank, non supporta la select.
+]
 
-#esempio[
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+Partendo dal vettore $underline(b)$ di dimensione $n$, lo dividiamo in:
 
-      // ===== VETTORE b completo =====
-      content((-6.5, 3.0), text(size: 11pt, weight: "bold")[$underline(b)$])
+- *#text(blue)[Superblocchi]* di lunghezza $(log(n))^2$: memorizzano il numero di $1$ prima dell'inizio del superblocco (quindi escluso)
+- *#text(orange)[Blocchi]* di lunghezza $1/2 log(n)$: memorizzano il numero di $1$ dall'inizio del superblocco fino all'inizio del blocco (escluso)
 
-      let total_start = -6
-      let total_width = 12
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      // Etichetta lunghezza totale
-      line((total_start, 4.2), (total_start + total_width, 4.2), stroke: 1.5pt + black)
-      line((total_start, 4.1), (total_start, 4.3), stroke: 1.5pt + black)
-      line((total_start + total_width, 4.1), (total_start + total_width, 4.3), stroke: 1.5pt + black)
-      content((0, 4.5), text(size: 10pt)[$n$])
+    let total_width = 12
+    let total_start = -6
+    let num_superblocks = 3
+    let superblock_width = total_width / num_superblocks
+    let num_blocks = 4
+    let block_width = superblock_width / num_blocks
 
-      // ===== SUPERBLOCCHI =====
-      let num_superblocks = 3
-      let superblock_width = total_width / num_superblocks
+    // ===== VETTORE b =====
+    content((total_start - 0.5, 3.0), text(size: 11pt, weight: "bold")[$underline(b)$])
 
-      for sb in range(num_superblocks) {
-        let sb_x = total_start + sb * superblock_width
+    // Lunghezza totale n
+    line((total_start, 5.0), (total_start + total_width, 5.0), stroke: 1.5pt + black)
+    line((total_start, 4.9), (total_start, 5.1), stroke: 1.5pt + black)
+    line((total_start + total_width, 4.9), (total_start + total_width, 5.1), stroke: 1.5pt + black)
+    content((0, 5.3), text(size: 10pt)[$n$])
 
-        // Disegna il superblocco
-        rect((sb_x, 2.5), (sb_x + superblock_width, 3.5), stroke: 3pt + blue, fill: none)
+    // ===== BLOCCHI (arancione) =====
+    for sb in range(num_superblocks) {
+      let sb_x = total_start + sb * superblock_width
 
-        // ===== BLOCCHI dentro ogni superblocco =====
-        let num_blocks = 4
-        let block_width = superblock_width / num_blocks
+      for b in range(num_blocks) {
+        let b_x = sb_x + b * block_width
 
-        for b in range(num_blocks) {
-          let b_x = sb_x + b * block_width
+        if sb == 1 and b == 2 {
+          rect((b_x, 2.3), (b_x + block_width, 3.7), stroke: 2pt + orange, fill: orange.transparentize(85%))
 
-          // Disegna il blocco
-          rect((b_x, 2.5), (b_x + block_width, 3.5), stroke: 1.5pt + black, fill: white)
+          // Linea rank da superblocco
+          line((sb_x, 2.0), (b_x, 2.0), stroke: (paint: orange, thickness: 1.2pt, dash: "dashed"))
+          content(((sb_x + b_x) / 2, 1.75), text(size: 9pt, fill: orange)[nel blocco])
 
-          // Riempi con pattern il primo blocco del secondo superblocco
-          if sb == 1 and b == 0 {
-            for j in range(3) {
-              line((b_x + 0.1 + j * 0.25, 2.5), (b_x + 0.1 + j * 0.25, 3.5), stroke: 1pt + gray)
-            }
-          }
-
-          // Evidenzia un blocco specifico (secondo blocco del secondo superblocco)
-          if sb == 1 and b == 1 {
-            rect((b_x, 2.5), (b_x + block_width, 3.5), stroke: 3pt + orange, fill: yellow.lighten(80%))
-          }
+          // Etichetta lunghezza blocco (sotto il blocco evidenziato)
+          let block_center = b_x + block_width / 2
+          line((b_x, 2), (b_x + block_width, 2), stroke: 1.5pt + orange)
+          line((b_x, 1.9), (b_x, 2.1), stroke: 1.5pt + orange)
+          line((b_x + block_width, 1.9), (b_x + block_width, 2.1), stroke: 1.5pt + orange)
+          content((block_center, 1.7), text(size: 9pt, fill: orange, weight: "bold")[$1/2 log n$])
+        } else {
+          rect((b_x, 2.3), (b_x + block_width, 3.7), stroke: 1pt + orange, fill: none)
         }
       }
+    }
 
-      // Etichetta superblocco
-      content((total_start + superblock_width / 2, 3.7), text(size: 9pt, fill: blue, weight: "bold")[Superblocco])
+    // ===== SUPERBLOCCHI (blu) =====
+    for sb in range(num_superblocks) {
+      let sb_x = total_start + sb * superblock_width
 
-      // Freccia lunghezza superblocco
-      line((total_start, 2.2), (total_start + superblock_width, 2.2), stroke: 2pt + blue)
-      line((total_start, 2.1), (total_start, 2.3), stroke: 2pt + blue)
-      line((total_start + superblock_width, 2.1), (total_start + superblock_width, 2.3), stroke: 2pt + blue)
-      content((total_start + superblock_width / 2, 1.9), text(size: 9pt, fill: blue)[$(log n)^2$])
+      if sb == 2 {
+        rect((sb_x, 2.3), (sb_x + superblock_width, 3.7), stroke: 2.5pt + blue, fill: blue.transparentize(85%))
+      } else {
+        rect((sb_x, 2.3), (sb_x + superblock_width, 3.7), stroke: 2pt + blue, fill: none)
+      }
 
-      // Freccia verso blocco evidenziato
-      let highlighted_x = total_start + superblock_width + superblock_width / 4
-      line((highlighted_x, 2.3), (highlighted_x, 1.5), stroke: 2pt + orange)
-      line((highlighted_x - 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
-      line((highlighted_x + 0.1, 1.7), (highlighted_x, 1.5), stroke: 2pt + orange)
+      // Linea rank globale
+      line((total_start, 4.0), (sb_x, 4.0), stroke: (paint: blue, thickness: 1.5pt, dash: "dashed"))
+    }
+    content(((total_start + 2.5) / 2, 4.25), text(size: 9pt, fill: blue)[nel superblocco])
 
-      content((highlighted_x, 1.2), text(size: 9pt, fill: orange, weight: "bold")[Blocco])
-      content((highlighted_x, 0.8), text(size: 9pt, fill: orange)[$1/2 log n$])
-    }),
-    caption: [
-      Struttura di Jacobson per Rank.
-    ],
-  )
-]
-#nota()[
-  Con le informazioni contenute nei $mb("superblocchi")$ e $mo("blocchi")$, siamo in grado di ricostruire quasi interamente il rank. Manca solamente un informazione: il numero di $1$ dentro il blocco stesso.
-]
+    // Etichetta lunghezza superblocco
+    let sb_center = total_start + 2.5 * superblock_width
+    line((sb_center - superblock_width / 2, 4), (sb_center + superblock_width / 2, 4), stroke: 1.2pt + blue)
+    line((sb_center - superblock_width / 2, 4.1), (sb_center - superblock_width / 2, 3.9), stroke: 1.2pt + blue)
+    line((sb_center + superblock_width / 2, 4.1), (sb_center + superblock_width / 2, 3.9), stroke: 1.2pt + blue)
+    content((sb_center, 4.2), text(size: 9pt, fill: blue, weight: "bold")[$(log n)^2$])
+  }),
+  caption: [
+    Struttura di Jacobson per Rank: il vettore è diviso in superblocchi (blu) e blocchi (arancione).
+  ],
+)
+
+Con le informazioni contenute nei #text(blue)[superblocchi] e #text(orange)[blocchi], siamo in grado di ricostruire quasi interamente il rank.
+Manca solamente un informazione: il numero di $1$ dentro il blocco stesso fino ad una certa posizione (offset interno al blocco).
+
+Dato che ogni blocco è lungo esattamente $1/2 log n$, allora esistono $2^(1/2 log n)$ *tipi* di blocco.
+Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esplicita *per ogni tipo* di blocco.
+Ogni tabella, deve memorizzare il numero di uni dall'inizio del blocco fino ad ogni posizione.
+
+Questo tipo di tecnica prende il nome di #text(green)[*Four Russians Trick*].
 
 === Spazio occupato
 
-Quanto spazio occupano i $mb("superblocchi")$ e i $mo("blocchi")$.
-- *$mb("Superblocchi")$*= La tabella ha $n / (log_n)^2$ righe, ognuna riga richiede $log n$ bit (valori che stanno in $overline(b)$), quindi:
-  $ n / (log_n)^2 log_n = n / (log n) = mb(o(n)) $
-- *$mo("Blocchi")$*= La tabella ha $n / (1/2 log n)$ righe, tuttavia il numero di $1$ è limitato (solo valori che stanno in un superblocco). Possono essere usati meno bit per ogni riga, $log((log n)^2)$:
-  $ n / (1/2 log n) 2 log log n = mo(o(n)) $
+#nota[
+  Per facilità, assumeremo che la dimensione $n$ è una potenza di $2$.
+]
 
-Per completare la rappresentazione manca calcolare il numero di $1$ dall'inizio del blocco fino a una certa posizione (*offset interno al blocco*).
-Tuttavia i *tipi* diversi di *blocco* sono *limitati*:
-$
-  "Tipi di blocco" = 2^(1/2 log n)
-$
-Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esplicita *per ogni tipo* di blocco. Le righe di ogni tabella contengono il numero di $1$ che ci sono dall'inizio del blocco fino alla fine di ogni possibile posizione. La tabella avrà la seguente dimensione:
-- Numero di righe = $1/2 log n$ righe,
-- Lunghezza delle righe = ogni riga necessita di $log(1/2 log n)$ bit per rappresentare il contenuto.
+Quanto spazio occupano i #text(blue)[superblocchi] e i #text(orange)[blocchi]?
 
-Questo tipo di tecnica prende il nome di *$mg("Four-Russian-Trick")$*. In totale lo spazio occupato dalla tecnica è:
-$
-  underbrace(2^(1/2 log n), "numero tabelle") underbrace(1/2 log n dot log (1/2 log n), "singola tabella") \
-  = underbrace(sqrt(n), "termine che cresce" \ "maggiormente") dot log(sqrt(n)) dot log (log sqrt(n)) \
-  = mg(o(n))
-$
+- #text(blue)[*Superblocchi*]: la tabella ha $n / (log_n)^2$ righe, ogni riga può contenere un numero grande al massimo quanto $n$ (vettore di tutti $1$), quindi $log n$ per rappresentarlo:
+  $ n / (log_n)^2 log_n = n / (log n) = mr(o(n)) $
+- #text(orange)[*Blocchi*]: la tabella ha $n / (1/2 log n)$ righe, tuttavia il numero che ciascuna deve contenere è limitato, sono al massimo la grandezza del superblocco, ovvero $(log n)^2$, rappresentabili in $log((log n)^2)$ bit:
+  $ n / (1/2 log n) log (log n)^2 = n / (1/2 log n) 2 log log n = mr(o(n)) $
 
-#attenzione()[
-  è necessario *conservare* anche il vettore *$underline(b)$* originale, per isolare i blocchi (Supponiamo si possa fare in tempo costante $->$ uso offset).
+  #nota[
+    Proprietà dei logaritmi:
+    $ log x^y = y log x $
+    Ma non vale
+    $ (log x)^y != y log x $
+  ]
+- #text(green)[*Four Russians Trick*]: esistono $2^(1/2 log n)$ tipi di blocchi, ognuna con dimensione:
+  - numero di righe: $1/2 log n$, una per ogni posizione, fino alla lunghezza del blocco
+  - grandezza di ogni riga: $log(1/2 log n)$ bit per rappresentare il contenuto
+  In totale:
+  $
+    underbrace(2^(1/2 log n), "numero tabelle") dot underbrace(1/2 log n dot log (1/2 log n), "singola tabella")
+    = 2^(log sqrt(n)) dot log(sqrt(n)) dot log (log sqrt(n)) \
+    = sqrt(n) space log sqrt(n) space log log sqrt(n)
+    = mr(o(n))
+  $
+
+#attenzione[
+  Per poter determinare il tipo di ogni blocco, è necessario *conservare* il vettore originale $underline(b)$.
+
+  Supponiamo che isolare un blocco si possa fare in tempo costante.
 ]
 
 #nota[
-  Si potrebbe tagliare l'implementazione e tenere solo $mb("superblocchi")$ e $mo("blocchi")$.
+  Si potrebbe tagliare l'implementazione e tenere solo #text(blue)[superblocchi] e #text(orange)[blocchi].
+  Non usando #text(green)[four russians trick], è necessario scorrere il blocco per contare gli $1$, rendendo l'accesso non più costante ma logaritmico.
 
-  Non usando $mg("fuor russians trick")$, è necessario scorrere il blocco per contare gli $1$, rendendo l'accesso non più costante ma logaritmico.\
-  Avremo quindi un *tradeoff* sul tempo (comunque molto più efficiente di quella massimalista) ma molto più semplice.
+  Avremo quindi un *tradeoff* sul tempo (comunque molto più efficiente della versione massimalista) ma molto più semplice.
 ]
 
 Spazio *totale* utilizzato:
-$ D_n = underbrace(n, "dim" underline(b)(n)) + mg(o(n)) = Z_n + o(Z_n) $
-Si tratta dunque di una *struttura statica succinta per il rango* con accesso costante.
+$ D_n = underbrace(n, "dim" underline(b)(n)) + mr(o(n)) = Z_n + o(Z_n) $
+Si tratta dunque di una *struttura statica succinta per il rango* con tempo di accesso costante.
 
-#nota()[
-  L'approccio di Jacob *lavora a livelli*. Le tabelle intermedie create contengono poche righe ma i valori contenuti sono grandi. Man mano che scendiamo di "livello" (da $mb("superblocchi")$ a $mo("blocchi"))$, la grandezza dei valori decresce.\
-  Nell'ultimo "livello", andremo ad utilizzare il *four russians trick*:
-  - il problema originale è stato ridotto talmente tanto da poter memorizzare tutte le possibili casistiche (tipi di blocchi).
+#informalmente[
+  L'approccio di Jacob *lavora a livelli*:
+  - le prime tabelle (superblocchi) contengono poche righe ma i valori contenuti sono grandi
+  - scendendo di livello (blocchi), il numero di tabelle cresce ma i valori sono più piccoli
+  - scendendo ulteriormente (four russians trick), il problema originale è stato ridotto talmente tanto da poter memorizzare tutte le possibili casistiche (tipi di blocchi).
 ]
 
 == Struttura di Clark per la Select
@@ -264,7 +297,7 @@ Lo spazio occupato è troppo. Anche in questo caso sfruttiamo una tecnica che *l
     = o(n)
   $
 
-  #esempio()[
+  #esempio[
     Se $n = 1024$ memoriziamo solo gli $1$ nelle posisizioni multiple di $log(1024) dot log(log(1024)) = 30-"esimo uno"$
   ]
 
