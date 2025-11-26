@@ -109,11 +109,11 @@ Formalmente:
   L'indice del $("numero di uni prima di" p +1)$-esimo uno (ovvero il prossimo uno) è almeno grande quanto $p$:
   $ forall p, quad "select"("rank"(p)) >= p $
 
-  In caso $b_p = 1$, allora il xc$("numero di uni prima di" p +1)$-esimo uno è esattamente $p$, dato che il prossimo uno è lui stesso (rank non conta la posizione stessa):
+  In caso $b_p = 1$, allora il $("numero di uni prima di" p +1)$-esimo uno è esattamente $p$, dato che il prossimo uno è lui stesso (rank non conta la posizione stessa):
   $ forall p, quad "select"("rank"(p)) = p $
 
   #nota[
-    Questa proprietà ci permette sempre di risalire al vettore originale
+    Questa proprietà ci permette sempre di risalire al vettore originale.
   ]
 ]
 
@@ -124,9 +124,9 @@ Esistono due approcci possibili naive:
   $ "spazio" = n, quad "tempo" = O(n) $
 
 - *massimalista*: il costruttore calcola le due tabelle di rank e select e butta via il vettore.
-  Le tabelle hanno $n$ righe, dove ogni riga ha un valore compreso tra $0$ e $n$.
-  Lo spazio occupato da ogni riga è $log n$ bit, quindi ognui tabella occupa $n log n$
-  $ "spazio" = 2 n log(n), quad "tempo" = O(1) $
+  Le tabelle hanno $n+1$ righe, dove ogni riga ha un valore compreso tra $0$ e $n$.
+  Lo spazio occupato da ogni riga è $log n$ bit, quindi ogni tabella occupa $n log n$ bit.
+  $ "spazio" = 2 n log(n) "bit", quad "tempo" = O(1) $
 
 Il *lower bound teorico* è $n$, quindi la struttura minimalista è l'ottimo, tuttavia è molto lenta.
 La versione massimalista è veloce ma occupa molto spazio, non è nemmeno compatta.
@@ -216,7 +216,7 @@ Partendo dal vettore $underline(b)$ di dimensione $n$, lo dividiamo in:
 )
 
 Con le informazioni contenute nei #text(blue)[superblocchi] e #text(orange)[blocchi], siamo in grado di ricostruire quasi interamente il rank.
-Manca solamente un informazione: il numero di $1$ dentro il blocco stesso fino ad una certa posizione (offset interno al blocco).
+Manca solamente un'informazione: il numero di $1$ dentro il blocco stesso fino ad una certa posizione (offset interno al blocco).
 
 Dato che ogni blocco è lungo esattamente $1/2 log n$, allora esistono $2^(1/2 log n)$ *tipi* di blocco.
 Siccome le combinazioni sono poche, possiamo costruire una *tabella* di rank esplicita *per ogni tipo* di blocco.
@@ -232,8 +232,8 @@ Questo tipo di tecnica prende il nome di #text(green)[*Four Russians Trick*].
 
 Quanto spazio occupano i #text(blue)[superblocchi] e i #text(orange)[blocchi]?
 
-- #text(blue)[*Superblocchi*]: la tabella ha $n / (log_n)^2$ righe, ogni riga può contenere un numero grande al massimo quanto $n$ (vettore di tutti $1$), quindi $log n$ per rappresentarlo:
-  $ n / (log_n)^2 log_n = n / (log n) = mr(o(n)) $
+- #text(blue)[*Superblocchi*]: la tabella ha $n / (log n)^2$ righe, ogni riga può contenere un numero grande al massimo quanto $n$ (vettore di tutti $1$), quindi $log n$ bit per rappresentarlo:
+  $ n / (log n)^2 log n = n / (log n) = mr(o(n)) $
 - #text(orange)[*Blocchi*]: la tabella ha $n / (1/2 log n)$ righe, tuttavia il numero che ciascuna deve contenere è limitato, sono al massimo la grandezza del superblocco, ovvero $(log n)^2$, rappresentabili in $log((log n)^2)$ bit:
   $ n / (1/2 log n) log (log n)^2 = n / (1/2 log n) 2 log log n = mr(o(n)) $
 
@@ -243,7 +243,7 @@ Quanto spazio occupano i #text(blue)[superblocchi] e i #text(orange)[blocchi]?
     Ma non vale
     $ (log x)^y != y log x $
   ]
-- #text(green)[*Four Russians Trick*]: esistono $2^(1/2 log n)$ tipi di blocchi, ognuna con dimensione:
+- #text(green)[*Four Russians Trick*]: esistono $2^(1/2 log n)$ tipi di blocchi, ognuno con dimensione:
   - numero di righe: $1/2 log n$, una per ogni posizione, fino alla lunghezza del blocco
   - grandezza di ogni riga: $log(1/2 log n)$ bit per rappresentare il contenuto
   In totale:
@@ -311,7 +311,7 @@ Anche in questo caso sfruttiamo una tecnica che lavora per *livelli*:
   - #text(blue)[*Caso II A*]: gli uni tra le due posizioni sono distribuiti in modo *sparso*:
     $ r_i >= (log n log log n)^2 $
 
-    Dato che sono pochi, allora andiamo a memorizziare *esplicitamente* le posizioni degli uni intermedi, come offset da $P_i$.
+    Dato che sono pochi, allora andiamo a memorizzare *esplicitamente* le posizioni degli uni intermedi, come offset da $P_i$.
     Dimensione della tabella:
     - _Righe_: gli $1$ sono esattamente $log n log log n$
     - _Valori_: offset relativo a $P_i$, quindi la distanza massima tra due $P_i$, $log(r_i)$ bit.
@@ -372,8 +372,8 @@ Anche in questo caso sfruttiamo una tecnica che lavora per *livelli*:
     Spazio totale:
     $
       (log r_i log log n) log overline(r_i^j) & underbrace(=, "moltiplico/divido per" \ log log n) (log r_i mo((log log n)^2) log overline(r_i^j)) / mo(log log n) \
-      quad quad & underbrace(=, r_i^j >= mo(log r_i (log log n)^2 log overline(r_i^j)))
-      <= mo(overline(r_i^j)) / (log log n)
+      quad quad & underbrace(<=, overline(r_i^j) >= mo(log overline(r_i^j) log r_i (log log n)^2))
+      mo(overline(r_i^j)) / (log log n)
     $
 
   - #text(orange)[*Caso III B*]: gli uni sono *densi*:
@@ -382,18 +382,19 @@ Anche in questo caso sfruttiamo una tecnica che lavora per *livelli*:
 
     Lo spazio occupato:
 
-    #teorema("Oss1")[
+    #teorema("Osservazione 1")[
       Dato che siamo nel #text(blue)[sottocaso II B] (il #text(orange)[livello III] esiste solo in questo caso), allora:
 
       $
                         overline(r_i^j) <= r_i & < (log n log log n)^2 \
-        mo(log) overline(r_i^j) <= mo(log) r_i & <= mo(log) (log n (log log n)^2) \
+        mo(log) overline(r_i^j) <= mo(log) r_i & < mo(log) (log n log log n)^2 \
+                                               & = log ((log n)^2 (log log n)^2) \
                                                & = 2 log log n + 2 log log log n \
                                                & <= 4 log log n
       $
     ] <clark-oss1>
 
-    #teorema("Oss2")[
+    #teorema("Osservazione 2")[
       Siccome siamo nel caso #text(orange)[III B], allora vale:
       $
         overline(r_i^j) < log overline(r_i^j) log r_i (log log n)^2
