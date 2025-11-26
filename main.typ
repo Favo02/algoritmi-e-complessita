@@ -3,7 +3,7 @@
 // metadata
 #let title = "Algoritmi e Complessità"
 #let subtitle = "Università degli Studi di Milano - Informatica Magistrale"
-#let authors = (("Luca Favini", "Favo02"), ("Luca Corradini", "LucaCorra02"), ("Matteo Zagheno", "Tsagae"))
+#let authors = (("Luca Favini", "Favo02"), ("Luca Corradini", "LucaCorra02"))
 #let introduction = [
   #show link: underline
   = Dispensa di Algoritmi e Complessità
