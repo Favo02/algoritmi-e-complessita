@@ -100,3 +100,4 @@
 
 #part("Strutture Dati Compresse")
 #include "chapters/17-strutture-dati-compresse.typ"
+#include "chapters/18-struttura-rango-e-selezione.typ"
