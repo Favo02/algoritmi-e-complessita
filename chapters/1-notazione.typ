@@ -114,3 +114,17 @@ Utilizzando la notazione di insieme appena introdotta, possiamo descrivere:
 / Disuguaglianza di Markov:
   per ogni variabile aleatoria non negativa e con media finita e per ogni $alpha > 0$ <disuguaglianza-di-markov>
   $ P[X >= alpha] <= E[X]/alpha $
+
+=== ottimizzazione
+- $t_h = "max"$: 
+  $
+    "APX" <= "Ottimo"\
+    "APX" >= "Ottimo"/"Fattore APX"
+  $
+  L'approssimazione cerca di salire verso l'ottimo
+- $t_h = "min"$:
+  $
+    "APX" >= "Ottimo"\
+    "APX" <= "Ottimo" dot "Fattore APX"
+  $
+  L'approssimazione cerca di scendere verso l'ottimo
