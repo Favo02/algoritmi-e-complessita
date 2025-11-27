@@ -837,6 +837,10 @@ Formalmente:
         Queste configurazioni non hanno lati che le collegano (dato che sono compatibili).
 
         L'insieme di tali configurazioni è un insieme indipendente, dato che devo accettare con probabilità $1$, la sua cardinalità deve essere $2^r(|x|) space qed$
+
+        #nota()[
+          L'insieme di vertici ha dimensione $>= 2^r(|x|)$, in quanto per un qualunque $R$ devo accettare.
+        ]
       ]
     ]<indipendent-sat-fatto-1>
 
@@ -848,7 +852,7 @@ Formalmente:
         $ 
         |S| > 2^(r(|x|)-1)
         $
-        Esiste un $w$ compatibile con tutte le configurazioni (per #link-teorema(<indipendent-sat-fatto-1>)). Accetto con probabilità $> 1/2$, *impossibile*, $qed$.
+        $S$ è un insieme di configurazioni al cui interno non ci possono essere configurazioni incompatibili tra loro.Si può costruire un $w$ compatibile con tutti i vertici di $S$. Di conseguenza, $w$ viene accettato in tutte le configurazioni, stiamo accettando con probabilità $> 1/2$, ma per definizione è *impossibile*, $qed$.
       ]
     ]<indipendent-sat-fatto-2>
 
@@ -858,7 +862,7 @@ Formalmente:
     Sia *$t_x^*$* la cardinalità del MaxIndependentSet per $G_x$:
     - se $mb(x in L) underbrace(=>,#link-teorema(<indipendent-sat-fatto-1>)) t^*_x >= 2^(r(|x|))$
 
-    - se $mr(x in.not L) underbrace(=>,#link-teorema(<indipendent-sat-fatto-2>)) t_x^* <= 2^(r(|x|)-1) = 2^(r(|x|))/2$
+    - se $mr(x in.not L) underbrace(=>,#link-teorema(<indipendent-sat-fatto-2>)) t_x^* < 2^(r(|x|)-1) = 2^(r(|x|))/2$
 
     Adesso supposiamo per *assurdo* che esista un algoritmo $A$ in grado di restituire una soluzione $overline(t)$ approssimata, con:
     $ 
@@ -872,7 +876,7 @@ Formalmente:
 
     - Se $mr(x in L)$:
       $
-        overline(t) <= t^* <= 2^(r(|x|)-1)/(2-epsilon) < 2^(r(|x|))/2
+        overline(t) <= t^* < 2^(r(|x|))/2
       $
       Tuttavia riusciremo a risolvere in tempo polinomaile il problema MaxIndependentSet guardando la soluzione $overline(t)$, questo è un *assurdo* in quanto *$L in "Npc"$*
   ]
