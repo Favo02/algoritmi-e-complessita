@@ -816,6 +816,10 @@ Formalmente:
       - $R eq.not R'$ //Todo verificare se != o =
       - oppure $exists k, k'$ tale che $i_k = i'_k'$ e $b_k != b'_k'$. Insieme di interrogazione uguale ma risposte dell'oracolo diverse.
 
+    #attenzione()[
+      Anche se i vertici sono $|V| <= 2^r(|x|) dot 2^q$, nell'insieme indipendente il numero massimo di *vertici selezionabili* è uno per ogni "gruppo" $R$ (al massimo *$2^(r(|x|))$*). Non possiamo prendere due vertici che usano la stessa stringa random $R$ (incompatibili). 
+    ]
+
       #esempio()[
         configurazioni incompatibili:
         $
@@ -852,7 +856,7 @@ Formalmente:
         $ 
         |S| > 2^(r(|x|)-1)
         $
-        $S$ è un insieme di configurazioni al cui interno non ci possono essere configurazioni incompatibili tra loro.Si può costruire un $w$ compatibile con tutti i vertici di $S$. Di conseguenza, $w$ viene accettato in tutte le configurazioni, stiamo accettando con probabilità $> 1/2$, ma per definizione è *impossibile*, $qed$.
+        $S$ è un insieme di configurazioni al cui interno non ci possono essere configurazioni incompatibili tra loro. Si può costruire un $w$ compatibile con tutti i vertici di $S$. Di conseguenza, $w$ viene accettato in tutte le configurazioni, stiamo accettando con probabilità $> 1/2$, ma per definizione è *impossibile* $qed$.
       ]
     ]<indipendent-sat-fatto-2>
 
