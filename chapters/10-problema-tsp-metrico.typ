@@ -8,13 +8,14 @@
 
 == Problema TSP [NPOc]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
   - $chevron.l delta_e chevron.r_(e in E) in bb(Q)^+$: pesi dei lati
 - *$"Amm"_Pi$*: circuito Hamiltoniano $pi in G$ (tocca esattamente una volta ogni vertice del grafo), oppure $bot$ (se non esiste)
 - *$C_Pi$*: peso del circuito Hamiltoniano:
   $ delta = sum_(e in pi) delta_e $
-- *$t_Pi$* = $min$
+- *$t_Pi$*$= min$
 
 #teorema("Teorema")[
   *$ "TSP" in "NPOc" $*
@@ -82,12 +83,13 @@ Vedremo una versione del problema che lavora in uno spazio metrico, aggiungendo 
 == Algoritmo di Christofides per TSP metrico [$3/2$-APX]
 
 #pseudocode(
-  [*Input*: $G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
+  [input $<- G(V, E =binom(V, 2)), chevron.l delta_e chevron.r_(e in E)$],
   [$T <-$ #link(<tsp-minimum-spanning-tree>)[Minimum spanning tree#super[1]] su $G$],
   [$D <-$ insieme dei vertici di grado dispari in $T$ #emph("// " + $|D|$ + " è pari per " + link(<tsp-handshaking-lemma>)[handshaking lemma#super[2]])],
   [$M <-$ #link(<tsp-minimum-weight-perfect-matching>)[Minimum-weight perfect matching#super[3]] su $D$],
   [$tilde(pi) <-$ Circuito Euleriano su $M union T$ #emph("// la sua esistenza è garantita da " + link(<tsp-esistenza-circuito-euleriano>)[esistenza circuito Euleriano#super[4]])],
-  [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]] ],
+  [$pi <- tilde(pi)$, #link(<tsp-cortocircuitazione>)[Shortcircuit#super[5]]],
+  [*Output* $pi$],
 )
 
 L'algoritmo sfrutta le seguenti componenti:
@@ -552,12 +554,12 @@ Eseguiamo ora l'algoritmo di Christofides su $G$:
   - costo di $mm(M = (1+epsilon) (n-2)/2 + 1)$
 
 - Unendo $mo(T) union mm(M)$ otteniamo un circuito Hamiltoniano (non c'è bisogno di cortocircuitazione), esso ha costo:
-$
-  delta & = mm((1+epsilon)(n-2)/2 + 1) + mo((n-1)) \
-  delta & = (n-2)/2 + epsilon(n-2)/2 + 1 + n - 1 \
-  delta & = 3/2 n - 1 + epsilon(n-2)/2 \
-  delta & = 3/2 n + epsilon n/2 - (1 + epsilon)
-$
+  $
+    delta & = mm((1+epsilon)(n-2)/2 + 1) + mo((n-1)) \
+    delta & = (n-2)/2 + epsilon(n-2)/2 + 1 + n - 1 \
+    delta & = 3/2 n - 1 + epsilon(n-2)/2 \
+    delta & = 3/2 n + epsilon n/2 - (1 + epsilon)
+  $
 
 #figure(
   cetz.canvas({
@@ -671,7 +673,6 @@ $
 $
 
 Per un $n$ abbastanza grande $n-> infinity$ e per un $epsilon$ abbastanza piccolo $epsilon -> 0$, il rapporto $delta/delta^*$ tende a $3/2$.
-
 
 #teorema("Teorema")[
   *$3/2$* è il miglior tasso di approssimazione noto per *TSP metrico*.

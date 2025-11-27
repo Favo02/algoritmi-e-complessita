@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Set Cover [NPOc]
+= Problema Set Cover [NPOc] <problema-set-cover>
 
 #informalmente[
   Esiste un universo di $n$ _punti_.
@@ -10,13 +10,14 @@
   L'obiettivo è comprare un insieme di aree, tale che tutti i punti siano coperti, minimizzando il costo totale.
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $S_1, S_2, ..., S_m subset.eq 2^Omega, quad limits(union.big)_(i=1)^m S_i = Omega, quad |Omega| = n$: insiemi delle aree che unite coprono tutto l'universo (possono anche sovrapporsi)
   - $w_1, w_2, ..., w_m in bb(Q)^+$: costi delle aree
 - *$"Amm"_Pi$* $= I subset.eq {1, ..., m}, quad limits(union.big)_(i in I) S_i = Omega$: un insieme di indici di aree che coprono tutti i punti
 - *$C_Pi$*: somma dei costi delle aree selezionate
   $ w = sum_(i in I) w_i $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #esempio[
   Esempio con $n=6$ punti e $m=4$ aree:
@@ -201,19 +202,18 @@ $ H(n) = sum_(i=1)^n 1/i $
   $ ln(n+1) <= H(n) <= 1+ln(n) $
 ]
 
-== Algoritmo PricingSetCover
+== Algoritmo PricingSetCover [$H(M)$-APX]
 
 #pseudocode(
   [$R <- Omega$ #emph("// punti ancora da coprire")],
   [$I <- emptyset$ #emph("// aree selezionate")],
-  [*While* $R != emptyset$],
+  [*While* $R != emptyset$ *do*],
   indent(
     [$i <-$ choose $in {1, ..., m} \\ I$ minimizing $w_i / (|S_i inter R|)$ #emph("// seleziona area che minimizza il prezzo")],
     [$I <- I union {i}$],
     [$R <- R \\ S_i$],
   ),
   [*Output* $I$],
-  [*End*],
 )
 
 Durante l'esecuzione abbiamo utilizzato un *prezzo* (_pricing_).
