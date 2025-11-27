@@ -281,7 +281,7 @@ Oltre all'oracolo questo modello di calcolo presenta anche un vettore di probabi
 == Classe PCP
 
 Siano $r,q$ due funzioni: *$r,q: bb(N) -> bb(N)$*.\
-La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste un probabilistc checker $V$ t.c: 
+La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste un probabilistc checker $V$ t.c: 
 1. $V$ lavora in tempo polinomiale
 2. $V$ effettua al più $q(|x|)$ query
 3. $V$ estrae al più $r(|x|)$ bit random
@@ -308,17 +308,22 @@ La classe $"PCP"[r,q]$ è la classe dei linguaggi $L subset.eq 2^*$ t.c esiste u
     Il linguaggio $L$ è accettato da un classificatore $V$ che usa $q$ interrogazioni all'oracolo e un numero logaritmico di bit random (è una sorta di *trade-off*). 
 
     #informalmente()[
-      Possiamo affermare che la randomizzazione è esponenzialmente più forte del determinismo.   
+      Il verificatore $V$ presenta un *trade-off* fra randomness e non determinismo. Con una quantità di bit random logaritmica sono in grado di ridurre il numero di query all'oracolo a una costante.
+
+      La probabilità è *esponenzialmente* più forte del non determinismo.    
     ]
   ]
-  Per costruire un verificatore in grado di riconoscere il linguaggio $L$ useremo un verificatore in forma normale. 
+  Per costruire un verificatore in grado di riconoscere il linguaggio $L in "NP"$ useremo un verificatore in forma normale (è possibile ricondurre un qualsiasi verificatore $V[O(log(n)),O(1)]$ che opera in forma normale). 
 
   === Verificatori in forma normale
 
-  Sia $L$ un linguaggio, $L in "PCP"[r(n),q]$. Esiste un verificatore $V$ in grado di accettare $L$, costruito nel seguente modo: 
+  Sia $L in 2^(2*)$ un linguaggio, $L in "PCP"[r(n),q]$. Esiste un verificatore $V$ in grado di accettare $L$, costruito nel seguente modo: 
   - $V$ prende in input una query $x in 2^*$
   - $V$ estrae $R = 2^r(n)$ bit
   - $V$ accede al oracolo un numero $<= q$ di volte. Dato $(x,R)$, il verificatore decide di interrogare $q$ posizioni specifice dell'oracolo $i_1(x,R), dots, i_q (x,R)$
+
+
+
 
   #nota[ 
     I bit random $R$ servono per "amplificare" la distinzione tra istanze "YES" e "NO". Provando tutte le possibili estrazioni random, trasformiamo una garanzia probabilistica in una garanzia deterministica sulla soddisfacibilità della CNF. 
