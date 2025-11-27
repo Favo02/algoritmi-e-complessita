@@ -614,7 +614,7 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
                             &= P(|x|) - P(|x|)/2^(q+1)
                   
       $
-        Riscrivendo la disequazione per $,mb(t_x^*)$:
+        Riscrivendo la disequazione per $,mb(t_x^*)$ (numero massimo di clausole soddisfacibili):
       $
         mb(t_x^*) <= P(|x|)-P(|x|)/2^(q+1)\
         mb("Raccogliamo" P(|x|))\
@@ -622,6 +622,16 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
         mb("Scegliendo il tasso di approx." overline(epsilon) = 1/2^(q+1))\
         mr(t_x^* <= P(|x|)(1-overline(epsilon)))
       $
+
+      #nota()[
+        Viene usato il *$<=$* e *non* il *$<$* in $t_x^* <= P(|x|)(1-overline(epsilon))$, in quanto: 
+        - Se il verificatore rifiuta, la formula diventa FALSA.
+        - Vuol dire che *almeno una clausola è falsa* (formule CNF in and), non per forza tutte. 
+        
+        Ad esempio se rendessimo vere *9* clausole su *10*, dobbiamo scrivere che il numero di clausole soddisfatte punteggio è $<= 9$. Non possiamo scrivere $< 9 $ (cioè $8$), perché $9$ è raggiungibile.
+      ]
+
+
     Riassumendo: 
     - $"Se" x in L$ = $mb(t_x^* = P(|x|))$
     - $"Se" x in.not L$ = $mr(t_x^* <= P(|x|)(1-1/(2^q+1)))$
