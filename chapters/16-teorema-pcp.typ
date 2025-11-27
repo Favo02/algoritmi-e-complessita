@@ -293,6 +293,10 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
      )
    $
 
+  #attenzione()[
+    Se $x in L$, deve esistere una stringa oracolica $w in 2^*$ tale che il verificatore accetti sempre, *indipendentemente dalla stringa random $R$* che capita di estrarre.
+  ]
+
 #nota[
   - *$"PCP"[0,0] = P$*. L'oracolo e la sorgente di bit random sono inutilizzabili. L'output dipende solo dall'input $V(x) = y$, se $x in L$ viene accettato dal verificatore. 
 
@@ -319,7 +323,7 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
 
   Sia $L in 2^(2*)$ un linguaggio, $L in "PCP"[r(n),q]$. Esiste un verificatore $V$ in grado di accettare $L$, costruito nel seguente modo: 
   - $V$ prende in input una query $x in 2^*$
-  - $V$ estrae $<= r(n)$ bit random, chiamo la lunghezza di questa sequenza $R=2^r(|x|)$ bit.
+  - $V$ estrae $<= r(n)$ bit random, chiamo con $R$ la stringa estratta, $R in 2^r(|x|)$ bit.
   - $V$ accede al oracolo un numero $<= q$ di volte. Dato $(x,R)$, il verificatore decide di interrogare $q$ posizioni specifice dell'oracolo $i_1(x,R), dots, i_q (x,R)$
 
 
@@ -566,10 +570,17 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
         phi_(x,R) = (w_3 or w_7 or not w_8) and (w_3 or not w_7 or w_8)
       $
     ]
-    Chiamiamo con $Phi_x$ la congiunzione di più formule $phi_(x,R)$:
+    Chiamiamo con $Phi_x$ la congiunzione di più formule $phi_(x,R)$ per tutte le *posssibil sequenze* di *bit random $R$*:
     $
       Phi_x = underbrace(and.big_(R in 2^(r(|x|))) phi_(x,R),"And di CNF")
     $
+    #nota()[
+      $R$ è una stringa appartenente all'insieme di tutte le possibili stringhe binarie di lunghezza $r(n)$: 
+      $
+        R in {0,1}^(r(n))
+      $
+    ]
+
 
     Dove: 
       1. $Phi_x$ è fatta da clausole con $q$ letterali ciascuna
