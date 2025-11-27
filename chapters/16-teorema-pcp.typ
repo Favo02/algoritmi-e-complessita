@@ -319,7 +319,7 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
 
   Sia $L in 2^(2*)$ un linguaggio, $L in "PCP"[r(n),q]$. Esiste un verificatore $V$ in grado di accettare $L$, costruito nel seguente modo: 
   - $V$ prende in input una query $x in 2^*$
-  - $V$ estrae $R = 2^r(n)$ bit
+  - $V$ estrae $<= r(n)$ bit random, chiamo la lunghezza di questa sequenza $R=2^r(|x|)$ bit.
   - $V$ accede al oracolo un numero $<= q$ di volte. Dato $(x,R)$, il verificatore decide di interrogare $q$ posizioni specifice dell'oracolo $i_1(x,R), dots, i_q (x,R)$
 
 
@@ -412,13 +412,14 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
 
         }),
         caption: [
-          Albero delle interrogazioni del verificatore adattivo.\
-          Le posizioni dell'$i$-esima query che vengono interrogate dipendono dal risultato \ delle $i-1$ query precedenti. 
+          Albero delle interrogazioni del *verificatore adattivo*.\
+          Le posizioni dell'$i$-esima query che vengono interrogate dipendono dal risultato \ delle *$i-1$ query precedenti*.\
+          $W_(i_2)^0$ = chiedo la posizione $i_2$ suppendo che la query precedente abbia avuto risposta $0$. 
         ]
       )
-      Siccome l'albero delle interrogazioni è alto $q$ (costante) e ogni nodo ha al massimo $2$ figli, l'abero ha al massimo $2^q$ foglie. Possiamo collezionare tutte le possibili posizioni dell'oracolo che vengono interrogate lungo un qualsiasi ramo, ci sono al massimo *$overline(q) = 2^q$* posizioni distinte (una per ogni folgia dell'albero). Per questo scopo utilizziamo una DFS o BFS. Il risultato di questa operazione è un oracolo *non adattivo* in cui: 
+      Siccome *l'albero* delle interrogazioni è *alto $q$* (costante) e ogni nodo ha al massimo $2$ figli, l'abero ha al massimo *$2^q$ foglie*. Possiamo collezionare tutte le possibili posizioni dell'oracolo che vengono interrogate lungo un qualsiasi ramo, ci sono al massimo *$overline(q) = 2^q$* posizioni distinte (numero di nodi interni). Per questo scopo utilizziamo una DFS o BFS. Il risultato di questa operazione è un *oracolo non adattivo* in cui: 
       - Inizialmente vengono collezionate tutte le $overline(q) = 2^q$ possibili interrogazioni.
-      - L'oracolo viene intterogato $2^q$ volte, tuttavia siccome $q=O(1)$, anche $overline(q) = O(1)$  
+      - L'oracolo viene interrogato $2^q$ volte, tuttavia siccome $q=O(1)$, anche $overline(q) = O(1)$  
       - Successivamente viene simulata l'esecuzione usando le risposte già collezionate. 
 
 
