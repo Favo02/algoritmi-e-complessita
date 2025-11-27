@@ -420,7 +420,9 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
       Siccome *l'albero* delle interrogazioni è *alto $q$* (costante) e ogni nodo ha al massimo $2$ figli, l'abero ha al massimo *$2^q$ foglie*. Possiamo collezionare tutte le possibili posizioni dell'oracolo che vengono interrogate lungo un qualsiasi ramo, ci sono al massimo *$overline(q) = 2^q$* posizioni distinte (numero di nodi interni). Per questo scopo utilizziamo una DFS o BFS. Il risultato di questa operazione è un *oracolo non adattivo* in cui: 
       - Inizialmente vengono collezionate tutte le $overline(q) = 2^q$ possibili interrogazioni.
       - L'oracolo viene interrogato $2^q$ volte, tuttavia siccome $q=O(1)$, anche $overline(q) = O(1)$  
-      - Successivamente viene simulata l'esecuzione usando le risposte già collezionate. 
+      - Successivamente viene simulata l'esecuzione usando le risposte già collezionate.
+
+      Il costo di questa operazione è una crescita esponenziale del numero di query (rimane una costante) 
 
 
       #esempio()[
