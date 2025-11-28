@@ -4,7 +4,7 @@
 
 == ADT
 
-- *Input*: dati $n$ numeri naturali $x_1,dots,x_(n-1) in bb(N)$, con valore compreso in $[0,U)$, consideriamo una sequenza *monotona non decrescente*:
+- *Input*: dati $n$ numeri naturali $x_0,dots,x_(n-1) in bb(N)$, con valore compreso in $[0,U)$, consideriamo una sequenza *monotona non decrescente*:
 $ 0 <= x_0 <= x_1 <= ... <= x_(n-1) < underbrace(U,"universo") $
 
 - *Primitiva di accesso*: c'è una sola primitiva d'accesso: dato $i$, vogliamo sapere $x_i$
