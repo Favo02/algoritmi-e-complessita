@@ -62,15 +62,15 @@ Nella pratica, vengono studiate alcune strutture assumendo la full Full-Randomne
 
 == ADT
 
-L'obbiettivo è costruire una funzione $f$ cha associa ad una chiave $s in S$, una valore rappresentabile con $2^r$ bit.\
+L'obbiettivo è costruire una funzione $f$ cha associa ad una chiave $s in S$, una valore rappresentabile con $r$ bit.\
 
 #informalmente[
-  La struttura dati che vogliamo rappresentare è un insieme di chiavi valori, dove le chiavi memorizzate sono $S$ (in un certo istante non avremo tutto l'universo $U$ memorizzato). Ogni chiave associa un valore rappresentabile con $2^r$ bit.
+  La struttura dati che vogliamo rappresentare è un insieme di chiavi valori, dove le chiavi memorizzate sono $S$ (in un certo istante non avremo tutto l'universo $U$ memorizzato). Ogni chiave associa un valore rappresentabile con $r$ bit.
 ]
 
 Dato un universo $U$ e un $r > 0$, ho una funzione: 
 $
-  f : S -> 2^r
+  f : S -> underbrace(2^r,"possibili valori rappresentabili con " \ r "bit")
 $
 con $S subset.eq U$. Si tratta di una struttura *statica* (non possono essere modificate chiavi e valori)
 
@@ -151,9 +151,12 @@ Nella definizione precendente abbiamo scelto solamente due funzioni di hash rand
 Se scegliessimo *più di due funzioni di hash* otterremmo un *ipergrafo*, permettendoci di abbassare il parametro $m$.\
 
 #nota()[
-  Un *ipergrafo* $H$ è un grafo in cui un arco può essere collegato a un qualunque numero di vertici. Formalmente, $H(X,E)$ dove: 
+  Un *ipergrafo* $H$ di dimensione $k$ è un grafo in cui un arco è collegato a un numero di vertici $k$. Formalmente, $H(X,E)$ dove: 
   - $X$= insieme di nodi
-  - $E subset.eq P(X)backslash{emptyset}$ = insisme formato da sottoinsiemi non vuoti di $X$ chiamati iperarchi 
+  - $E subset.eq P(X)backslash{emptyset}$ = insieme degli iperarchi dove ogni lato $e in E$ ha cardinalità $k$ (è connesso a $k$ vertici):
+  $
+    forall e in E, |e| = k
+  $
 
   #figure(
   cetz.canvas({
