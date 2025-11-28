@@ -221,7 +221,7 @@ La sequenza unaria può essere vista come una stringa binaria dove:
 
   Per trovare i bit più significativi di *$x_i$*:
   $
-  "select"_underline(b)(i) = underbrace(i-1,"numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i-1),"somma degli zeri" \ "prima dell' "i"-esimo 1")
+  "select"_underline(b)(i) = underbrace(i-1,"numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i),"somma degli zeri" \ "prima dell' "i"-esimo 1")
   $
 
 #nota()[
@@ -229,12 +229,12 @@ La sequenza unaria può essere vista come una stringa binaria dove:
   
   Questa posizione codifica:
   - Il numero di $1$ visti fino ad ora: $i-1$ (gli $1$ precedenti)
-  - Il numero di $0$ visti fino ad ora: $u_0 + u_1 + ... + u_(i-1)$
+  - Il numero di $0$ visti fino ad ora: $u_0 + u_1 + ... + u_(i)$
 ]
 Espandendo la formula:
 $
-  "select"_underline(b)(i) &= i-1 + sum_(j=0)^(i-1) mb(u_j)\
-                           &= i-1+sum_(j=0)^(i-1) mb(floor(x_j/2^l) - floor((x_(j-1))/2^l))\
+  "select"_underline(b)(i) &= i-1 + sum_(j=0)^(i) mb(u_j)\
+                           &= i-1+sum_(j=0)^(i) mb(floor(x_j/2^l) - floor((x_(j-1))/2^l))\
                            &= mb("Serie telescopica")\
                            &= i-1+mb(floor(x_i/2^l))                    
 $
