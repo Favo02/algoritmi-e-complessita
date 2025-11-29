@@ -12,7 +12,7 @@ In *informatica*, la nomenclatura standard è:
 / Albero: struttura radicata aciclica dove ogni nodo ha dei figli.
   Assegnando una radice qualsiasi ad un albero secondo la _teoria dei grafi_, otteniamo un albero in _informatica_
 / Albero ordinato: albero in cui i figli di un nodo hanno un certo ordine
-/ Albero binari: albero in cui ogni nodo ha esattamente $0$ o $2$ figli.
+/ Albero binario: albero in cui ogni nodo ha esattamente $0$ o $2$ figli.
 
 == ADT Albero Binario
 
@@ -115,7 +115,7 @@ I nodi di un albero binario si dividono in:
 )
 
 #teorema("Proprietà")[
-  In un albero binario, Il numero di foglie $E$ è il numero di nodi interni $I+1$:
+  In un albero binario, il numero di foglie $E$ è il numero di nodi interni $I+1$:
   $ |E| = |I| + 1 $
 
   #dimostrazione[
@@ -150,14 +150,14 @@ Per poter affermare che una struttura è compressa, allora dobbiamo quantificare
 Vogliamo stabilire quanti sono i possibili tipi di alberi binari con $n$ nodi interni, per poi stabilire quanti bit servono per poterli rappresentare distintamente tutti.
 
 #teorema("Teorema")[
-  Il numero di alberi binari con $n$ nodi intenri è $ C_n = 1/(n+1) binom(2n, n) $
+  Il numero di alberi binari con $n$ nodi interni è $ C_n = 1/(n+1) binom(2n, n) $
   chiamato il *numero di Catalano*.
 ]
 
 #teorema("Teorema")[
   Servono almeno $2n - O(log n)$ bit per rappresentare un albero binario con $n$ nodi *interni*.
 
-  Il teoretical lower bound è $2n$:
+  Il theoretical lower bound è $2n$:
   $ Z_n = 2n $
 
   #dimostrazione[
@@ -200,7 +200,7 @@ Vogliamo stabilire quanti sono i possibili tipi di alberi binari con $n$ nodi in
 
 === Rappresentazione succinta
 
-Vogliamo rappresentare un albero binario, considerando solamente la sua struttura, senza considerare i dei dati che contiene (*dati ancillari*).
+Vogliamo rappresentare un albero binario, considerando solamente la sua struttura, senza considerare dei dati che contiene (*dati ancillari*).
 
 Ogni nodo è numerato, per livello di profondità e da sinistra verso destra (come li visiterebbe una *BFS*).
 Creiamo un vettore di $2n+1$ elementi, dove $n$ è il numero di nodi interi:
@@ -338,7 +338,7 @@ La rappresentazione richiede $2 n + 1 + o(2n +1) = 2n + o(n)$ bit: è *succinta*
 Dato un certo nodo $x$, accedere ai figli di $x$.
 
 Per accedere ai figli di $x$, chiamati $x'$ e $x''$, dobbiamo sapere quanti nodi hanno indice più piccolo di $x'$.
-Chiamiamo $T'$ il sottoalbero contentente tutti questi nodi.
+Chiamiamo $T'$ il sottoalbero contenente tutti questi nodi.
 
 Per conoscere la quantità di nodi di $T'$ dobbiamo sapere quanti nodi hanno dei figli prima di $x'$.
 Questi non sono altro che tutti i nodi visitati prima di $x$, ovvero:
@@ -389,7 +389,7 @@ Questi non sono altro che tutti i nodi visitati prima di $x$, ovvero:
   ],
 )
 
-Possiamo calcolare questa quantità conoscendo il numero di nodi interni di $T'$ sfruttando la proprità #link-teorema(<albero-binario-numero-nodi>).
+Possiamo calcolare questa quantità conoscendo il numero di nodi interni di $T'$ sfruttando la proprietà #link-teorema(<albero-binario-numero-nodi>).
 $ |"nodi" T'| = 2 |"nodi interni" T'| + 1 = 2 "rank"_underline(b)(x) + 1 $
 
 Dato che i nodi sono numerati a partire da $0$, allora gli indici dei figli di $x$ sono:
@@ -413,21 +413,21 @@ $
                   2"rank"(p)+2 & = x
                 ) \
               & = cases(
-                  "rank"(p)+1/2 & = x/2,
-                  "rank"(p)+1 & = x/2
+                  "rank"(p) & = (x-1)/2,
+                  "rank"(p) & = (x-2)/2
                 ) \
-    "rank"(p) & = floor(x/2-1/2) \
+    "rank"(p) & = floor((x-1)/2) \
 $
 Sapendo che rank e select si annullano (#link-teorema(<rank-select-operazioni-inverse>)) in caso $b_p = 1$ (e $p$ lo è dato che ha figli), possiamo applicare la select da entrambe le parti:
 $
-  "select"("rank"(p)) & = "select"(floor(x/2-1/2)) \
-                    p & = "select"(floor(x/2-1/2))
+  "select"("rank"(p)) & = "select"(floor((x-1)/2)) \
+                    p & = "select"(floor((x-1)/2))
 $
 
 === Dati ancillari
 
 La struttura mostra un modo per memorizzare la struttura dell'albero.
-Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovveri i dati ancillari.
+Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovvero i dati ancillari.
 
 - Dati ancillari solo su *nodi interni*: memorizzati in un array lungo quanto il numero di nodi interni dell'albero:
   - Usare una *select* per sapere dato un nodo dove sarà il suo dato ancillare
@@ -629,7 +629,7 @@ Per ogni nodo $v$ nella foresta:
 
 === Parole di Dyck
 
-Una foresta viene trasformata in una parola di Dyck.
+Una foresta (o albero generico) viene trasformata in una parola di Dyck.
 
 Formalmente:
 - $Sigma = {(,)}$: alfabeto composto solo da parentesi aperta e chiusa
@@ -640,9 +640,9 @@ Formalmente:
 $ alpha : F_n -> D_n $
 
 Definizione della biiezione $alpha$ ricorsiva:
-- _Caso base_: $alpha(emptyset) = epsilon$
-- _Passo ricorsivo_: per una foresta $F$ composta da $T_1, dots, T_k$ alberi, allora inseriamo delle #text(red)[parentesi] che racchiudono l'albero e procediamo ricorsivamente:
-  $ alpha(F) = mr(\()alpha(T_1) space dots space alpha(T_k)mr(\)) $
+- _Caso base_: $alpha(emptyset) = epsilon$ (foresta vuota)
+- _Passo ricorsivo_: per una foresta $F$ composta da $T_1, dots, T_k$ alberi, inseriamo delle #text(red)[parentesi] che racchiudono l'albero e procediamo ricorsivamente:
+  $ alpha(F) = mr(\() space alpha(T_1) space dots space alpha(T_k) space mr(\)) $
 
 #figure(
   cetz.canvas({
@@ -717,5 +717,5 @@ Definizione della biiezione $alpha$ ricorsiva:
 
 #attenzione[
   Questa struttura a parentesi rappresenta solo l'albero, senza dati ancillari.
-  Per memorizzare dei dati ancillari bisogna portarsi a dietro un array con informazioni sulle parentesi aperte (complicato).
+  Per memorizzare dei dati ancillari bisogna portarsi dietro un array con informazioni sulle parentesi aperte (complicato).
 ]
