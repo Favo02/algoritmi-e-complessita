@@ -18,7 +18,7 @@ $
   S subset.eq U, quad |S| << |U|, quad |S| = n, quad n <= m
 $
 Vogliamo dunque che gli elementi di $S$ cadano in bucket distinti.
-Questa una proprietà non è esplicitata dato che $S$ *non* è *noto* a propri.
+Questa proprietà non è esplicitata dato che $S$ *non* è *noto* a priori.
 
 #esempio[
   Sia $h$ una funzione di hash che funziona perfettamente su tutti gli interi $in [0, 1000]$.
@@ -32,9 +32,9 @@ Questa una proprietà non è esplicitata dato che $S$ *non* è *noto* a propri.
 
 Chiamata anche Simple Uniform Hashing Assumption (SUHA).
 
-#teorema("Definzione")[
-  Dati $U$ e $m$, si sceglie la funzione hash: $h : U -> m$ *uniformemente a caso*, ovvero che valgono:
-  + *uniformità*: qualsiasi chiave $k$ ha la stessa probabilità di essere mappa un uno qualsiasi degli $m$ bucket
+#teorema("Definizione")[
+  Dati $U$ e $m$, si sceglie la funzione hash: $h : U -> m$ *uniformemente a caso*, ovvero che valgano:
+  + *uniformità*: qualsiasi chiave $k$ ha la stessa probabilità di essere mappata in uno qualsiasi degli $m$ bucket
   + *indipendenza*: una mappatura è indipendente dalle mappature delle altre chiavi
 
   #attenzione[
@@ -76,7 +76,7 @@ I risultati ottenuti sotto l'assunzione vengono rilassati, misurandone il tasso 
   Ogni chiave associa un valore rappresentabile con $r$ bit.
 ]
 
-L'obiettivo è costruire una funzione $f$ cha associa ad una chiave $s in S$, una valore rappresentabile con $r$ bit:
+L'obiettivo è costruire una funzione $f$ che associa ad una chiave $s in S$, un valore rappresentabile con $r$ bit:
 $ f : S -> underbrace(2^r, "valori rappresentabili"\ "con" r "bit") $
 con $S subset.eq U$.
 La struttura è *statica*, non possono essere modificate chiavi e valori.
@@ -97,7 +97,7 @@ Andiamo a costruire un *grafo* dove:
 - *archi*: per ogni elemento $s in S$ creo un lato tra $(h_0(s),h_1(s))$, quindi |S| archi
 
 Durante la costruzione del grafo devono *valere* le seguenti proprietà:
-+ $h_0(x) != h_1(x)$, altrimenti collegherei un vertice $x in S$ a se stesso, creado un loop
++ $h_0(x) != h_1(x)$, altrimenti collegherei un vertice $x in S$ a se stesso, creando un loop
 + $forall x,y in S, x != y quad {h_0(x),h_1(x)} != {h_0(y),h_1(y)}$ chiavi diverse danno origine a lati diversi
 + aciclicità
 
@@ -122,7 +122,7 @@ $ forall s in S cases(x_(h_0(s)) + x_(h_1(s)) mod 2^r = f(s)) $
 
 Se il grafo è *aciclico*, allora il sistema è *risolubile*.
 
-La soluzione del sistema è un *array* $[x_0, ... x_(m-1)]$ di dimensione $m$ con valori compresi fra ${0, dots, r}$.
+La soluzione del sistema è un *array* $[x_0, ... x_(m-1)]$ di dimensione $m$ con valori compresi in ${0, dots, 2^r-1}$.
 È sufficiente memorizzare *solo* questo array per calcolare il valore che corrisponde ad ogni chiave:
 $ f(s) = (x_h_0(s) + x_h_1(s)) mod 2^r $
 
@@ -185,7 +185,7 @@ Questo vettore occupa $m log 2^r = m r$ bit.
 
 === Parametro $m$
 
-Una scelta fondamenta è il numero di bucket $m$.
+Una scelta fondamentale è il numero di bucket $m$.
 È necessario effettuare un *tradeoff*:
 - più $m$ è *piccolo* più la struttura è *succinta* (dato che il vettore occupa $m r$ bit)
 - $m$ *tanto piccolo*, allora è *difficile* ottenere un grafo che rispetta le tre *proprietà* in tempi ragionevoli
@@ -199,7 +199,7 @@ Una scelta fondamenta è il numero di bucket $m$.
 
 === Generalizzazione su Dimensione $> 2$
 
-Nella definizione precendente abbiamo scelto solamente due funzioni di hash random $h_0$ e $h_1$, quindi ogni lato connetteva due bucket, ottenendo un grafo di dimensione $2$ (un grafo "normale").
+Nella definizione precedente abbiamo scelto solamente due funzioni di hash random $h_0$ e $h_1$, quindi ogni lato connetteva due bucket, ottenendo un grafo di dimensione $2$ (un grafo "normale").
 
 Se scegliessimo un numero $k > 2$ di *funzioni di hash* otterremmo un grafo di dimensione $k$, ovvero un *ipergrafo*, permettendoci di abbassare il parametro $m$ (quindi anche lo spazio occupato).
 
@@ -333,7 +333,7 @@ Quando l'ipergrafo viene trasformato a sistema e viene trovato l'ordine di pelat
     ],
   )
 
-  Scrivendo le equazioni di ogni iperlato e sequendo l'ordine di pelatura, otteniamo un sistema con $n$ equazioni e $m$ incognite:
+  Scrivendo le equazioni di ogni iperlato e seguendo l'ordine di pelatura, otteniamo un sistema con $n$ equazioni e $m$ incognite:
   $
     cases(
       A & = mr(x_0) & + x_1 & + x_2 & + 0 & + 0 & = 25 quad mod 100,
@@ -342,11 +342,11 @@ Quando l'ipergrafo viene trasformato a sistema e viene trovato l'ordine di pelat
     )
   $
   Dove in rosso, sono marcati i #text(red)[cardini].
-  Il cardine $i$-esimo indica dice la variabile libera che viene assegnata all'equazione $i$-esima.
-  Risolvendo il sitema, partendo da $i=0$:
-  - $x_0 = 25$
-  - $x_4 = 12$
-  - $x_3 = 12$
+  Il cardine $i$-esimo indica la variabile libera che viene assegnata all'equazione $i$-esima.
+  Risolvendo il sistema, partendo da $i=0$:
+  - $x_0 = 25$ (dall'equazione $A$)
+  - $x_4 = 37 - x_0 - x_2 = 37 - 25 - 0 = 12$ (dall'equazione $C$)
+  - $x_3 = 12 - x_1 - x_2 = 12 - 0 - 0 = 12$ (dall'equazione $B$)
 
   Ottenendo la soluzione finale $[25, 0, 0, 12, 12]$.
 ]
@@ -357,10 +357,10 @@ Quando l'ipergrafo viene trasformato a sistema e viene trovato l'ordine di pelat
 
 === Dimensione $k$ ottima
 
-Possiamo chiederci se sia vantaggioso usarare un ipergrafo con dimensione $k > 2$, al posto di un grafo "standard" ($k = 2$).
+Possiamo chiederci se sia vantaggioso usare un ipergrafo con dimensione $k > 2$, al posto di un grafo "standard" ($k = 2$).
 
 #teorema("Teorema")[
-  Per ogni $k >= 2$, esiste un $gamma_k$ tale che, per ogni $m >= gamma_k$, la costruzione del $k$-ipergrafo è pelabile e rispetta le altre due proprietà quasi certamente.
+  Per ogni $k >= 2$, esiste un $gamma_k$ tale che, per ogni $m >= gamma_k n$, la costruzione del $k$-ipergrafo è pelabile e rispetta le altre due proprietà quasi certamente.
 
   #informalmente[
     Per ogni dimensione $k$, esiste un bound di $m$ (numero di nodi del grafo, ovvero numero di bucket delle funzioni di hash) che ci garantisce di trovare un ipergrafo valido in pochi tentativi.
@@ -404,7 +404,7 @@ $ f : S -> 2^r $
 L'unica cosa che viene memorizzata dalla rappresentazione proposta è l'*array* soluzione del sistema, ovvero un array $x$ di $m r$ bit.
 
 #nota[
-  In realtà avremmo anche bisogno di memorizzare le due/tre funzioni di hash utilizate.
+  In realtà avremmo anche bisogno di memorizzare le due/tre funzioni di hash utilizzate.
 
   Nel calcolo dello spazio utilizzato viene trascurata la loro dimensione, supponiamo che le funzioni di hash occupino "poco spazio".
 ]
@@ -460,12 +460,12 @@ Funzionamento:
   - per fare ciò viene sfruttata la rank/select per sapere se la variabile vale $0$
   - in caso non valga zero, si accede a $tilde(x)$
 - viene calcolato il risultato:
-  $ f(s) = (x_(h_0(s)) + x_(h_1(s)), x_(h_2(s))) mod 2^r $
+  $ f(s) = (x_(h_0(s)) + x_(h_1(s)) + x_(h_2(s))) mod 2^r $
 
 #attenzione[
   La struttura *non memorizza* l'insieme delle chiavi $S$.
 
-  Di conseguenza, se alla struttura diamo in pasto un qualsiasi elemento $in U in.not S$, non può riconoscere che è un input non è "valido", ma viene comunque costruita una risposta (stile _undefined behaviour_).
+  Di conseguenza, se alla struttura diamo in pasto un qualsiasi elemento $in U in.not S$, non può riconoscere che l'input non è "valido", ma viene comunque costruita una risposta (stile _undefined behaviour_).
 
   Per lo stesso motivo, non è possibile accedere all'insieme di tutti i valori.
 ]
