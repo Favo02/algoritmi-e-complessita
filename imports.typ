@@ -50,32 +50,54 @@
 #let link-equation(label) = underline(ref(label))
 
 // first page and outline
-#let frontmatter(title, subtitle, authors) = {
-  align(left + horizon, block(width: 90%)[
+#let frontmatter(title, subtitle, authors, introduction) = {
+  align(center + horizon, block(width: 90%)[
 
-    #text(3em)[*#title*]\
-    #text(1.5em)[#subtitle]
-
-    #(
-      authors
-        .map(author => [
-          #link("https://github.com/" + author.at(1))[
-            #text(1.5em, author.at(0))
-          ]
-        ])
-        .join([ -- ])
-    )\
-
-    #text("Ultima modifica:")
-    #datetime.today().display("[day]/[month]/[year]")
+    #text(3em)[*#title*]
+    #block(above: 1.5em)[#text(1.3em)[#subtitle]]
+    #block(below: 0.8em)[#(
+      authors.map(author => [#link("https://github.com/" + author.at(1))[#author.at(0)]]).join([, ])
+    )]
+    #text(0.8em)[Ultima modifica: #datetime.today().display("[day]/[month]/[year]")]
   ])
 
   pagebreak()
+
+  // Info section
+  set heading(numbering: none, bookmarked: false, outlined: false)
+  [#introduction]
+
+  show outline.entry.where(
+    level: 1,
+  ): it => {
+    if it.element.numbering == none and it.element.outlined {
+      v(0.5em)
+      text(1.1em)[*#it*]
+    } else {
+      it
+    }
+  }
 
   outline(
     title: "Indice",
     indent: auto,
   )
+}
+
+// part counter and function
+#let part-counter = counter("part")
+#let part(title) = {
+  part-counter.step()
+
+  // Add to outline without numbering in the document flow
+  align(center + horizon)[
+    #context {
+      let part-num = numbering("I", part-counter.get().first())
+      heading(level: 1, numbering: none, outlined: true, bookmarked: true)[
+        Parte #part-num: #title
+      ]
+    }
+  ]
 }
 
 // todo warning

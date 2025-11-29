@@ -146,13 +146,15 @@ Un algoritmo $A$ si dice *pseudopolinomiale* se impiega un tempo polinomiale ris
 #esempio[
   Trovare se un numero è primo, algoritmo naive:
   #pseudocode(
-    [*Input:* $n > 2 in bb(N)$],
-    [*For* $i = 2, dots, n-1$ #emph("// controlla tutti i possibili divisori")],
+    [input $<- n > 2 in bb(N)$],
+    [*For* $i = 2, dots, n-1$ *do* #emph("// controlla tutti i possibili divisori")],
     indent(
-      [*If* $n mod i = 0$ *then* *output* $"False"$],
+      [*If* $n mod i = 0$ *then*],
+      indent(
+        [*Output* $"False"$],
+      ),
     ),
-    [*End*],
-    [*output* $"True"$],
+    [*Output* $"True"$],
   )
 
   Questo algoritmo *NON è polinomiale*, ma *pseudopolinomiale* dato che dipende dal valore di $n$ e non dalla lunghezza di $n$:
@@ -278,12 +280,12 @@ Ovvero vogliamo quindi la soluzione con costo massimo (o minimo) rispetto a tutt
 #esempio[
   *Problema dello Zaino (Knapsack)*
 
-  - $I_Pi$: insieme di $n$ oggetti con peso $w_i$ e valore $v_i$, capacità dello zaino $W$
-  - $"Amm"_(Pi)(I)$: sottoinsiemi di oggetti che rispettano il vincolo di peso
+  - *$I_Pi$*: insieme di $n$ oggetti con peso $w_i$ e valore $v_i$, capacità dello zaino $W$
+  - *$"Amm"_Pi$*: sottoinsiemi di oggetti che rispettano il vincolo di peso
     $ "Amm"_(Pi)(I) = {S subset.eq {1, 2, ..., n} : sum_(i in S) w_i <= W} $
-  - $C_(Pi)(I, S)$: valore totale degli oggetti selezionati
+  - *$C_Pi$*: valore totale degli oggetti selezionati
     $ C_(Pi)(I, S) = sum_(i in S) v_i $
-  - $t_Pi = max$: massimizzare il valore
+  - *$t_Pi$*$= max$: massimizzare il valore
 
   L'obiettivo è trovare un sottoinsieme $S^*$ che massimizza il valore rispettando il vincolo di peso:
   $ C_(Pi)(I, S^*) = max_(S in "Amm"_(Pi)(I)) sum_(i in S) v_i $
@@ -385,15 +387,15 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
 #esempio[
   *MaxSAT* (Versione di ottimizzazione di SAT)
 
-  - $I_Pi$: formula booleane in CNF $phi$
+  - *$I_Pi$*: formula booleane in CNF $phi$
     #nota[
       Una formula booleana in forma normale congiunta (CNF) è composta da:
       - tante clausole, messe in _AND_ tra di loro
       - ogni clausola è composta da letterali (che possono essere negati), messi in _OR_ tra loro
     ]
-  - $"Amm"_(Pi)(x)$: assegnamenti di valori di verità per le variabili che compaiono in x
-  - $C_(Pi)(x, y)$: numero di clausole della formula $x in I_Pi$ rese vere da $y$
-  - $t_Pi = max$, il massimo numero di formule rese vere da $y$.
+  - *$"Amm"_Pi$*: assegnamenti di valori di verità per le variabili che compaiono in x
+  - *$C_Pi$*: numero di clausole della formula $x in I_Pi$ rese vere da $y$
+  - *$t_Pi$*$= max$, il massimo numero di formule rese vere da $y$.
 
   Se esistesse un algoritmo $A$ polinomiale per MaxSAT, allora si potrebbe usare per decidere SAT.
   Basterebbe controllare se il massimo numero di clausole risolvibili corrisponde al numero totale di clausole.
@@ -401,7 +403,7 @@ Un problema di ottimizzazione $Pi in "NPO"$ se:
   #informalmente[
     Per decidere se un problema di ottimizzazione è risolvibile in tempo polinomiale, spesso è utile ricondursi a proprietà applicabili/non applicabili rispetto ai problemi di decisione.
   ]
-]
+] <problema-max-sat>
 
 === Problema di Decisione Associato ad un Problema di Ottimizzazione <problema-decisione-associato>
 
@@ -454,7 +456,7 @@ Un problema di ottimizzazione $Pi in "NPOc"$ se:
     Possiamo usare l'algoritmo $A$ per decidere $hat(Pi)$ in tempo polinomiale:
     - usiamo $A$ per calcolare la soluzione ottima $y^*$
     - calcoliamo la funzione obiettivo $C_(Pi)(x,y^*)$
-    - $
+      $
         C_(Pi)(x,y^*) space cases(
           >= k "output Yes",
           < k "output No",
@@ -535,7 +537,7 @@ $ "APX" = union.big_(alpha >= 1) alpha"-APX" $
 $"PTAS"$ e $"FPTAS"$ sono delle sottoclassi di $"APX"$.
 
 / PTAS, Polynomial-Time Approximation Scheme: i problemi $Pi in "PTAS"$ prendono in input anche il tasso di approssimazione desiderato $epsilon$. La soluzione prodotta si discosta di $epsilon$ da quella ottima:
-$ Pi (x in I_(Pi), epsilon > 1) $
+$ Pi (x in I_Pi, epsilon > 1) $
 
 #attenzione[
   Non è possibile chiedere l'ottimo, $epsilon > 1$.
