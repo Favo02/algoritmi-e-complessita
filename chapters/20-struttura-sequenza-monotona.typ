@@ -176,7 +176,7 @@ Di queste due parti viene memorizzato:
   $
 ]
 
-- Bit #text(blue)[meno significativi]: per ogni numero della sequenza $x_i$ con $i in 0,dots,n-1$ memorizziamo $l$ bit cosi come sono, di conseguenza lo spazio occupato è:
+- Bit #text(blue)[meno significativi]: per ogni numero della sequenza $x_i$ con $i in 0,dots,n-1$ memorizziamo $l$ bit così come sono, di conseguenza lo spazio occupato è:
   $
     #text(blue)[$n dot l "bit"$]
   $
@@ -218,7 +218,7 @@ Per rispondere ad una query, ovvero ricostruire $x_i$ dato l'indice $i$, dobbiam
 
   Per trovare i bit più significativi di *$x_i$*:
   $
-    "select"_underline("MSB")(i) = underbrace(i-1, "numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i), "somma degli zeri" \ "prima dell' "i"-esimo 1")
+    "select"_underline("MSB")(i) = underbrace(i-1, "numero di 1" \ "prima dell'"i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i), "somma degli zeri" \ "prima dell'"i"-esimo 1")
   $
   La funzione $"select"_underline("MSB")(i)$ restituisce la *posizione* dell'$i$-esimo bit $1$ nella stringa unaria, ovvero:
   - il numero di $1$ visti fino ad ora: $i-1$ (gli $1$ precedenti)
@@ -261,23 +261,23 @@ Per stabilire se la rappresentazione proposta è compressa ci serve stimare il t
   $
 
   Valgono le seguenti biiezioni:
-  + Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine non è importante dato che è sempre fissato, multi perchè un intero ci può essere più volte).
+  + Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perché l'ordine non è importante dato che è sempre fissato, multi perché un intero ci può essere più volte).
     Ci interessa il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
-  + Un multiinsieme a sua volta può essere visto come un'*equazione* di $U-1$ incognite, dove ogni incognita indica quante volte compare quell'elemento.
+  + Un multiinsieme a sua volta può essere visto come un'*equazione* di $U$ incognite, dove ogni incognita indica quante volte compare quell'elemento.
     Vogliamo quindi trovare le soluzioni non negative dell'equazione:
     $ c_0 + c_1 + ... + c_(U-1) = n $
 
   + Per la tecnica *Stars and Bars*, andiamo a rappresentare l'equazione come una stringa composta da due caratteri $Sigma = ("*","|")$ (star e bar).
     Dove:
     - $"*"$ = sono in totale $n$ e rappresentano $c_i$, ovvero la cardinalità con cui un certo numero compare nella sequenza.
-    - $"|"$ = $U-1$, numero di incognite
+    - $"|"$ = $U-1$ separatori (per separare $U$ bucket)
 
     #informalmente[
       Le barre rappresentano la separazione tra i vari bucket.
       Dentro ogni bucket ci possono essere $0$ o più elementi (le star).
 
-      Ad esempio $"*|**||*"$ rappresenta 1 elementi di tipo $1$, 2 elementi di tipo $2$, 0 elementi di tipo $3$ e 1 elemento di tipo $4$.
+      Ad esempio $"*|**||*"$ rappresenta 1 elemento di tipo $0$, 2 elementi di tipo $1$, 0 elementi di tipo $2$ e 1 elemento di tipo $3$.
       Nel nostro caso il multiinsieme ${0, 1, 1, 3}$.
 
       Fissando il numero di $"*"$, si fissa $n$, ovvero la cardinalità dell'insieme, ovvero la lunghezza della sequenza monotona.
@@ -308,7 +308,7 @@ Per stabilire se la rappresentazione proposta è compressa ci serve stimare il t
     & approx n log((U+n-1)/n)+(U-1)underbrace(log(1), =0) \
     & approx n underbrace(log((U+n-1)/n), "raccogliamo" mb(U/n)) \
     & = n log(mb(U/n) dot (1+n/U-1/U)) \
-    & = n log(U/n)+n underbrace(log(1+n/U-1/U), mb(x approx log(1+1))) \
+    & = n log(U/n)+n underbrace(log(1+n/U-1/U), mb(log(1+x) approx x)) \
     & approx n log U/n + n (mb(n/U - 1/U)) \
     & approx n log U/n + underbrace(mb((n^2)/U), n^2 << U -> approx 0) \
     & approx n log U/n
