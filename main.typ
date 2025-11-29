@@ -104,4 +104,3 @@
 #include "chapters/19-struttura-albero.typ"
 #include "chapters/20-struttura-sequenza-monotona.typ"
 #include "chapters/21-struttura-funzione.typ"
-#include "chapters/??-struttura-hash-minimale-perfetto.typ"
