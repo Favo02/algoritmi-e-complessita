@@ -103,3 +103,4 @@
 #include "chapters/18-struttura-rango-e-selezione.typ"
 #include "chapters/19-struttura-albero.typ"
 #include "chapters/20-struttura-sequenza-monotona.typ"
+#include "chapters/21-struttura-funzione.typ"
