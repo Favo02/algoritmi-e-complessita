@@ -32,9 +32,9 @@
   Problema: Decidere se un numero è primo.
 
   Formalmente:
-  - $I_(Pi)$: numeri interi naturali $bb(N)$
-  - $O_(Pi)$: vero/falso (quindi è un problema di decisione)
-  - $"sol"_Pi$: per questo specifico esempio, per ogni input c'è un SOLO output, quindi ogni insieme è un *singoletto*
+  - *$I_Pi$*: numeri interi naturali $bb(N)$
+  - *$O_Pi$*: vero/falso (quindi è un problema di decisione)
+  - *$"sol"_Pi$*: per questo specifico esempio, per ogni input c'è un SOLO output, quindi ogni insieme è un *singoletto*
 
   #nota[
     Restringere l'insieme degli output non rende più facili i problemi!
