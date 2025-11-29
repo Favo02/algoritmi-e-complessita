@@ -6,52 +6,48 @@
 
 - *Input*: dati $n$ numeri naturali $x_0,dots,x_(n-1) in bb(N)$, con valore compreso in $[0,U)$, consideriamo una sequenza *monotona non decrescente*:
 $ 0 <= x_0 <= x_1 <= ... <= x_(n-1) < underbrace(U, "universo") $
-
-- *Primitiva di accesso*: c'è una sola primitiva d'accesso: dato $i$, vogliamo sapere $x_i$
-
-*Rappresentazione naive*: ogni intero viene scritto usando $log U$ bit.
+- *Primitiva*: dato un indice $i$, ottenere il valore $x_i$
+- *Rappresentazione naive*: ogni intero viene memorizzato usando $log U$ bit
 
 #informalmente[
-  Le sequenze monotone sono utilizzate in diversi ambiti
-
-  Webgraph:
-  - Ogni nodo viene numerato da $0$ a $U$
-  - I vicini di un vertice possono essere memorizzati come una sequenza monotona strettamente crescente
-  - Si possono scalare i valori per un fattore $k$, in modo tale da comprimere l'intervallo da $[0,d]$, dove $d$ è il grado del vertice
-
-  Documenti e indici per l'interrogazione
+  Le sequenze monotone sono molto utilizzate in diversi ambiti, ad esempio nel grafo di Webgraph:
+  - ogni nodo viene numerato da $0$ a $U$
+  - gli adiacenti di un vertice possono essere memorizzati come una sequenza monotona strettamente crescente
+  - si possono scalare i valori, in modo tale da comprimere la sequenza in $[0,d]$, dove $d$ è il grado del vertice
 ]
 
 == Rappresentazione quasi-succinta di Elias-Fano
 
-La rappresentazione in binario di ogni intero $x_i$ della sequenza viene divisa in $mr("bit significativi")$ e $mb("meno significativi")$.
-
-L'obbiettivo di Elias-Fano è bilanciare la dimensione delle due parti $mb(L)$ e $mr(H)$ per avvicinarsi all'ottimo teorico, di conseguenza vengono usati:
-- $mb("bit meno significativi")$: $l = max(0, floor(log U/n))$ bit
-- $mr("bit più significiativi")$: $ceil(log_2(U))-l "bit"$.
-
-Bit *$mb("meno significativi")$*. $l_0,dots,l_(n-1)$, essi vengono rappresentati esplcitamente :
-$ l = max(0, floor(log U/n)) $
-$l$ rappresenta il numero di bit dedicati alla parte meno significativa di $x_i$.
-
-Dove:
-- $l_0 = x_0 mod 2^l$
-- $l_1 = x_1 mod 2^l$
-- $dots$
-- $l_(n-1) = x_(n-1) mod 2^l$
-
-#nota[
-  $x_i mod 2^l$, prende gli ultimi $l$ bit di $x_i$ (*maschera bit a bit*)
+#informalmente[
+  Ogni numero viene diviso in parte significativa e meno significativa:
+  - la parte meno significativa viene memorizzata così com'è (dato che cambia spesso e velocemente)
+  - la parte più significativa cambia lentamente, quindi viene compressa. La compressione sfrutta la differenza tra la parte significativa del numero attuale e del precedente
 ]
 
-Bit *$mr("più significativi")$*. $u_0,dots,u_(n-1)$, essi vengono rappresentati in *unario*:
-$ u_i = floor(x_i/ 2^l) - floor(x_(i-1)/2^l) $
 
-$u_i$ rappresentano i *gap* (differenze) tra le parti più significative consecutive, in quanto tendono a essere in media più piccole (saranno ancora una sequenza monotona crescente). Inoltre, *$u_i$* è il *numero di zeri* della rappresentazione in unario, essi saranno *seguiti da un $1$*. Tale differenza è al minimo zero (sequenza non decrescente).
 
-#nota[
-  $floor(x_i/ 2^l)$, prende tutti i bit tranne gli $l$ meno significativi, *shift a destra di $l$* posizioni.
-]
+L'obiettivo di Elias-Fano è bilanciare la dimensione delle due parti di #text(red)[bit significativi] e #text(blue)[meno significativi] di ogni numero per avvicinarsi all'ottimo teorico.
+La rappresentazione in binario di ogni intero $x_i$ della sequenza viene divisa in:
+- #text(blue)[$l$ bit meno significativi]: $ l = max(0, floor(log U/n)) "bit" $
+- #text(red)[$h$ bit più significiativi]: $ h = ceil(log(U))-l "bit" $
+
+Di queste due parti viene memorizzato:
+- #text(blue)[Bit meno significativi]: vengono memorizzati così come sono, utilizzando $l$ bit per ogni $x_i$:
+  $ l_i = x_i mod 2^l $
+  #nota[
+    Partendo da $x_i$, si può estrarre la parte meno significativa utilizzando il modulo per $2^l$.
+
+    $x_i mod 2^l$ estrae gli ultimi $l$ bit di $x_i$ (*maschera bit a bit*).
+  ]
+- #text(red)[Bit più significativi]: viene memorizzata in unario la *differenza* rispetto alla parte significativa del numero precedente:
+  $ u_i = floor(x_i/ 2^l) - floor(x_(i-1)/2^l) "in unario" $
+  I vari $u_i$, che rappresentano i *gap* (differenze), sono tutti positivi (la minima differenza è $0$).
+  Questi $u_i$ sono rappresentati in unario, ovvero $u_i$ zeri seguiti da un uno.
+  #nota[
+    Partendo da $x_i$, si può estrarre la parte più significativa utilizzando la divisione per $2^l$.
+
+    $floor(x_i / 2^l)$ estrae tutti i bit tranne gli $l$ meno significativi (*shift a destra di $l$* posizioni).
+  ]
 
 #esempio[
   #figure(
@@ -69,7 +65,7 @@ $u_i$ rappresentano i *gap* (differenze) tra le parti più significative consecu
       let y-input = 4
 
       // Disegna label input
-      content((-3, y-input + box-height / 2), align(right, text(size: 9pt, [
+      content((-3, y-input + box-height / 2 - 0.5), align(right, text(size: 9pt, [
         Valori di input\
         $floor(log_2(32/5)) = 2 "bit"$\
         $U = 32, mb(l = 2)$
@@ -88,8 +84,8 @@ $u_i$ rappresentano i *gap* (differenze) tra le parti più significative consecu
       let y-binary = y-input - y-gap
 
       // Label binary
-      content((-3.5, y-binary + box-height / 2), align(right, text(size: 8pt, [
-        I bit $mr("significativi")$ sono calcolati come:
+      content((-3, y-binary + box-height / 2 - 1), align(right, text(size: 9pt, [
+        I bit #text(red)[significativi] sono calcolati come:
         - $u_0 = 1-0 = 1 "zeri"$
         - $u_1 = 2-1 = 1 "zeri"$
         - $u_2 = 2-2 = 0 "zeri"$
@@ -180,150 +176,142 @@ $u_i$ rappresentano i *gap* (differenze) tra le parti più significative consecu
   $
 ]
 
-- bit $mb("meno significativi")$.
-  Per ogni numero della sequenza $x_i$ con $i in 0,dots,n-1$ memorizziamo $l$ bit cosi come sono, di conseguenza lo spazio occupato è:
+- Bit #text(blue)[meno significativi]: per ogni numero della sequenza $x_i$ con $i in 0,dots,n-1$ memorizziamo $l$ bit cosi come sono, di conseguenza lo spazio occupato è:
   $
-    mb(n dot l "bit")
+    #text(blue)[$n dot l "bit"$]
   $
 
-- bit $mr("più significativi")$. Scriviamo gli MSB di ogni numero $x_i$ in unario, dove $u_i$ è il numero di zeri:
+- Bit #text(red)[più significativi] (MSB): differenza $u_i$ di ogni numero $x_i$ in unario:
+  $
+    "MSB" & <= sum_(i=0)^(n-1)underbrace((u_i+1), "unario") \
+          & = sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l)+ mr(1)) \
+          & = mr(n) + underbrace(sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l)), mr("serie telescopica")) \
+          & = n + mr(floor(x_(n-1)/2^l) - underbrace((x_(0-1))/2^l, "il primo numero"\ "parte da 0")) \
+          & = n + underbrace(floor(x_(n-1)/2^l), mr(x_n < U)) \
+          & <= n + floor(U/2^l) \
+          & <= n + underbrace(U/2^mr(l), l = floor(log(U/n))) \
+          & <= n + U/2^mr(floor(log(U/n))) \
+          & <= n + U/2^mr(log(U/n)-1) \
+          & = n + U/(2^(log(U/n))/2) \
+          & = n + (2U)/2^(log(U/n)) \
+          & = n + (2U)/(U/n) \
+          & = n + (2U dot n)/U \
+          & = mr(3n "bit")
+  $
+
+Spazio *totale*:
 $
-  "MSB" & <= sum_(i=0)^(n-1)underbrace((u_i+1), u "zeri" + "un "1) \
-        & = sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l)+ mr(1)) \
-        & = underbrace(mr(n), "i vari 1" \ "si sommano") + sum_(i=0)^(n-1) (floor(x_i/2^l)-floor((x_(i-1))/2^l)) \
-        & mb("Serie telescopica") \
-        & = n + mb(floor(x_(n-1)/2^l)- underbrace((x_(0-1))/2^l, =0" inizia da 1")) \
-        & = n + floor(x_(n-1)/2^l) \
-        & mb("Al massimo" x_n "ha valore" U) \
-        & <= n + floor(U/2^l) \
-        & <= n + U/2^mb("l") \
-        & mb("Ricordando che" l = floor(log(U/n))) \
-        & <= n + U/2^mb(floor(log(U/n))) \
-        & mb("Suppongo che" U/n "non sia potenza di 2") \
-        & <= n + U/2^mb(log(U/n)-1) \
-        & = n + U/(2^(log(U/n))/2) \
-        & = n + (2U)/2^(log(U/n)) \
-        & = n + (2U)/(U/n) \
-        & = n + (2U dot n)/U \
-        & = mr(3n "bit")
-$
-Costo *totale*:
-$
-  D_n & = mr(3n)+mb(n l) \
+  D_n & = mr(3n) + mb(n l) \
       & = 3n + n floor(log(U/n)) \
-      & = 2n + n dot ceil(log(U/n))
+      & = 2n + n ceil(log(U/n))
 $
 
 === Risposta alle query
 
 Per rispondere ad una query, ovvero ricostruire $x_i$ dato l'indice $i$, dobbiamo:
 
-1. Recuperare i bit $mr("più significativi")$ dalla rappresentazione unaria
-2. Recuperare i bit $mb("meno significativi")$ dalla loro posizione esplicita
-3. Combinare le due parti per ottenere il valore completo
++ Recuperare i bit #text(red)[più significativi] dalla rappresentazione unaria:
 
-==== Trovare bit più significativi
+  la sequenza unaria può essere vista come una stringa binaria dove:
+  - gli *zeri* rappresentano i valori $u_i$
+  - gli *uni* servono da separatori
 
-Trovare i bit $mr("più significativi")$.
-La sequenza unaria può essere vista come una stringa binaria dove:
-- Gli $mr("zeri")$ rappresentano i valori $u_i$
-- Gli $mr("uni")$ servono da separatori
+  Per trovare i bit più significativi di *$x_i$*:
+  $
+    "select"_underline("MSB")(i) = underbrace(i-1, "numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i), "somma degli zeri" \ "prima dell' "i"-esimo 1")
+  $
+  La funzione $"select"_underline("MSB")(i)$ restituisce la *posizione* dell'$i$-esimo bit $1$ nella stringa unaria, ovvero:
+  - il numero di $1$ visti fino ad ora: $i-1$ (gli $1$ precedenti)
+  - il numero di $0$ visti fino ad ora: $u_0 + u_1 + ... + u_(i)$
 
-Per trovare i bit più significativi di *$x_i$*:
-$
-  "select"_underline(b)(i) = underbrace(i-1, "numero di 1" \ "prima dell' "i"-esimo") + underbrace(u_0 + u_1 + ... + u_(i), "somma degli zeri" \ "prima dell' "i"-esimo 1")
-$
+  Espandendo la formula:
+  $
+    "select"_underline("MSB")(i) & = i-1 + sum_(j=0)^(i) mr(u_j) \
+    & = i-1 + underbrace(sum_(j=0)^(i) mr(floor(x_j/2^l) - floor((x_(j-1))/2^l)), "serie telescopica") \
+    & = i-1+mr(floor(x_i/2^l))
+  $
 
-#nota[
-  La funzione $"select"_underline(b)(i)$ restituisce la *posizione* dell'$i$-esimo bit $1$ nella stringa unaria.
+  Quindi, i bit #text(red)[più significativi] sono ottenuti come:
+  $
+    floor(x_i/2^l) = "select"_underline("MSB")(i) - i+1
+  $
 
-  Questa posizione codifica:
-  - Il numero di $1$ visti fino ad ora: $i-1$ (gli $1$ precedenti)
-  - Il numero di $0$ visti fino ad ora: $u_0 + u_1 + ... + u_(i)$
-]
-Espandendo la formula:
-$
-  "select"_underline(b)(i) & = i-1 + sum_(j=0)^(i) mb(u_j) \
-                           & = i-1+sum_(j=0)^(i) mb(floor(x_j/2^l) - floor((x_(j-1))/2^l)) \
-                           & = mb("Serie telescopica") \
-                           & = i-1+mb(floor(x_i/2^l))
-$
-Alla fine, i bit $mr("più significativi")$ sono ottenuti come:
-$
-  floor(x_i/2^l) = "select"_underline(b)(i) - i+1
-$
++ Recuperare i bit #text(blue)[meno significativi] dalla loro posizione esplicita:
+  i bit #text(blue)[meno significativi] di $x_i$ sono memorizzati esplicitamente nella posizione:
+  $ "posizione" = i dot l $
+  Leggiamo $l$ bit consecutivi a partire dalla posizione $i dot l$ nell'array rappresentante i bit meno significativi.
 
-==== Trovare bit meno significativi
-I bit $mb("meno significativi")$ di $x_i$ sono memorizzati esplicitamente nella posizione:
-$
-  "posizione" = i dot l
-$
-Leggiamo $l$ bit consecutivi a partire dalla posizione $i dot l$ nell'array rappresentante i bit meno significativi.
-
-==== Ricostruzione completa
-
-Il valore finale è:
-$
-  x_i = underbrace(("select"_underline(b)(i) - i+1), mr("MSB")) dot 2^l + underbrace(mb("LSB"[i dot l : (i+1) dot l]), mb("LSB"))
-$
-
-Dove $mb("LSB"[i dot l : (i+1) dot l])$ indica i bit dalla posizione $i dot l$ alla posizione $(i+1) dot l - 1$ nella stringa dei bit meno significativi.
++ Combinare le due parti per ottenere il valore completo:
+  $
+    x_i = underbrace(("select"_underline("MSB")(i) - i+1), mr("MSB")) dot 2^l + underbrace(mb("LSB"[i dot l : (i+1) dot l]), mb("LSB"))
+  $
 
 #nota[
-  Grazie alla struttura dati rank/select sui bit, possiamo calcolare $"select"_underline(b)(i)$ in tempo $O(1)$, rendendo l'accesso a $x_i$ molto efficiente.
+  Grazie alla struttura dati rank/select sui bit, possiamo calcolare $"select"_underline("MSB")(i)$ in tempo $O(1)$, rendendo l'accesso a $x_i$ molto efficiente.
 ]
 
-=== È succinta?
-Per stabilire se la rappresentazione proposta è succinta ci serve stimare il theoretical lower bound.
+=== È compressa?
+
+Per stabilire se la rappresentazione proposta è compressa ci serve stimare il theoretical lower bound.
 
 #dimostrazione[
   Dati $n$ e $U$, vogliamo contare il *numero di sequenze monotone valide*:
   $
     0 <= x_0 <= x_1 <= dots <= x_(n-1) < U
   $
-  Valgono inoltre le seguenti biiezioni:
-  1. Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine è fissato, multi perchè un intero ci può essere più volte). Vogliamo stabilire il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
-  2. Un multiinsieme a sua volta può essere visto come un'*equazione* di *$U-1$ incognite*. Vogliamo quindi trovare le soluzioni non negative di un equazione (ovvero contare quante volte appare ogni elemento della sequenza):
-  $ c_0 + c_1 + ... + c_(u-1) = n $
+  Valgono le seguenti biiezioni:
+  + Una sequenza ordinata si può vedere come un *multiinsieme* (insiemi perchè l'ordine non è importante dato che è sempre fissato, multi perchè un intero ci può essere più volte).
+    Ci interessa il numero di multiinsiemi su ${0,1,dots,U-1}$ di cardinalità $n$.
 
-  3. Sfruttando un particolare metodo di conteggio chiamato *$"star""&""bars"$*, possiamo andare a rappresentare l'equazione come una stringa composta da due caratteri $Sigma = ("*","|")$. Dove:
-    - *$"*"$* = sono in totale $n$ e rappresentano $c_i$, ovvero la cardinalità con cui un certo numero compare nella sequenza.
-    - *$"|"$* = $U-1$, numero di incognite
+  + Un multiinsieme a sua volta può essere visto come un'*equazione* di $U-1$ incognite, dove ogni incognita indica quante volte compare quell'elemento.
+    Vogliamo quindi trovare le soluzioni non negative dell'equazione:
+    $ c_0 + c_1 + ... + c_(U-1) = n $
 
-    Le stringhe così create avranno una lunghezza pari a *$U+n-1$*. L'obbiettivo è andare a contare tutti i *possibili modi* in cui possiamo andare a disporre le barre negli asterischi:
-    $
-      binom(U+n-1, U-1) & underbrace(=, "def di"\ "fattoriale") (U+n-1)! / ((U-1)!((U+n-1) - (U-1))!) \
-                        & = ((U+n-1)!) / ((U-1)! (n)!) \
-      binom(U+n-1, U-1) & = ((U+n-1)!) / ((U-1)! (n)!) = underbrace(binom(U+n-1, n), "disposizioni degli" \ "asterischi")
-    $
+  + Per la tecnica *Stars and Bars*, andiamo a rappresentare l'equazione come una stringa composta da due caratteri $Sigma = ("*","|")$ (star e bar).
     Dove:
-    - $U+n-1$ = caratteri totali
-    - $U+1$ = numero di barre $"|"$
+    - $"*"$ = sono in totale $n$ e rappresentano $c_i$, ovvero la cardinalità con cui un certo numero compare nella sequenza.
+    - $"|"$ = $U-1$, numero di incognite
+
+    #informalmente[
+      Le barre rappresentano la separazione tra i vari bucket.
+      Dentro ogni bucket ci possono essere $0$ o più elementi (le star).
+
+      Ad esempio $"*|**||*"$ rappresenta 1 elementi di tipo $1$, 2 elementi di tipo $2$, 0 elementi di tipo $3$ e 1 elemento di tipo $4$.
+      Nel nostro caso il multiinsieme ${0, 1, 1, 3}$.
+
+      Fissando il numero di $"*"$, si fissa $n$, ovvero la cardinalità dell'insieme, ovvero la lunghezza della sequenza monotona.
+    ]
+
+    Le stringhe così create avranno una lunghezza pari a $underbrace(U-1, "bars") + underbrace(n, "stars")$.
+    Andare a contare tutte le *permutazioni* di questa stringa è come calcolare il numero di multiinsiemi quindi il numero di sequenze:
+    $
+      underbrace(binom(U+n-1, U-1), "disposizioni delle" \ "barre") & = (U+n-1)! / ((U-1)!((U+n-1) - (U-1))!) \
+      & = ((U+n-1)!) / ((U-1)! (n)!) = underbrace(binom(U+n-1, n), "disposizioni degli" \ "asterischi")
+    $
 
   In conclusione:
   $ Z_n = log(binom(U+n-1, n)) $
-  Applicando la seguente $mb("formula")$:
+  Applicando la proprietà:
   $
-    mb(log binom(A, B) approx B log (A/B) + (A-B) log (A / (A-B)))
+    log binom(A, B) approx B log (A/B) + (A-B) log (A / (A-B))
   $
   con $mr(A = U+n-1)$ e $mb(B = n)$, otteniamo:
   $
     Z_n & approx mb(n) log (mr(U+n-1))/mb(n) + (mr(U+n-1)-mb(n)) log (mr(U+n-1))/(mr(U+n-1)-mb(n)) \
-        & = n log((U+n-1)/n) + (U-1) log((U+n-1)/(U-1)) \
-        & mb("Assumiamo ora che " n << U ", ipotesi realistica") \
-        & = n log((U+n-1)/n) + (U-1) log(underbrace((U+n-1)/(U-1), mb(approx 1))) \
-        & approx n log((U+n-1)/n)+(U-1)underbrace(log(1), =0) \
-        & approx n log((U+n-1)/n) \
-        & mb("Raccogliamo" U/n) \
-        & = n log(mb(U/n) dot (1+n/U-1/U)) \
-        & = n log(U/n)+n log(1+n/U-1/U) \
-        & mb("Sfruttando "x approx log(1+x)) \
-        & approx n log U/n + n (mb(n/U - 1/U)) \
-        & approx n log U/n + mb((n^2)/U) \
-        & mb("Siccome " n^2 << U) \
-        & approx n log U/n + underbrace(mb(n^2/U), approx 1) \
-        & approx n log U/n
+        & = n log((U+n-1)/n) + (U-1) log((U+n-1)/(U-1))
+  $
+
+  Assumiamo che $n << U$, ovvero che il numero di elementi è molto più piccolo dell'universo (cosa molto realistica).
+  $
+    & = n log((U+n-1)/n) + (U-1) log(underbrace((U+n-1)/(U-1), mb(approx 1))) \
+    & approx n log((U+n-1)/n)+(U-1)underbrace(log(1), =0) \
+    & approx n underbrace(log((U+n-1)/n), "raccogliamo" mb(U/n)) \
+    & = n log(mb(U/n) dot (1+n/U-1/U)) \
+    & = n log(U/n)+n underbrace(log(1+n/U-1/U), mb(x approx log(1+1))) \
+    & approx n log U/n + n (mb(n/U - 1/U)) \
+    & approx n log U/n + underbrace(mb((n^2)/U), n^2 << U -> approx 0) \
+    & approx n log U/n
   $
   #nota[
     L'assunzione che $n << U$ è realistica. Ad esempio consideriamo $n$ come le amicizie di un utente su Facebook e $U$ come il numero di utenti di Facebook.
@@ -336,8 +324,7 @@ Per stabilire se la rappresentazione proposta è succinta ci serve stimare il th
 
   Dato che la nostra struttura dati occupa:
   $ D_n approx 3n + n ceil(log U/n) $
-  allora abbiamo una *struttura succinta* $space qed$
-
+  allora abbiamo una *struttura succinta* $space qed$.
 
   #attenzione[
     Da un punto di vista teorico, abbiamo fatto i conti con delle assunzioni ($n << U$) e approssimazioni, non è sempre vero che la struttura è succinta.
