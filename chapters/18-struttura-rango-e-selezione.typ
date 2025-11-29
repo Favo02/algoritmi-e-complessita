@@ -115,7 +115,7 @@ Formalmente:
   #nota[
     Questa proprietà ci permette sempre di risalire al vettore originale.
   ]
-]
+] <rank-select-operazioni-inverse>
 
 Esistono due approcci possibili naive:
 

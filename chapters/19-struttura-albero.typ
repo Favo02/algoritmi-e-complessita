@@ -4,369 +4,442 @@
 
 == Nomenclatura
 
-Nomenclatura in teoria dei grafi:
-
-/ Albero: grafo non orientato, conesso ed aciclico
+In *teoria dei grafi*, la nomenclatura standard è:
+/ Albero: grafo non orientato, conesso ed aciclico (non necessariamente radicato)
 / Foresta: grafo non orientato ed aciclico (ogni componente connessa è un albero)
 
-Nomenclatura in informatica:
-
-/ Albero: struttura radicata dove ogni nodo ha dei figli
-
-  #nota[
-    Se prendiamo un albero stando alla definizione di teoria dei grafi e scegliamo un qualsiasi nodo, allora otteniamo un albero radicato (quindi nel senso di informatica)
-  ]
-
+In *informatica*, la nomenclatura standard è:
+/ Albero: struttura radicata aciclica dove ogni nodo ha dei figli.
+  Assegnando una radice qualsiasi ad un albero secondo la _teoria dei grafi_, otteniamo un albero in _informatica_
 / Albero ordinato: albero in cui i figli di un nodo hanno un certo ordine
+/ Albero binari: albero in cui ogni nodo ha esattamente $0$ o $2$ figli.
 
-/ Albero binari: albero in cui ogni nodo ha $0$ o $2$ figli. Definizione ricorsiva:
-- Passo base = un nodo è un albero
-- Passo ricorsivo = Siano $T_1$ e $T_2$ due alberi binari, allora anche $T$ è un albero:
+== ADT Albero Binario
+
+Albero in cui ogni nodo ha esattamente $0$ o $2$ figli.
+
+Definizione ricorsiva:
+- Passo base: un nodo è un albero
+- Passo ricorsivo: siano $T_1$ e $T_2$ due alberi binari, allora anche l'albero $T$ dove i due figli sono $T_1$ e $T_2$ è un albero binario
 
 #figure(
   cetz.canvas(length: 0.8cm, {
     import cetz.draw: *
 
-    // Nodo radice
-    circle((0, 0), radius: 0.15, fill: white, stroke: 2pt + black)
-    content((0, 0), text(size: 9pt)[$r$])
+    let r = 0.3 // raggio nodo
 
-    // Triangolo T1 (sinistro)
-    line((-1.5, -0.8), (-0.8, -2), stroke: 2pt + black)
-    line((-0.8, -2), (-2.2, -2), stroke: 2pt + black)
-    line((-2.2, -2), (-1.5, -0.8), stroke: 2pt + black)
+    // Nodo radice
+    circle((0, 0), radius: r, fill: white, stroke: black)
+    content((0, 0), text(size: 10pt)[$r$])
+
+    // Triangolo T1 (sinistro) - più simmetrico
+    line((-2.5, -2.5), (-0.5, -2.5), stroke: black)
+    line((-2.5, -2.5), (-1.5, -0.5), stroke: black)
+    line((-0.5, -2.5), (-1.5, -0.5), stroke: black)
     content((-1.5, -1.5), text(size: 11pt, weight: "bold")[$T_1$])
 
-    // Triangolo T2 (destro)
-    line((1.5, -0.8), (2.2, -2), stroke: 2pt + black)
-    line((2.2, -2), (0.8, -2), stroke: 2pt + black)
-    line((0.8, -2), (1.5, -0.8), stroke: 2pt + black)
+    // Triangolo T2 (destro) - più simmetrico
+    line((0.5, -2.5), (2.5, -2.5), stroke: black)
+    line((0.5, -2.5), (1.5, -0.5), stroke: black)
+    line((2.5, -2.5), (1.5, -0.5), stroke: black)
     content((1.5, -1.5), text(size: 11pt, weight: "bold")[$T_2$])
 
     // Collegamenti dalla radice ai triangoli
-    line((0, -0.15), (-1.5, -0.8), stroke: 2pt + black)
-    line((0, -0.15), (1.5, -0.8), stroke: 2pt + black)
+    line((-0.25, -0.15), (-1.5, -0.5), stroke: black)
+    line((0.25, -0.15), (1.5, -0.5), stroke: black)
 
-    // Etichette
-    content((-1.7, -0.4), text(size: 8pt)[figlio sx])
-    content((1.7, -0.4), text(size: 8pt)[figlio dx])
+    // Etichette colorate
+    content((-2.2, -0.2), [sx])
+    content((2.2, -0.2), [dx])
   }),
+  caption: [
+    Albero binario con radice $r$ e due sottoalberi binari $T_1$ (figlio sinistro) e $T_2$ (figlio destro).
+  ],
 )
-Dove:
-- *$mr("Nodi interni")$* = Sono i nodi dell'albero che hanno un figlio
-- *$mb("Nodi esterni")$* = Sono le foglie dell'albero.
+I nodi di un albero binario si dividono in:
+- *interni*: nodi dell'albero che hanno dei figli
+- *esterni*: le foglie dell'albero
+#figure(
+  cetz.canvas(length: 0.8cm, {
+    import cetz.draw: *
 
-  #teorema("Proprietà")[
-    In un albero binario, Il numero di foglie $E$ è il numero di nodi interni $I$ (nodi con figli) $+1$:
-    $ |E| = |I| + 1 $
+    let r = 0.3 // raggio nodo
 
-    #dimostrazione[
-      La dimostrazione è per *induzione strutturale*:
-      - *Passo base* = Albero con un solo nodo $|E| = 1, |I| = 0 space qed$
-      - *Passo induttivo* = ALbero $T$ con due sottoalberi $T_1$ e $T_2$.
-      $
-        |E(T)| = |E(T_1)| + |E(T_2)|\
-        mb("Siccome" |E(T_1)| < |E(T)| "uso ipotesi induttiva")\
-        |E(T)| = underbrace(|I(T_1)|+1+|I(T_2)|, I(T))+1\
-        |E(T)| = |I(T)| + underbrace(1, "radice di" T) space qed
-      $
-    ]
+    // Lines
+    line((-0.2, -0.2), (-1.3, -1.3), stroke: black)
+    line((-1.65, -1.65), (-2, -2.2), stroke: black)
+    line((-1.35, -1.65), (-1, -2.2), stroke: black)
+    line((0.2, -0.2), (1.3, -1.3), stroke: black)
+    line((1.35, -1.65), (1, -2.3), stroke: black)
+    line((0.85, -2.65), (0.5, -3.2), stroke: black)
+    line((1.15, -2.65), (1.5, -3.2), stroke: black)
+    line((1.65, -1.65), (2, -2.2), stroke: black)
+
+    // Nodo radice (interno)
+    circle((0, 0), radius: r, fill: white, stroke: black)
+    content((0, 0), text(size: 10pt)[$r$])
+
+    // Sottoalbero sinistro
+    circle((-1.5, -1.5), radius: r, fill: white, stroke: black)
+    content((-1.5, -1.5), text(size: 9pt)[$i_1$])
+
+    // Foglie del sottoalbero sinistro
+    rect((-2.3, -2.8), (-1.7, -2.2), stroke: black, fill: white)
+    content((-2, -2.5), text(size: 9pt)[$e_1$])
+
+    rect((-1.3, -2.8), (-0.7, -2.2), stroke: black, fill: white)
+    content((-1, -2.5), text(size: 9pt)[$e_2$])
+
+    // Sottoalbero destro (interno)
+    circle((1.5, -1.5), radius: r, fill: white, stroke: black)
+    content((1.5, -1.5), text(size: 9pt)[$i_2$])
+
+    // i3
+    circle((1, -2.5), radius: r, fill: white, stroke: black)
+    content((1, -2.5), text(size: 9pt)[$i_3$])
+
+    // Figli di i3
+    rect((0.2, -3.8), (0.8, -3.2), stroke: black, fill: white)
+    content((0.5, -3.5), text(size: 9pt)[$e_3$])
+
+    rect((1.2, -3.8), (1.8, -3.2), stroke: black, fill: white)
+    content((1.5, -3.5), text(size: 9pt)[$e_5$])
+
+    // Foglia e4
+    rect((1.7, -2.8), (2.3, -2.2), stroke: black, fill: white)
+    content((2, -2.5), text(size: 9pt)[$e_4$])
+  }),
+  caption: [
+    Nodi di un albero binario: nodi interni (cerchi) con figli, e nodi esterni (rettangoli) che sono le foglie.
+  ],
+)
+
+#teorema("Proprietà")[
+  In un albero binario, Il numero di foglie $E$ è il numero di nodi interni $I+1$:
+  $ |E| = |I| + 1 $
+
+  #dimostrazione[
+    La dimostrazione è per *induzione* strutturale:
+    - _Passo base 1_: albero con un solo nodo $|E| = 1, |I| = 0$
+    - _Passo base 2_: albero banale con radice e due figli $|E| = 2, |I| = 1$
+    - _Passo induttivo_: posso combinare i due passi base, il numero di nodi di ciascun tipo rimangono uguali tranne per la radice che diventa interno
+      $ |E| = underbrace(2 dot 2, "sottoalberi") + underbrace(1-1, "radice non più esterno") = 4 $
+      $ |I| = underbrace(2 dot 1, "sottoalberi") + underbrace(1, "radice ora interno") = 3 $
   ]
-  #nota()[
-    In un albero il numero di nodi totale $n$ è dato da:
-    $ n = |E|+|I| $
-    Possiamo scriverlo come:
-    $
-      n & = |E| + |E| - 1 = 2|E|-1 \
-      n & = |I|+1 + |I| = 2|I|+1
-    $
-  ]
+] <albero-binario-numero-nodi>
 
-== Struttura succinta per Albero Binario
+#teorema("Corollario")[
+  In un albero il numero di nodi totale $n$:
+  $ n = |E|+|I| $
+
+  Possiamo scriverlo come:
+  - $ n = |E| + |E| - 1 = 2|E|-1 $
+  - $ n = |I|+1 + |I| = 2|I|+1 $
+]
+
+Le primitive definite su un albero binario sono:
+- *children*: dato un nodo (non foglia), ottenere i figli
+- *parent*: dato un nodo (non radice), ottenere il genitore
+
+== Struttura compressa per Albero Binario
 
 === Theoretical Lower Bound
 
-Per poter affermare che una struttura è compressa, allora dobbiamo quantificare il theoretical lower bound (teorema di shannon). Vogliamo stabilire quanti sono i possibili tipi di alberi binari con *$n$ nodi interni*
+Per poter affermare che una struttura è compressa, allora dobbiamo quantificare il theoretical lower bound (teorema di Shannon).
+
+Vogliamo stabilire quanti sono i possibili tipi di alberi binari con $n$ nodi interni, per poi stabilire quanti bit servono per poterli rappresentare distintamente tutti.
 
 #teorema("Teorema")[
   Il numero di alberi binari con $n$ nodi intenri è $ C_n = 1/(n+1) binom(2n, n) $
-  chiamato il *numero di Catalano*
+  chiamato il *numero di Catalano*.
 ]
-
 
 #teorema("Teorema")[
-  Il theoretical lower bound è $2n$, servono *almeno $2n-O(log n)$ bit* per rappresentare un *albero binario* con *$n$ nodi interni*.
+  Servono almeno $2n - O(log n)$ bit per rappresentare un albero binario con $n$ nodi *interni*.
 
-#dimostrazione()[
+  Il teoretical lower bound è $2n$:
+  $ Z_n = 2n $
 
-  #nota[
-    Proprietà utili:
-    - Approssimazione di $mr("Stirling")$:
-      $ x! approx sqrt(2 pi x) (x/e)^x $
-    - Definizione binomiale:
-      $ binom(n, k) = n! / (k!(n-k)!) $
-  ]<Proprietà-utili-alberi>
-  Quindi il theoretical lower bound è:
-  $
-    C_n = 1/(n+1) binom(2n, n) underbrace(=, "def binomiale") 1/(n+1) dot (2n!) / ((n)! dot (2n-n)!) = 1/(n+1) dot (2n!) / ((n)! dot (n)!)
-  $
-  Usando Stirling #link-teorema(<Proprietà-utili-alberi>) con $mr(x = 2n)$ e $mr(x = n)$:
-  $
-    C_n = 1/(n+1) dot (2n!) / ((n)!^2) & approx 1/(n+1) dot mr(sqrt(4 pi n) ((2n)/e)^(2n)) / mr((sqrt(2 pi n) (n/e)^n))^2 \
-                                       & = 1/(n+1) dot (2 sqrt(pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n)) \
-                                       & = 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n)) \
-                                       & mb(a^x/b^x = (a/b)^x) \
-                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot (mb((2n)/e dot e/n))^(2n) \
-                                       & = 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n) \
-                                       & mb(a^x / a^y = a^(x-y)) \
-                                       & = 1/(n+1) dot mb((pi n)^(1/2)/(pi n)^1) dot 2^(2n) \
-                                       & = 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n) \
-                                       & = 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n) \
-                                       & approx 4^n / (sqrt(pi n^3))
-  $
-  Il numero di bit minimo per rappresentare un albero binario è pari a:
-  $
-    log_2 C_n approx log_2(4^n/sqrt(pi n^3)) & = log_2(2^(2n))-log_2(1/sqrt(pi n^3)) \
-                                             & = 2n dot 1 - log_2(1/sqrt(pi n^3)) \
-                                             & approx 2n - O(log n) space qed
-  $
+  #dimostrazione[
 
+    #nota[
+      Proprietà utili:
+      - Approssimazione di #text(red)[Stirling]:
+        $ x! approx sqrt(2 pi x) (x/e)^x $ <albero-binario-stirling>
+      - Definizione binomiale:
+        $ binom(n, k) = n! / (k!(n-k)!) $
+      - Proprietà esponenziali:
+        $ mb(a^x/b^x = (a/b)^x) $
+        $ mp(a^x / a^y = a^(x-y)) $
+    ]
 
-]
+    Quindi il theoretical lower bound è:
+    $
+      C_n = 1/(n+1) binom(2n, n) = 1/(n+1) dot ((2n)!) / ((n)! dot (2n-n)!) = 1/(n+1) dot ((2n)!) / (n! dot n!)
+    $
+    Usando l'approssimazione di Stirling (#link-equation(<albero-binario-stirling>)) con $mr(x = 2n)$ e $mr(x = n)$:
+    $
+      C_n = 1/(n+1) dot (2n!) / ((n)!^2) & approx 1/(n+1) dot mr(sqrt(4 pi n) ((2n)/e)^(2n)) / mr((sqrt(2 pi n) (n/e)^n))^2 \
+                                         & = 1/(n+1) dot (2 sqrt(pi n)((2n)/e)^(2n))/(2 pi n (n/e)^(2n)) \
+                                         & = 1/(n+1) dot (sqrt(pi n)((2n)/e)^(2n)) / (pi n (n/e)^(2n)) \
+                                         & = 1/(n+1) dot sqrt(pi n)/(pi n) dot (mb((2n)/e dot e/n))^(2n) \
+                                         & = 1/(n+1) dot sqrt(pi n)/(pi n) dot 2^(2n) \
+                                         & = 1/(n+1) dot mp((pi n)^(1/2)/(pi n)^1) dot 2^(2n) \
+                                         & = 1/(n+1) dot (pi n)^(-1/2) dot 2^(2n) \
+                                         & = 1/(n+1) dot 1/sqrt(pi n) dot 2^(2n) \
+                                         & approx 4^n / (sqrt(pi n^3))
+    $
+    Il numero di bit minimo per rappresentare un albero binario è pari a:
+    $
+      log_2 C_n approx log_2(4^n/sqrt(pi n^3)) & = log_2(2^(2n))-log_2(1/sqrt(pi n^3)) \
+                                               & = 2n dot 1 - log_2(1/sqrt(pi n^3)) \
+                                               & approx 2n - O(log n) space qed
+    $
+  ]
 ]
 
 === Rappresentazione succinta
 
-Vogliamo rappresentare un albero binario, in questo caso rappresentermo solamente la sua struttura. Nel conto totale dello spazio non terremo conto dei dati che contiene (*dati ancillari*).
+Vogliamo rappresentare un albero binario, considerando solamente la sua struttura, senza considerare i dei dati che contiene (*dati ancillari*).
 
-L'idea è quella di numerari i nodi livello per livello da sinistra verso destra (*BFS*). Creiamo un vettore di $2n+1$ elementi, dove $n$ è il numero di nodi interi:
-- il vettore memorizza $1$ per i nodi interni e $0$ per le foglie.
-- usiamo inoltre una struttura rank/select.
-
-La rappresentazione richiede *$2n + o(n)$ bit è succinta*.
-
-#esempio[
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
-
-      // ===== ALBERO =====
-      content((-5, 4), text(size: 11pt, weight: "bold")[$T$])
-
-      // Nodi (cerchi per interni, rettangoli per foglie)
-      // Nodo 0 (radice)
-      circle((-2, 3.5), radius: 0.25, fill: white, stroke: 2pt + red)
-      content((-2, 3.5), text(size: 9pt)[$0$])
-
-      // Nodo 1
-      circle((-3, 2.5), radius: 0.25, fill: white, stroke: 2pt + red)
-      content((-3, 2.5), text(size: 9pt)[$1$])
-
-      // Foglia 2
-      rect((-1.3, 2.3), (-0.7, 2.7), stroke: 2pt + black, fill: white)
-      content((-1, 2.5), text(size: 9pt)[$2$])
-
-      // Foglia 3
-      rect((-4.3, 1.3), (-3.7, 1.7), stroke: 2pt + black, fill: white)
-      content((-4, 1.5), text(size: 9pt)[$3$])
-
-      // Nodo 4
-      circle((-2, 1.5), radius: 0.25, fill: white, stroke: 2pt + red)
-      content((-2, 1.5), text(size: 9pt)[$4$])
-
-      // Nodo 5
-      circle((-3, 0.5), radius: 0.25, fill: white, stroke: 2pt + red)
-      content((-3, 0.5), text(size: 9pt)[$5$])
-
-      // Nodo 6
-      circle((-1, 0.5), radius: 0.25, fill: white, stroke: 2pt + red)
-      content((-1, 0.5), text(size: 9pt)[$6$])
-
-      // Foglia 7
-      rect((-3.8, -0.7), (-3.2, -0.3), stroke: 2pt + black, fill: white)
-      content((-3.5, -0.5), text(size: 9pt)[$7$])
-
-      // Foglia 8
-      rect((-2.5, -0.7), (-1.9, -0.3), stroke: 2pt + black, fill: white)
-      content((-2.2, -0.5), text(size: 9pt)[$8$])
-
-      // Foglia 9
-      rect((-1.5, -0.7), (-0.9, -0.3), stroke: 2pt + black, fill: white)
-      content((-1.2, -0.5), text(size: 9pt)[$9$])
-
-      // Foglia 10
-      rect((-0.3, -0.7), (0.3, -0.3), stroke: 2pt + black, fill: white)
-      content((0, -0.5), text(size: 9pt)[$10$])
-
-      // Archi
-      line((-2, 3.35), (-3, 2.65), stroke: 2pt + black) // 0-1
-      line((-2, 3.35), (-1, 2.6), stroke: 2pt + black) // 0-2
-      line((-3, 2.35), (-4, 1.7), stroke: 2pt + black) // 1-3
-      line((-3, 2.35), (-2, 1.65), stroke: 2pt + black) // 1-4
-      line((-2, 1.35), (-3, 0.65), stroke: 2pt + black) // 4-5
-      line((-2, 1.35), (-1, 0.65), stroke: 2pt + black) // 4-6
-      line((-3, 0.35), (-3.5, -0.3), stroke: 2pt + black) // 5-7
-      line((-3, 0.35), (-2.2, -0.3), stroke: 2pt + black) // 5-8
-      line((-1, 0.35), (-1.2, -0.3), stroke: 2pt + black) // 6-9
-      line((-1, 0.35), (0, -0.3), stroke: 2pt + black) // 6-10
-
-      // ===== VETTORE b E INFORMAZIONI =====
-      content((3, 4), text(size: 11pt)[$n = 5$])
-      content((3, 3.5), text(size: 10pt)[\#nodi = $2n+1 = 11$])
-
-      // Indici sopra il vettore
-      for i in range(11) {
-        content((1.22 + i * 0.5, 3), text(size: 8pt)[#i])
-      }
-
-      // Vettore b
-      content((0.5, 2.5), text(size: 11pt, weight: "bold")[$underline(b)$])
-      let b_values = (1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0)
-      for i in range(11) {
-        let x = 1 + i * 0.5
-        rect((x, 2.2), (x + 0.45, 2.7), stroke: 2pt + black, fill: white)
-        content((x + 0.225, 2.45), text(size: 10pt)[#b_values.at(i)])
-      }
-
-      content((3, 1.8), text(size: 10pt)[in aggiunta il costo perRANK/SELECT])
-
-      // Spazio totale
-      content((3, 1.2), text(size: 11pt)[
-        $2n+1 + o(2n+1)$
-      ])
-      content((3.5, 0.75), text(size: 11pt)[$= 2n + o(n)$])
-
-      content((3.5, 0.3), text(size: 10pt, fill: green.darken(20%))[Succinta!])
-    }),
-    caption: [
-      Rappresentazione succinta di un albero binario con $n=5$ nodi interni (quindi $n=11$ nodi totali).\
-      Il vettore $underline(b)$ memorizza $1$ per i nodi interni e $0$ per le foglie.\
-      Con una struttura rank/select, la rappresentazione richiede *$2n + o(n)$ bit
-      è succinta*.
-    ],
-  )
-]
-
+Ogni nodo è numerato, per livello di profondità e da sinistra verso destra (come li visiterebbe una *BFS*).
+Creiamo un vettore di $2n+1$ elementi, dove $n$ è il numero di nodi interi:
+- il vettore memorizza $1$ per i nodi interni e $0$ per le foglie
+- usiamo inoltre una struttura rank/select
 #nota[
   I figli sinistri saranno sempre di indice dispari, i figli destri saranno sempre di indice pari.
 ]
 
-=== Navigare l'albero
+La rappresentazione richiede $2 n + 1 + o(2n +1) = 2n + o(n)$ bit: è *succinta*.
 
-Con questa struttura, vogliamo poter navigare l'albero, per ogni nodo:
-+ capire se è una foglia: facile, basta guardare il vettore di bit
-+ se non è foglia, sapere chi sono i figli:
+#esempio[
+  #figure(
+    grid(
+      columns: 2,
+      column-gutter: 2em,
+      row-gutter: 1em,
+
+      // Colonna sinistra: albero
+      cetz.canvas(length: 0.8cm, {
+        import cetz.draw: *
+
+        let r = 0.3 // raggio nodi circolari
+        let box-size = 0.5 // dimensione rettangoli foglie
+
+        // Archi
+        line((-0.2, 3.8), (-1.3, 3), stroke: black) // 0-1
+        line((0.2, 3.8), (1.3, 3), stroke: black) // 0-2
+        line((-1.7, 2.6), (-2.3, 1.8), stroke: black) // 1-3
+        line((-1.3, 2.6), (-0.7, 1.8), stroke: black) // 1-4
+        line((-0.7, 1.4), (-1.3, 0.6), stroke: black) // 4-5
+        line((-0.3, 1.4), (0.3, 0.6), stroke: black) // 4-6
+        line((-1.7, 0.2), (-2.1, -0.6), stroke: black) // 5-7
+        line((-1.3, 0.2), (-0.9, -0.6), stroke: black) // 5-8
+        line((0.3, 0.2), (-0.1, -0.6), stroke: black) // 6-9
+        line((0.7, 0.2), (1.1, -0.6), stroke: black) // 6-10
+
+        // ===== ALBERO =====
+        content((0, 5), text(size: 11pt, weight: "bold")[$T$])
+
+        // Livello 0: radice
+        circle((0, 4), radius: r, fill: white)
+        content((0, 4), text(size: 9pt)[$0$])
+
+        // Livello 1
+        circle((-1.5, 2.8), radius: r, fill: white)
+        content((-1.5, 2.8), text(size: 9pt)[$1$])
+
+        rect(
+          (1.5 - box-size / 2, 2.8 - box-size / 2),
+          (1.5 + box-size / 2, 2.8 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((1.5, 2.8), text(size: 9pt)[$2$])
+
+        // Livello 2
+        rect(
+          (-2.5 - box-size / 2, 1.6 - box-size / 2),
+          (-2.5 + box-size / 2, 1.6 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((-2.5, 1.6), text(size: 9pt)[$3$])
+
+        circle((-0.5, 1.6), radius: r, fill: white)
+        content((-0.5, 1.6), text(size: 9pt)[$4$])
+
+        // Livello 3
+        circle((-1.5, 0.4), radius: r, fill: white)
+        content((-1.5, 0.4), text(size: 9pt)[$5$])
+
+        circle((0.5, 0.4), radius: r, fill: white)
+        content((0.5, 0.4), text(size: 9pt)[$6$])
+
+        // Livello 4: foglie
+        rect(
+          (-2.2 - box-size / 2, -0.8 - box-size / 2),
+          (-2.2 + box-size / 2, -0.8 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((-2.2, -0.8), text(size: 9pt)[$7$])
+
+        rect(
+          (-0.8 - box-size / 2, -0.8 - box-size / 2),
+          (-0.8 + box-size / 2, -0.8 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((-0.8, -0.8), text(size: 9pt)[$8$])
+
+        rect(
+          (-0.2 - box-size / 2, -0.8 - box-size / 2),
+          (-0.2 + box-size / 2, -0.8 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((-0.2, -0.8), text(size: 9pt)[$9$])
+
+        rect(
+          (1.2 - box-size / 2, -0.8 - box-size / 2),
+          (1.2 + box-size / 2, -0.8 + box-size / 2),
+          stroke: black,
+          fill: white,
+        )
+        content((1.2, -0.8), text(size: 9pt)[$10$])
+      }),
+
+      // Colonna destra: vettore e informazioni
+      align(horizon)[
+        #align(center)[
+          #text(size: 11pt, weight: "bold")[$underline(b)$]
+          #table(
+            columns: 11,
+            align: center + horizon,
+            stroke: 0.5pt + black,
+            inset: 5pt,
+            // Riga indici
+            [0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10],
+            // Riga valori
+            [1], [1], [0], [0], [1], [1], [1], [0], [0], [0], [0],
+          )
+        ]
+      ],
+    ),
+    caption: [
+      Rappresentazione succinta di un albero binario con $n=5$ nodi interni (quindi $11$ nodi totali). I nodi interni (cerchi rossi) corrispondono a $1$ nel vettore, le foglie (rettangoli) a $0$.
+    ],
+  )
+]
 
 === Primitiva child
 
-Dato un certo nodo $x$, vogliamo sapre qual'è il figlio destro o sinistro di $x$.
+Dato un certo nodo $x$, accedere ai figli di $x$.
+
+Per accedere ai figli di $x$, chiamati $x'$ e $x''$, dobbiamo sapere quanti nodi hanno indice più piccolo di $x'$.
+Chiamiamo $T'$ il sottoalbero contentente tutti questi nodi.
+
+Per conoscere la quantità di nodi di $T'$ dobbiamo sapere quanti nodi hanno dei figli prima di $x'$.
+Questi non sono altro che tutti i nodi visitati prima di $x$, ovvero:
+- tutti i nodi ai livelli precedenti di $x$
+- i nodi allo stesso livello di $x$ ma più a sinistra
 
 #figure(
-  cetz.canvas({
+  cetz.canvas(length: 0.8cm, {
     import cetz.draw: *
 
-    // Triangolo grande (albero completo) - punta in alto
-    line((-3, -2), (3, -2), stroke: 2pt + black) // base
-    line((-3, -2), (0, 3), stroke: 2pt + black) // lato sx
-    line((3, -2), (0, 3), stroke: 2pt + black) // lato dx
+    let r = 0.3 // raggio nodi
 
-    // ===== ALBERO T' (parte sinistra evidenziata) =====
-    content((-1.0, 2.8), text(size: 11pt, weight: "bold")[$mr(T')$])
+    // Grande triangolo che rappresenta l'intero albero T
+    line((4, 0), (0, 5), stroke: black + 1pt)
+    line((-4, 0), (4, 0), stroke: black + 1pt)
+    line((-4, 0), (0, 5), stroke: black + 1pt)
 
-    // Linea verticale che separa T'
-    line((-0.75, 1.0), (-1.25, 1.0), stroke: 2pt + red)
-    line((-0.75, 1.0), (-0.35, 1.8), stroke: 2pt + red)
-    line((0.80, 1.8), (-0.4, 1.8), stroke: 2pt + red)
+    // Etichetta dell'albero
+    content((0, 5.5), text(size: 11pt, weight: "bold")[$T$])
 
-    // Nodi interni in T' (cerchietti blu)
-    for i in range(3) {
-      let y = 2.5 - i * 0.6
-      let x = 0 + i * 0.25
-      circle((x, y), radius: 0.1, fill: blue, stroke: none)
-    }
+    // Sottoalbero T' (area grigia)
+    merge-path(fill: gray.lighten(70%), stroke: gray + 1.5pt, close: true, {
+      line((0, 5), (2.4, 2))
+      line((2.4, 2), (-0.8, 2))
+      line((-0.8, 2), (-0.8, 1))
+      line((-0.8, 1), (-3.2, 1))
+    })
 
-    // ===== NODO x E SUOI FIGLI =====
+    content((-2, 2.8), text(size: 12pt, weight: "bold", fill: gray.darken(30%))[$T'$])
 
-    // Nodo x (evidenziato)
-    circle((0, 1.5), radius: 0.2, fill: white, stroke: 3pt + red)
-    content((0, 1.5), text(size: 9pt, fill: red)[$x$])
+    // Collegamenti da x ai suoi figli
+    line((0.7, 2.75), (-0.15, 1.8), stroke: red + 1pt)
+    line((0.9, 2.75), (1.8, 1.8), stroke: red + 1pt)
 
-    // Figlio sinistro (sotto)
-    circle((-1.0, 0.3), radius: 0.15, fill: black, stroke: 2pt + black)
-    line((-0.9, 0.5), (-0.2, 1.5), stroke: 2pt + black)
-    content((-0.7, -0.2), text(size: 9pt)[$2"rank"_underline(b)(x)+1$])
+    // Nodo x
+    circle((0.8, 3.0), radius: r, fill: blue.lighten(80%), stroke: blue + 1.5pt)
+    content((0.8, 3.0), text(size: 10pt, fill: blue, weight: "bold")[$x$])
 
-    // Figlio destro (sotto)
-    circle((.9, 0.3), radius: 0.15, fill: black, stroke: 2pt + black)
-    line((0.2, 1.50), (0.9, 0.30), stroke: 2pt + black)
-    content((0.8, -0.5), text(size: 9pt)[$2"rank"_underline(b)(x)+2$])
+    // Figli di x: x' (sinistro) e x'' (destro)
+    circle((-0.2, 1.5), radius: r, fill: red.lighten(80%), stroke: red + 1.5pt)
+    content((-0.2, 1.5), text(size: 10pt, fill: red, weight: "bold")[$x'$])
 
-    // ===== ETICHETTE E SPIEGAZIONI =====
-
-    content((2.5, 1.5), text(size: 10pt, weight: "bold")[$T$])
-    content((2.5, 1), text(size: 9pt)[
-      Albero completo
-    ])
+    circle((1.8, 1.5), radius: r, fill: red.lighten(80%), stroke: red + 1.5pt)
+    content((1.8, 1.5), text(size: 10pt, fill: red, weight: "bold")[$x''$])
   }),
   caption: [
-    $T'$ contiene tutti i nodi con indice minore di $x$.
+    Calcolo degli indici dei figli di $x$: il sottoalbero $T'$ (area grigia) contiene tutti i nodi visitati prima del figlio sinistro $x'$ di $x$.
   ],
 )
 
-Vogliamo stabilire i figli di $x$ in un albero $T$.
-Considerando il sottoalbero $mr(T')$ che comprende tutti i nodi dello stesso livello di $x$ e tutti i nodi dei livelli precedenti.
+Possiamo calcolare questa quantità conoscendo il numero di nodi interni di $T'$ sfruttando la proprità #link-teorema(<albero-binario-numero-nodi>).
+$ |"nodi" T'| = 2 |"nodi interni" T'| + 1 = 2 "rank"_underline(b)(x) + 1 $
 
-Il numero di *nodi interni* $I$ di $mr(T'(I))$:
-- nodi interni di $T$ con indici $< x$
-- equivale al numero di $1$ in $underline(b)$ di indici $<x$ = *$"rank"_underline(b)(x)$*
+Dato che i nodi sono numerati a partire da $0$, allora gli indici dei figli di $x$ sono:
+- $2 "rank"_underline(b)(x) + 1$
+- $2 "rank"_underline(b)(x) + 2$.
 
-Quindi il *numero di nodi* di $mr(T')$ è uguale a $2$ volte il numero di nodi interni di $mr(T'(I))$:
-*$ 
-  2|T'(I)|+1 = 2"rank"_underline(b)(x) + 1 
-$*
-Dato che i nodi sono numerati a partire da $0$, allora l'indice dei figli di $x$ sono: 
-  - $2 "rank"_underline(b)(x) + 1$
-  - $2 "rank"_underline(b)(x) + 2$.
+=== Primitiva parent
 
-=== Primitiva parent 
-
-Il padre di un nodo $x$ è quel nodo $p$ t.c: 
+Il padre di un nodo $x$ è quel nodo $p$ tale che:
 $
   "Parent"(x) = cases(
-    "left-child"(p) &= x,
-    "right-child"(p) &= x
+    "left-child"(p) & = x,
+    "right-child"(p) & = x
   )
 $
-#informalmente()[
-  Il genitore del nodo $x$ è il nodo $p$ per cui $x$ è il figlio destro o il figlio sinistro.
-]
-Per trovare il nodo genitore $p$: 
+
+Possiamo espandere le primitive child:
 $
-  "Parent"(x) &= cases(
-    2"rank"(p)+1 &= x,
-    2"rank"(p)+2 &= x
-  )\
-              &= cases(
-                "rank"(p)+1/2 &= x/2,
-                "rank"(p)+1 &= x/2
-              )\
-              &= "rank"(p) = floor(x/2-1/2)\
-              &mb("Applichiamo select a entrambi i membri")\
-              &= "select"("rank"(p)) = "select"(floor(x/2-1/2))\
-              p&= "select"(floor(x/2-1/2))
+  "Parent"(x) & = cases(
+                  2"rank"(p)+1 & = x,
+                  2"rank"(p)+2 & = x
+                ) \
+              & = cases(
+                  "rank"(p)+1/2 & = x/2,
+                  "rank"(p)+1 & = x/2
+                ) \
+    "rank"(p) & = floor(x/2-1/2) \
+$
+Sapendo che rank e select si annullano (#link-teorema(<rank-select-operazioni-inverse>)) in caso $b_p = 1$ (e $p$ lo è dato che ha figli), possiamo applicare la select da entrambe le parti:
+$
+  "select"("rank"(p)) & = "select"(floor(x/2-1/2)) \
+                    p & = "select"(floor(x/2-1/2))
 $
 
 === Dati ancillari
 
-La struttura mostrata in precedenza, mostra un modo per memorizzare la struttura dell'albero. Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovveri i *dati ancillari*.
+La struttura mostra un modo per memorizzare la struttura dell'albero.
+Solitamente, insieme all'albero, vogliamo anche memorizzare i dati contenuti nei nodi dell'albero, ovveri i dati ancillari.
 
-/ Dati ancillari solo su nodi interni: Teniamo un array lungo il numero di nodi interni dell'albero:
+- Dati ancillari solo su *nodi interni*: memorizzati in un array lungo quanto il numero di nodi interni dell'albero:
   - Usare una *select* per sapere dato un nodo dove sarà il suo dato ancillare
   - Usare una *rank* per sapere dato un dato a che nodo corrisponde
 
-/ Dati ancillari anche sulle foglie: Teniamo un array della stessa lunghezza di $b$ (numero totale di nodi), ogni cella dell'array contiene il dato di quel nodo
+- Dati ancillari anche sulle *foglie*: memorizzati in un array della stessa lunghezza di $b$ (numero totale di nodi), ogni cella dell'array contiene il dato di quel nodo
 
 == Biiezioni fra Alberi Binari, Alberi Generali e Foreste
+
+#nota[
+  Una biiezione tra due insiemi $X$ e $Y$ è una relazione binaria tale che ad ogni elemento di $X$ corrisponde *uno ed uno solo* elemento di $Y$ (e viceversa).
+]
 
 / $B_n$: insieme alberi binari con $n$ nodi *interni*
 / $F_n$: insieme delle foreste ordinate (foresta in cui le radici dei singoli alberi sono ordinate) con $n$ nodi
@@ -377,302 +450,272 @@ La struttura mostrata in precedenza, mostra un modo per memorizzare la struttura
   Non esiste l'albero vuoto (dato che deve avere una radice), ma esiste la foresta vuota.
 ]
 
-#nota[
-  Una biiezione tra due insiemi $X$ e $Y$ è una relazione binaria tale che ad ogni elemento di $X$ corrisponde *uno ed uno solo* elemento di $Y$. *Vale* anche *nella direzione opposta*, ad ogni elemento di $Y$ corrisponde uno ed un solo elemento di $X$.
-]
-
 === Lift
 
+La *foresta* ordinata viene trasformata in un *albero*, aggiungendo una radice che connette tutte le radici.
+
 $ phi : F_n -> T_(n+1) $
-*Lift*. La foresta ordinata viene trasformata in un albero, aggiungendo un nodo che connette tutte le radici.
 
 #figure(
-  cetz.canvas(length: 0.6cm, {
+  cetz.canvas(length: 0.7cm, {
     import cetz.draw: *
 
+    let r = 0.2 // raggio nodo radice
+
     // ===== FORESTA F_n (sinistra) =====
-    content((-6, 3.5), text(size: 10pt, weight: "bold")[Foresta $F_n$])
+    content((-5, 4), text(size: 11pt, weight: "bold")[Foresta $F_n$])
 
-    // Albero T1 (triangolo - punta in alto)
-    line((-6.5, 0.5), (-5.5, 0.5), stroke: 2pt + black)
-    line((-6.5, 0.5), (-6, 2), stroke: 2pt + black)
-    line((-5.5, 0.5), (-6, 2), stroke: 2pt + black)
-    content((-6, 1.2), text(size: 9pt, weight: "bold")[$T_1$])
+    // Albero T1
+    line((-6.5, 0.5), (-5, 0.5), stroke: black)
+    line((-6.5, 0.5), (-5.75, 2.5), stroke: black)
+    line((-5, 0.5), (-5.75, 2.5), stroke: black)
+    content((-5.75, 1.3), text(size: 10pt, weight: "bold")[$T_1$])
 
-    // Albero T2 (triangolo - punta in alto)
-    line((-4.8, 0.5), (-3.8, 0.5), stroke: 2pt + black)
-    line((-4.8, 0.5), (-4.3, 2), stroke: 2pt + black)
-    line((-3.8, 0.5), (-4.3, 2), stroke: 2pt + black)
-    content((-4.3, 1.2), text(size: 9pt, weight: "bold")[$T_2$])
+    // Albero T2
+    line((-4.3, 0.5), (-2.8, 0.5), stroke: black)
+    line((-4.3, 0.5), (-3.55, 2.5), stroke: black)
+    line((-2.8, 0.5), (-3.55, 2.5), stroke: black)
+    content((-3.55, 1.3), text(size: 10pt, weight: "bold")[$T_2$])
 
-    // Puntini di sospensione
-    content((-3, 1.2), text(size: 11pt)[...])
+    // Puntini
+    content((-2, 1.5), text(size: 12pt)[$dots.c$])
 
-    // Albero Tk (triangolo - punta in alto)
-    line((-2.5, 0.5), (-1.5, 0.5), stroke: 2pt + black)
-    line((-2.5, 0.5), (-2, 2), stroke: 2pt + black)
-    line((-1.5, 0.5), (-2, 2), stroke: 2pt + black)
-    content((-2, 1.2), text(size: 9pt, weight: "bold")[$T_k$])
+    // Albero Tk (più distanziato)
+    line((-0.5, 0.5), (1, 0.5), stroke: black)
+    line((-0.5, 0.5), (0.25, 2.5), stroke: black)
+    line((1, 0.5), (0.25, 2.5), stroke: black)
+    content((0.25, 1.3), text(size: 10pt, weight: "bold")[$T_k$])
 
     // ===== FRECCIA LIFT =====
-    content((0, 2.5), text(size: 10pt, weight: "bold")[LIFT])
-    line((-0.6, 1.3), (0.6, 1.3), stroke: 2pt + black)
-    line((0.45, 1.45), (0.6, 1.3), stroke: 2pt + black)
-    line((0.45, 1.15), (0.6, 1.3), stroke: 2pt + black)
+    content((2.5, 2.5), text(size: 11pt, weight: "bold")[$phi$ (Lift)])
+    line((1.5, 1.5), (3.5, 1.5), stroke: black)
+    line((3.35, 1.65), (3.5, 1.5), stroke: black)
+    line((3.35, 1.35), (3.5, 1.5), stroke: black)
 
     // ===== ALBERO T_(n+1) (destra) =====
-    content((4, 3.5), text(size: 10pt, weight: "bold")[Albero $T_(n+1)$])
+    content((7, 4), text(size: 11pt, weight: "bold")[Albero $T_(n+1)$])
 
     // Nodo radice aggiunto
-    circle((4, 2.8), radius: 0.15, fill: black, stroke: 2pt + black)
+    circle((7, 3.2), radius: r, fill: white, stroke: black)
+    content((7, 3.2), text(size: 8pt, fill: black)[$r$])
 
-    // Collegamenti ai sottoalberi
-    line((4, 2.65), (2.5, 2), stroke: 2pt + black)
-    line((4, 2.65), (4, 2), stroke: 2pt + black)
-    line((4, 2.65), (5.5, 2), stroke: 2pt + black)
+    // Collegamenti dalla radice ai sottoalberi
+    line((7, 3), (5.5, 2.5), stroke: black)
+    line((7, 3), (7, 2.5), stroke: black)
+    line((7, 3), (8.75, 2.5), stroke: black)
 
-    // Albero T1 (triangolo - punta in alto)
-    line((2, 0.5), (3, 0.5), stroke: 2pt + black)
-    line((2, 0.5), (2.5, 2), stroke: 2pt + black)
-    line((3, 0.5), (2.5, 2), stroke: 2pt + black)
-    content((2.5, 1.2), text(size: 9pt, weight: "bold")[$T_1$])
+    // Albero T1
+    line((5, 0.5), (6, 0.5), stroke: black)
+    line((5, 0.5), (5.5, 2.5), stroke: black)
+    line((6, 0.5), (5.5, 2.5), stroke: black)
+    content((5.5, 1.3), text(size: 10pt, weight: "bold")[$T_1$])
 
-    // Albero T2 (triangolo - punta in alto)
-    line((3.5, 0.5), (4.5, 0.5), stroke: 2pt + black)
-    line((3.5, 0.5), (4, 2), stroke: 2pt + black)
-    line((4.5, 0.5), (4, 2), stroke: 2pt + black)
-    content((4, 1.2), text(size: 9pt, weight: "bold")[$T_2$])
+    // Albero T2
+    line((6.5, 0.5), (7.5, 0.5), stroke: black)
+    line((6.5, 0.5), (7, 2.5), stroke: black)
+    line((7.5, 0.5), (7, 2.5), stroke: black)
+    content((7, 1.3), text(size: 10pt, weight: "bold")[$T_2$])
 
-    // Puntini di sospensione (tratteggiati)
-    line((4.8, 1.5), (5.2, 1.5), stroke: (dash: "dotted", thickness: 2pt))
+    // Puntini
+    content((8, 1.5), text(size: 12pt)[$dots.c$])
 
-    // Albero Tk (triangolo - punta in alto)
-    line((5.5, 0.5), (6.5, 0.5), stroke: 2pt + black)
-    line((5.5, 0.5), (6, 2), stroke: 2pt + black)
-    line((6.5, 0.5), (6, 2), stroke: 2pt + black)
-    content((6, 1.2), text(size: 9pt, weight: "bold")[$T_k$])
+    // Albero Tk (più distanziato)
+    line((8.25, 0.5), (9.25, 0.5), stroke: black)
+    line((8.25, 0.5), (8.75, 2.5), stroke: black)
+    line((9.25, 0.5), (8.75, 2.5), stroke: black)
+    content((8.75, 1.3), text(size: 10pt, weight: "bold")[$T_k$])
   }),
   caption: [
-    Operazione di *Lift*
-  ]
+    Operazione di Lift.
+  ],
 )
-
 
 === First child next sibling (FCNS)
 
-L'*FCNS* trasforma una foresta ordinata in un albero binario:
+Una foresta ordinata (o un albero generale, non necessariamente binario) viene trasformata in un albero *binario*.
 $ psi : F_n -> B_n $
-Funzionamento: per ogni nodo $v$ nella foresta:
+
+Per ogni nodo $v$ nella foresta:
 - Il figlio sinistro di $v$ nell'albero binario corrisponde al *primo figlio* di $v$ nella foresta
 - Il figlio destro di $v$ nell'albero binario corrisponde al *prossimo fratello* (next sibling) di $v$ nella foresta
 
-#esempio[
-  #figure(
-    cetz.canvas(length: 0.7cm, {
-      import cetz.draw: *
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      let r = 0.35  // raggio nodi
+    let r = 0.3 // raggio nodi
 
-      // ===== ALBERO GENERALE (sinistra) =====
-      content((-4, 4), text(size: 10pt, weight: "bold")[Albero generale])
+    // ===== ALBERO GENERALE (sinistra) =====
+    content((-4, 4), text(size: 11pt, weight: "bold")[Albero generale (o foresta)])
 
-      // Nodo radice r
-      circle((-4, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((-4, 2.5), text(size: 9pt)[$r$])
+    // Nodo radice r
+    circle((-4, 3), radius: r, fill: white, stroke: black)
+    content((-4, 3), text(size: 10pt)[$r$])
 
-      // Figli a, b, c
-      circle((-5.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((-5.5, 1), text(size: 9pt)[$a$])
-      
-      circle((-4, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((-4, 1), text(size: 9pt)[$b$])
-      
-      circle((-2.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((-2.5, 1), text(size: 9pt)[$c$])
+    // Figli a, b, c
+    circle((-5.5, 1.5), radius: r, fill: white, stroke: black)
+    content((-5.5, 1.5), text(size: 10pt)[$a$])
 
-      // Collegamenti
-      line((-4, 2.3), (-5.5, 1.2), stroke: 2pt + black)
-      line((-4, 2.3), (-4, 1.2), stroke: 2pt + black)
-      line((-4, 2.3), (-2.5, 1.2), stroke: 2pt + black)
+    circle((-4, 1.5), radius: r, fill: white, stroke: black)
+    content((-4, 1.5), text(size: 10pt)[$b$])
 
-      content((-4, 0.3), text(size: 9pt)[
-        $r$ ha 3 figli: $a, b, c$
-      ])
+    circle((-2.5, 1.5), radius: r, fill: white, stroke: black)
+    content((-2.5, 1.5), text(size: 10pt)[$c$])
 
-      // ===== FRECCIA FCNS =====
-      content((0, 2.5), text(size: 10pt, weight: "bold")[FCNS])
-      line((-1.5, 2), (1.5, 2), stroke: 2pt + black)
-      line((1.35, 2.15), (1.5, 2), stroke: 2pt + black)
-      line((1.35, 1.85), (1.5, 2), stroke: 2pt + black)
+    // Collegamenti dalla radice ai figli
+    line((-4, 2.7), (-5.5, 1.8), stroke: black)
+    line((-4, 2.7), (-4, 1.8), stroke: black)
+    line((-4, 2.7), (-2.5, 1.8), stroke: black)
 
-      // ===== ALBERO BINARIO (destra) =====
-      content((4, 4), text(size: 10pt, weight: "bold")[Albero binario])
+    // Figli di b: d, e
+    circle((-4.7, 0), radius: r, fill: white, stroke: black)
+    content((-4.7, 0), text(size: 10pt)[$d$])
 
-      // Nodo radice r
-      circle((4, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((4, 2.5), text(size: 9pt)[$r$])
+    circle((-3.3, 0), radius: r, fill: white, stroke: black)
+    content((-3.3, 0), text(size: 10pt)[$e$])
 
-      // Nodo a (figlio sinistro di r)
-      circle((3, 1.5), radius: r, fill: white, stroke: 2pt + blue)
-      content((3, 1.5), text(size: 9pt)[$a$])
-      line((3.9, 2.35), (3.1, 1.65), stroke: 2pt + blue)
-      content((2.2, 1.5), text(size: 8pt, fill: blue)[sx])
+    line((-4, 1.2), (-4.7, 0.3), stroke: black)
+    line((-4, 1.2), (-3.3, 0.3), stroke: black)
 
-      // Nodo b (figlio destro di a)
-      circle((4.5, 0.5), radius: r, fill: white, stroke: 2pt + red)
-      content((4.5, 0.5), text(size: 9pt)[$b$])
-      line((3.15, 1.35), (4.35, 0.65), stroke: 2pt + red)
-      content((5.2, 0.5), text(size: 8pt, fill: red)[dx])
+    // ===== FRECCIA FCNS =====
+    content((0, 3), text(size: 11pt, weight: "bold")[$psi$ (FCNS)])
+    line((-1.5, 2.5), (1.5, 2.5), stroke: black)
+    line((1.35, 2.65), (1.5, 2.5), stroke: black)
+    line((1.35, 2.35), (1.5, 2.5), stroke: black)
 
-      // Nodo c (figlio destro di b)
-      circle((6, -0.5), radius: r, fill: white, stroke: 2pt + red)
-      content((6, -0.5), text(size: 9pt)[$c$])
-      line((4.65, 0.35), (5.85, -0.35), stroke: 2pt + red)
-      content((6.7, -0.5), text(size: 8pt, fill: red)[dx])
+    // ===== ALBERO BINARIO (destra) =====
+    content((4.5, 4), text(size: 11pt, weight: "bold")[Albero binario])
 
-      // Annotazioni
-      content((4, -2.2), text(size: 9pt)[
-        #text(fill: blue)[$a$ = figlio sx di $r$] (primo figlio, $r$ non ha figli destri è radice)\
-        #text(fill: red)[$b$ = figlio dx di $a$] (fratello successivo)\
-        #text(fill: red)[$c$ = figlio dx di $b$] (fratello successivo)
-      ])
-    }),
-    caption: [
-      Esempio di trasformazione FCNS.\
-    ]
-  )
-]
+    // Nodo radice r
+    circle((4.5, 3), radius: r, fill: white, stroke: black)
+    content((4.5, 3), text(size: 10pt)[$r$])
 
-#nota()[
+    // Nodo a (figlio sinistro di r = primo figlio)
+    circle((3.5, 2), radius: r, fill: white, stroke: blue)
+    content((3.5, 2), text(size: 10pt)[$a$])
+    line((4.35, 2.75), (3.65, 2.25), stroke: blue)
+
+    // Nodo b (figlio destro di a = fratello successivo)
+    circle((4.5, 1), radius: r, fill: white, stroke: red)
+    content((4.5, 1), text(size: 10pt)[$b$])
+    line((3.65, 1.75), (4.35, 1.25), stroke: red)
+
+    // Nodo d (figlio sinistro di b = primo figlio di b)
+    circle((3.5, 0), radius: r, fill: white, stroke: blue)
+    content((3.5, 0), text(size: 10pt)[$d$])
+    line((4.35, 0.75), (3.65, 0.25), stroke: blue)
+
+    // Nodo e (figlio destro di d = fratello successivo)
+    circle((4.5, -1), radius: r, fill: white, stroke: red)
+    content((4.5, -1), text(size: 10pt)[$e$])
+    line((3.65, -0.25), (4.35, -0.75), stroke: red)
+
+    // Nodo c (figlio destro di b = fratello successivo)
+    circle((5.5, 0), radius: r, fill: white, stroke: red)
+    content((5.5, 0), text(size: 10pt)[$c$])
+    line((4.65, 0.75), (5.35, 0.25), stroke: red)
+  }),
+  caption: [
+    Trasformazione FCNS (First Child Next Sibling): i nodi sinistri sono i #text(blue)[figli], i nodi destri sono #text(red)[fratelli] del nodo attuale.
+  ],
+)
+
+#nota[
   La trasformazione *preserva* la cardinalità:
   $ |T_(n+1)| = |F_n| = |B_n| = C_n $
-  il numero di foreste ordinate con $n$ nodi è uguale al numero di alberi binari con $n$ nodi interni, entrambi sono pari al numero di catalano. 
+
+  Il numero di _foreste ordinate_ con $n$ nodi (che è uguale al numero di _alberi generali_ con $n$ nodi) è uguale al numero di _alberi binari_ con $n$ nodi interni, entrambi sono pari al _numero di catalano_.
 ]
+
 === Parole di Dyck
 
+Una foresta viene trasformata in una parola di Dyck.
+
 Formalmente:
-- $Sigma = {( space,space )}$. Alfabeto
+- $Sigma = {(,)}$: alfabeto composto solo da parentesi aperta e chiusa
 - $s in Sigma^*$ è una parola di Dyck se:
   + il numero di parentesi aperte $\#_\($ è uguale al numero di parentesi chiuse $\#_\)$
-  + $forall v$ prefisso di $w$, $\#_\( v >= \#_\) v$. Permette di evitare situazioni come $"))(("$
+  + $forall$ prefisso $v$ di $w$, $\#_\( v >= \#_\) v$, ovvero se le parentesi sono bilanciate
 
-*$ alpha : F_n -> D_n $*
-La definizione della biiezione $alpha$ è ricorsiva:
-- *Caso base* = $alpha(emptyset) = epsilon$
-- *Passo ricorsivo* = Per una foresta $F$ composta da $T_1,dots,T_k$ alberi: 
-  $
-    alpha(F) = alpha(T_1) space dots space alpha(T_k)
-  $
-  Per ogni albero $T_i$ avente una radice e sottoalberi $A_1,dots,A_k$, inseriamo delle $mr("parentesi")$ che racchiudono l'albero. 
-  $ 
-    alpha(T_i) = mr("(")alpha(A_1,dots A_k)mr(")") 
-  $
+$ alpha : F_n -> D_n $
 
-#esempio[
-  #figure(
-    cetz.canvas({
-      import cetz.draw: *
+Definizione della biiezione $alpha$ ricorsiva:
+- _Caso base_: $alpha(emptyset) = epsilon$
+- _Passo ricorsivo_: per una foresta $F$ composta da $T_1, dots, T_k$ alberi, allora inseriamo delle #text(red)[parentesi] che racchiudono l'albero e procediamo ricorsivamente:
+  $ alpha(F) = mr(\()alpha(T_1) space dots space alpha(T_k)mr(\)) $
 
-      let r = 0.30  // raggio nodi
+#figure(
+  cetz.canvas({
+    import cetz.draw: *
 
-      // ===== ALBERO GENERALE (alto) =====
-      content((-4, 6), text(size: 11pt, weight: "bold")[Foresta $F$])
+    let r = 0.30 // raggio nodi
 
-      // Radice A
-      circle((0, 5.5), radius: r, fill: white, stroke: 2pt + black)
-      content((0, 5.5), text(size: 10pt)[$A$])
+    // ===== ALBERO GENERALE (alto) =====
+    content((0, 6.5), text(size: 11pt, weight: "bold")[Foresta $F$])
 
-      // Primo livello: B, C, D, E, F, G
-      let level1 = (
-        ((-4, 4), $B$),
-        ((-2.5, 4), $C$),
-        ((-1, 4), $D$),
-        ((1, 4), $E$),
-        ((2.5, 4), $F$),
-        ((4, 4), $G$),
-      )
-      
-      for (pos, label) in level1 {
-        circle(pos, radius: r, fill: white, stroke: 2pt + black)
-        content(pos, text(size: 10pt)[#label])
-        line((0, 5.3), (pos.at(0), pos.at(1) + 0.25), stroke: 2pt + black)
-      }
+    // Radice A
+    circle((0, 5.8), radius: r, fill: white, stroke: black)
+    content((0, 5.8), text(size: 10pt)[$A$])
 
-      // Sottoalbero B: H, I, J
-      circle((-5, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((-5, 2.5), text(size: 10pt)[$H$])
-      line((-4.2, 3.8), (-5, 2.75), stroke: 2pt + black)
+    // Primo livello: B, C, D
+    let level1 = (
+      ((-2.5, 4.2), $B$),
+      ((0, 4.2), $C$),
+      ((2.5, 4.2), $D$),
+    )
 
-      circle((-4, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((-4, 2.5), text(size: 10pt)[$I$])
-      line((-4, 3.75), (-4, 2.75), stroke: 2pt + black)
+    for (pos, label) in level1 {
+      circle(pos, radius: r, fill: white, stroke: black)
+      content(pos, text(size: 10pt)[#label])
+      line((0, 5.5), (pos.at(0), pos.at(1) + 0.3), stroke: black)
+    }
 
-      circle((-3, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((-3, 2.5), text(size: 10pt)[$J$])
-      line((-3.8, 3.8), (-3, 2.75), stroke: 2pt + black)
+    // Sottoalbero B: E, F
+    circle((-3, 2.5), radius: r, fill: white, stroke: black)
+    content((-3, 2.5), text(size: 10pt)[$E$])
+    line((-2.5, 3.9), (-3, 2.8), stroke: black)
 
-      // Sottoalbero H: N, O
-      circle((-5.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((-5.5, 1), text(size: 10pt)[$N$])
-      line((-5.15, 2.3), (-5.5, 1.25), stroke: 2pt + black)
+    circle((-2, 2.5), radius: r, fill: white, stroke: black)
+    content((-2, 2.5), text(size: 10pt)[$F$])
+    line((-2.5, 3.9), (-2, 2.8), stroke: black)
 
-      circle((-4.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((-4.5, 1), text(size: 10pt)[$O$])
-      line((-4.85, 2.3), (-4.5, 1.25), stroke: 2pt + black)
+    // Sottoalbero D: H
+    circle((2.5, 2.5), radius: r, fill: white, stroke: black)
+    content((2.5, 2.5), text(size: 10pt)[$H$])
+    line((2.5, 3.9), (2.5, 2.8), stroke: black)
 
-      // Sottoalbero E: K, L
-      circle((0.5, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((0.5, 2.5), text(size: 10pt)[$K$])
-      line((0.85, 3.8), (0.5, 2.75), stroke: 2pt + black)
+    // ===== FRECCIA VERSO BASSO =====
+    line((0, 1.8), (0, 1.0), stroke: black)
+    line((-0.1, 1.15), (0, 1.0), stroke: black)
+    line((0.1, 1.15), (0, 1.0), stroke: black)
+    content((0.7, 1.4), text(size: 10pt, weight: "bold")[$alpha$])
 
-      circle((1.5, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((1.5, 2.5), text(size: 10pt)[$L$])
-      line((1.15, 3.8), (1.5, 2.75), stroke: 2pt + black)
+    // ===== PASSI COSTRUZIONE PAROLA DI DYCK =====
+    content((0, 0.3), text(size: 11pt, weight: "bold")[Costruzione parola di Dyck])
 
-      // Sottoalbero K: P
-      circle((0.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((0.5, 1), text(size: 10pt)[$P$])
-      line((0.5, 2.25), (0.5, 1.25), stroke: 2pt + black)
+    content((0, -1.2), align(center)[
+      $ mr("(") space mp(alpha(B)) space mb(alpha(C)) space mo(alpha(D)) space mr(")") $
 
-      // Sottoalbero L: Q
-      circle((1.5, 1), radius: r, fill: white, stroke: 2pt + black)
-      content((1.5, 1), text(size: 10pt)[$Q$])
-      line((1.5, 2.25), (1.5, 1.25), stroke: 2pt + black)
+      $
+        ( space mp("(") space alpha(E) space alpha(F) space mp(")") space mb("()") space mo("(") space alpha(H) space mo(")") space )
+      $
 
-      // Sottoalbero G: M
-      circle((4, 2.5), radius: r, fill: white, stroke: 2pt + black)
-      content((4, 2.5), text(size: 10pt)[$M$])
-      line((4, 3.75), (4, 2.75), stroke: 2pt + black)
+      $
+        ( space ( space "()" space "()" space ) space () space ( space "()" space ) space )
+      $
+    ])
+  }),
+  caption: [
+    Esempio di trasformazione $alpha : F_n -> D_n$.
+  ],
+)
 
-      // ===== FRECCIA VERSO BASSO =====
-      line((0, 0.3), (0, -0.3), stroke: 2pt + black)
-      line((-0.1, -0.15), (0, -0.3), stroke: 2pt + black)
-      line((0.1, -0.15), (0, -0.3), stroke: 2pt + black)
-      content((0.7, 0), text(size: 10pt, weight: "bold")[$alpha$])
-
-      // ===== PAROLA DI DYCK (sotto) =====
-      content((0, -1), text(size: 11pt, weight: "bold")[Parola di Dyck $D_n$])
-
-      
-  
-      content((0.48, -1.8), text(size: 10pt, fill: black)[$
-        underbrace("(",A) space underbrace("(",B)"sottoalbero" B space underbrace(")",B) space underbrace("()",C) space underbrace("()",D) space underbrace("(",E) "sottoalbero" E space underbrace(")",E) space underbrace("()",F) space underbrace("(",G) "sottoalbero" G space underbrace(")",G) space underbrace(")",A)
-      $])
-      
-    }),
-    caption: [
-      Esempio di trasformazione $alpha : F_n -> D_n$. L'albero con radice $A$ viene convertito in una parola di Dyck dove ogni sottoalbero è racchiuso tra parentesi ricorsivamente.
-    ]
-  )
-]
-
-#nota()[
+#nota[
   Traduciamo ricorsivamente ogni foresta ad una parola di Dyck:
   *$ |D_n| = |F_n| = C_n $*
 ]
 
-
 #attenzione[
-  Questa struttura a parentesi rappresenta solo l'alberi, senza dati ancillari.
-  Se vogliamo anche dati ancillari bisogna portarsi a dietro un array con informazioni sulle parentesi aperte (complicato).
+  Questa struttura a parentesi rappresenta solo l'albero, senza dati ancillari.
+  Per memorizzare dei dati ancillari bisogna portarsi a dietro un array con informazioni sulle parentesi aperte (complicato).
 ]
