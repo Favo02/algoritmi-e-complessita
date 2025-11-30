@@ -565,7 +565,16 @@ Sfruttiamo una *rank/select* per fare ciò:
 #nota[
   Questa tecnica è generale e molto potente.
 
-  Dato che la funzione (perfetta) restituisce un output più sparso di quello che ci serve, comprimiamo questo output usando un vettore di bit e una rank/select.
+  Dato che la funzione (perfetta) restituisce un output più sparso di quello che ci serve, comprimiamo questo output usando un vettore di bit e una rank/select. Cioè stiamo andando a *ignorare* il contenuto dei *bucket vuoti* (nessuna chiave in essi)
+]
+
+#esempio()[
+  Supponiamo di avere $3$ amici ($n=3$) che entrano in un cinema con $5$ posti ($m=5$), numerati da $0$ a $4$.
+  L'algoritmo di hash assegna loro i posti in modo sparso per evitare collisioni:
+  - I posti assegnati sono: $0, 2, 4$
+  - I posti $1$ e $3$ sono vuoti.
+  
+  L'obiettivo (minimalità) è fare rispondere $0, 1, 2$ (come se fossero seduti vicini, senza buchi). Per scalare i valori basta che ogni persona conti il numero di persone sedure prima di se stesso. L'operazione di Rank fa esattamente questo conteggio.
 ]
 
 === Theoretical Lower Bound
@@ -615,8 +624,12 @@ $ Z_n = log H_(U)(n) $
   Una funzione $h : U -> n$ separa un insieme $S$ se mappa ogni elemento in un bucket diverso.
   Nel caso peggiore, ogni bucket ha circa $U/n$ elementi nella controimmagine.
 
-  Il numero di insiemi separati da $h$ è circa:
+  Il numero di insiemi separati da $h$ (quindi senza collisioni) è circa:
   $ v = product_(k=0)^(n-1) |h^(-1)(k)| approx (U/n)^n $
+
+  #nota()[
+    La controimmagine ci dice quante scelte abbiamo per ogni posizione. Per sapere quanti insiemi totali possiamo formare, dobbiamo moltiplicare le possibilità per ogni bucket. Ogni contro immagine avra crica dimensione $U/n$
+  ]
 
 / Quante funzioni servono per coprire tutti gli insiemi?:
   Dobbiamo coprire $binom(U, n)$ insiemi, e ogni funzione copre al massimo $v$ insiemi.
