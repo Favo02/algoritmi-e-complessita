@@ -8,6 +8,7 @@
   Ogni lato del grafo deve essere coperto da almeno un vertice.
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G(V, E)$: grafo non orientato
   - $w_i in bb(Q)^+, space forall i in V$: costo di ogni vertice
@@ -15,7 +16,7 @@
   $ X subset.eq V, quad forall e in E, quad e inter X != emptyset $
 - *$C_Pi$*: costo totale dei vertici selezionati
   $ sum_(i in X)w_i $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #nota[
   La notazione $e inter X$ è valida perché un lato $e$ non è altro che un _insieme_ di due vertici.
@@ -23,13 +24,13 @@
   In una soluzione ammissibile, almeno un'estremità di ogni lato (una coppia di vertici) deve appartenere all'insieme dei vertici coperti $X$, quindi $forall e in E, e inter X != emptyset$.
 ]
 
-== Riduzione di VertexCover a SetCover [H(D)-APX]
+== Riduzione di VertexCover a SetCover [$H(D)$-APX]
 
 #teorema("Proprietà")[
   La versione di decisione di $"VertexCover"$ è polinomialmente riducibile all'istanza di decisione di $"SetCover"$:
   *$ hat("VertexCover") <=_p hat("SetCover") $*
 
-  #dimostrazione()[
+  #dimostrazione[
     Data un'istanza di $"VertexCover"$:
     $ x' = (underbrace(G=(V,E), "grafo"), underbrace((w_i)_(i in V), "costi"), underbrace(overline(w), "budget")) $
 
@@ -83,15 +84,15 @@
   ]
 ]
 
-== Vertex Cover mediante Pricing [2-APX]
+== Vertex Cover mediante Pricing [$2$-APX]
 
 In ogni istante è presente una *funzione di prezzatura* (pricing):
-$ angle.l P_e angle.r quad forall e in E $
+$ chevron.l P_e chevron.r quad forall e in E $
 
 #nota[
   Notazione:
   - $P_e$ indica il prezzo di un singolo lato $e$. È una _variabile duale_ associata al lato $e$
-  - $angle.l P_e angle.r$ indica l'insieme di tutti i prezzi dei lati $e$. Non è propriamente una _funzione_ (nonostante si comporti come tale) ma l'_intero vettore_ di _variabili duali_
+  - $chevron.l P_e chevron.r$ indica l'insieme di tutti i prezzi dei lati $e$. Non è propriamente una _funzione_ (nonostante si comporti come tale) ma l'_intero vettore_ di _variabili duali_
 ]
 
 #informalmente[
@@ -102,7 +103,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 / Prezzatura equa:
-  una prezzatura $angle.l P_e angle.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un'offerta minore o uguale al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
+  una prezzatura $chevron.l P_e chevron.r$ si dice *equa* se ogni vertice riceve dai lati incidenti un'offerta minore o uguale al suo prezzo d'acquisto $w_i$ (ovvero nessun vertice riceve più del suo costo):
   $ forall i in V, quad sum_(e "t.c." i in e) P_e <= w_i $
 
   #nota[
@@ -146,7 +147,7 @@ $ angle.l P_e angle.r quad forall e in E $
   ]
 
 / Prezzatura stretta:
-  una prezzatura $angle.l P_e angle.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta proveniente dai lati incidenti è esattamente uguale al suo costo $w_i$:
+  una prezzatura $chevron.l P_e chevron.r$ si dice *stretta* su un vertice $overline(i) in V$ se l'offerta proveniente dai lati incidenti è esattamente uguale al suo costo $w_i$:
   $ sum_(e "t.c." overline(i) in e) P_e = w_overline(i) $
 
   #esempio[
@@ -205,9 +206,8 @@ $ angle.l P_e angle.r quad forall e in E $
         "// aumentiamo la prezzatura del lato, una delle due estremità diventa stretta",
       )],
   ),
-  [$X <- "insieme dei vertici su cui" angle.l P_e angle.r "è stretta"$],
+  [$X <- "insieme dei vertici su cui" chevron.l P_e chevron.r "è stretta"$],
   [*Output* $X$],
-  [*End*],
 )
 
 #esempio[
@@ -288,7 +288,7 @@ $ angle.l P_e angle.r quad forall e in E $
 ]
 
 #teorema("Lemma")[
-  Se $angle.l P_e angle.r$ è una *prezzatura equa*, allora la somma della prezzatura di ogni lato $P_e$ è minore o uguale al costo della soluzione ottima $w^*$:
+  Se $chevron.l P_e chevron.r$ è una *prezzatura equa*, allora la somma della prezzatura di ogni lato $P_e$ è minore o uguale al costo della soluzione ottima $w^*$:
   $ sum_(e in E) P_e <= w^* $
 
   #dimostrazione[
@@ -383,11 +383,11 @@ $ angle.l P_e angle.r quad forall e in E $
   ]
 ]
 
-== Vertex Cover tramite Programmazione Lineare [2-APX]
+== Vertex Cover tramite Programmazione Lineare [$2$-APX]
 
 Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul problema della programmazione lineare.
 
-=== Problema Programmazione Lineare (LP) [PO]
+=== Problema Programmazione Lineare (LP) [PO] <problema-programmazione-lineare>
 
 #informalmente[
   Abbiamo $n$ variabili, ovvero gli elementi del vettore $x$.
@@ -399,6 +399,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   Tra tutti gli $x$ che soddisfano i vincoli (se ce ne sono), si vuole prendere quello che minimizza la funzione obiettivo (che è la somma pesata degli $x_i$).
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - matrice $A in bb(Q)^(m times n)$: vincoli a cui sono sottoposte le variabili, ogni riga rappresenta gli scalari che moltiplicano le variabili
   - vettore $underline(b) in bb(Q)^m$: limiti o lati destri di ogni vincolo, ovvero il valore a destra della disequazione
@@ -407,7 +408,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   $ A underline(x) >= underline(b) $
 - *$C_Pi$*: il valore pesato del vettore $underline(x)$, dove $T$ all'esponente indica la trasposizione
   $ underline(c)^T underline(x) $
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #nota[
   I vincoli possono essere sia di $>=$ che $<=$ (basta cambiare i segni della riga)
@@ -453,8 +454,7 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   ]
 ]
 
-
-=== Programmazione Lineare Intera (ILP) [NPOc]
+=== Programmazione Lineare Intera (ILP) [NPOc] <problema-programmazione-lineare-intera>
 
 #informalmente[
   Stesso problema della LP, ma con solo interi come soluzioni ammissibili.
@@ -462,13 +462,14 @@ Ulteriore soluzione a VertexCover, anch'essa 2-approssimazione, basata sul probl
   Nonostante l'insieme delle soluzioni sia un sottoinsieme rispetto a LP, il problema è più difficile.
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - matrice $A in bb(Q)^(m times n)$: vincoli
   - vettore $underline(b) in bb(Q)^m$: limiti destri
   - vettore $underline(c) in bb(Q)^n$: costi
 - *$"Amm"_Pi$*: vettore $underline(x) in mr(bb(Z)^n)$, dove ogni riga rispetta i vincoli: $A underline(x) >= underline(b)$
 - *$C_Pi$*: il valore pesato della soluzione, $underline(c)^T underline(x)$
-- *$t_Pi = min$*
+- *$t_Pi$*$= min$
 
 #teorema("Teorema")[
   *$ "IntegerLinearProgramming" in "NPOc" $*
@@ -490,7 +491,7 @@ Possiamo trattare un'istanza di VertexCover come un'istanza di IntegerLinearProg
   [
     $I_"VertexCover"$:
     - grafo $G = (V,E)$
-    - pesi dei vertici $angle.l w_i angle.r_(i in V)$
+    - pesi dei vertici $chevron.l w_i chevron.r_(i in V)$
   ],
   [
     $I_"ILP"$:

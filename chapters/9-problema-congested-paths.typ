@@ -1,6 +1,6 @@
 #import "../imports.typ": *
 
-= Problema Congested Paths
+= Problema Congested Paths [NPOc]
 
 #attenzione[
   Questo problema è noto in letteratura come "Disjoint Paths".
@@ -14,32 +14,33 @@
   Obiettivo: massimizzare le coppie collegate (rispettando il vincolo $c$).
 ]
 
+Formalmente:
 - *$I_Pi$*:
   - $G = (N,A)$: grafo orientato
   - $s_0, ..., s_(k-1) in bb(N)$: lista di sorgenti
   - $t_0, ..., t_(k-1) in bb(N)$: lista di destinazioni
   - $c in bb(N^+)$: tasso di congestione
-- *$"Amm"_(Pi)$*: insieme delle coppie collegate
+- *$"Amm"_Pi$*: insieme delle coppie collegate
   $
     I subset.eq k, quad
     forall i in I, quad exists "un cammino" pi_i: s_i ~> t_i \
     "t.c." forall a in A, quad "non ci sono più di" c "cammini" pi_i "che passano per" a
   $
 - *$C_Pi$* = $|I|$: numero di coppie collegate
-- *$t_Pi = max$*
+- *$t_Pi$*$= max$
 
 #nota[
   È possibile specificare la stessa sorgente o destinazione più volte, basta inserirla più volte nella lista di sorgenti/destinazioni.
   L'algoritmo, lavorando sugli indici, le considererà coppie distinte.
 ]
 
-== Algoritmo PricingCongestedPaths
+== Algoritmo PricingCongestedPaths [$(2 c m^(1/(c+1))+1)$-APX]
 
 Per l'algoritmo abbiamo bisogno di definire:
 
 / Costo di un cammino $pi$: somma dei costi degli archi su cui passa.
   $
-    pi = angle.l x_1,x_2,dots,x_i angle.r \
+    pi = chevron.l x_1,x_2,dots,x_i chevron.r \
   $
 
 / Funzione costo $ell$: funzione che associa ad ogni arco un costo. Se il parametro è un cammino, allora restituisce il costo del cammino.
@@ -54,11 +55,11 @@ Per l'algoritmo abbiamo bisogno di definire:
 Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anche un parametro $beta in bb(Q) > 1$ _(di cui vedremo come calcolare il valore)_.
 
 #pseudocode(
-  [*Input* $G=(N, A), space S, space T, space c, space beta >1$],
+  [input $<- G=(N, A), space S, space T, space c, space beta >1$],
   [$I <- emptyset$ #emph("// indici delle coppie collegate")],
   [$P <- emptyset$ #emph("// insieme dei cammini trovati")],
   [$ell(a)=1, quad forall a in A$ #emph("// tutti gli archi costano inizialmente 1")],
-  [*Forever*],
+  [*While* true *do*],
   indent(
     [$pi_i <-$ find the shortest path connecting $(s_i,t_i)$ for some $i in.not I$ #emph("// cammino più corto tra tutti quelli esistenti tra una coppia sorgente-destinazione")],
     [*If* such path $exists.not$ *then*],
@@ -72,7 +73,7 @@ Oltre all'input del problema $"CongestedPath"$, all'algoritmo viene passato anch
       [$ell(a) <- ell(a) dot beta$ #emph("// penalizziamo gli archi usati, aumentando il loro costo")],
       [*If* $ell(a) = beta^c$ *then* #emph("// usato " + $c$ + " volte")],
       indent(
-        [*Delete* $a$ #emph("// quindi non si può più usare, lo eliminiamo")],
+        [delete $a$ #emph("// quindi non si può più usare, lo eliminiamo")],
       ),
     ),
   ),
@@ -161,7 +162,6 @@ $
 
     + *Passo Base*. All'inizio il peso di tutti gli archi è inizializzato a $1$:
       $ sum_(a in A) underbrace(ell(a), =1) = m $
-
 
     + *Passo induttivo*. Quando aggiungo un nuovo cammino $pi$, il peso di tutti gli archi $a in A$ viene aggiornato, modificando la funzione $ell -> ell^'$:
       $
