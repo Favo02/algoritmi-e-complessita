@@ -83,7 +83,7 @@ La struttura è *statica*, non possono essere modificate chiavi e valori.
 
 *Primitiva* di accesso: data una chiave, vogliamo ottenere il suo valore (non è possibile il contrario e non è possibile elencare tutti i valori)
 
-== Struttura MWHC (Minimal Weight Hypergraph Construction)
+== Struttura MWHC (Minimal Weight Hypergraph Construction) <mwhc>
 
 Dati:
 - $U$ = universo
@@ -472,96 +472,95 @@ Funzionamento:
 
 == Hash Minimale Perfetto (MPH)
 
-Sia $S subset.eq U$ e $m in bb(N)$ fissato.
+Siano $S subset.eq U$ e $m in bb(N)$ fissati.
 
-Una funzione di hash $ h : U -> m $ si dice:
-+ *perfetta* per $S$ se "non ha conflitti su $S$", ovvero è iniettiva su quel sottoinsieme
-  $
-    forall x, y in S, quad x != y => h(x) != h(y) \
-    => |S| <= m
-  $
-+ *minimale perfetta* sse perfetta e $|S| = m$
+Una funzione di hash $quad h : U -> m quad$ si dice:
++ *perfetta* per $S$ se è iniettiva sul sottoinsieme $S$ di $U$:
+  $ forall x, y in S, quad x != y => h(x) != h(y) $
+  Questo implica che il numero di bucket sia maggiore della cardinalità di $S$:
+  $ |S| <= m $
++ *minimale perfetta* se e solo se $h$ è perfetta e $|S| = m$
 
-=== Utilità
+#esempio[
+  Un possibile utilizzo di un hash minimale perfetto è enumerare gli elementi di $S$.
 
-A cosa servono?
+  Basta mettere tutti gli elementi in un array e indicizzarlo con $h$.
+]
 
-Supponiamo di avere $S subset.eq U$ e $h : U -> n$ minimale perfetta per $S$.
+=== Prima costruzione: OPMPH (Order Preserving MPH)
 
-Se vogliamo ad esempio enumerare gli elementi di $S$, allora possiamo semplicemente metterli in un array e indicizzare questo array con $h$.
+Un modo banale di costruire un MPH è quello di *fissare* la funzione $h$ e poi *rappresentarla* tramite #link(<mwhc>)[MWHC].
 
-=== Costruzione
+Per fissare la funzione $h$ si intende associare ad ogni chiave un valore compreso tra $0$ e $n-1$.
+Dato che siamo noi a scegliere questi valori, scegliamo anche l'*ordine* delle chiavi, da qui il nome Order Preserving MPH.
 
-Si può costruire una funzione minimale perfetta? Si
+Spazio utilizzato:
+$ D_n = n underbrace(r, "fino a" 2^r) + gamma n + o(n) = n underbrace(log n, 2^log n = n) + gamma n + o(n) $
 
-=== Primo modo: ORMPH
+Esistono esattamente $n!$ modi di associare le chiavi ai valori, quindi il theoretical lower bound è:
+$ Z_n = log n! approx n log n $
 
-Fissa $h$ a priori e usa MWHC.
-Ovvero semplicemente enumera tutte le chiavi di $S$, associandogli un indice qualsiasi tra $0$ e $n-1$.
-Esistono esattamente $n!$ ordini possibili.
+La struttura è *compatta*.
 
-Order reserving minimal perfect hash (ORMPH):
-fissiamo in che ordine vogliamo le chiavi
+#attenzione[
+  Abbiamo però risolto un problema molto più complesso, ovvero abbiamo voluto *decidere noi l'ordine* delle chiavi.
+  Ma per essere minimale perfetto basta un *ordine qualsiasi*.
 
-Poi memorizza questo valore con MWHC.
+  Esistono diversi casi:
+  - ordine *scelto*: Order Preserving Minimal Perfect Hash (OPMPH)
+  - ordine *lessicografico*: Monotone Minimal Perfect Hash (MMPH)
+  - ordine *qualsiasi*: Minimal Perfect Hash (MPH)
 
-Quindi servono
-$
-  n r + gamma n + o(n) => \
-  n log n + gamma n + o(n)
-$
+  $ Z_"MPH" < Z_"MMPH" < Z_"OPMPH" $
+]
 
-$Z_n = log n! approx n log n$ quindi è succinta.
-Però abbiamo risolto un problema molto più complesso, ovvero abbiamo voluto decidere noi l'ordine delle chiavi.
-Ma per essere minimale perfetto basta un ordine qualsiasi.
+=== Seconda costruzione: variante di MWHC
 
-$ Z_"MPH" < Z_"OPMPH" $
-
-Esiste anche un caso intermedio:
-- non voglio un ordine qualsiasi (MPH)
-- ma non voglio un ordine che scelgo io (OPMPH)
-- vogliamo come ordine l'ordine lessicografico: Monotone Minimal Perfect Hash (MMPH)
-
-$ Z_"MPH" < Z_"MMPH" < Z_"OPMPH" $
-
-
-=== Secondo modo: variante di MWHC
-
-Non ci interessa l'ordine delle chiavi, va bene uno qualsiasi
+Non ci interessa l'ordine delle chiavi, va bene uno qualsiasi.
 
 Quando costruiamo MWHC, abbiamo un sistema di equazioni.
-Ma fino a quando non lo risolviamo, non abbiamo ancora deciso cosa c'è a destra dell'equazione.
-L'unica cosa che lo sappiamo è esiste un hinge, ovvero un indice che non è mai apparso prima.
+Ogni equazione eguaglia i risultati delle funzioni di hash al valore della funzione che stiamo codificando:
+$ x_h_0(s) + x_h_1(s) + x_h_2(s) = underbrace(f(s), "valore") $
 
-Quindi possiamo mettere a destra dell'equazione l'indice dello hinge, che è, per definizione, mai usato prima.
+Possiamo decidere noi quel valore.
+Dato che vogliamo una hash *iniettiva*, dobbiamo usare qualcosa che non appare mai più di una volta.
+L'*hinge* $k$, per definizione, rispetta questa caratteristica.
+$ x_h_0(s) + x_h_1(s) + x_h_2(s) = h_(k)(s) $
 
-Così abbiamo fissa una perfect hash (non minimale), dato che avremo solo $n$ valori (indici degli hinge) tra $0$ e $m-1$ e non esattamente $m$.
-La chiamiamo $tilde(h)$.
+#attenzione[
+  Tramite questo metodo otteniamo una funzione di hash perfetta ma *non minimale*: per come funziona MWHC, il numero di bucket è $m = gamma n >= n$ ($gamma = 1.23$), di conseguenza gli hinge utilizzati potrebbero eccedere $n$ e lasciare dei buchi.
+]
 
-Spazio occupato da $tilde(h)$:
+Spazio occupato:
 $
-  n r + gamma n + o(n) \
-  = n log m + gamma n + o(n) \
-  = n log (gamma n) + gamma n + o(n) \
-  = n log n + n log gamma + gamma n + o(n)
-$
-
-Ma non abbiamo bisogno di mettere come valore il valore dell'hinge.
-Possiamo mettere direttamente l'hinge. ??????
-
-Ovvero quale funzione di hash (tra le 3 usate) ha dato quel valore ???????
-
-$tilde(s) = h_((x_h_0(s))) ...$
-
-Adesos occupiamo:
-$
-  n r + gamma n + o(n) \
-  = 2 n + gamma n + o(n)
+  n r + gamma n + o(n) & = n log m + gamma n + o(n) \
+                       & = n log (gamma n) + gamma n + o(n) \
+                       & = n log n + n log gamma + gamma n + o(n)
 $
 
-Ma questa cosa non è ancora minimale (abbiamo $n$ valori):
+#nota[
+  La grandezza degli elementi del vettore da memorizzare (soluzione del sistema) dipende dalla grandezza dei valori delle equazioni.
 
-quindi facciamo un vettore di $m$ bit e mettiamo a $1$ i valori output della funzione perfetta e poi facciamo una rank/select su questa cosa.
+  Andando a ridurre i valori delle equazioni, riduciamo anche i bit necessari per ogni elemento del vettore che verrà memorizzato.
+]
+
+_Ottimizzazione_: al posto di utilizzare come valore l'_intero_ hinge, andiamo solo a specificare da *quale delle tre funzioni* deriva.
+Ora il valore occupa solo $2$ bit.
+$ x_h_0(s) + x_h_1(s) + x_h_2(s) = k $
+
+
+Spazio occupato:
+$ n r + gamma n + o(n) = 2 n + gamma n + o(n) $
+
+#attenzione[
+  Anche questa funzione è perfetta ma non *minimale* per lo stesso motivo di prima: l'output è nel range $[0, m-1]$ con $m = gamma n > n$.
+]
+
+Possiamo andare a scalare i valori ottenuti dal range $[0, m-1]$ al range $[0, n-1]$, rendendo la funzione *minimale perfetta*.
+Sfruttiamo una *rank/select* per fare ciò:
+- creiamo un vettore binario lungo $m$
+- mettiamo a $1$ i risultati della funzione di hash (ci saranno esattamente $n$ uni)
+- andiamo a effettuare l'operazione di rank per sapere il valore compresso nell'intervallo $[0, n-1]$
 
 #nota[
   Questa tecnica è generale e molto potente.
@@ -569,49 +568,72 @@ quindi facciamo un vettore di $m$ bit e mettiamo a $1$ i valori output della fun
   Dato che la funzione (perfetta) restituisce un output più sparso di quello che ci serve, comprimiamo questo output usando un vettore di bit e una rank/select.
 ]
 
-=== Information Theoretical Lower Bound
+=== Theoretical Lower Bound
 
-Calcolare quante sono le MPH con chiavi nell'universo $U$?
-$ h : U -> n $
+L'obiettivo è calcolare il *limite inferiore teorico* per rappresentare una MPH.
 
-Per ogni $s$ fatto scegliendo esattamente un $x in h^(-1)(k) forall k in {0, ..., n-1}$ allora $h$ è minimale perfetta per $S$.
-Si dice che $h$ separa $S$.
+/ Separazione: data una funzione hash minimale perfetta $h : U -> n$, diciamo che $h$ *separa* un insieme $S subset.eq U$ con $|S| = n$ se $h$ è iniettiva su $S$ (ovvero è una MPH per $S$).
 
-Se ci viene dato un insieme di funzioni:
-$ H = {h_0, h_1, ..., h_(t-1)} $
-$H$ è un $n$-sistema se $forall S subset.eq U quad |S| n$, $exists i = 0, ..., t-1$ tale che $h_i$ separa $S$.
+  #informalmente[
+    Una funzione $h$ separa un insieme $S$ quando mappa tutti gli elementi di $S$ in bucket diversi, senza collisioni.
+  ]
 
-#informalmente[
-  Se troviamo un $n$-sistema, allora abbiamo trovato un insieme di funzioni di hash che per qualsiasi cardinalità di insieme possiamo trovare una funzione minimale perfetta.
+  #nota[
+    Procedimento opposto: data una MPH fissata $h : U -> n$, possiamo costruire *tutti* gli insiemi $S$ che $h$ separa:
+    - per ogni bucket $k in {0, ..., n-1}$, prendiamo esattamente un elemento da $h^(-1)(k)$ (l'antiimmagine di $k$)
+    - otteniamo un insieme $S$ di $n$ elementi che viene separato da $h$
+  ]
+
+/ $n$-sistema: consideriamo una *famiglia* di $t$ funzioni di hash:
+  $ H = {h_0, h_1, ..., h_(t-1)} $
+
+  Questa famiglia $H$ è un *$n$-sistema* se è in grado di gestire *qualsiasi* insieme di $n$ chiavi:
+  $ forall S subset.eq U, space |S| = n, quad exists space i in {0, ..., t-1} "tale che" h_i "separa" S $
+
+  #informalmente[
+    Un $n$-sistema è una famiglia di funzioni di hash "universale": per qualunque insieme di $n$ chiavi, almeno una delle funzioni della famiglia lo separa (è iniettiva su di esso).
+  ]
+
+Chiamiamo $H_(U)(n)$ la *cardinalità minima* di un $n$-sistema, ovvero quante funzioni servono nel caso peggiore.
+
+Il theoretical lower bound per rappresentare una MPH è:
+$ Z_n = log H_(U)(n) $
+
+#nota[
+  Se abbiamo bisogno di almeno $H_(U)(n)$ funzioni diverse, allora per memorizzare "quale funzione stiamo usando" servono almeno $log H_(U)(n)$ bit.
 ]
 
-Quanto è grande il più piccolo $n$-sistema?
+/ Quanti insiemi dobbiamo coprire?:
+  Tutti i possibili sottoinsiemi di $U$ con cardinalità $n$:
+  $ binom(U, n) "insiemi" $
 
-Chiamiamo $H_U(n)$ la cardinalità del più piccolo $n$-sistema.
-$ Z_n = log H_U(n) $
+/ Quanti insiemi separa una singola funzione?:
+  Una funzione $h : U -> n$ separa un insieme $S$ se mappa ogni elemento in un bucket diverso.
+  Nel caso peggiore, ogni bucket ha circa $U/n$ elementi nella controimmagine.
 
-Quandi sono gli insiemi di carinalità? $binom(U, n)$
+  Il numero di insiemi separati da $h$ è circa:
+  $ v = product_(k=0)^(n-1) |h^(-1)(k)| approx (U/n)^n $
 
-Ogni funzione di hash separi al massimo $v$ insiemi di cardinalità $n$.
-$ v approx (U/n)^n $
+/ Quante funzioni servono per coprire tutti gli insiemi?:
+  Dobbiamo coprire $binom(U, n)$ insiemi, e ogni funzione copre al massimo $v$ insiemi.
+  $
+        H_(U)(n) & >= binom(U, n) / v \
+                 & >= binom(U, n) / ((U/n)^n) \
+     ln H_(U)(n) & >= n + O(ln n) \
+    log H_(U)(n) & >= (ln H_(U)(n)) / (ln 2) \
+                 & >= n / (ln 2) + O(ln n)
+  $
 
-Dato che vogliamo separare $H_U(n)$ insiemi ed esistono $binom(U, n)$ funzioni, ma ognuna separa al massimo $v$, allora deve:
-$ H_U(n) >= binom(U, n) / v $
-
-Quindi
-$ H_U(n) >= binom(U, n)/(U / n)^n $
-
-$
-  ln H_U(n) >= n + O(ln n) \
-  log H_U(n) = (ln H_U(n)) / (ln 2) \
-  >= n / (ln 2) + O (ln n) \
-  = 1.44 n + O(ln n)
-$
-
-Quindi il theoretical lower bound è $Z_n$:
 $ Z_n >= 1.44 n + O(ln n) $
 
-Noi abbiamo usato
-$ 2 n + gamma n + o (n) + gamma n + o(n) $
+La seconda costruzione ottimizzata con rank/select usa:
+$
+  underbrace(2n, "array valori") + underbrace(gamma n, "vettore bit") + underbrace(o(n), "rank/select")
+  & = 2n + 1.23n + o(n) = 3.23n + o(n)
+$
 
-Quindi è compatta.
+La struttura è *compatta*.
+
+#nota[
+  Esistono strutture più sofisticate che si avvicinano di più al limite teorico, ma sono significativamente più complesse da implementare e utilizzare.
+]
