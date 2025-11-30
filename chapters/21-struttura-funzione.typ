@@ -582,6 +582,10 @@ L'obiettivo è calcolare il *limite inferiore teorico* per rappresentare una MPH
     Procedimento opposto: data una MPH fissata $h : U -> n$, possiamo costruire *tutti* gli insiemi $S$ che $h$ separa:
     - per ogni bucket $k in {0, ..., n-1}$, prendiamo esattamente un elemento da $h^(-1)(k)$ (l'antiimmagine di $k$)
     - otteniamo un insieme $S$ di $n$ elementi che viene separato da $h$
+
+    La controimmagine di un bucket $k$ (scritta come $h^{-1}(k)$) è l'insieme di tutte le chiavi dell'universo $U$ che finiscono in quel bucket.
+
+
   ]
 
 / $n$-sistema: consideriamo una *famiglia* di $t$ funzioni di hash:
