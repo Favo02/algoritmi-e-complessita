@@ -309,7 +309,11 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
     $
       exists underbrace(q in bb(N),"costante"), exists underbrace(r(n) in O(log n),"funzione logaritmica") "t.c" L in "PCP"[r(n),q]
     $
-    Il linguaggio $L$ è accettato da un classificatore $V$ che usa $q$ interrogazioni all'oracolo e un numero logaritmico di bit random (è una sorta di *trade-off*). 
+    Il linguaggio $L$ è accettato da un classificatore $V$ che usa $q$ interrogazioni all'oracolo e un numero logaritmico di bit random (è una sorta di *trade-off*).
+
+    #attenzione()[
+      Con $n$ indichiamo la dimensione dell'input $x$, *$n = |x|$*.
+    ] 
 
     #informalmente()[
       Il verificatore $V$ presenta un *trade-off* fra randomness e non determinismo. Con una quantità di bit random logaritmica sono in grado di ridurre il numero di query all'oracolo a una costante.
@@ -335,7 +339,7 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
 
   #nota()[
     Faremo le seguenti *assunzioni*:
-    1. Assumiamo che il verificatore $V$ legga *essattamente* $q$ bit dall'oracolo $w$ e estrae *esattamente* $2^r(n)$ bit random. Si tratta di un assunzione *wrost-case* (passo da $<=$ ad $=$)
+    1. Assumiamo che il verificatore $V$ legga *essattamente* $q$ bit dall'oracolo $w$ e estrae *esattamente* $r(n)$ bit random. Si tratta di un assunzione *wrost-case* (passo da $<=$ ad $=$)
 
     2. Posso assumere che tutti i bit randomo vengano estratti all'inizio. Dopo aver letto l'input il verificatore $V$ estraee $R in 2^(r(n))$
 
@@ -546,7 +550,7 @@ La classe $"PCP"[r,q] subset.eq 2^(2^*)$ è la classe dei linguaggi $L subset.eq
 ]<lemma-formula-booleana>
 
 #teorema("Teorema")[
-  Esiste un $overline(epsilon) > 0 "t.c"$ $"MaxCNFSat"$ non è $1-overline(epsilon)$-approssimabile, a meno che $"P"="NP"$.
+  Esiste un $overline(epsilon) > 0 "t.c"$ $"MaxCNFSat"$ non è $(1+overline(epsilon))$-approssimabile, a meno che $"P"="NP"$.
 
   #informalmente()[
     Stiamo dicendo che esiste una costante positiva $overline(epsilon)$ al di sotto della quale è impossibile approssimare  $"MaxCNFSat"$
@@ -823,7 +827,7 @@ Formalmente:
       Il numero di vertici è pari a:
       $ mb(|V| <= 2^r(|x|) dot 2^q) $
     - *Lati*= Dati due vertici $(R, {i_1=b_1,dots,i_q=b_q}) in V$ e $(R', {i_1=b_1,dots,i_q=b_q})in V$, esiste un *arco* se e solo se le *configurazioni* sono *incompatibili*, cioè
-      - $R eq.not R'$ //Todo verificare se != o =
+      - $R eq R'$ //Todo verificare se != o =
       - oppure $exists k, k'$ tale che $i_k = i'_k'$ e $b_k != b'_k'$. Insieme di interrogazione uguale ma risposte dell'oracolo diverse.
 
     #attenzione()[
