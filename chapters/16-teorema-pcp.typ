@@ -343,119 +343,122 @@ Queste assunzioni permettono:
 - visitare l'albero e effettuare tutte le possibili query, salvando i risultati
 - procedere come un normale verificatore *deterministico* (senza non determinismo o randomicità)
 
-// TODO:
-// #nota[
-//   I bit random $R$ servono per "amplificare" la distinzione tra istanze "YES" e "NO". Provando tutte le possibili estrazioni random, trasformiamo una garanzia probabilistica in una garanzia deterministica sulla soddisfacibilità della CNF.
-// ]
-
 == Inapprossimabilità di $"Max"E_3"SAT"$ mediante PCP
 
 #teorema("Lemma")[
-  Data una funzione booleana $phi$:
+  Data una funzione booleana $f$:
   $
-    phi : 2^({x_1,dots,x_k}) -> {0,1}
+    f : 2^({x_1,dots,x_k}) -> {0,1}
   $
-  Allora $phi$ si può scrivere come una *CNF* con al più $2^k$ clausole, ognuna con esattamente $k$ letterali.
+  Allora $f$ si può scrivere come una *CNF* con al più $2^k$ clausole, ognuna con esattamente $k$ letterali.
+
+  #informalmente[
+    Per ogni assegnamento che deve valere falso costruiamo una clausola che vale $0$ per esattamente quell'assegnamento.
+
+    In questo modo, quando un assegnamento che deve valere falso viene passato, la corrispettiva clausola vale $0$, rendendo falsa tutta la CNF.
+  ]
 
   #esempio[
-    Andiamo a creare tutte le possibili combinazioni di assegnamenti:
     #figure(
       table(
-        columns: 5,
+        columns: 4,
         align: center,
-        table.header([$x_1$], [$x_2$], [$x_3$], [Clausola], [Valore]),
-        [$0$], [$0$], [$0$], [$(x_1 or x_2 or x_3)$], [$0$],
-        [$0$], [$0$], [$1$], [$(x_1 or x_2 or overline(x_3))$], [$1$],
-        [$0$], [$1$], [$0$], [$(x_1 or overline(x_2) or x_3)$], [$1$],
-        [$0$], [$1$], [$1$], [$(x_1 or overline(x_2) or overline(x_3))$], [$1$],
-        [$1$], [$0$], [$0$], [$(overline(x_1) or x_2 or x_3)$], [$1$],
-        [$1$], [$0$], [$1$], [$(overline(x_1) or x_2 or overline(x_3))$], [$1$],
-        [$1$], [$1$], [$0$], [$(overline(x_1) or overline(x_2) or x_3)$], [$1$],
-        [$1$], [$1$], [$1$], [$(overline(x_1) or overline(x_2) or overline(x_3))$], [$1$],
+        table.cell(colspan: 3, fill: gray.lighten(80%))[Funzione $f$],
+        table.cell(fill: gray.lighten(80%))[CNF],
+        table.cell(fill: gray.lighten(80%))[$x_1$],
+        table.cell(fill: gray.lighten(80%))[$x_2$],
+        table.cell(fill: gray.lighten(80%))[Valore],
+        table.cell(fill: gray.lighten(80%))[Clausola],
+        [$0$], [$0$], [$0$], [$(x_1 or x_2)$],
+        [$0$], [$1$], [$1$], [_nessuna_],
+        [$1$], [$0$], [$0$], [$(not x_1 or x_2)$],
+        [$1$], [$1$], [$1$], [_nessuna_],
       ),
       caption: [
-        Tabella di verità per una formula CNF con $k=3$ variabili. Ogni riga mostra un assegnamento e la clausola corrispondente. La formula CNF completa è la congiunzione di tutte le clausole: $(x_1 or x_2 or x_3) and ... and (overline(x_1) or overline(x_2) or overline(x_3))$.
+        Formula CNF per la funzione $f$: $(x_1 or x_2) and (not x_1 or x_2)$.
       ],
     )
   ]
-]<lemma-formula-booleana>
+] <pcp-lemma-formula-booleana>
 
 #teorema("Teorema")[
-  Esiste un $overline(epsilon) > 0 "t.c"$ $"MaxCNFSat"$ non è $(1+overline(epsilon))$-approssimabile, a meno che $"P"="NP"$.
+  Esiste un $overline(epsilon) > 0$ tale che $"MaxSAT"$ non è $(1+overline(epsilon))$-approssimabile, a meno che $"P"="NP"$.
 
   #informalmente[
-    Stiamo dicendo che esiste una costante positiva $overline(epsilon)$ al di sotto della quale è impossibile approssimare  $"MaxCNFSat"$
+    Come per ogni dimostrazione di inapprossimabilità, andiamo a creare un input in cui il gap tra le soluzioni è molto grande.
+    Con un'approssimazione troppo piccola, sarebbe possibile capire in quale soluzione ottima siamo, generando un assurdo.
   ]
+
   #dimostrazione[
-    Sia $L$ un linguaggio, dove $L in "Npc"$ (quindi $L$ è uno dei problemi più difficili in $"NP"$). Di conseguenza:
-    $ L in "NP" = "PCP"[r(n),1] $
-    per qualche $r(n) in O(log(n))$ e $q in bb(N)$.\
-    Sia $V$ un verificatore in forma normale per $L$. $V$ per il lemma verificatore-forma-normale, può essere descritto come segue:
-    1. Fissato l'input $x in 2^*$
-    2. Fissati i bit estratti $R in 2^(r(|x|))$
+    Sia $L$ un linguaggio $in "NPc"$.
+    Di conseguenza, per qualche $r(n) in O(log(n))$ e $q in bb(N)$:
+    $ L in "NP" = "PCP"[r(n),q] $
 
-    Per una specifica estrazione $R$, $V$ intteroga l'oracolo $w$ in *$q$* posizioni indipendenti ${i_1 (x,R),dots,i_q (x,R)}$ e accetta o rifiuta (in base alla risposta dell'oracolo):
-    $
-      phi(w_(i_1(x,R)), dots, w_(i_q (x,R))) in 2
-    $
-    Siccome la stringa oracolica $w$ è una funzione booleana, per il lemma #link-teorema(<lemma-formula-booleana>), $phi$ è descrivibile come una formula $phi_(x,R)$ CNF nelle variabili $w_(i_1(x,R)),dots,w_(i_q (x,R))$ con un numero di clausole $<=2^q$ di $q$ letterali:
-    #esempio[
-      $
-        "Per" q = 3\
-        phi_(x,R) = (w_3 or w_7 or not w_8) and (w_3 or not w_7 or w_8)
-      $
-    ]
-    Chiamiamo con $Phi_x$ la congiunzione di più formule $phi_(x,R)$ per tutte le *posssibil sequenze* di *bit random $R$*:
-    $
-      Phi_x = underbrace(and.big_(R in 2^(r(|x|))) phi_(x,R), "And di CNF")
-    $
-    #nota[
-      $R$ è una stringa appartenente all'insieme di tutte le possibili stringhe binarie di lunghezza $r(n)$:
-      $
-        R in {0,1}^(r(n))
-      $
-    ]
+    Sia $V$ un verificatore in forma normale per $L$.
 
+    Fissato l'input $x in 2^*$ e i bit random $R in 2^(r(|x|))$, il verificatore $V$ interroga l'oracolo $w$ in $q$ posizioni indipendenti ${i_(1)(x,R), dots, i_(q)(x,R)}$ e accetta o rifiuta in base alle risposte dell'oracolo.
+    Possiamo descrivere questo comportamento come una funzione:
+    $ f(w_(i_1(x,R)), dots, w_(i_q (x,R))) in {0, 1} space ("YES/NO") $
+
+    Siccome la stringa oracolica $w$ è una funzione booleana, per il lemma #link-teorema(<pcp-lemma-formula-booleana>), $f$ è descrivibile come una formula CNF $phi_(x,R)$ nelle variabili $w_(i_1(x,R)),dots,w_(i_q (x,R))$ con un numero di clausole $<= 2^q$, ciascuna di $q$ letterali.
+
+    Questa formula è diversa per qualsiasi possibile stringa $R$ random scelta.
+    Chiamiamo con $Phi_x$ la congiunzione delle formule $phi_(x,R)$ per tutte le *possibili sequenze* di bit random $R$:
+    $ Phi_x = underbrace(and.big_(R in 2^(r(|x|))) phi_(x,R), "AND di CNF") $
 
     Dove:
-    1. $Phi_x$ è fatta da clausole con $q$ letterali ciascuna
-    2. $Phi_x$ contiene un numero di clauosole pari a :
-    $
-      underbrace(mb(2^q), "clausole di "phi_(x,R)) dot underbrace(mr(2^r(|x|)), "clausole di "Phi_x) & = 2^(q+r(|x|)) \
-                                                                                                     & = 2^(q+O(log |x|)) \
-                                                                                                     & = "Poly"(|x|)
-    $
-    Esiste quindi un polinomio *$P(|x|)$* per cui $Phi$ contiene esattamente $|P(x)|$ clausole.
+    + $phi$ è fatta da clausole con $q$ letterali ciascuna (un ramo dell'albero)
+    + il numero di clausole di $phi$ è $2^q$
+    + $Phi$ contiene $2^r(|x|)$ formule $phi$
+    + di conseguenza, in totale, il numero di clausole è:
+      $
+        2^q dot 2^r(|x|) & = 2^(q+r(|x|)) \
+                         & = 2^(q+O(log |x|)) \
+                         & in "Poly"
+      $
+
+    Esiste quindi un *polinomio* $P(|x|)$ per cui $Phi$ contiene esattamente $|P(x)|$ clausole.
 
     #informalmente[
-      Ogni $phi_(x,R)$ rappresenta una "traccia di esecuzione" del verificatore con una specifica estrazione random $R$. La forma $Phi_x$ è soddisfacibile se e solo se esiste una stringa dell'oracolo $w$ che fa accettare il verificatore per ogni possibile estrazione random.
+      Ogni $phi_(x,R)$ rappresenta una "traccia di esecuzione" (ramo dell'albero) del verificatore con una specifica estrazione random $R$.
+      La forma $Phi_x$ è soddisfacibile se e solo se esiste una *stringa* dell'oracolo $w$ che fa *accettare* il verificatore per *ogni* possibile *estrazione random*.
     ]
-    Possiamo ora collegarci al linguaggio $L$:
-    - Se $mb(x in L)$ = $V$ deve essere tale per cui esiste una stringa oracolica $w$ che fa accettare con probabilità $1$. *Tutte* le $phi_(x,R)$ devono essere soddisfatte $=>$ *$Phi_x$ è soddisfacibile*. Esiste quindi un assegnamento che *soddisfa* tutte le *$P(|x|)$ clauosle* di $Phi_x$. Chiamo con *$t_x^*$* tale quantità:
-    $
-      mb(t_x^* = P(|x|))
-    $
 
-    - se $mr(x in.not L)$ =  $V$ deve essere tale per cui ogni stringa $w$ fa accettare $x$ con probabilità $< 1/2$. Ogni $w$ *non* soddisfa almeno metà delle $phi_(x,R)$ clauosole di $Phi_x$:
-    $
-      "Ogni" w "non soddisfa" >= 2^r(|x|)/2 "delle" underbrace(phi_(x,R), 2^q "clausole") "clausole"
-    $
-    Voglio ora stimare il numero di clausole totali non soddisfatte:
-    $
-      forall w "soddisfa" & < underbrace(P(|x|), 2^q dot 2^r(|x|) "clausole")- 2^r(|x|)/2 "clausole" \
-                          & mb(2^(r(|x|)) = P(|x|)/2^q) \
-                          & = P(|x|) - (mb(P(|x|)/2^q) / 2) \
-                          & = P(|x|) - P(|x|)/(2^q dot 2) \
-                          & = P(|x|) - P(|x|)/2^(q+1)
-    $
-    Riscrivendo la disequazione per $,mb(t_x^*)$ (numero massimo di clausole soddisfacibili):
-    $
-      mb(t_x^*) <= P(|x|)-P(|x|)/2^(q+1)\
-      mb("Raccogliamo" P(|x|))\
-      t_x^* <= P(|x|)(1-1/2^(q+1))\
-      mb("Scegliendo il tasso di approx." overline(epsilon) = 1/2^(q+1))\
-      mr(t_x^* <= P(|x|)(1-overline(epsilon)))
-    $
+    Indichiamo con $t^*_x$ il numero di *clausole soddisfatte*.
+
+    Possiamo ora collegarci al linguaggio $L$:
+    - se $mb(x in L)$: $V$ deve essere tale per cui esiste una stringa oracolica $w$ che fa accettare $x$ con probabilità $1$.
+      *Tutte* le $phi_(x,R)$ devono essere soddisfatte, quindi $Phi_x$ è *soddisfacibile*.
+      Esiste quindi un assegnamento che *soddisfa* tutte le $P(|x|)$ clausole di $Phi_x$:
+      $ mb(t_x^*) = underbrace(2^r(|x|), "#" phi) underbrace(2^q, "# clausole" phi) = mb(P(|x|)) $
+
+    - se $mr(x in.not L)$: $V$ deve essere tale per cui ogni stringa oracolica $w$ fa accettare $x$ con probabilità $< 1/2$.
+      Ogni $w$ *non* soddisfa almeno *metà* delle $phi_(x,R)$ clauosole di $Phi_x$.
+      In totale, il numero di clausole soddisfatte è:
+      $
+        mr(t^*_x) & < underbrace(2^r(|x|) / 2 2^q, "# clausole"\ "soddisfatte") + underbrace(2^r(|x|) / 2 2^(q-1), "# clausole non"\ "soddisfatte") \
+        & < P(|x|) / 2 + (2^r(|x|) 2^q 2^(-1)) / 2 \
+        & < P(|x|) / 2 + (2^r(|x|) 2^q) / 4 \
+        & < P(|x|) / 2 + P(|X|) / 4 \
+      $
+
+      #todo
+
+      $
+        forall w "soddisfa" & < underbrace(P(|x|), 2^q dot 2^r(|x|) "clausole")- 2^r(|x|)/2 "clausole" \
+                            & mb(2^(r(|x|)) = P(|x|)/2^q) \
+                            & = P(|x|) - (mb(P(|x|)/2^q) / 2) \
+                            & = P(|x|) - P(|x|)/(2^q dot 2) \
+                            & = P(|x|) - P(|x|)/2^(q+1)
+      $
+      Riscrivendo la disequazione per $,mb(t_x^*)$ (numero massimo di clausole soddisfacibili):
+      $
+        mb(t_x^*) <= P(|x|)-P(|x|)/2^(q+1)\
+        mb("Raccogliamo" P(|x|))\
+        t_x^* <= P(|x|)(1-1/2^(q+1))\
+        mb("Scegliendo il tasso di approx." overline(epsilon) = 1/2^(q+1))\
+        mr(t_x^* <= P(|x|)(1-overline(epsilon)))
+      $
 
     #nota[
       Viene usato il *$<=$* e *non* il *$<$* in $t_x^* <= P(|x|)(1-overline(epsilon))$, in quanto:
@@ -464,7 +467,6 @@ Queste assunzioni permettono:
 
       Ad esempio se rendessimo vere *9* clausole su *10*, dobbiamo scrivere che il numero di clausole soddisfatte punteggio è $<= 9$. Non possiamo scrivere $< 9$ (cioè $8$), perché $9$ è raggiungibile.
     ]
-
 
     Riassumendo:
     - $"Se" x in L$ = $mb(t_x^* = P(|x|))$
@@ -499,9 +501,6 @@ Queste assunzioni permettono:
     $
     impossibile in quanto avevamo definito $overline(epsilon) = 1/2^(q+1)$, di conseguenza $mb(B_x) < mr(A_x)$.\
     Questo signifca che $A_x$ e $B_x$ sono distinguibili, potrei decidere *l'appartenenza* o meno di $x$ al linguaggio $L$ in *tempo polinomiale*. Siccome *$L in "NPc"$* questo è un assurdo $qed$
-
-
-
   ]
 ]
 
@@ -513,8 +512,9 @@ Queste assunzioni permettono:
   ]
 ]
 
-
 == Inapprossimabilità di MaxIndependentSet
+
+#todo
 
 #informalmente[
   Dato un grafo non orientato, vogliamo trovare il più grande insieme di vertici $X$ tale che nessuno di questi vertici $v in X$ sia collegato tra loro da un lato.
