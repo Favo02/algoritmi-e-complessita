@@ -109,6 +109,11 @@ In un dato istante, procedendo con l'esecuzione, le *trasformazioni possibili* p
 - $pi "corto" -> pi "lungo"$ _(il costo dei suoi archi aumenta)_
 - $pi "esistente" -> pi "non esistente"$ _(un suo arco viene cancellato)_
 
+#attenzione[
+  Andremo a considerare solo la *prima fase* per l'analisi, ma l'algoritmo potrebbe trovare *ulteriori cammini* nella seconda fase.
+  Questi ulteriori cammini non causano problemi all'analisi effettuata dato che andrebbero a migliorare soluzione.
+]
+
 Possiamo dividere l'esecuzione dell'algoritmo in due fasi:
 $
   underbrace(C_0 supset.eq C_1 supset.eq C_2 supset.eq C_3 supset.eq dots supset.eq, mr("fase 1")) underbrace(C_s, mb("fase 2," overline(ell))) = emptyset

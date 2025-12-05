@@ -33,7 +33,6 @@ Formalmente:
 ]
 
 #esempio[
-  //TODO: fare il disegno?
   $m = 3, n = 8, t = [3, 1, 3, 1, 1, 4, 5, 1]$
 
   - $"macchina" 0$: $[5, 1]$ = $6$ tempo
@@ -198,8 +197,6 @@ A questo punto potremo chiederci se la dimostrazione proposta è la *"migliore p
     - all'arrivo dell'ultimo task, viene assegnato alla prima macchina, avendo così un carico $L = m-1+m = 2m-1$
 
     $ L/L^* = (2 m -1) / m = 2 - 1/m underbrace(>=, "per" m > 1 / epsilon) 2-epsilon space qed $
-
-    //TODO: Non so se volete mettere un disegno. io penso si capisca cosi.
 
     #informalmente[
       L'algoritmo non sa che il task grande arriva alla fine, di conseguenza distribuisce equamente tra le varie macchine i task da $1$.

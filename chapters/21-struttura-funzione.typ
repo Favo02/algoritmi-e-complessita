@@ -495,7 +495,7 @@ Per fissare la funzione $h$ si intende associare ad ogni chiave un valore compre
 Dato che siamo noi a scegliere questi valori, scegliamo anche l'*ordine* delle chiavi, da qui il nome Order Preserving MPH.
 
 Spazio utilizzato:
-$ D_n = n underbrace(r, "fino a" 2^r) + gamma n + o(n) = n underbrace(log n, 2^log n = n) + gamma n + o(n) $
+$ D_n = n r + gamma n + o(n) = n underbrace(log n, 2^log n = n) + gamma n + o(n) $
 
 Esistono esattamente $n!$ modi di associare le chiavi ai valori, quindi il theoretical lower bound è:
 $ Z_n = log n! approx n log n $
@@ -566,6 +566,18 @@ Sfruttiamo una *rank/select* per fare ciò:
   Questa tecnica è generale e molto potente.
 
   Dato che la funzione (perfetta) restituisce un output più sparso di quello che ci serve, comprimiamo questo output usando un vettore di bit e una rank/select.
+  Cioè stiamo andando a *ignorare* il contenuto dei *bucket vuoti* (nessuna chiave in essi).
+]
+
+#esempio[
+  Supponiamo di avere $3$ amici ($n=3$) che entrano in un cinema con $5$ posti ($m=5$), numerati da $0$ a $4$.
+  L'algoritmo di hash assegna loro i posti in modo sparso per evitare collisioni:
+  - i posti assegnati sono: $0, 2, 4$
+  - i posti $1$ e $3$ sono vuoti
+
+  L'obiettivo (minimalità) è fare rispondere $0, 1, 2$ (come se fossero seduti vicini, senza buchi).
+  Per scalare i valori basta che ogni persona conti il numero di persone sedure prima di se stesso.
+  L'operazione di Rank fa esattamente questo conteggio.
 ]
 
 === Theoretical Lower Bound
@@ -582,6 +594,8 @@ L'obiettivo è calcolare il *limite inferiore teorico* per rappresentare una MPH
     Procedimento opposto: data una MPH fissata $h : U -> n$, possiamo costruire *tutti* gli insiemi $S$ che $h$ separa:
     - per ogni bucket $k in {0, ..., n-1}$, prendiamo esattamente un elemento da $h^(-1)(k)$ (l'antiimmagine di $k$)
     - otteniamo un insieme $S$ di $n$ elementi che viene separato da $h$
+
+    La controimmagine o antiimmagine di un bucket $k$, indicata con $h^(-1)(k)$, è l'insieme di tutte le chiavi dell'universo $U$ che finiscono in quel bucket.
   ]
 
 / $n$-sistema: consideriamo una *famiglia* di $t$ funzioni di hash:
@@ -611,8 +625,14 @@ $ Z_n = log H_(U)(n) $
   Una funzione $h : U -> n$ separa un insieme $S$ se mappa ogni elemento in un bucket diverso.
   Nel caso peggiore, ogni bucket ha circa $U/n$ elementi nella controimmagine.
 
-  Il numero di insiemi separati da $h$ è circa:
+  Il numero di insiemi separati da $h$ (quindi senza collisioni) è circa:
   $ v = product_(k=0)^(n-1) |h^(-1)(k)| approx (U/n)^n $
+
+  #nota[
+    La controimmagine ci dice quante scelte abbiamo per ogni posizione.
+    Per sapere quanti insiemi totali possiamo formare, dobbiamo moltiplicare le possibilità per ogni bucket.
+    Ogni contro immagine avra circa dimensione $U/n$ (dipende da come sono distribuite le chiavi tra i vari bucket).
+  ]
 
 / Quante funzioni servono per coprire tutti gli insiemi?:
   Dobbiamo coprire $binom(U, n)$ insiemi, e ogni funzione copre al massimo $v$ insiemi.
