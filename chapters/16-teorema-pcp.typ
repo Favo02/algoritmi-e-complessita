@@ -514,114 +514,73 @@ Queste assunzioni permettono:
 
 == Inapprossimabilità di MaxIndependentSet
 
-#todo
-
 #informalmente[
-  Dato un grafo non orientato, vogliamo trovare il più grande insieme di vertici $X$ tale che nessuno di questi vertici $v in X$ sia collegato tra loro da un lato.
+  Dato un grafo non orientato, vogliamo trovare il più grande insieme di vertici $X$ nessuna coppia di vertici è collegata direttamente da un lato.
 ]
 
 #esempio([
   #figure(
-    cetz.canvas({
-      import cetz.draw: *
+    grid(
+      columns: 2,
+      // Non Indipendente
+      cetz.canvas({
+        import cetz.draw: *
 
-      // ===== LIVELLO SUPERIORE =====
+        // Lati (coordinate aggiustate)
+        line((-2 + 0.15, 0.5), (0 - 0.15, 1), stroke: 3pt + red) // v1-v2
+        line((-2 + 0.11, 0.5 - 0.11), (-1 - 0.11, -0.5 + 0.11), stroke: black) // v1-v3
+        line((-1 + 0.15, -0.5), (1 - 0.15, 0), stroke: black) // v3-v4
+        line((0 + 0.15, 1 - 0.07), (1 - 0.15, 0 + 0.07), stroke: black) // v2-v4
+        line((-1 + 0.11, -0.5 - 0.11), (0 - 0.11, -1.5 + 0.11), stroke: black) // v3-v5
+        line((1 - 0.11, 0 - 0.11), (0 + 0.11, -1.5 + 0.11), stroke: black) // v4-v5
 
-      // GRAFO ORIGINALE
-      content((-6, 3.8), text(size: 12pt, weight: "bold")[Grafo $G$])
+        // Vertici
+        circle((-2, 0.5), radius: 0.15, fill: black, stroke: 2pt + black) // v1
+        content((-2.4, 0.5), text(size: 10pt)[$v_1$])
 
-      // Vertici
-      circle((-7, 2.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-7.4, 2.5), text(size: 10pt)[$v_1$])
+        circle((0, 1), radius: 0.15, fill: black, stroke: 2pt + black) // v2
+        content((0, 1.4), text(size: 10pt)[$v_2$])
 
-      circle((-5, 3), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-5, 3.4), text(size: 10pt)[$v_2$])
+        circle((-1, -0.5), radius: 0.15, fill: white, stroke: black) // v3
+        content((-1.4, -0.5), text(size: 10pt)[$v_3$])
 
-      circle((-6, 1.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-6.4, 1.5), text(size: 10pt)[$v_3$])
+        circle((1, 0), radius: 0.15, fill: white, stroke: black) // v4
+        content((1.4, 0), text(size: 10pt)[$v_4$])
 
-      circle((-4, 2), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-3.6, 2), text(size: 10pt)[$v_4$])
+        circle((0, -1.5), radius: 0.15, fill: black, stroke: 2pt + black) // v5
+        content((0, -1.9), text(size: 10pt)[$v_5$])
+      }),
+      // Insieme Indipendente
+      cetz.canvas({
+        import cetz.draw: *
 
-      circle((-5, 0.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-5, 0.1), text(size: 10pt)[$v_5$])
+        // Lati
+        line((-7 + 0.15, -3.5), (-5 - 0.15, -3), stroke: black) // v1-v2
+        line((-7 + 0.11, -3.5 - 0.11), (-6 - 0.11, -4.5 + 0.11), stroke: black) // v1-v3
+        line((-6 + 0.15, -4.5), (-4 - 0.15, -4), stroke: black) // v3-v4
+        line((-5 + 0.15, -3 - 0.07), (-4 - 0.15, -4 + 0.07), stroke: black) // v2-v4
+        line((-6 + 0.11, -4.5 - 0.11), (-5 - 0.11, -5.5 + 0.11), stroke: black) // v3-v5
+        line((-4 - 0.11, -4 - 0.11), (-5 + 0.11, -5.5 + 0.11), stroke: black) // v4-v5
 
-      // Lati
-      line((-6.85, 2.5), (-5.15, 3), stroke: 2pt + black) // v1-v2
-      line((-6.9, 2.4), (-6.1, 1.6), stroke: 2pt + black) // v1-v3
-      line((-5.85, 1.5), (-4.15, 2), stroke: 2pt + black) // v3-v4
-      line((-5.1, 2.9), (-4.1, 2.1), stroke: 2pt + black) // v2-v4
-      line((-5.9, 1.4), (-5.1, 0.6), stroke: 2pt + black) // v3-v5
-      line((-4.1, 1.9), (-5, 0.6), stroke: 2pt + black) // v4-v5
+        // Vertici
+        circle((-7, -3.5), radius: 0.15, fill: black, stroke: black) // v1
+        content((-7.4, -3.5), text(size: 10pt)[$v_1$])
 
-      // SOLUZIONE NON INDIPENDENTE
-      content((-1, 3.8), text(size: 12pt, weight: "bold")[Non Indipendente])
-      content((1.5, 3.4), text(size: 10pt, fill: red)[${v_1, v_2, v_3}$ ✗])
+        circle((-5, -3), radius: 0.15, fill: white, stroke: black) // v2
+        content((-5, -2.6), text(size: 10pt)[$v_2$])
 
-      // Vertici
-      circle((-2, 2.5), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + red)
-      content((-2.4, 2.5), text(size: 10pt)[$v_1$])
+        circle((-6, -4.5), radius: 0.15, fill: white, stroke: black) // v3
+        content((-6.4, -4.5), text(size: 10pt)[$v_3$])
 
-      circle((0, 3), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + red)
-      content((0, 3.4), text(size: 10pt)[$v_2$])
+        circle((-4, -4), radius: 0.15, fill: black, stroke: black) // v4
+        content((-3.6, -4), text(size: 10pt)[$v_4$])
 
-      circle((-1, 1.5), radius: 0.15, fill: red.lighten(70%), stroke: 2pt + black)
-      content((-1.4, 1.5), text(size: 10pt)[$v_3$])
-
-      circle((1, 2), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((1.4, 2), text(size: 10pt)[$v_4$])
-
-      circle((0, 0.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((0, 0.1), text(size: 10pt)[$v_5$])
-
-      // Lati
-      line((-1.85, 2.5), (-0.15, 3), stroke: 3pt + red) // v1-v2 PROBLEMA!
-      line((-1.9, 2.4), (-1.1, 1.6), stroke: 2pt + black) // v1-v3
-      line((-0.85, 1.5), (0.85, 2), stroke: 2pt + black) // v3-v4
-      line((-0.1, 2.9), (0.9, 2.1), stroke: 2pt + black) // v2-v4
-      line((-0.9, 1.4), (-0.1, 0.6), stroke: 2pt + black) // v3-v5
-      line((0.9, 1.9), (0, 0.6), stroke: 2pt + black) // v4-v5
-
-      content((-1.5, 0.8), text(size: 9pt, fill: red)[
-        $v_1$ e $v_2$ \ collegati!
-      ])
-
-      // ===== LIVELLO INFERIORE =====
-
-      // INSIEME INDIPENDENTE
-      content((-6, -0.5), text(size: 12pt, weight: "bold")[Insieme Indipendente])
-      content((-6, -1.2), text(size: 10pt, fill: green)[${v_1, v_4}$ ✓])
-
-      // Vertici
-      circle((-7, -2), radius: 0.15, fill: green.lighten(70%), stroke: 2pt + green)
-      content((-7.4, -2), text(size: 10pt)[$v_1$])
-
-      circle((-5, -1.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-5, -1.1), text(size: 10pt)[$v_2$])
-
-      circle((-6, -3.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-6.4, -3.5), text(size: 10pt)[$v_3$])
-
-      circle((-4, -3), radius: 0.15, fill: green.lighten(70%), stroke: 2pt + green)
-      content((-3.6, -3), text(size: 10pt)[$v_4$])
-
-      circle((-5, -4.5), radius: 0.15, fill: white, stroke: 2pt + black)
-      content((-5, -4.9), text(size: 10pt)[$v_5$])
-
-      // Lati
-      line((-6.85, -2), (-5.15, -1.5), stroke: 2pt + black) // v1-v2
-      line((-6.9, -2.1), (-6.1, -3.4), stroke: 2pt + black) // v1-v3
-      line((-5.85, -3.5), (-4.15, -3), stroke: 2pt + black) // v3-v4
-      line((-5.1, -1.6), (-4.1, -2.9), stroke: 2pt + black) // v2-v4
-      line((-5.9, -3.6), (-5.1, -4.4), stroke: 2pt + black) // v3-v5
-      line((-4.1, -3.1), (-5, -4.4), stroke: 2pt + black) // v4-v5
-
-      content((-5.5, -5.3), text(size: 9pt, fill: green)[
-        Nessun lato tra $v_1$ e $v_4$!
-      ])
-    }),
+        circle((-5, -5.5), radius: 0.15, fill: white, stroke: black) // v5
+        content((-5, -5.9), text(size: 10pt)[$v_5$])
+      }),
+    ),
     caption: [
-      Esempio di MaxIndependentSet. Un insieme è indipendente se nessun vertice è collegato ad un altro. L'obiettivo è trovare l'insieme indipendente di cardinalità massima.
+      sinistra: ${v_1, v_2, v_5}$ NON è indipendente, destra: ${v_1, v_4}$ è indipendente.
     ],
   )
 ])
@@ -672,7 +631,7 @@ Formalmente:
     ]
 
     #informalmente[
-      configurazioni indipendenti significa che non ci può essere una stringa dell'oracolo compatibile con entrambe le stringhe, *non possono coesistere* nello stesso universo.
+      Configurazioni indipendenti significa che non ci può essere una stringa dell'oracolo compatibile con entrambe le stringhe, *non possono coesistere* nello stesso universo.
     ]
 
     #teorema("Fatto")[
@@ -704,7 +663,7 @@ Formalmente:
     ]<indipendent-sat-fatto-2>
 
     #informalmente[
-      Se $x in L$, allora c'è un insieme indipendente di taglia grande, altrimenti avrà uan dimensione ridotta (queste due casistiche sono disgiunte).
+      Se $x in L$, allora c'è un insieme indipendente di taglia grande, altrimenti avrà una dimensione ridotta (queste due casistiche sono disgiunte).
     ]
     Sia *$t_x^*$* la cardinalità del MaxIndependentSet per $G_x$:
     - se $mb(x in L) underbrace(=>, #link-teorema(<indipendent-sat-fatto-1>)) t^*_x >= 2^(r(|x|))$
