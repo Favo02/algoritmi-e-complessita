@@ -323,7 +323,7 @@ Per stabilire se la rappresentazione proposta è compressa ci serve stimare il t
   $
 
   Dato che la nostra struttura dati occupa:
-  $ D_n approx 3n + n ceil(log U/n) $
+  $ D_n approx underbrace(3n, o(Z_n)) + underbrace(n ceil(log U/n), Z_n) $
   allora abbiamo una *struttura succinta* $space qed$.
 
   #attenzione[
