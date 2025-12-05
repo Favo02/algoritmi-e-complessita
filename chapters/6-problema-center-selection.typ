@@ -487,7 +487,6 @@ Comportamento dell'algoritmo $"CenterSelectionPlus"$ al variare di $r$:
         )
       ],
     )
-    // TODO: questa dimostrazione funziona, ma non mi sembra molto formale
 
     L'idea è quella di *ridurre l'arbitrarietà* dell'algoritmo V1.
 

@@ -303,6 +303,7 @@ $ chevron.l P_e chevron.r quad forall e in E $
     $ sum_(e in E) P_e <= sum_(i in X^*) sum_(e, i in e) P_e $ <vertex-cover-eq-ogni-lato>
 
     Mettendo i pezzi insieme: // TODO: perché la sommatoria di tutti i P_e non al costo w_i della soluzione ottima come anche mostrato nella dimostazionae successiva (66)?
+    #todo
 
     $
       sum_(e in E) P_e underbrace(<=, #link-equation(<vertex-cover-eq-ogni-lato>))
