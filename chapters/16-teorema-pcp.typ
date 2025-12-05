@@ -153,7 +153,7 @@ L'output della macchina $V$ dipende dall'input $x$, dalla stringa oracolica $w$ 
 == Classe PCP
 
 #informalmente[
-  Utilizziamo un verificatore probabilistico, con due parametri $r$ e $q$, che limitano il numero di *query* (quanto a fondo possiamo ispezionare $w$) e il numero di *estrazioni* casuali (quante volte possiamo ispezionare $w$).
+  Utilizziamo un verificatore probabilistico, con due parametri $r$ e $q$, che limitano il numero di *query* (quanto a fondo possiamo ispezionare $w$) e il numero di *estrazioni* casuali (che useremo per scegliere dove ispezionare $w$).
 ]
 
 Siano $r,q$ due funzioni: $r,q: bb(N) -> bb(N)$.
@@ -443,6 +443,7 @@ Queste assunzioni permettono:
       $
 
       #todo
+      // TODO: finire di sistemare calcoli
 
       $
         forall w "soddisfa" & < underbrace(P(|x|), 2^q dot 2^r(|x|) "clausole")- 2^r(|x|)/2 "clausole" \
